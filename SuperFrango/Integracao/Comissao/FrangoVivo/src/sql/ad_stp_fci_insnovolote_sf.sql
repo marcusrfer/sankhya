@@ -100,7 +100,7 @@ begin
   stp_set_atualizando('N');
  
   p_mensagem := 'Confirmada a importação e calculo do lote nro ' || p_nrolote || '.' ||
-                '<br>Clique <a title="Posicionar registro" target="_parent" href="' ||
+                '<br>Clique <a title="Posicionar registro" target="_blank" href="' ||
                 ad_fnc_urlskw('AD_TSFFCI', p_nrolote) ||
                 '"><font color="#0000FF"><b> Aqui' ||
                 '</b></font></a> para posicionar o registro.';

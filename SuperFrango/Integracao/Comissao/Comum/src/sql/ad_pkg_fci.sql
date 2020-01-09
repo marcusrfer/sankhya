@@ -95,7 +95,7 @@ create or replace package body ad_pkg_fci is
     from lote_ave
    where numlote = p_nrolote
      and status = 'F';
- 
+
   return ad_pkg_var.lote;
  exception
   when no_data_found then
@@ -106,11 +106,11 @@ create or replace package body ad_pkg_fci is
                                 p_lote    out ad_tsffci%rowtype,
                                 p_conf    out ad_tsffciconf%rowtype) as
  begin
- 
+
   select * into p_lote from ad_tsffci where numlote = p_nrolote;
- 
+
   select * into p_conf from ad_tsffciconf where nuconf = get_config(p_nrolote);
- 
+
  exception
   when others then
    raise;
@@ -119,9 +119,9 @@ create or replace package body ad_pkg_fci is
  -- retorna a quantidade separndo por sexo do animal
  function get_qtd_sexo_lote(p_nrolote number, p_sexo varchar2) return float deterministic is
  begin
- 
+
   lote := get_dados_lote(p_nrolote);
- 
+
   select sum(qtdfem), sum(qtdmac)
     into ad_pkg_var.qtd1, ad_pkg_var.qtd2
     from (select (case
@@ -149,7 +149,7 @@ create or replace package body ad_pkg_fci is
               and c.codtipoper = 27
               and c.dtfatur between lote.dataini and lote.datafim
               and i.sequencia > 0);
- 
+
   if p_sexo = 'F' then
    return ad_pkg_var.qtd1;
   elsif p_sexo = 'M' then
@@ -157,7 +157,7 @@ create or replace package body ad_pkg_fci is
   else
    return 0;
   end if;
- 
+
  exception
   when others then
    return 0;
@@ -166,9 +166,9 @@ create or replace package body ad_pkg_fci is
  -- busca o codemp das notas do período
  function get_codemp_lote(p_nrolote number) return int deterministic is
  begin
- 
+
   lote := get_dados_lote(p_nrolote);
- 
+
   select c.codemp
     into ad_pkg_var.resulti
     from tgfcab c
@@ -177,9 +177,9 @@ create or replace package body ad_pkg_fci is
      and c.codtipoper in (331, 334, 27)
      and c.dtfatur between lote.dataini and lote.datafim
    group by c.codemp;
- 
+
   return ad_pkg_var.resulti;
- 
+
  exception
   when others then
    return 0;
@@ -191,7 +191,7 @@ create or replace package body ad_pkg_fci is
   notas t_dados_notas := t_dados_notas();
  begin
   lote := get_dados_lote(p_nrolote);
- 
+
   select p_nrolote, null, c.codemp, c.nunota, null, c.numnota, c.serienota, c.dtneg,
          c.dtfatur, c.vlrnota, c.codtipoper, c.tipmov, c.statusnota, c.statusnfe, i.qtdneg
     bulk collect
@@ -209,12 +209,12 @@ create or replace package body ad_pkg_fci is
      and c.codtipoper = 27
      and c.dtfatur between lote.dataini and lote.datafim
      and i.sequencia > 0;
- 
+
   for i in notas.first .. notas.last
   loop
    pipe row(notas(i));
   end loop;
- 
+
  end get_notas_transp;
 
  -- retorna as notas de transferência de ração para o parceiro no período
@@ -222,11 +222,18 @@ create or replace package body ad_pkg_fci is
  pipelined is
   notas t_dados_notas := t_dados_notas();
  begin
- 
+
   lote := get_dados_lote(p_nrolote);
- 
+  
+  Select Trunc(dhpega)
+  Into lote.datafim
+  From ad_tsflfv l
+  Where l.numlote = lote.numlote;
+  
+
   select p_nrolote, null, c.codemp, c.nunota, null, c.numnota, c.serienota, c.dtneg,
-         c.dtfatur, c.vlrnota, c.codtipoper, c.tipmov, c.statusnota, c.statusnfe, i.qtdneg
+         c.dtfatur, c.vlrnota, c.codtipoper, c.tipmov, c.statusnota, c.statusnfe, i.qtdneg *
+         Case When c.codtipoper = 331 then 1 Else -1 End qtdneg
     bulk collect
     into notas
     from tgfcab c
@@ -240,16 +247,17 @@ create or replace package body ad_pkg_fci is
      and c.statusnota = 'L'
      and i.statusnota = 'L'
      and c.codtipoper in (331, 334)
-     and c.dtfatur between lote.dataini and lote.datafim
+     and c.dtfatur >= lote.dataini - 8 
+     and c.dtfatur <= lote.datafim
      and p.descrprod like ('%RACAO%')
      and i.sequencia > 0
      and i.atualestoque <> 0;
- 
+
   for i in notas.first .. notas.last
   loop
    pipe row(notas(i));
   end loop;
- 
+
  end get_notas_racao;
 
  -- retorna a movimentação financeira do parceiro no período
@@ -258,7 +266,7 @@ create or replace package body ad_pkg_fci is
   notas t_dados_notas := t_dados_notas();
  begin
   lote := get_dados_lote(p_nrolote);
- 
+
   select p_nrolote, null, f.codemp, null, f.nufin, f.numnota, f.serienota, f.dtneg,
          f.dtvenc, f.vlrdesdob, f.codtipoper, 'I', null, null, 1
     bulk collect
@@ -267,12 +275,12 @@ create or replace package body ad_pkg_fci is
    where f.codparc = lote.codparc
      and dtneg between lote.dataini and lote.datafim
      and recdesp = 1;
- 
+
   for i in notas.first .. notas.last
   loop
    pipe row(notas(i));
   end loop;
- 
+
  end get_notas_fin;
 
  -- função auxiliar que retorna o total de ração transferida no período
@@ -309,7 +317,7 @@ create or replace package body ad_pkg_fci is
  function get_dados_balanca(p_nrolote number, p_tipo varchar2) return float as
  begin
   lote := get_dados_lote(p_nrolote);
- 
+
   select sum(peg.qtdavesabat), sum(peg.pesoliq)
     into ad_pkg_var.resultf, ad_pkg_var.resultn
     from tgfpeg peg
@@ -320,7 +328,7 @@ create or replace package body ad_pkg_fci is
      and peg.dhiniciopega between lote.dataini and lote.datafim
      and cab.codparc = lote.codparc
      and peg.produto = 'FRANGO VIVO';
- 
+
   if lower(p_tipo) = 'qtdaves' then
    return ad_pkg_var.resultf;
   elsif lower(p_tipo) = 'peso' then
@@ -350,17 +358,23 @@ create or replace package body ad_pkg_fci is
   lote lote_ave%rowtype;
  begin
   lote := get_dados_lote(p_nrolote);
- 
+
+  Select Trunc(l.dhpega)
+  Into lote.datafim
+   From ad_tsflfv l
+   Where numlote = lote.numlote;
+
   select tci.codtab, tci.percom, tci.preco
     into ad_pkg_var.resulti, ad_pkg_var.resultn, ad_pkg_var.resultf
     from ad_tsftci tci
    where tci.codemp = get_codemp_lote(p_nrolote)
      and tci.dtvigor = (select max(dtvigor)
                           from ad_tsftci i
-                         where i.codtab = tci.codtab
+                         where 1 = 1
+                         --i.codtab = tci.codtab
                            and i.codemp = tci.codemp
                            and dtvigor <= lote.datafim);
- 
+
   if lower(p_tipo) = 'codtab' then
    return ad_pkg_var.resulti;
   elsif lower(p_tipo) = 'percom' then
@@ -370,7 +384,7 @@ create or replace package body ad_pkg_fci is
   else
    return 0;
   end if;
- 
+
  exception
   when others then
    return 0;
@@ -382,14 +396,20 @@ create or replace package body ad_pkg_fci is
   lote lote_ave%rowtype;
  begin
   lote := get_dados_lote(p_nrolote);
- 
+  
+  Select Trunc(l.dhpega)
+  Into lote.datafim
+   From ad_tsflfv l
+   Where numlote = lote.numlote;
+
   select *
     into p_tabela
     from ad_tsftci tci
    where tci.codemp = p_codemp
      and tci.dtvigor = (select max(dtvigor)
                           from ad_tsftci i
-                         where i.codtab = tci.codtab
+                         where 1 = 1
+                         --i.codtab = tci.codtab
                            and i.codemp = tci.codemp
                            and dtvigor <= lote.datafim);
  exception
@@ -424,7 +444,7 @@ create or replace package body ad_pkg_fci is
    when others then
     return - 1;
   end;
- 
+
   -- busca set de parametros
   begin
    select nuconf
@@ -438,7 +458,7 @@ create or replace package body ad_pkg_fci is
    when no_data_found then
     return - 1;
   end;
- 
+
   return(v_nuconf);
  end get_config;
 
@@ -471,7 +491,7 @@ create or replace package body ad_pkg_fci is
                 0.16
               end + (power((p_ipsul - p_ipsum), 2) * 0.000027) +
               (power((p_ipsul - p_ipsum), 3) * 0.000018) + 10.5;
- 
+
   return(v_result);
  end get_perc_com;
 
@@ -482,7 +502,7 @@ create or replace package body ad_pkg_fci is
   tab  ad_tsftci%rowtype;
   i    int;
  begin
- 
+
   begin
    /*conf.nuconf := get_config(p_nrolote);
    select * into conf from ad_tsffciconf where nuconf = conf.nuconf;*/
@@ -492,9 +512,9 @@ create or replace package body ad_pkg_fci is
     p_errmsg := 'Erro ao buscar as informações da tela de parâmetros. ' || sqlerrm;
     return;
   end;
- 
+
   for dados in (
-                
+
                 select distinct lt.codparc, l.codprod, lt.qtdavesaloj qtdaves,
                                  l.descrabrevave, l.dtalojamento, l.qtdmortes, l.pesofinal,
                                  l.dtabate, l.numlote, fv.idade, fv.sexo, lt.status,
@@ -507,10 +527,10 @@ create or replace package body ad_pkg_fci is
                  where 1 = 1
                    and lt.status = 'F'
                    and l.numlote = p_nrolote
-                
+
                 )
   loop
-  
+
    /* if dados.sexo = 'F' then
     ad_pkg_var.stmt := 'Select i.fpfemea, i.ipsufemea From ad_tsftci i Where i.codtab = :tabela';
    elsif dados.sexo = 'M' then
@@ -518,7 +538,7 @@ create or replace package body ad_pkg_fci is
    elsif dados.sexo = 'X' then
     ad_pkg_var.stmt := 'Select i.fpsexado, i.ipsusexado From ad_tsftci i Where i.codtab = :tabela';
    end if;
-   
+
    declare
     c sys_refcursor;
    begin
@@ -529,7 +549,7 @@ create or replace package body ad_pkg_fci is
     into lote.fpmedio, lote.ipsumedio;
     close c;
    end;*/
-  
+
    lote.tipocom     := 'FV';
    lote.numlote     := dados.numlote;
    lote.codlote     := dados.codlote;
@@ -546,11 +566,11 @@ create or replace package body ad_pkg_fci is
    lote.percfem     := snk_dividir(lote.qtdfem, lote.qtdaves) * 100;
    lote.qtdmachos   := ad_pkg_fci.get_qtd_sexo_lote(dados.numlote, 'M');
    lote.percmachos  := snk_dividir(lote.qtdmachos, lote.qtdaves) * 100;
-  
+
    get_dados_tabela(p_nrolote => p_nrolote, p_codemp => lote.codemp, p_tabela => tab);
-  
+
    lote.tabela := tab.codtab;
-  
+
    if dados.sexo = 'F' then
     lote.ipsumedio := tab.ipsufemea;
     lote.fpmedio   := tab.fpfemea;
@@ -561,7 +581,7 @@ create or replace package body ad_pkg_fci is
     lote.ipsumedio := tab.ipsusexado;
     lote.fpmedio   := tab.fpsexado;
    end if;
-  
+
    --tipo do preço
    if lote.percfem >= conf.percprecofem then
     lote.tipopreco := 'F';
@@ -573,7 +593,7 @@ create or replace package body ad_pkg_fci is
    else
     lote.tipopreco := 'P';
    end if;
-  
+
    lote.qtdabat     := nvl(ad_pkg_fci.get_qtd_abatida(lote.numlote), 0);
    lote.qtdracao    := round(ad_pkg_fci.get_total_racao_lote(lote.numlote), cd);
    lote.peso        := round(ad_pkg_fci.get_pesoliq_balanca(lote.numlote), cd);
@@ -595,19 +615,19 @@ create or replace package body ad_pkg_fci is
    lote.vlrcom      := round(lote.pesocom * lote.vlrunit, cd);
    lote.vlrcomliq   := round(lote.vlrcom - lote.vlrdespesas, cd);
    lote.dhinclusao  := sysdate;
-  
+
    delete from ad_tsffci where numlote = dados.numlote;
-  
+
    insert into ad_tsffci values lote;
    i := sql%rowcount;
-  
+
   end loop dados;
- 
+
   if nvl(i, 0) = 0 then
    p_errmsg := 'O lote não consta nas tabelas acessórias de integração com o Avecom.';
    return;
   end if;
- 
+
  exception
   when others then
    p_errmsg := sqlerrm;
@@ -621,7 +641,7 @@ create or replace package body ad_pkg_fci is
  begin
   conf.nuconf := get_config(p_nrolote);
   select * into conf from ad_tsffciconf c where c.nuconf = conf.nuconf;
- 
+
   for fin in (select f.numlote, f.vlrdespesas, 1 recdesp
                 from ad_tsffci f
                where numlote = p_nrolote
@@ -645,14 +665,14 @@ create or replace package body ad_pkg_fci is
    p_errmsg := sqlerrm;
  end set_dados_financeiro;
 
- -- método que popula a aba notas fiscais 
+ -- método que popula a aba notas fiscais
  procedure set_dados_notas(p_nrolote number, p_errmsg out varchar2) as
   notas t_dados_notas := t_dados_notas();
   stmt  varchar2(4000);
   cur   sys_refcursor;
   i     int := 0;
  begin
- 
+
   for z in 1 .. 3
   loop
    if z = 1 then
@@ -662,7 +682,7 @@ create or replace package body ad_pkg_fci is
    else
     stmt := 'Select * From Table(ad_pkg_fci.get_notas_fin(:nrolote))';
    end if;
-  
+
    open cur for stmt
    using p_nrolote;
    loop
@@ -674,13 +694,13 @@ create or replace package body ad_pkg_fci is
    end loop;
    notas.trim;
    close cur;
-  
+
   end loop;
- 
+
   select count(*) into i from ad_tsffci where numlote = p_nrolote;
- 
+
   dbms_output.put_line('lotes existentes: ' || i);
- 
+
   for x in notas.first .. notas.last
   loop
    notas(x).nufcinf := x;
@@ -699,9 +719,9 @@ create or replace package body ad_pkg_fci is
      p_errmsg := 'erro ao inserir a linha ' || x || ' - ' || sqlerrm;
      return;
    end;
-  
+
   end loop;
- 
+
  end;
 
  /*M. Rangel - insere lançamentos da bonificação quando for mortalidade
@@ -713,9 +733,9 @@ create or replace package body ad_pkg_fci is
   l    ad_tsffci%rowtype;
   i    int;
  begin
- 
+
   get_dados_fechamento(p_nrolote, l, conf);
- 
+
   begin
    select count(*)
      into i
@@ -732,7 +752,7 @@ create or replace package body ad_pkg_fci is
     p_errmsg := 'Erro ao excluir lote real existente. ' || sqlerrm;
     return;
   end;
- 
+
   begin
    insert into ad_tsffcibnf
     (numlote, nufcibnf, tipobonif, percmortprev, qtdmortprev, saldoprev, percmortreal,
@@ -756,7 +776,7 @@ create or replace package body ad_pkg_fci is
                                p_sem3    in number,
                                p_sem4    in number,
                                p_errmsg  out varchar2) as
- 
+
   type bonificacoes is table of ad_tsffcibnf%rowtype;
   v_qtdmortsem  number;
   v_percmortsem float;
@@ -768,13 +788,13 @@ create or replace package body ad_pkg_fci is
  begin
   /*  -- busca os dados do lote
     select * into l from ad_tsffci where numlote = p_nrolote;
-   
+
     -- busca parametros do processso ativos
     select * into conf from ad_tsffciconf where nuconf = ad_pkg_fci.get_config(l.numlote);
   */
- 
+
   get_dados_fechamento(p_nrolote, l, conf);
- 
+
   -- verifica se já possui lançamentos calculados
   select count(*) into i from ad_tsffcibnf where numlote = l.numlote;
   if i > 0 then
@@ -782,7 +802,7 @@ create or replace package body ad_pkg_fci is
     where numlote = l.numlote
       and tipobonif = 'M';
   end if;
- 
+
   -- inicia o set value dos campos
   for m in 1 .. 4
   loop
@@ -805,7 +825,7 @@ create or replace package body ad_pkg_fci is
    else
     v_qtdmortsem := l.qtdmortes;
    end if;
-  
+
    -- insere os dados das semanas
    b.extend;
    b(m).numlote := l.numlote;
@@ -838,7 +858,7 @@ create or replace package body ad_pkg_fci is
    b(m).vlrunitbnf := b(m).vlrbonific / l.qtdabat;
    b(m).aprovado := 'N';
    b(m).obs := v_sem;
-  
+
    -- insere os dados da semana
    begin
     insert into ad_tsffcibnf values b (m);
@@ -847,12 +867,12 @@ create or replace package body ad_pkg_fci is
      p_errmsg := 'Erro ao inserir os dados semanais. ' || sqlerrm;
      return;
    end;
-  
+
   end loop;
- 
+
  end set_bnf_mortalidade;
 
- -- calcula bonificação GPA 
+ -- calcula bonificação GPA
  procedure set_bnf_carcaca(p_nrolote number, p_errmsg out varchar2) as
   v_sexo      varchar2(1);
   v_codprod   number;
@@ -862,15 +882,15 @@ create or replace package body ad_pkg_fci is
   b           ad_tsffcibnf%rowtype;
   c           ad_tsffciconf%rowtype;
  begin
- 
+
   get_dados_fechamento(p_nrolote, l, c);
- 
+
   select count(*)
     into i
     from ad_tsffcibnf bnf
    where numlote = l.numlote
      and bnf.tipobonif = 'C';
- 
+
   if i > 0 then
    begin
     delete from ad_tsffcibnf
@@ -881,9 +901,9 @@ create or replace package body ad_pkg_fci is
      p_errmsg := 'Erro ao excluir bonificações existentes. ' || sqlerrm;
      return;
    end;
-  
+
   end if;
- 
+
   begin
    select max(nufcibnf) + 1 into i from ad_tsffcibnf where numlote = l.numlote;
    insert into ad_tsffcibnf
@@ -901,11 +921,11 @@ create or replace package body ad_pkg_fci is
     rollback;
     return;
   end;
- 
+
   -- calcula o valor médio de comissões pagas por lote e sexo
   begin
    select sexo into v_sexo from ad_tsftfv f where f.numlote = l.numlote;
-  
+
    if v_sexo = 'F' then
     v_codprod := ad_pkg_fci.c_codprodfemea;
    elsif v_sexo = 'M' then
@@ -913,7 +933,7 @@ create or replace package body ad_pkg_fci is
    else
     v_codprod := ad_pkg_fci.c_codprodsexado;
    end if;
-  
+
    i := 0;
    for med in (select cab.codtipoper, cab.nunota, cab.dtfatur, cab.vlrnota, ite.codprod,
                       ad_get.descrproduto(ite.codprod) prod, ite.qtdneg, ite.vlrtot
@@ -931,16 +951,16 @@ create or replace package body ad_pkg_fci is
      i           := i + 1;
     end if;
    end loop;
-  
+
    v_vlrcommed := v_vlrcommed / i;
-  
+
   exception
    when others then
     p_errmsg := 'Erro no calculo do vlr. médio de comissões. ' || sqlerrm;
     rollback;
     return;
   end;
- 
+
   begin
    update ad_tsffcibnf bnf
       set bnf.vlrbonific = greatest(v_vlrcommed - l.vlrcom, 0),
@@ -955,14 +975,14 @@ create or replace package body ad_pkg_fci is
     rollback;
     return;
   end;
- 
+
  end set_bnf_carcaca;
 
  -- método auxiliar para criação de ligação entre lote_ave e tsflfv
  procedure aux_fix_lig_numlote as
   i integer;
  begin
- 
+
   for lote in (select distinct l.numlfv, l.codparc, l.codprod, l.qtdaves, l.dtalojamento,
                                l.qtdmortes, l.pesofinal, l.dtabate, l.dhpega, l.dhracao,
                                l.gta, l.numlote, tl.nro_lote
@@ -973,11 +993,11 @@ create or replace package body ad_pkg_fci is
                 where l.gta is not null)
   loop
    update ad_tsflfv f set f.numlote = lote.nro_lote where f.numlfv = lote.numlfv;
-  
+
    update ad_tsfpfv2 t set t.numlote = lote.nro_lote where t.numlfv = lote.numlfv;
-  
+
   end loop;
- 
+
  end aux_fix_lig_numlote;
 
 end ad_pkg_fci;

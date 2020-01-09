@@ -1,0 +1,1753 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="dtref" description="Dt. Referência" metadata="date" required="true" keep-last="true" keep-date="false" order="0"/>
+  </prompt-parameters>
+  <level id="lvl_5lf7qq" description="Principal">
+    <args>
+      <arg id="p_codlot" type="integer" order="0"/>
+      <arg id="p_grau" type="integer"/>
+      <arg id="p_descrlot" type="text" order="2"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="100">
+        <chart id="cht_5lf7qr" type="line" nroColuna="13">
+          <title><![CDATA[<strong>Total de Ativos - Todas as Unidades</strong>]]></title>
+          <expression type="sql" data-source="MGEDS"><![CDATA[select dtref dtref_, to_char(dtref, 'mm/yy') dtref, count(*) ativos,sum(case            when exists (select 1                     from ad_prhsit s                    where f.codsit = s.codsit                      and s.nuprh = 1                      and s.gruporel = 'A'                      and s.subgruporel = 'AF') then              1             else              0           end) as afastados from ad_basefunc_fpw f where dtref between add_months(:dtref, -12) and :dtref group by dtref,  to_char(dtref, 'mm/yy') ORDER BY F.DTREF]]></expression>
+          <metadata>
+            <field name="DTREF_" label="DTREF_" type="D" visible="true" useFooter="false"/>
+            <field name="DTREF" label="Dt. Ref." type="S" visible="true" useFooter="false"/>
+            <field name="ATIVOS" label="Ativos" type="I" visible="true" useFooter="false"/>
+            <field name="AFASTADOS" label="Afastados" type="I" visible="true" useFooter="false"/>
+            <field name="ativosliq" label="Ativ + Afast" type="I" visible="true" useFooter="false">
+              <calculated>
+                <formula><![CDATA[$ATIVOS - $AFASTADOS]]></formula>
+              </calculated>
+            </field>
+          </metadata>
+          <horizontal-axis>
+            <category field="$DTREF" rotation="0" dropLabel="false">
+              <initView value="first"/>
+            </category>
+          </horizontal-axis>
+          <vertical-axis>
+            <linear resultRotation="0" vResizing="false">
+              <mask/>
+            </linear>
+          </vertical-axis>
+          <series>
+            <serie type="line" circle-intersection="true">
+              <xField>$DTREF</xField>
+              <yField>$ATIVOS</yField>
+              <display><![CDATA[Ativ + Afast]]></display>
+              <color>0x33ff</color>
+              <on-click navigate-to="lvl_53ijjo">
+                <param id="am_label">Ativos</param>
+                <param id="am_dtref">$DTREF_</param>
+                <param id="am_tipo">T</param>
+              </on-click>
+            </serie>
+            <serie type="line" circle-intersection="true">
+              <xField>$DTREF</xField>
+              <yField>$ativosliq</yField>
+              <display><![CDATA[Ativos Reais]]></display>
+              <color>0xcccc</color>
+              <on-click navigate-to="lvl_53ijjo">
+                <param id="am_label">Ativ - Afast</param>
+                <param id="am_dtref">$DTREF_</param>
+                <param id="am_tipo">TA</param>
+              </on-click>
+            </serie>
+          </series>
+          <legend position="top" direction="v"/>
+        </chart>
+      </container>
+      <container orientacao="V" tamanhoRelativo="195">
+        <container orientacao="V" tamanhoRelativo="797">
+          <chart id="cht_5lf7qw" type="line" nroColuna="13">
+            <title><![CDATA[Contratações - Demissões - Afastamentos - Aposentadorias - Todas as Unidades]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select  dtref, to_char(dtref,'mm/yy') dtref_ ,       sum(case when trunc(f.dtadmiss, 'fmmm') = dtref then 1 end) adm,       sum(case when trunc(f.dtdemiss, 'fmmm') = dtref then 1 end) dem,       sum(case when exists (select 1 from ad_prhsit s where s.nuprh = 1                      and s.codsit = f.codsit and s.gruporel = 'A'                      and s.subgruporel = 'AF') then 1 end) afast,       sum(case when exists (select 1 from ad_prhsit s                    where s.nuprh = 1                      and s.codsit = f.codsit                      and s.gruporel = 'A'                      and s.subgruporel = 'AP') then 1 end) apos  from ad_basefunc_fpw f where dtref between add_months(:dtref, -12) and :dtref group by dtref, to_char(dtref,'mm/yy') order by dtref]]></expression>
+            <metadata>
+              <field name="DTREF" label="Dt. Ref" type="D" visible="true" useFooter="false"/>
+              <field name="DTREF_" label="Dt. Ref" type="S" visible="true" useFooter="false"/>
+              <field name="ADM" label="Admitidos" type="I" visible="true" useFooter="false"/>
+              <field name="DEM" label="Demitidos" type="I" visible="true" useFooter="false"/>
+              <field name="AFAST" label="Afastados" type="I" visible="true" useFooter="false"/>
+              <field name="APOS" label="Aposentados" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <horizontal-axis>
+              <category field="$DTREF_" rotation="0" dropLabel="false">
+                <initView value="disabled"/>
+              </category>
+            </horizontal-axis>
+            <vertical-axis>
+              <linear resultRotation="0" vResizing="false">
+                <mask/>
+              </linear>
+            </vertical-axis>
+            <series>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$ADM</yField>
+                <display><![CDATA[Admitidos]]></display>
+                <color>0x66ff</color>
+                <on-click navigate-to="lvl_500a7q">
+                  <param id="an_dtref">$DTREF</param>
+                  <param id="an_tipo">A</param>
+                  <param id="an_label">Admissões</param>
+                </on-click>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$DEM</yField>
+                <display><![CDATA[Demitidos]]></display>
+                <color>0xff0000</color>
+                <on-click navigate-to="lvl_500a7q">
+                  <param id="an_dtref">$DTREF</param>
+                  <param id="an_tipo">D</param>
+                  <param id="an_label">Demissões</param>
+                </on-click>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$AFAST</yField>
+                <display><![CDATA[Afastados]]></display>
+                <color>0xcccc</color>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$APOS</yField>
+                <display><![CDATA[Aposent.]]></display>
+                <color>0x9933ff</color>
+              </serie>
+            </series>
+            <legend position="top" direction="v"/>
+          </chart>
+        </container>
+        <container orientacao="H" tamanhoRelativo="100">
+          <container orientacao="V" tamanhoRelativo="33"/>
+          <container orientacao="V" tamanhoRelativo="33">
+            <simple-value id="svl_6ce3h9">
+              <value-expression><![CDATA[<div align="center"><button type="button">Análise por Lotações</button></div>]]></value-expression>
+              <on-click navigate-to="lvl_6ce3ja">
+                <param id="l_dtref">:dtref</param>
+                <param id="l_grau">1</param>
+                <param id="l_codlot"/>
+                <param id="l_proxgrau">1</param>
+              </on-click>
+            </simple-value>
+          </container>
+          <container orientacao="V" tamanhoRelativo="33"/>
+        </container>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_500a7q" description="AnaliseAno">
+    <args>
+      <arg id="an_dtref" type="date"/>
+      <arg id="an_tipo" type="text"/>
+      <arg id="an_label" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_500a7s" type="line" nroColuna="13">
+            <title><![CDATA[:an_label por Sexo no período Todas as Unidades]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select  dtref, to_char(dtref,'mm/yy') dtref_ ,       sum(case             when f.sexo = 'M' then              1           end) homem,       sum(case             when f.sexo = 'F' then              1           end) mulher,		:an_tipo tipo  from ad_basefunc_fpw f where dtref between add_months(:dtref, -12) and :dtref  and CASE 	when :an_tipo = 'A' then        trunc(f.dtadmiss, 'fmmm')  	when :an_tipo = 'D' then 	  trunc(f.dtdemiss, 'fmmm')	end = dtref group by dtref, to_char(dtref,'mm/yy')  order by dtref]]></expression>
+            <metadata>
+              <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+              <field name="DTREF_" label="Mês" type="S" visible="true" useFooter="false"/>
+              <field name="HOMEM" label="Homens" type="I" visible="true" useFooter="false"/>
+              <field name="MULHER" label="Mullheres" type="I" visible="true" useFooter="false"/>
+              <field name="TIPO" label="TIPO" type="S" visible="true" useFooter="false"/>
+            </metadata>
+            <horizontal-axis>
+              <category field="$DTREF_" rotation="0" dropLabel="false">
+                <initView value="first"/>
+              </category>
+            </horizontal-axis>
+            <series>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$HOMEM</yField>
+                <display><![CDATA[Homens]]></display>
+                <color>0x66ff</color>
+                <on-click navigate-to="lvl_53ijjo">
+                  <param id="am_label">:an_label</param>
+                  <param id="am_dtref">$DTREF</param>
+                  <param id="am_tipo">$TIPO</param>
+                </on-click>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$MULHER</yField>
+                <display><![CDATA[Mulheres]]></display>
+                <color>0xff33ff</color>
+                <on-click navigate-to="lvl_53ijjo">
+                  <param id="am_label">:an_label</param>
+                  <param id="am_dtref">$DTREF</param>
+                  <param id="am_tipo">$TIPO</param>
+                </on-click>
+              </serie>
+            </series>
+            <legend position="top" direction="v"/>
+          </chart>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_53ijhp" type="line" nroColuna="13">
+            <title><![CDATA[:an_label  por Faixa Etária - Todas as Unidades]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select dtref,       to_char(dtref, 'mm/yy') dtref_,       sum(case             when round(ad_get.meses_entre_datas(trunc(f.dtnasc, 'mm'), last_day(dtref)) / 12) between 18 and 20 then              1           end) as fx_1,       sum(case             when round(ad_get.meses_entre_datas(trunc(f.dtnasc, 'mm'), last_day(dtref)) / 12) between 21 and 25 then              1           end) as fx_2,       sum(case             when round(ad_get.meses_entre_datas(f.dtnasc, last_day(dtref)) / 12) between 26 and 30 then              1           end) as fx_3,       sum(case             when round(ad_get.meses_entre_datas(f.dtnasc, last_day(dtref)) / 12) between 31 and 35 then              1           end) as fx_4,       sum(case             when round(ad_get.meses_entre_datas(f.dtnasc, last_day(dtref)) / 12) between 36 and 40 then              1           end) as fx_5,       sum(case             when round(ad_get.meses_entre_datas(f.dtnasc, last_day(dtref)) / 12) > 40 then              1           end) as fx_6  from ad_basefunc_fpw f where dtref between add_months(:dtref, -12) and :dtref   and case         when :an_tipo = 'A' then          trunc(f.dtadmiss, 'fmmm')         when :an_tipo = 'D' then          trunc(f.dtdemiss, 'fmmm')       end = dtref group by dtref, to_char(dtref, 'mm/yy') order by dtref]]></expression>
+            <metadata>
+              <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+              <field name="DTREF_" label="Mês" type="S" visible="true" useFooter="false"/>
+              <field name="FX_1" label="18 a 20" type="I" visible="true" useFooter="false"/>
+              <field name="FX_2" label="21 a 25" type="I" visible="true" useFooter="false"/>
+              <field name="FX_3" label="26 a 30" type="I" visible="true" useFooter="false"/>
+              <field name="FX_4" label="31 a 35" type="I" visible="true" useFooter="false"/>
+              <field name="FX_5" label="35 a 40" type="I" visible="true" useFooter="false"/>
+              <field name="FX_6" label="+40" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <horizontal-axis>
+              <category field="$DTREF" rotation="0" dropLabel="false">
+                <initView value="first"/>
+              </category>
+            </horizontal-axis>
+            <series>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$FX_1</yField>
+                <display><![CDATA[18 a 20]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$FX_2</yField>
+                <display><![CDATA[21 a 25]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$FX_3</yField>
+                <display><![CDATA[26 a 30]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$FX_4</yField>
+                <display><![CDATA[31 a 35]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$FX_5</yField>
+                <display><![CDATA[35 a 40]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$FX_6</yField>
+                <display><![CDATA[+40]]></display>
+              </serie>
+            </series>
+            <legend position="top" direction="v"/>
+          </chart>
+        </container>
+      </container>
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_53ijie" type="line" nroColuna="13">
+            <title><![CDATA[:an_label por Escolaridade no período Todas as Unidades]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select dtref,       to_char(dtref, 'mm/yy') dtref_,       sum(case             when f.grauinstr in (1, 2, 3, 4, 5) then              1           end) as g1,       sum(case             when f.grauinstr in (6, 7, 12, 13) then              1           end) as g2,       sum(case             when f.grauinstr in (8, 9, 10, 11, 14, 15) then              1           end) as g3  from ad_basefunc_fpw f where dtref between add_months(:an_dtref, -12) and :an_dtref   and case         when :an_tipo = 'A' then          trunc(f.dtadmiss, 'fmmm')         when :an_tipo = 'D' then          trunc(f.dtdemiss, 'fmmm')       end = dtref group by dtref, to_char(dtref, 'mm/yy') order by dtref]]></expression>
+            <metadata>
+              <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+              <field name="DTREF_" label="DTREF_" type="S" visible="true" useFooter="false"/>
+              <field name="G1" label="Fund" type="I" visible="true" useFooter="false"/>
+              <field name="G2" label="Médio" type="I" visible="true" useFooter="false"/>
+              <field name="G3" label="Superior" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <horizontal-axis>
+              <category field="$DTREF_" rotation="0" dropLabel="false">
+                <initView value="first"/>
+              </category>
+            </horizontal-axis>
+            <series>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$G1</yField>
+                <display><![CDATA[Fund]]></display>
+                <color>0xff0000</color>
+                <on-click navigate-to="lvl_53ijjo">
+                  <param id="am_label">:an_label</param>
+                  <param id="am_dtref">:an_dtref</param>
+                  <param id="am_tipo">:an_tipo</param>
+                </on-click>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$G2</yField>
+                <display><![CDATA[Médio]]></display>
+                <color>0xff66</color>
+                <on-click navigate-to="lvl_53ijjo">
+                  <param id="am_label">:an_label</param>
+                  <param id="am_dtref">:an_dtref</param>
+                  <param id="am_tipo">:an_tipo</param>
+                </on-click>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$G3</yField>
+                <display><![CDATA[Superior]]></display>
+                <color>0x66ff</color>
+                <on-click navigate-to="lvl_53ijjo">
+                  <param id="am_label">:an_label</param>
+                  <param id="am_dtref">:an_dtref</param>
+                  <param id="am_tipo">:an_tipo</param>
+                </on-click>
+              </serie>
+            </series>
+            <legend position="top" direction="v"/>
+          </chart>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_53ijiz" type="line" nroColuna="13">
+            <title><![CDATA[:an_label por Estado - Todas as Unidades]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select dtref,       to_char(dtref, 'mm/yy') dtref_,       sum(case             when f.uf = 'GO' then              1           end) as go,       sum(case             when f.uf = 'PA' then              1           end) as pa,       sum(case             when f.uf = 'MA' then              1           end) as ma,       sum(case             when f.uf = 'MG' then              1           end) as mg,       sum(case             when f.uf = 'DF' then              1           end) as df,       sum(case             when f.uf = 'SP' then              1           end) as sp  from ad_basefunc_fpw f where dtref between add_months(:dtref, -12) and :dtref   and case         when :an_tipo = 'A' then          trunc(f.dtadmiss, 'fmmm')         when :an_tipo = 'D' then          trunc(f.dtdemiss, 'fmmm')       end = dtref group by dtref, to_char(dtref, 'mm/yy') order by dtref]]></expression>
+            <metadata>
+              <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+              <field name="DTREF_" label="Mês" type="S" visible="true" useFooter="false"/>
+              <field name="GO" label="GO" type="I" visible="true" useFooter="false"/>
+              <field name="PA" label="PA" type="I" visible="true" useFooter="false"/>
+              <field name="MA" label="MA" type="I" visible="true" useFooter="false"/>
+              <field name="MG" label="MG" type="I" visible="true" useFooter="false"/>
+              <field name="DF" label="DF" type="I" visible="true" useFooter="false"/>
+              <field name="SP" label="SP" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <horizontal-axis>
+              <category field="$DTREF_" rotation="0" dropLabel="false">
+                <initView value="first"/>
+              </category>
+            </horizontal-axis>
+            <series>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$GO</yField>
+                <display><![CDATA[GO]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$PA</yField>
+                <display><![CDATA[PA]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$MA</yField>
+                <display><![CDATA[MA]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$MG</yField>
+                <display><![CDATA[MG]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$DF</yField>
+                <display><![CDATA[DF]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$SP</yField>
+                <display><![CDATA[SP]]></display>
+              </serie>
+            </series>
+            <legend position="top" direction="v"/>
+          </chart>
+        </container>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_53ijjo" description="AnaliseMes">
+    <args>
+      <arg id="am_label" type="text"/>
+      <arg id="am_dtref" type="date"/>
+      <arg id="am_tipo" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_6ce3hc" type="column" nroColuna="6">
+            <title><![CDATA[:am_label por Sexo no mês :am_dtref]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select  dtref, to_char(dtref,'mm/yy') dtref_ ,       sum(case             when f.sexo = 'M' then              1           end) homem,       sum(case             when f.sexo = 'F' then              1           end) mulher, :am_tipo as tipo  from ad_basefunc_fpw f where dtref = :am_dtref  and CASE 	when :am_tipo = 'A' then        trunc(f.dtadmiss, 'fmmm')  	when :am_tipo = 'D' then 	  trunc(f.dtdemiss, 'fmmm')     when :am_tipo in ('T', 'TA') then       dtref 	end = dtrefand case         when :am_tipo in ('A', 'D', 'T') then          0         when :am_tipo = 'TA' then          case            when exists (select 1                    from ad_prhsit s                   where s.codsit = f.codsit                     and s.gruporel = 'A'                     and subgruporel = 'AF') then             1            else             0          end       end != 1 group by dtref, to_char(dtref,'mm/yy')  order by dtref]]></expression>
+            <metadata>
+              <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+              <field name="DTREF_" label="Mês" type="S" visible="true" useFooter="false"/>
+              <field name="HOMEM" label="Homem" type="I" visible="true" useFooter="false"/>
+              <field name="MULHER" label="Mulher" type="I" visible="true" useFooter="false"/>
+              <field name="TIPO" label="TIPO" type="S" visible="true" useFooter="false"/>
+            </metadata>
+            <horizontal-axis>
+              <category field="$DTREF_" rotation="0" dropLabel="false">
+                <initView value="first"/>
+              </category>
+            </horizontal-axis>
+            <vertical-axis>
+              <linear resultRotation="-90" vResizing="false">
+                <mask/>
+                <showStackLabels/>
+              </linear>
+            </vertical-axis>
+            <series>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$HOMEM</yField>
+                <display><![CDATA[Homens]]></display>
+                <color>0x66ff</color>
+                <on-click navigate-to="lvl_53ijjp">
+                  <param id="anl_idade"/>
+                  <param id="anl_sexo">M</param>
+                  <param id="anl_uf"/>
+                  <param id="anl_escola"/>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_label">:am_label</param>
+                </on-click>
+              </serie>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$MULHER</yField>
+                <display><![CDATA[Mulheres]]></display>
+                <color>0xff33ff</color>
+                <on-click navigate-to="lvl_53ijjp">
+                  <param id="anl_idade"/>
+                  <param id="anl_sexo">F</param>
+                  <param id="anl_uf"/>
+                  <param id="anl_escola"/>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_label">:am_label</param>
+                </on-click>
+              </serie>
+            </series>
+          </chart>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_99fkow" type="column">
+            <title><![CDATA[:am_label por Idade no mês :am_dtref]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select f.dtref, to_char(dtref, 'mm/yy') dtref_,       sum(case             when round(ad_get.meses_entre_datas(f.dtnasc, :am_dtref) / 12) between 18 and 20 then              1             else              0           end) fx_1,       sum(case             when round(ad_get.meses_entre_datas(f.dtnasc, :am_dtref) / 12) between 21 and 25 then              1             else              0           end) fx_2,       sum(case             when round(ad_get.meses_entre_datas(f.dtnasc, :am_dtref) / 12) between 26 and 30 then              1             else              0           end) fx_3,       sum(case             when round(ad_get.meses_entre_datas(f.dtnasc, :am_dtref) / 12) between 31 and 35 then              1             else              0           end) fx_4,       sum(case             when round(ad_get.meses_entre_datas(f.dtnasc, :am_dtref) / 12) between 36 and 40 then              1             else              0           end) fx_5,       sum(case             when round(ad_get.meses_entre_datas(f.dtnasc, :am_dtref) / 12) > 40 then              1             else              0           end) fx_6, :am_tipo as tipo  from ad_basefunc_fpw f where f.dtref = :am_dtref   and case         when :am_tipo = 'A' then          trunc(f.dtadmiss, 'fmmm')         when :am_tipo = 'D' then          trunc(f.dtdemiss, 'fmmm')         when :am_tipo in ('T', 'TA') then          dtref       end = dtref   and case         when :am_tipo in ('A', 'D', 'T') then          0         when :am_tipo = 'TA' then          case            when exists (select 1                    from ad_prhsit s                   where s.codsit = f.codsit                     and s.gruporel = 'A'                     and subgruporel = 'AF') then             1            else             0          end       end != 1 group by f.dtref, to_char(dtref, 'mm/yy') order by dtref]]></expression>
+            <metadata>
+              <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+              <field name="DTREF_" label="Mês" type="S" visible="true" useFooter="false"/>
+              <field name="FX_1" label="18 a 20" type="I" visible="true" useFooter="false"/>
+              <field name="FX_2" label="21 a 25" type="I" visible="true" useFooter="false"/>
+              <field name="FX_3" label="26 a 30" type="I" visible="true" useFooter="false"/>
+              <field name="FX_4" label="31 a 35" type="I" visible="true" useFooter="false"/>
+              <field name="FX_5" label="36 a 40" type="I" visible="true" useFooter="false"/>
+              <field name="FX_6" label="+40" type="I" visible="true" useFooter="false"/>
+              <field name="TIPO" label="TIPO" type="S" visible="true" useFooter="false"/>
+            </metadata>
+            <series>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$FX_1</yField>
+                <display><![CDATA[18 a 20]]></display>
+                <on-click navigate-to="lvl_53ijjp">
+                  <param id="anl_idade">1</param>
+                  <param id="anl_sexo"/>
+                  <param id="anl_uf"/>
+                  <param id="anl_escola"/>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_label">:am_label</param>
+                </on-click>
+              </serie>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$FX_2</yField>
+                <display><![CDATA[21 a 25]]></display>
+                <on-click navigate-to="lvl_53ijjp">
+                  <param id="anl_idade">2</param>
+                  <param id="anl_sexo"/>
+                  <param id="anl_uf"/>
+                  <param id="anl_escola"/>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_label">:am_label</param>
+                </on-click>
+              </serie>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$FX_3</yField>
+                <display><![CDATA[26 a 30]]></display>
+                <on-click navigate-to="lvl_53ijjp">
+                  <param id="anl_idade">3</param>
+                  <param id="anl_sexo"/>
+                  <param id="anl_uf"/>
+                  <param id="anl_escola"/>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_label">:am_label</param>
+                </on-click>
+              </serie>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$FX_4</yField>
+                <display><![CDATA[31 a 35]]></display>
+                <on-click navigate-to="lvl_53ijjp">
+                  <param id="anl_idade">4</param>
+                  <param id="anl_sexo"/>
+                  <param id="anl_uf"/>
+                  <param id="anl_escola"/>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_label">:am_label</param>
+                </on-click>
+              </serie>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$FX_5</yField>
+                <display><![CDATA[36 a 40]]></display>
+                <on-click navigate-to="lvl_53ijjp">
+                  <param id="anl_idade">5</param>
+                  <param id="anl_sexo"/>
+                  <param id="anl_uf"/>
+                  <param id="anl_escola"/>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_label">:am_label</param>
+                </on-click>
+              </serie>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$FX_6</yField>
+                <display><![CDATA[+40]]></display>
+                <on-click navigate-to="lvl_53ijjp">
+                  <param id="anl_idade">6</param>
+                  <param id="anl_sexo"/>
+                  <param id="anl_uf"/>
+                  <param id="anl_escola"/>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_label">:am_label</param>
+                </on-click>
+              </serie>
+            </series>
+            <legend position="top" direction="v"/>
+          </chart>
+        </container>
+      </container>
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_99fkp7" type="column" nroColuna="6">
+            <title><![CDATA[:am_label por Escolaridade no mês :am_dtref]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select dtref,       to_char(dtref, 'mm/yy') dtref_,       sum(case             when f.grauinstr in (1, 2, 3, 4, 5) then              1           end) as g1,       sum(case             when f.grauinstr in (6, 7, 12, 13) then              1           end) as g2,       sum(case             when f.grauinstr in (8, 9, 10, 11, 14, 15) then              1           end) as g3,     :am_tipo as tipo  from ad_basefunc_fpw f where dtref = :am_dtref  and CASE 	when :am_tipo = 'A' then        trunc(f.dtadmiss, 'fmmm')  	when :am_tipo = 'D' then 	  trunc(f.dtdemiss, 'fmmm')     when :am_tipo in ('T', 'TA') then       dtref 	end = dtrefand case         when :am_tipo in ('A', 'D', 'T') then          0         when :am_tipo = 'TA' then          case            when exists (select 1                    from ad_prhsit s                   where s.codsit = f.codsit                     and s.gruporel = 'A'                     and subgruporel = 'AF') then             1            else             0          end       end != 1 group by dtref, to_char(dtref, 'mm/yy') order by dtref]]></expression>
+            <metadata>
+              <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+              <field name="DTREF_" label="Mês" type="S" visible="true" useFooter="false"/>
+              <field name="G1" label="Fund." type="I" visible="true" useFooter="false"/>
+              <field name="G2" label="Médio" type="I" visible="true" useFooter="false"/>
+              <field name="G3" label="Superior" type="I" visible="true" useFooter="false"/>
+              <field name="TIPO" label="TIPO" type="S" visible="true" useFooter="false"/>
+            </metadata>
+            <horizontal-axis>
+              <category field="DTREF_" rotation="0" dropLabel="false">
+                <initView value="first"/>
+              </category>
+            </horizontal-axis>
+            <series>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$G1</yField>
+                <display><![CDATA[Fund.]]></display>
+                <on-click navigate-to="lvl_53ijjp">
+                  <param id="anl_idade"/>
+                  <param id="anl_sexo"/>
+                  <param id="anl_uf"/>
+                  <param id="anl_escola">1</param>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_label">:am_label</param>
+                </on-click>
+              </serie>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$G2</yField>
+                <display><![CDATA[Médio]]></display>
+                <on-click navigate-to="lvl_53ijjp">
+                  <param id="anl_idade"/>
+                  <param id="anl_sexo"/>
+                  <param id="anl_uf"/>
+                  <param id="anl_escola">2</param>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_label">:am_label</param>
+                </on-click>
+              </serie>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$G3</yField>
+                <display><![CDATA[Superior]]></display>
+                <on-click navigate-to="lvl_53ijjp">
+                  <param id="anl_idade"/>
+                  <param id="anl_sexo"/>
+                  <param id="anl_uf"/>
+                  <param id="anl_escola">3</param>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_label">:am_label</param>
+                </on-click>
+              </serie>
+            </series>
+            <legend position="top" direction="v"/>
+          </chart>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <geochart id="gch_99fkqw">
+            <title><![CDATA[:am_label por Estado no mês :am_dtref]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select dtref,       to_char(dtref, 'mm/yy') dtref_, :am_tipo as tipo,	  f.uf,       count(*) qtd  from ad_basefunc_fpw f where dtref = :am_dtref  and CASE 	when :am_tipo = 'A' then        trunc(f.dtadmiss, 'fmmm')  	when :am_tipo = 'D' then 	  trunc(f.dtdemiss, 'fmmm')     when :am_tipo in ('T', 'TA') then       dtref 	end = dtrefand case         when :am_tipo in ('A', 'D', 'T') then          0         when :am_tipo = 'TA' then          case            when exists (select 1                    from ad_prhsit s                   where s.codsit = f.codsit                     and s.gruporel = 'A'                     and subgruporel = 'AF') then             1            else             0          end       end != 1 group by dtref, to_char(dtref, 'mm/yy'), f.uf order by dtref, to_char(dtref, 'mm/yy'), f.uf]]></expression>
+            <metadata>
+              <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+              <field name="DTREF_" label="Mês" type="S" visible="true" useFooter="false"/>
+              <field name="TIPO" label="TIPO" type="S" visible="true" useFooter="false"/>
+              <field name="UF" label="UF" type="S" visible="true" useFooter="false"/>
+              <field name="QTD" label="Qtd" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <country>BR</country>
+            <legend show="false" colors="#FF0400,#00A300"/>
+            <region-marker>
+              <name>$UF</name>
+              <value>$QTD</value>
+              <on-click navigate-to="lvl_53ijjp">
+                <param id="anl_idade"/>
+                <param id="anl_sexo"/>
+                <param id="anl_uf">$UF</param>
+                <param id="anl_escola"/>
+                <param id="anl_dtref">$DTREF</param>
+                <param id="anl_tipo">$TIPO</param>
+                <param id="anl_label">:am_label</param>
+              </on-click>
+            </region-marker>
+          </geochart>
+        </container>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_53ijjp" description="Analitico">
+    <args>
+      <arg id="anl_idade" type="integer" order="2"/>
+      <arg id="anl_sexo" type="text" order="3"/>
+      <arg id="anl_uf" type="text" order="4"/>
+      <arg id="anl_escola" type="integer" order="5"/>
+      <arg id="anl_dtref" type="date" order="6"/>
+      <arg id="anl_tipo" type="text"/>
+      <arg id="anl_label" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_53ijjq" useNewGrid="S">
+        <title><![CDATA[:am_label em :am_dtref]]></title>
+        <expression type="sql" data-source="MGEDS"><![CDATA[select f.*,  Round(ad_get.meses_entre_datas(f.dtnasc, :anl_dtref) / 12) idade, ad_pkg_func.get_descrformacao_func(f.codemp, f.matfunc, :anl_dtref) formacao  from ad_basefunc_fpw f where dtref = :anl_dtref  and CASE 	when :am_tipo = 'A' then        trunc(f.dtadmiss, 'fmmm')  	when :am_tipo = 'D' then 	  trunc(f.dtdemiss, 'fmmm')     when :am_tipo in ('T', 'TA') then       dtref 	end = dtref and (f.sexo = :anl_sexo or nvl(:anl_sexo,'0') = '0')  and  (case     when Round(ad_get.meses_entre_datas(f.dtnasc, :anl_dtref) / 12) between 18 and 20 then 1    when Round(ad_get.meses_entre_datas(f.dtnasc, :anl_dtref) / 12) between 21 and 25 then 2    when Round(ad_get.meses_entre_datas(f.dtnasc, :anl_dtref) / 12) between 26 and 30 then 3    when Round(ad_get.meses_entre_datas(f.dtnasc, :anl_dtref) / 12) between 31 and 35 then 4    when Round(ad_get.meses_entre_datas(f.dtnasc, :anl_dtref) / 12) between 36 and 40 then 5    when Round(ad_get.meses_entre_datas(f.dtnasc, :anl_dtref) / 12) > 40 then 6     end = :anl_idade or nvl(:anl_idade,0) = 0 ) and ( Case 	When grauinstr  In (1, 2, 3, 4, 5) Then 1	When grauinstr in (6, 7, 12, 13) Then 2	When grauinstr In (8, 9, 10, 11, 14, 15) Then 3	End = :anl_escola or nvl(:anl_escola, 0) = 0 ) and (uf = :anl_uf or nvl(:anl_uf, '0') = '0' )and case         when :am_tipo in ('A', 'D', 'T') then          0         when :am_tipo = 'TA' then          case            when exists (select 1                    from ad_prhsit s                   where s.codsit = f.codsit                     and s.gruporel = 'A'                     and subgruporel = 'AF') then             1            else             0          end       end != 1 order by dtref]]></expression>
+        <metadata>
+          <field name="DTREF" label="Referência" type="D" visible="false" useFooter="false"/>
+          <field name="CODEMP" label="Empresa" type="I" visible="true" useFooter="false"/>
+          <field name="MATFUNC" label="Matrícula" type="I" visible="true" useFooter="false"/>
+          <field name="NOMEFUNC" label="Nome" type="S" visible="true" useFooter="false"/>
+          <field name="SEXO" label="Sexo" type="S" visible="true" useFooter="false"/>
+          <field name="DTNASC" label="Dt. Nasc." type="D" visible="true" useFooter="false"/>
+          <field name="CODSIT" label="Cód Sit" type="I" visible="true" useFooter="false"/>
+          <field name="DESCRSIT" label="Situação" type="S" visible="true" useFooter="false"/>
+          <field name="CIDADE" label="Cidade" type="S" visible="true" useFooter="false"/>
+          <field name="UF" label="UF" type="S" visible="true" useFooter="false"/>
+          <field name="DTADMISS" label="Dt. Adm" type="D" visible="true" useFooter="false"/>
+          <field name="DTDEMISS" label="Dt. Dem" type="D" visible="true" useFooter="false"/>
+          <field name="DTINISIT" label="Dt. inicio Sit" type="D" visible="true" useFooter="false"/>
+          <field name="DIVISAO" label="Divisão" type="F" visible="true" useFooter="false"/>
+          <field name="LODESCLOT" label="Lotação" type="S" visible="true" useFooter="false"/>
+          <field name="SETOR" label="Setor" type="F" visible="false" useFooter="false"/>
+          <field name="DEPTO" label="depto" type="F" visible="false" useFooter="false"/>
+          <field name="UNIDADE" label="Unidade" type="F" visible="true" useFooter="false"/>
+          <field name="GRAUINSTR" label="GRAUINSTR" type="I" visible="false" useFooter="false"/>
+          <field name="ESCOLARIDADE" label="Escolaridade" type="S" visible="true" useFooter="false"/>
+          <field name="CARGO" label="codcargo" type="I" visible="false" useFooter="false"/>
+          <field name="DESCRCARGO" label="Cargo" type="S" visible="true" useFooter="false"/>
+          <field name="IDADE" label="Idade" type="I" visible="true" useFooter="false"/>
+          <field name="FORMACAO" label="formação" type="S" visible="true" useFooter="false"/>
+        </metadata>
+      </grid>
+    </container>
+  </level>
+  <level id="lvl_6ce3ja" description="Unidades">
+    <args>
+      <arg id="l_codlot" type="integer"/>
+      <arg id="l_grau" type="integer"/>
+      <arg id="l_dtref" type="date"/>
+      <arg id="l_proxgrau" type="integer"/>
+      <arg id="l_descrlot" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="1025">
+        <chart id="cht_6ce3jb" type="pizza">
+          <args>
+            <arg id="l_dtref" type="date"/>
+            <arg id="l_grau" type="integer"/>
+            <arg id="l_codlot" type="integer"/>
+            <arg id="l_proxgrau" type="integer"/>
+          </args>
+          <title><![CDATA[Total de Colaboradores da Unidade :l_descrlot em :l_dtref]]></title>
+          <expression type="sql" data-source="MGEDS"><![CDATA[select dtref_, dtref, t.codlot, initcap(replace(l.lodesclot, 'SSA - ', '')) descrlot, r.grau,r.grau + 1 proxnvl, sum(qtd ) qtd from (select to_char(dtref, 'mm/yy') dtref_,       dtref,       f.codemp,       case when nvl(:l_proxgrau,0) in (0,1) then f.unidade       when :l_proxgrau = 2 then f.depto       when :l_proxgrau = 3 then f.setor       when :l_proxgrau = 4 then f.divisao        end codlot,        1 qtd  from ad_basefunc_fpw f where dtref = :l_dtref   and (case 	when nvl(:l_grau,0) in (0,1) then f.unidade     when :l_grau = 2 then f.unidade      when :l_grau = 3 then f.depto     when :l_grau = 4 then f.setor /*f.divisao */     end = :l_codlot or nvl(:l_codlot, 0) = 0)) t left join FPWPOWER.lotacoes l on l.locodemp = t.codemp and l.locodlot = t.codlot left join fpw_lotacoes_rel r on r.codemp = 1 and r.codlot = t.codlot group by dtref_, dtref, t.codlot, r.grau, r.grau + 1, initcap(replace(l.lodesclot, 'SSA - ', '')) ]]></expression>
+          <metadata>
+            <field name="DTREF_" label="DTREF_" type="S" visible="true" useFooter="false"/>
+            <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+            <field name="CODLOT" label="CODLOT" type="I" visible="true" useFooter="false"/>
+            <field name="DESCRLOT" label="DESCRLOT" type="S" visible="true" useFooter="false"/>
+            <field name="GRAU" label="GRAU" type="I" visible="true" useFooter="false"/>
+            <field name="PROXNVL" label="PROXNVL" type="I" visible="true" useFooter="false"/>
+            <field name="QTD" label="QTD" type="I" visible="true" useFooter="false"/>
+          </metadata>
+          <series>
+            <serie type="pizza">
+              <field>$QTD</field>
+              <nameField>$DESCRLOT</nameField>
+              <refresh-details ui-list="svl_6ce3lk,svl_6ce3ll">
+                <param id="l_dtref">$DTREF</param>
+                <param id="l_grau">$GRAU</param>
+                <param id="l_codlot">$CODLOT</param>
+                <param id="l_proxgrau">$PROXNVL</param>
+                <param id="l_descrlot">$DESCRLOT</param>
+              </refresh-details>
+            </serie>
+          </series>
+        </chart>
+      </container>
+      <container orientacao="H" tamanhoRelativo="100">
+        <container orientacao="H" tamanhoRelativo="50">
+          <container orientacao="V" tamanhoRelativo="16"/>
+          <container orientacao="V" tamanhoRelativo="16"/>
+          <container orientacao="V" tamanhoRelativo="16">
+            <simple-value id="svl_6ce3lk">
+              <args>
+                <arg id="l_dtref" type="date"/>
+                <arg id="l_grau" type="integer"/>
+                <arg id="l_codlot" type="integer"/>
+                <arg id="l_proxgrau" type="integer"/>
+                <arg id="l_descrlot" type="text"/>
+              </args>
+              <value-expression><![CDATA[<div align="center"><button type="button">Análises</button></div>]]></value-expression>
+              <on-click navigate-to="lvl_99fkjr">
+                <param id="l_grau">:l_grau</param>
+                <param id="l_codlot">:l_codlot</param>
+                <param id="l_dtref">:l_dtref</param>
+                <param id="l_descrlot">:l_descrlot</param>
+                <param id="l_tipo"/>
+                <param id="l_label"/>
+              </on-click>
+            </simple-value>
+          </container>
+          <container orientacao="V" tamanhoRelativo="16">
+            <simple-value id="svl_6ce3ll">
+              <args>
+                <arg id="l_dtref" type="date"/>
+                <arg id="l_grau" type="integer"/>
+                <arg id="l_codlot" type="integer"/>
+                <arg id="l_proxgrau" type="integer"/>
+                <arg id="l_descrlot" type="text"/>
+              </args>
+              <value-expression><![CDATA[<div align="center"><button type="button">Próx Nível</button></div>]]></value-expression>
+              <on-click navigate-to="lvl_9a7rxm">
+                <param id="l_dtref">:l_dtref</param>
+                <param id="l_codlot">:l_codlot</param>
+                <param id="l_grau">:l_grau</param>
+                <param id="l_proxgrau">:l_proxgrau</param>
+              </on-click>
+            </simple-value>
+          </container>
+          <container orientacao="V" tamanhoRelativo="16"/>
+          <container orientacao="V" tamanhoRelativo="16"/>
+        </container>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_9a7rxm" description="Depto">
+    <args>
+      <arg id="l_grau" type="integer"/>
+      <arg id="l_codlot" type="integer"/>
+      <arg id="l_dtref" type="date"/>
+      <arg id="l_proxgrau" type="integer"/>
+      <arg id="l_descrlot" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="1277">
+        <chart id="cht_9a7rxn" type="pizza">
+          <title><![CDATA[Depto - :l_descrlot em :dtref]]></title>
+          <expression type="sql" data-source="MGEDS"><![CDATA[select dtref_, dtref, t.codlot, initcap(replace(l.lodesclot, 'SSA - ', '')) descrlot, r.grau,r.grau + 1 proxnvl, sum(qtd ) qtd from (select to_char(dtref, 'mm/yy') dtref_,       dtref,       f.codemp,       case when nvl(:l_proxgrau,0) in (0,1) then f.unidade       when :l_proxgrau = 2 then f.depto       when :l_proxgrau = 3 then f.setor       when :l_proxgrau = 4 then f.divisao        end codlot,        1 qtd  from ad_basefunc_fpw f where dtref = :l_dtref   and (case 	when :l_grau = 1 then f.unidade     when :l_grau = 2 then f.depto     when :l_grau = 3 then f.setor     when :l_grau = 4 then f.divisao     end = :l_codlot or nvl(:l_codlot, 0) = 0)) t left join FPWPOWER.lotacoes l on l.locodemp = t.codemp and l.locodlot = t.codlot left join fpw_lotacoes_rel r on r.codemp = 1 and r.codlot = t.codlot group by dtref_, dtref, t.codlot, r.grau, r.grau + 1, initcap(replace(l.lodesclot, 'SSA - ', '')) ]]></expression>
+          <metadata>
+            <field name="DTREF_" label="DTREF_" type="S" visible="true" useFooter="false"/>
+            <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+            <field name="CODLOT" label="CODLOT" type="I" visible="true" useFooter="false"/>
+            <field name="DESCRLOT" label="DESCRLOT" type="S" visible="true" useFooter="false"/>
+            <field name="GRAU" label="GRAU" type="I" visible="true" useFooter="false"/>
+            <field name="PROXNVL" label="PROXNVL" type="I" visible="true" useFooter="false"/>
+            <field name="QTD" label="QTD" type="I" visible="true" useFooter="false"/>
+          </metadata>
+          <series>
+            <serie type="pizza">
+              <field>$QTD</field>
+              <nameField>$DESCRLOT</nameField>
+              <refresh-details ui-list="svl_9a7r0y,svl_9a7r0x">
+                <param id="l_codlot">$CODLOT</param>
+                <param id="l_dtref">$DTREF</param>
+                <param id="l_grau">$GRAU</param>
+                <param id="l_proxgrau">$PROXNVL</param>
+                <param id="l_descrlot">$DESCRLOT</param>
+              </refresh-details>
+            </serie>
+          </series>
+        </chart>
+      </container>
+      <container orientacao="H" tamanhoRelativo="100">
+        <container orientacao="V" tamanhoRelativo="16"/>
+        <container orientacao="V" tamanhoRelativo="16"/>
+        <container orientacao="V" tamanhoRelativo="16">
+          <simple-value id="svl_9a7r0y">
+            <args>
+              <arg id="l_codlot" type="integer"/>
+              <arg id="l_dtref" type="date"/>
+              <arg id="l_grau" type="integer"/>
+              <arg id="l_proxgrau" type="integer"/>
+              <arg id="l_descrlot" type="text"/>
+            </args>
+            <value-expression><![CDATA[<div align="center"><button type="button">Análises</button></div>]]></value-expression>
+            <on-click navigate-to="lvl_99fkjr">
+              <param id="l_grau">:l_grau</param>
+              <param id="l_codlot">:l_codlot</param>
+              <param id="l_dtref">:l_dtref</param>
+              <param id="l_descrlot">:l_descrlot</param>
+              <param id="l_tipo"/>
+              <param id="l_label"/>
+            </on-click>
+          </simple-value>
+        </container>
+        <container orientacao="V" tamanhoRelativo="16">
+          <simple-value id="svl_9a7r0x">
+            <args>
+              <arg id="l_codlot" type="integer"/>
+              <arg id="l_dtref" type="date"/>
+              <arg id="l_grau" type="integer"/>
+              <arg id="l_proxgrau" type="integer"/>
+              <arg id="l_descrlot" type="text"/>
+            </args>
+            <value-expression><![CDATA[<div align="center"><button type="button">Próx. Nível</button></div>]]></value-expression>
+            <on-click navigate-to="lvl_9a7r18">
+              <param id="l_grau">:l_grau</param>
+              <param id="l_codlot">:l_codlot</param>
+              <param id="l_dtref">:l_dtref</param>
+              <param id="l_proxgrau">:l_proxgrau</param>
+              <param id="l_descrlot">:l_descrlot</param>
+            </on-click>
+          </simple-value>
+        </container>
+        <container orientacao="V" tamanhoRelativo="16"/>
+        <container orientacao="V" tamanhoRelativo="16"/>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_9a7r18" description="Setor">
+    <args>
+      <arg id="l_grau" type="integer"/>
+      <arg id="l_codlot" type="integer"/>
+      <arg id="l_dtref" type="date"/>
+      <arg id="l_proxgrau" type="integer"/>
+      <arg id="l_descrlot" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="1006">
+        <chart id="cht_9a7r19" type="pizza">
+          <title><![CDATA[Setor de :l_descrlot em :l_dtref]]></title>
+          <expression type="sql" data-source="MGEDS"><![CDATA[select dtref_, dtref, t.codlot, initcap(replace(l.lodesclot, 'SSA - ', '')) descrlot, r.grau,r.grau + 1 proxnvl, sum(qtd ) qtd from (select to_char(dtref, 'mm/yy') dtref_,       dtref,       f.codemp,       case when nvl(:l_proxgrau,0) in (0,1) then f.unidade       when :l_proxgrau = 2 then f.depto       when :l_proxgrau = 3 then f.setor       when :l_proxgrau = 4 then f.divisao        end codlot,        1 qtd  from ad_basefunc_fpw f where dtref = :l_dtref   and (case 	when nvl(:l_grau,0) in (0,1) then f.unidade     when :l_grau = 2 then depto     when :l_grau = 3 then setor     when :l_grau = 4 then divisao     end = :l_codlot or nvl(:l_codlot, 0) = 0)) t left join FPWPOWER.lotacoes l on l.locodemp = t.codemp and l.locodlot = t.codlot left join fpw_lotacoes_rel r on r.codemp = 1 and r.codlot = t.codlot group by dtref_, dtref, t.codlot, r.grau, r.grau + 1, initcap(replace(l.lodesclot, 'SSA - ', '')) ]]></expression>
+          <metadata>
+            <field name="DTREF_" label="DTREF_" type="S" visible="true" useFooter="false"/>
+            <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+            <field name="CODLOT" label="CODLOT" type="I" visible="true" useFooter="false"/>
+            <field name="DESCRLOT" label="DESCRLOT" type="S" visible="true" useFooter="false"/>
+            <field name="GRAU" label="GRAU" type="I" visible="true" useFooter="false"/>
+            <field name="PROXNVL" label="PROXNVL" type="I" visible="true" useFooter="false"/>
+            <field name="QTD" label="QTD" type="I" visible="true" useFooter="false"/>
+          </metadata>
+          <series>
+            <serie type="pizza">
+              <field>$QTD</field>
+              <nameField>$DESCRLOT</nameField>
+              <refresh-details ui-list="svl_9a7r3r,svl_9a7sha">
+                <param id="l_dtref">$DTREF</param>
+                <param id="l_codlot">$CODLOT</param>
+                <param id="l_grau">$GRAU</param>
+                <param id="l_proxgrau">$PROXNVL</param>
+                <param id="l_descrlot">$DESCRLOT</param>
+              </refresh-details>
+            </serie>
+          </series>
+        </chart>
+      </container>
+      <container orientacao="H" tamanhoRelativo="100">
+        <container orientacao="V" tamanhoRelativo="33"/>
+        <container orientacao="H" tamanhoRelativo="33">
+          <container orientacao="V" tamanhoRelativo="50">
+            <simple-value id="svl_9a7r3r">
+              <args>
+                <arg id="l_dtref" type="date"/>
+                <arg id="l_codlot" type="integer"/>
+                <arg id="l_grau" type="integer"/>
+                <arg id="l_proxgrau" type="integer"/>
+                <arg id="l_descrlot" type="text"/>
+              </args>
+              <value-expression><![CDATA[<div align="center"><button type="button">Análises</button></div>]]></value-expression>
+              <on-click navigate-to="lvl_99fkjr">
+                <param id="l_grau">:l_grau</param>
+                <param id="l_codlot">:l_codlot</param>
+                <param id="l_dtref">:l_dtref</param>
+                <param id="l_descrlot">:l_descrlot</param>
+                <param id="l_tipo"/>
+                <param id="l_label"/>
+              </on-click>
+            </simple-value>
+          </container>
+          <container orientacao="V" tamanhoRelativo="50">
+            <simple-value id="svl_9a7sha">
+              <args>
+                <arg id="l_dtref" type="date"/>
+                <arg id="l_codlot" type="integer"/>
+                <arg id="l_grau" type="integer"/>
+                <arg id="l_proxgrau" type="integer"/>
+                <arg id="l_descrlot" type="text"/>
+              </args>
+              <value-expression><![CDATA[<div align="center"><button type="button">Prox Nível</button></div>]]></value-expression>
+              <on-click navigate-to="lvl_9a7r26">
+                <param id="l_dtref">:l_dtref</param>
+                <param id="l_codlot">:l_codlot</param>
+                <param id="l_grau">:l_grau</param>
+                <param id="l_proxgrau">:l_proxgrau</param>
+                <param id="l_descrlot">:l_descrlot</param>
+              </on-click>
+            </simple-value>
+          </container>
+        </container>
+        <container orientacao="V" tamanhoRelativo="33"/>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_9a7r26" description="Divisao">
+    <args>
+      <arg id="l_grau" type="integer"/>
+      <arg id="l_codlot" type="integer"/>
+      <arg id="l_dtref" type="date"/>
+      <arg id="l_proxgrau" type="integer"/>
+      <arg id="l_descrlot" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="1025">
+        <chart id="cht_9a7r27" type="pizza">
+          <title><![CDATA[Divisao de :l_descrlot em :l_dtref]]></title>
+          <expression type="sql" data-source="MGEDS"><![CDATA[select dtref_, dtref, t.codlot, initcap(replace(l.lodesclot, 'SSA - ', '')) descrlot, r.grau,r.grau + 1 proxnvl, sum(qtd ) qtd from (select to_char(dtref, 'mm/yy') dtref_,       dtref,       f.codemp,       case when nvl(:l_proxgrau,0) in (0,1) then f.unidade       when :l_proxgrau = 2 then f.depto       when :l_proxgrau = 3 then f.setor       when :l_proxgrau = 4 then f.divisao        end codlot,        1 qtd  from ad_basefunc_fpw f where dtref = :l_dtref   and (case 	when nvl(:l_grau,0) in (0,1) then f.unidade     when :l_grau = 2 then f.depto     when :l_grau = 3 then f.setor     when :l_grau= 4 then f.divisao     end = :l_codlot or nvl(:l_codlot, 0) = 0)) t left join FPWPOWER.lotacoes l on l.locodemp = t.codemp and l.locodlot = t.codlot left join fpw_lotacoes_rel r on r.codemp = 1 and r.codlot = t.codlot group by dtref_, dtref, t.codlot, r.grau, r.grau + 1, initcap(replace(l.lodesclot, 'SSA - ', '')) ]]></expression>
+          <metadata>
+            <field name="DTREF_" label="DTREF_" type="S" visible="true" useFooter="false"/>
+            <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+            <field name="CODLOT" label="CODLOT" type="I" visible="true" useFooter="false"/>
+            <field name="DESCRLOT" label="DESCRLOT" type="S" visible="true" useFooter="false"/>
+            <field name="GRAU" label="GRAU" type="I" visible="true" useFooter="false"/>
+            <field name="PROXNVL" label="PROXNVL" type="I" visible="true" useFooter="false"/>
+            <field name="QTD" label="QTD" type="I" visible="true" useFooter="false"/>
+          </metadata>
+          <series>
+            <serie type="pizza">
+              <field>$QTD</field>
+              <nameField>$DESCRLOT</nameField>
+              <refresh-details ui-list="svl_99flar">
+                <param id="l_dtref">$DTREF</param>
+                <param id="l_codlot">$CODLOT</param>
+                <param id="l_descrlot">$DESCRLOT</param>
+                <param id="l_grau">$GRAU</param>
+              </refresh-details>
+            </serie>
+          </series>
+        </chart>
+      </container>
+      <container orientacao="H" tamanhoRelativo="100">
+        <container orientacao="V" tamanhoRelativo="33"/>
+        <container orientacao="V" tamanhoRelativo="33">
+          <simple-value id="svl_99flar">
+            <args>
+              <arg id="l_dtref" type="date"/>
+              <arg id="l_codlot" type="integer"/>
+              <arg id="l_descrlot" type="text"/>
+              <arg id="l_grau" type="integer"/>
+            </args>
+            <value-expression><![CDATA[<div align="center"><button type="button">Análises</button></div>]]></value-expression>
+            <on-click navigate-to="lvl_99fkjr">
+              <param id="l_grau">:l_grau</param>
+              <param id="l_codlot">:l_codlot</param>
+              <param id="l_dtref">:l_dtref</param>
+              <param id="l_descrlot">:l_descrlot</param>
+              <param id="l_tipo"/>
+              <param id="l_label"/>
+            </on-click>
+          </simple-value>
+        </container>
+        <container orientacao="V" tamanhoRelativo="33"/>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_99fkjr" description="PrincipalLot">
+    <args>
+      <arg id="l_grau" type="integer"/>
+      <arg id="l_codlot" type="integer"/>
+      <arg id="l_dtref" type="date"/>
+      <arg id="l_descrlot" type="text"/>
+      <arg id="l_tipo" type="text"/>
+      <arg id="l_label" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="343">
+        <chart id="cht_99fkjt" type="line" nroColuna="13">
+          <title><![CDATA[Total de Ativos  de <span style="color: red;">:l_descrlot</span>]]></title>
+          <expression type="sql" data-source="MGEDS"><![CDATA[select dtref dtref_, to_char(dtref, 'mm/yy') dtref, count(*) ativos,sum(case            when exists (select 1                     from ad_prhsit s                    where f.codsit = s.codsit                      and s.nuprh = 1                      and s.gruporel = 'A'                      and s.subgruporel = 'AF') then              1             else              0           end) as afastados from ad_basefunc_fpw f where dtref between add_months(:l_dtref, -12) and :l_dtref  and case  when :l_grau = 1 then f.unidade when :l_grau = 2 then f.depto when :l_grau = 3 then f.setor when :l_grau = 4 then nvl(f.divisao, f.setor)  else    0 end = nvl(:l_codlot , 0)group by dtrefORDER BY F.DTREF]]></expression>
+          <metadata>
+            <field name="DTREF_" label="DTREF_" type="D" visible="true" useFooter="false"/>
+            <field name="DTREF" label="Dt. Ref." type="S" visible="true" useFooter="false"/>
+            <field name="ATIVOS" label="Ativos" type="I" visible="true" useFooter="false"/>
+            <field name="AFASTADOS" label="Afastados" type="I" visible="true" useFooter="false"/>
+            <field name="ativosliq" label="Ativos Reais" type="I" visible="true" useFooter="false">
+              <calculated>
+                <formula><![CDATA[$ATIVOS - $AFASTADOS]]></formula>
+              </calculated>
+            </field>
+          </metadata>
+          <horizontal-axis>
+            <category field="$DTREF" rotation="0" dropLabel="false">
+              <initView value="first"/>
+            </category>
+          </horizontal-axis>
+          <vertical-axis>
+            <linear resultRotation="0" vResizing="false">
+              <mask/>
+            </linear>
+          </vertical-axis>
+          <series>
+            <serie type="line" circle-intersection="true">
+              <xField>$DTREF</xField>
+              <yField>$ATIVOS</yField>
+              <display><![CDATA[Ativos]]></display>
+              <color>0x33ff</color>
+              <on-click navigate-to="lvl_99fk50">
+                <param id="l_dtref">$DTREF_</param>
+                <param id="l_codlot">:l_codlot</param>
+                <param id="l_grau">:l_grau</param>
+                <param id="l_descrlot">:l_descrlot</param>
+                <param id="l_tipo">T</param>
+                <param id="l_label">Ativos</param>
+              </on-click>
+            </serie>
+            <serie type="line" circle-intersection="true">
+              <xField>$DTREF</xField>
+              <yField>$ativosliq</yField>
+              <display><![CDATA[Ativos Reais]]></display>
+              <color>0xcccc</color>
+              <on-click navigate-to="lvl_99fk50">
+                <param id="l_dtref">$DTREF_</param>
+                <param id="l_codlot">:l_codlot</param>
+                <param id="l_grau">:l_grau</param>
+                <param id="l_descrlot">:l_descrlot</param>
+                <param id="l_tipo">TA</param>
+                <param id="l_label">Ativos - Afast</param>
+              </on-click>
+            </serie>
+          </series>
+          <legend position="top" direction="v"/>
+        </chart>
+      </container>
+      <container orientacao="V" tamanhoRelativo="580">
+        <chart id="cht_99fkjv" type="line" nroColuna="13">
+          <title><![CDATA[Contratações - Demissões - Afastamentos - Aposentadorias - <span style="color: red";>:l_descrlot </span>]]></title>
+          <expression type="sql" data-source="MGEDS"><![CDATA[select  dtref, to_char(dtref,'mm/yy') dtref_ ,       sum(case when trunc(f.dtadmiss, 'fmmm') = dtref then 1 end) adm,       sum(case when trunc(f.dtdemiss, 'fmmm') = dtref then 1 end) dem,       sum(case when exists (select 1 from ad_prhsit s where s.nuprh = 1                      and s.codsit = f.codsit and s.gruporel = 'A'                      and s.subgruporel = 'AF') then 1 end) afast,       sum(case when exists (select 1 from ad_prhsit s                    where s.nuprh = 1                      and s.codsit = f.codsit                      and s.gruporel = 'A'                      and s.subgruporel = 'AP') then 1 end) apos  from ad_basefunc_fpw f where dtref between add_months(:dtref, -12) and :dtref  and (case 	when :l_grau = 1 then unidade 	when :l_grau = 2 then depto 	when :l_grau = 3 then setor 	when :l_grau = 4 then divisao 	else 0	end = :l_codlot or nvl(:l_codlot, 0) = 0) group by dtref order by dtref]]></expression>
+          <metadata>
+            <field name="DTREF" label="Dt. Ref" type="D" visible="true" useFooter="false"/>
+            <field name="DTREF_" label="Dt. Ref" type="S" visible="true" useFooter="false"/>
+            <field name="ADM" label="Admitidos" type="I" visible="true" useFooter="false"/>
+            <field name="DEM" label="Demitidos" type="I" visible="true" useFooter="false"/>
+            <field name="AFAST" label="Afastados" type="I" visible="true" useFooter="false"/>
+            <field name="APOS" label="Aposentados" type="I" visible="true" useFooter="false"/>
+          </metadata>
+          <horizontal-axis>
+            <category field="$DTREF_" rotation="0" dropLabel="false">
+              <initView value="disabled"/>
+            </category>
+          </horizontal-axis>
+          <vertical-axis>
+            <linear resultRotation="0" vResizing="false">
+              <mask/>
+            </linear>
+          </vertical-axis>
+          <series>
+            <serie type="line" circle-intersection="true">
+              <xField>$DTREF_</xField>
+              <yField>$ADM</yField>
+              <display><![CDATA[Admitidos]]></display>
+              <color>0x66ff</color>
+              <on-click navigate-to="lvl_99fk1c">
+                <param id="l_grau">:l_grau</param>
+                <param id="l_codlot">:l_codlot</param>
+                <param id="l_dtref">$DTREF</param>
+                <param id="l_descrlot">:l_descrlot</param>
+                <param id="l_tipo">A</param>
+                <param id="l_label">Admissões</param>
+              </on-click>
+            </serie>
+            <serie type="line" circle-intersection="true">
+              <xField>$DTREF_</xField>
+              <yField>$DEM</yField>
+              <display><![CDATA[Demitidos]]></display>
+              <color>0xff0000</color>
+              <on-click navigate-to="lvl_99fk1c">
+                <param id="l_grau">:l_grau</param>
+                <param id="l_codlot">:l_codlot</param>
+                <param id="l_dtref">:l_dtref</param>
+                <param id="l_descrlot">:l_descrlot</param>
+                <param id="l_tipo">D</param>
+                <param id="l_label">Demissões</param>
+              </on-click>
+            </serie>
+            <serie type="line" circle-intersection="true">
+              <xField>$DTREF_</xField>
+              <yField>$AFAST</yField>
+              <display><![CDATA[Afastados]]></display>
+              <color>0xcccc</color>
+            </serie>
+            <serie type="line" circle-intersection="true">
+              <xField>$DTREF_</xField>
+              <yField>$APOS</yField>
+              <display><![CDATA[Aposent.]]></display>
+              <color>0x9933ff</color>
+            </serie>
+          </series>
+          <legend position="top" direction="v"/>
+        </chart>
+      </container>
+      <container orientacao="H" tamanhoRelativo="100">
+        <container orientacao="V" tamanhoRelativo="33"/>
+        <container orientacao="V" tamanhoRelativo="33">
+          <simple-value id="svl_99fkjz">
+            <value-expression><![CDATA[<div align="center"><button type="button">Análise por Lotações</button></div>]]></value-expression>
+            <on-click navigate-to="lvl_6ce3ja">
+              <param id="l_dtref">:dtref</param>
+              <param id="l_grau">1</param>
+              <param id="l_codlot"/>
+              <param id="l_proxgrau">1</param>
+            </on-click>
+          </simple-value>
+        </container>
+        <container orientacao="V" tamanhoRelativo="33"/>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_99fk1c" description="AnaliseLotAno">
+    <args>
+      <arg id="l_grau" type="integer"/>
+      <arg id="l_codlot" type="integer"/>
+      <arg id="l_dtref" type="date"/>
+      <arg id="l_descrlot" type="text"/>
+      <arg id="l_tipo" type="integer"/>
+      <arg id="l_label" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_99fk1e" type="line" nroColuna="13">
+            <title><![CDATA[:l_label por Sexo no período - <span style="color: red;">:l_descrlot</span>]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select  dtref, to_char(dtref,'mm/yy') dtref_ , :l_tipo tipo, :l_codlot codlot, :l_descrlot descrlot, 	:l_grau grau, :l_label label,       sum(case             when f.sexo = 'M' then              1           end) homem,       sum(case             when f.sexo = 'F' then              1           end) mulher  from ad_basefunc_fpw f where dtref between add_months(:dtref, -12) and :dtref  and CASE 	when :l_tipo = 'A' then        trunc(f.dtadmiss, 'fmmm')  	when :l_tipo = 'D' then 	  trunc(f.dtdemiss, 'fmmm')	end = dtrefand (case	when :l_grau = 1 then unidade 	when :l_grau = 2 then depto	when :l_grau = 3 then setor	when :l_grau = 4 then divisao 	else 0	end = :l_codlot or nvl(:l_codlot, 0) = 0) group by dtref, to_char(dtref,'mm/yy')  order by dtref]]></expression>
+            <metadata>
+              <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+              <field name="DTREF_" label="Mês" type="S" visible="true" useFooter="false"/>
+              <field name="TIPO" label="TIPO" type="S" visible="true" useFooter="false"/>
+              <field name="CODLOT" label="CODLOT" type="S" visible="true" useFooter="false"/>
+              <field name="DESCRLOT" label="DESCRLOT" type="S" visible="true" useFooter="false"/>
+              <field name="GRAU" label="GRAU" type="S" visible="true" useFooter="false"/>
+              <field name="LABEL" label="LABEL" type="S" visible="true" useFooter="false"/>
+              <field name="HOMEM" label="Homens" type="I" visible="true" useFooter="false"/>
+              <field name="MULHER" label="Mullheres" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <horizontal-axis>
+              <category field="$DTREF_" rotation="0" dropLabel="false">
+                <initView value="first"/>
+              </category>
+            </horizontal-axis>
+            <series>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$HOMEM</yField>
+                <display><![CDATA[Homens]]></display>
+                <color>0x66ff</color>
+                <on-click navigate-to="lvl_99fk50">
+                  <param id="l_dtref">$DTREF</param>
+                  <param id="l_codlot">$CODLOT</param>
+                  <param id="l_grau">$GRAU</param>
+                  <param id="l_descrlot">$DESCRLOT</param>
+                  <param id="l_tipo">$TIPO</param>
+                  <param id="l_label">$LABEL</param>
+                </on-click>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$MULHER</yField>
+                <display><![CDATA[Mulheres]]></display>
+                <color>0xff33ff</color>
+                <on-click navigate-to="lvl_99fk50">
+                  <param id="l_dtref">$DTREF</param>
+                  <param id="l_codlot">$CODLOT</param>
+                  <param id="l_grau">$GRAU</param>
+                  <param id="l_descrlot">$DESCRLOT</param>
+                  <param id="l_tipo">$TIPO</param>
+                  <param id="l_label">$LABEL</param>
+                </on-click>
+              </serie>
+            </series>
+            <legend position="top" direction="v"/>
+          </chart>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_99fk42" type="line" nroColuna="13">
+            <title><![CDATA[:l_label  por Faixa Etária - <span style="color: red;">:l_descrlot</span>]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select dtref,       to_char(dtref, 'mm/yy') dtref_, :l_tipo tipo, :l_codlot codlot, :l_descrlot descrlot, 	:l_grau grau, :l_label label,       sum(case             when round(ad_get.meses_entre_datas(trunc(f.dtnasc, 'mm'), last_day(dtref)) / 12) between 18 and 20 then              1           end) as fx_1,       sum(case             when round(ad_get.meses_entre_datas(trunc(f.dtnasc, 'mm'), last_day(dtref)) / 12) between 21 and 25 then              1           end) as fx_2,       sum(case             when round(ad_get.meses_entre_datas(f.dtnasc, last_day(dtref)) / 12) between 26 and 30 then              1           end) as fx_3,       sum(case             when round(ad_get.meses_entre_datas(f.dtnasc, last_day(dtref)) / 12) between 31 and 35 then              1           end) as fx_4,       sum(case             when round(ad_get.meses_entre_datas(f.dtnasc, last_day(dtref)) / 12) between 36 and 40 then              1           end) as fx_5,       sum(case             when round(ad_get.meses_entre_datas(f.dtnasc, last_day(dtref)) / 12) > 40 then              1           end) as fx_6  from ad_basefunc_fpw f where dtref between add_months(:dtref, -12) and :dtref   and case         when :l_tipo = 'A' then          trunc(f.dtadmiss, 'fmmm')         when :l_tipo = 'D' then          trunc(f.dtdemiss, 'fmmm')       end = dtrefand (case	when :l_grau = 1 then unidade 	when :l_grau = 2 then depto	when :l_grau = 3 then setor	when :l_grau = 4 then divisao 	else 0	end = :l_codlot or nvl(:l_codlot, 0) = 0) group by dtref, to_char(dtref, 'mm/yy') order by dtref]]></expression>
+            <metadata>
+              <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+              <field name="DTREF_" label="Mês" type="S" visible="true" useFooter="false"/>
+              <field name="TIPO" label="TIPO" type="S" visible="true" useFooter="false"/>
+              <field name="CODLOT" label="CODLOT" type="S" visible="true" useFooter="false"/>
+              <field name="DESCRLOT" label="DESCRLOT" type="S" visible="true" useFooter="false"/>
+              <field name="GRAU" label="GRAU" type="S" visible="true" useFooter="false"/>
+              <field name="LABEL" label="LABEL" type="S" visible="true" useFooter="false"/>
+              <field name="FX_1" label="18 a 20" type="I" visible="true" useFooter="false"/>
+              <field name="FX_2" label="21 a 25" type="I" visible="true" useFooter="false"/>
+              <field name="FX_3" label="26 a 30" type="I" visible="true" useFooter="false"/>
+              <field name="FX_4" label="31 a 35" type="I" visible="true" useFooter="false"/>
+              <field name="FX_5" label="35 a 40" type="I" visible="true" useFooter="false"/>
+              <field name="FX_6" label="+40" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <horizontal-axis>
+              <category field="$DTREF" rotation="0" dropLabel="false">
+                <initView value="first"/>
+              </category>
+            </horizontal-axis>
+            <series>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$FX_1</yField>
+                <display><![CDATA[18 a 20]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$FX_2</yField>
+                <display><![CDATA[21 a 25]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$FX_3</yField>
+                <display><![CDATA[26 a 30]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$FX_4</yField>
+                <display><![CDATA[31 a 35]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$FX_5</yField>
+                <display><![CDATA[35 a 40]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$FX_6</yField>
+                <display><![CDATA[+40]]></display>
+              </serie>
+            </series>
+            <legend position="top" direction="v"/>
+          </chart>
+        </container>
+      </container>
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_99fk44" type="line" nroColuna="13">
+            <title><![CDATA[:l_label por Escolaridade no período - <span style="color: red;">:l_descrlot</span>]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select dtref,       to_char(dtref, 'mm/yy') dtref_, :l_tipo tipo, :l_codlot codlot, :l_descrlot descrlot, 	:l_grau grau, :l_label label,       sum(case             when f.grauinstr in (1, 2, 3, 4, 5) then              1           end) as g1,       sum(case             when f.grauinstr in (6, 7, 12, 13) then              1           end) as g2,       sum(case             when f.grauinstr in (8, 9, 10, 11, 14, 15) then              1           end) as g3  from ad_basefunc_fpw f where dtref between add_months(:l_dtref, -12) and :l_dtref   and case         when :l_tipo = 'A' then          trunc(f.dtadmiss, 'fmmm')         when :l_tipo = 'D' then          trunc(f.dtdemiss, 'fmmm')       end = dtrefand (case	when :l_grau = 1 then unidade 	when :l_grau = 2 then depto	when :l_grau = 3 then setor	when :l_grau = 4 then divisao 	else 0	end = :l_codlot or nvl(:l_codlot, 0) = 0) group by dtref, to_char(dtref, 'mm/yy') order by dtref]]></expression>
+            <metadata>
+              <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+              <field name="DTREF_" label="DTREF_" type="S" visible="true" useFooter="false"/>
+              <field name="TIPO" label="TIPO" type="S" visible="true" useFooter="false"/>
+              <field name="CODLOT" label="CODLOT" type="S" visible="true" useFooter="false"/>
+              <field name="DESCRLOT" label="DESCRLOT" type="S" visible="true" useFooter="false"/>
+              <field name="GRAU" label="GRAU" type="S" visible="true" useFooter="false"/>
+              <field name="LABEL" label="LABEL" type="S" visible="true" useFooter="false"/>
+              <field name="G1" label="Fund" type="I" visible="true" useFooter="false"/>
+              <field name="G2" label="Médio" type="I" visible="true" useFooter="false"/>
+              <field name="G3" label="Superior" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <horizontal-axis>
+              <category field="$DTREF_" rotation="0" dropLabel="false">
+                <initView value="first"/>
+              </category>
+            </horizontal-axis>
+            <series>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$G1</yField>
+                <display><![CDATA[Fund]]></display>
+                <color>0xff0000</color>
+                <on-click navigate-to="lvl_53ijjo">
+                  <param id="am_label">:an_label</param>
+                  <param id="am_dtref">:an_dtref</param>
+                  <param id="am_tipo">:an_tipo</param>
+                </on-click>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$G2</yField>
+                <display><![CDATA[Médio]]></display>
+                <color>0xff66</color>
+                <on-click navigate-to="lvl_53ijjo">
+                  <param id="am_label">:an_label</param>
+                  <param id="am_dtref">:an_dtref</param>
+                  <param id="am_tipo">:an_tipo</param>
+                </on-click>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$G3</yField>
+                <display><![CDATA[Superior]]></display>
+                <color>0x66ff</color>
+                <on-click navigate-to="lvl_53ijjo">
+                  <param id="am_label">:an_label</param>
+                  <param id="am_dtref">:an_dtref</param>
+                  <param id="am_tipo">:an_tipo</param>
+                </on-click>
+              </serie>
+            </series>
+            <legend position="top" direction="v"/>
+          </chart>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_99fk46" type="line" nroColuna="13">
+            <title><![CDATA[:l_label por Estado - <span style="color: red;">:l_descrlot</span>]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select dtref,       to_char(dtref, 'mm/yy') dtref_, :l_tipo tipo, :l_codlot codlot, :l_descrlot descrlot, 	:l_grau grau, :l_label label,       sum(case             when f.uf = 'GO' then              1           end) as go,       sum(case             when f.uf = 'PA' then              1           end) as pa,       sum(case             when f.uf = 'MA' then              1           end) as ma,       sum(case             when f.uf = 'MG' then              1           end) as mg,       sum(case             when f.uf = 'DF' then              1           end) as df,       sum(case             when f.uf = 'SP' then              1           end) as sp  from ad_basefunc_fpw f where dtref between add_months(:dtref, -12) and :dtref   and case         when :l_tipo = 'A' then          trunc(f.dtadmiss, 'fmmm')         when :l_tipo = 'D' then          trunc(f.dtdemiss, 'fmmm')       end = dtrefand (case	when :l_grau = 1 then unidade 	when :l_grau = 2 then depto	when :l_grau = 3 then setor	when :l_grau = 4 then divisao 	else 0	end = :l_codlot or nvl(:l_codlot, 0) = 0) group by dtref, to_char(dtref, 'mm/yy') order by dtref]]></expression>
+            <metadata>
+              <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+              <field name="DTREF_" label="Mês" type="S" visible="true" useFooter="false"/>
+              <field name="TIPO" label="TIPO" type="S" visible="true" useFooter="false"/>
+              <field name="CODLOT" label="CODLOT" type="S" visible="true" useFooter="false"/>
+              <field name="DESCRLOT" label="DESCRLOT" type="S" visible="true" useFooter="false"/>
+              <field name="GRAU" label="GRAU" type="S" visible="true" useFooter="false"/>
+              <field name="LABEL" label="LABEL" type="S" visible="true" useFooter="false"/>
+              <field name="GO" label="GO" type="I" visible="true" useFooter="false"/>
+              <field name="PA" label="PA" type="I" visible="true" useFooter="false"/>
+              <field name="MA" label="MA" type="I" visible="true" useFooter="false"/>
+              <field name="MG" label="MG" type="I" visible="true" useFooter="false"/>
+              <field name="DF" label="DF" type="I" visible="true" useFooter="false"/>
+              <field name="SP" label="SP" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <horizontal-axis>
+              <category field="$DTREF_" rotation="0" dropLabel="false">
+                <initView value="first"/>
+              </category>
+            </horizontal-axis>
+            <series>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$GO</yField>
+                <display><![CDATA[GO]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$PA</yField>
+                <display><![CDATA[PA]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$MA</yField>
+                <display><![CDATA[MA]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$MG</yField>
+                <display><![CDATA[MG]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$DF</yField>
+                <display><![CDATA[DF]]></display>
+              </serie>
+              <serie type="line" circle-intersection="true">
+                <xField>$DTREF_</xField>
+                <yField>$SP</yField>
+                <display><![CDATA[SP]]></display>
+              </serie>
+            </series>
+            <legend position="top" direction="v"/>
+          </chart>
+        </container>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_99fk50" description="AnaliseLotMes">
+    <args>
+      <arg id="l_dtref" type="date"/>
+      <arg id="l_codlot" type="integer"/>
+      <arg id="l_grau" type="integer"/>
+      <arg id="l_descrlot" type="text"/>
+      <arg id="l_tipo" type="integer"/>
+      <arg id="l_label" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_99fk52" type="column" nroColuna="6">
+            <title><![CDATA[:l_label por Sexo no mês :l_dtref - <span style="color: red;">:l_descrlot</span>]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select  dtref, to_char(dtref,'mm/yy') dtref_ , :l_tipo tipo, :l_codlot codlot, :l_descrlot descrlot, 	:l_grau grau, :l_label label,       sum(case             when f.sexo = 'M' then              1           end) homem,       sum(case             when f.sexo = 'F' then              1           end) mulher  from ad_basefunc_fpw f where dtref = :l_dtref  and CASE 	when :l_tipo = 'A' then        trunc(f.dtadmiss, 'fmmm')  	when :l_tipo = 'D' then 	  trunc(f.dtdemiss, 'fmmm')  when :l_tipo in ('T', 'TA') then    f.dtref	end = dtrefand (case	when :l_grau = 1 then unidade 	when :l_grau = 2 then depto	when :l_grau = 3 then setor	when :l_grau = 4 then divisao 	else 0	end = :l_codlot or nvl(:l_codlot, 0) = 0)and case         when :l_tipo in ('A', 'D', 'T') then          0         when :l_tipo = 'TA' then          case            when exists (select 1                    from ad_prhsit s                   where s.codsit = f.codsit                     and s.gruporel = 'A'                     and subgruporel = 'AF') then             1            else             0          end       end != 1 group by dtref, to_char(dtref,'mm/yy')  order by dtref]]></expression>
+            <metadata>
+              <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+              <field name="DTREF_" label="Mês" type="S" visible="true" useFooter="false"/>
+              <field name="TIPO" label="TIPO" type="S" visible="true" useFooter="false"/>
+              <field name="CODLOT" label="CODLOT" type="S" visible="true" useFooter="false"/>
+              <field name="DESCRLOT" label="DESCRLOT" type="S" visible="true" useFooter="false"/>
+              <field name="GRAU" label="GRAU" type="S" visible="true" useFooter="false"/>
+              <field name="LABEL" label="LABEL" type="S" visible="true" useFooter="false"/>
+              <field name="HOMEM" label="Homem" type="I" visible="true" useFooter="false"/>
+              <field name="MULHER" label="Mulher" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <horizontal-axis>
+              <category field="$DTREF_" rotation="0" dropLabel="false">
+                <initView value="first"/>
+              </category>
+            </horizontal-axis>
+            <vertical-axis>
+              <linear resultRotation="-90" vResizing="false">
+                <mask/>
+                <showStackLabels/>
+              </linear>
+            </vertical-axis>
+            <series>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$HOMEM</yField>
+                <display><![CDATA[Homens]]></display>
+                <color>0x66ff</color>
+                <on-click navigate-to="lvl_99fll4">
+                  <param id="anl_grau">$GRAU</param>
+                  <param id="anl_label">$LABEL</param>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_codlot">$CODLOT</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_sexo">M</param>
+                  <param id="anl_idade"/>
+                  <param id="anl_escola"/>
+                  <param id="anl_uf"/>
+                  <param id="l_descrlot">$DESCRLOT</param>
+                </on-click>
+              </serie>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$MULHER</yField>
+                <display><![CDATA[Mulheres]]></display>
+                <color>0xff33ff</color>
+                <on-click navigate-to="lvl_99fll4">
+                  <param id="anl_grau">$GRAU</param>
+                  <param id="anl_label">$LABEL</param>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_codlot">$CODLOT</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_sexo">F</param>
+                  <param id="anl_idade"/>
+                  <param id="anl_escola"/>
+                  <param id="anl_uf"/>
+                  <param id="l_descrlot">$DESCRLOT</param>
+                </on-click>
+              </serie>
+            </series>
+          </chart>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_99fk6y" type="column">
+            <title><![CDATA[:l_label por Idade no mês :l_dtref - <span style="color: red;">:l_descrlot</span>]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select dtref, to_char(dtref, 'mm/yy') dtref_, :l_tipo tipo, :l_codlot codlot, :l_descrlot descrlot,       :l_grau grau, :l_label label,       Sum(case         when round(ad_get.meses_entre_datas(f.dtnasc, dtref) / 12) between 18 and 20 then          1         else          0       End) fx_1,       Sum(case         when round(ad_get.meses_entre_datas(f.dtnasc, dtref) / 12) between 21 and 25 then          1         else          0       End) fx_2,       Sum(case         when round(ad_get.meses_entre_datas(f.dtnasc, dtref) / 12) between 26 and 30 then          1         else          0       End) fx_3,       Sum(case         when round(ad_get.meses_entre_datas(f.dtnasc, dtref) / 12) between 31 and 35 then          1         else          0       End) fx_4,       Sum(case         when round(ad_get.meses_entre_datas(f.dtnasc, dtref) / 12) between 36 and 40 then          1         else          0       End) fx_5,       Sum(case         when round(ad_get.meses_entre_datas(f.dtnasc, dtref) / 12) > 40 then          1         else          0       End) fx_6  from ad_basefunc_fpw f where dtref = :l_dtref   and case         when :l_tipo = 'A' then          trunc(f.dtadmiss, 'fmmm')         when :l_tipo = 'D' then          trunc(f.dtdemiss, 'fmmm')         when :l_tipo in ('T', 'TA') then          f.dtref       end = dtref   and (case         when :l_grau = 1 then          unidade         when :l_grau = 2 then          depto         when :l_grau = 3 then          setor         when :l_grau = 4 then          divisao         else          0       end = :l_codlot or nvl(:l_codlot, 0) = 0)         and case         when :l_tipo in ('A', 'D', 'T') then          0         when :l_tipo = 'TA' then          case            when exists (select 1                    from ad_prhsit s                   where s.codsit = f.codsit                     and s.gruporel = 'A'                     and subgruporel = 'AF') then             1            else             0          end       end != 1 Group By dtref, to_char(dtref, 'mm/yy'), :l_tipo, :l_codlot, :l_descrlot,:l_grau, :l_label order by dtref]]></expression>
+            <metadata>
+              <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+              <field name="DTREF_" label="Mês" type="S" visible="true" useFooter="false"/>
+              <field name="TIPO" label="TIPO" type="S" visible="true" useFooter="false"/>
+              <field name="CODLOT" label="CODLOT" type="S" visible="true" useFooter="false"/>
+              <field name="DESCRLOT" label="DESCRLOT" type="S" visible="true" useFooter="false"/>
+              <field name="GRAU" label="GRAU" type="S" visible="true" useFooter="false"/>
+              <field name="LABEL" label="LABEL" type="S" visible="true" useFooter="false"/>
+              <field name="FX_1" label="18 a 20" type="I" visible="true" useFooter="false"/>
+              <field name="FX_2" label="21 a 25" type="I" visible="true" useFooter="false"/>
+              <field name="FX_3" label="26 a 30" type="I" visible="true" useFooter="false"/>
+              <field name="FX_4" label="31 a 35" type="I" visible="true" useFooter="false"/>
+              <field name="FX_5" label="36 a 40" type="I" visible="true" useFooter="false"/>
+              <field name="FX_6" label="+40" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <series>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$FX_1</yField>
+                <display><![CDATA[18 a 20]]></display>
+                <on-click navigate-to="lvl_99fll4">
+                  <param id="anl_grau">$GRAU</param>
+                  <param id="anl_label">$LABEL</param>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_codlot">$CODLOT</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_sexo"/>
+                  <param id="anl_idade">1</param>
+                  <param id="anl_escola"/>
+                  <param id="anl_uf"/>
+                  <param id="l_descrlot">$DESCRLOT</param>
+                </on-click>
+              </serie>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$FX_2</yField>
+                <display><![CDATA[21 a 25]]></display>
+                <on-click navigate-to="lvl_99fll4">
+                  <param id="anl_grau">$GRAU</param>
+                  <param id="anl_label">$LABEL</param>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_codlot">$CODLOT</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_sexo"/>
+                  <param id="anl_idade">2</param>
+                  <param id="anl_escola"/>
+                  <param id="anl_uf"/>
+                  <param id="l_descrlot">$DESCRLOT</param>
+                </on-click>
+              </serie>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$FX_3</yField>
+                <display><![CDATA[26 a 30]]></display>
+                <on-click navigate-to="lvl_99fll4">
+                  <param id="anl_grau">$GRAU</param>
+                  <param id="anl_label">$LABEL</param>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_codlot">$CODLOT</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_sexo"/>
+                  <param id="anl_idade">3</param>
+                  <param id="anl_escola"/>
+                  <param id="anl_uf"/>
+                  <param id="l_descrlot">$DESCRLOT</param>
+                </on-click>
+              </serie>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$FX_4</yField>
+                <display><![CDATA[31 a 35]]></display>
+                <on-click navigate-to="lvl_99fll4">
+                  <param id="anl_grau">$GRAU</param>
+                  <param id="anl_label">$LABEL</param>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_codlot">$CODLOT</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_sexo"/>
+                  <param id="anl_idade">4</param>
+                  <param id="anl_escola"/>
+                  <param id="anl_uf"/>
+                  <param id="l_descrlot">$DESCRLOT</param>
+                </on-click>
+              </serie>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$FX_5</yField>
+                <display><![CDATA[36 a 40]]></display>
+                <on-click navigate-to="lvl_99fll4">
+                  <param id="anl_grau">$GRAU</param>
+                  <param id="anl_label">$LABEL</param>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_codlot">$CODLOT</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_sexo"/>
+                  <param id="anl_idade">5</param>
+                  <param id="anl_escola"/>
+                  <param id="anl_uf"/>
+                  <param id="l_descrlot">$DESCRLOT</param>
+                </on-click>
+              </serie>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$FX_6</yField>
+                <display><![CDATA[+40]]></display>
+                <on-click navigate-to="lvl_99fll4">
+                  <param id="anl_grau">$GRAU</param>
+                  <param id="anl_label">$LABEL</param>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_codlot">$CODLOT</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_sexo"/>
+                  <param id="anl_idade">6</param>
+                  <param id="anl_escola"/>
+                  <param id="anl_uf"/>
+                  <param id="l_descrlot">$DESCRLOT</param>
+                </on-click>
+              </serie>
+            </series>
+            <legend position="top" direction="v"/>
+          </chart>
+        </container>
+      </container>
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_99fk60" type="column" nroColuna="6">
+            <title><![CDATA[:l_label por Escolaridade no mês :l_dtref - <span style="color: red;">:l_descrlot</span>]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select dtref,       to_char(dtref, 'mm/yy') dtref_, :l_tipo tipo, :l_codlot codlot, :l_descrlot descrlot, 	:l_grau grau, :l_label label,       sum(case             when f.grauinstr in (1, 2, 3, 4, 5) then              1           end) as g1,       sum(case             when f.grauinstr in (6, 7, 12, 13) then              1           end) as g2,       sum(case             when f.grauinstr in (8, 9, 10, 11, 14, 15) then              1           end) as g3  from ad_basefunc_fpw f where dtref = :l_dtref   and case         when :l_tipo = 'A' then          trunc(f.dtadmiss, 'fmmm')         when :l_tipo = 'D' then          trunc(f.dtdemiss, 'fmmm')  when :l_tipo in ('T', 'TA') then    f.dtref       end = dtrefand (case	when :l_grau = 1 then unidade 	when :l_grau = 2 then depto	when :l_grau = 3 then setor	when :l_grau = 4 then divisao 	else 0	end = :l_codlot or nvl(:l_codlot, 0) = 0)and case         when :l_tipo in ('A', 'D', 'T') then          0         when :l_tipo = 'TA' then          case            when exists (select 1                    from ad_prhsit s                   where s.codsit = f.codsit                     and s.gruporel = 'A'                     and subgruporel = 'AF') then             1            else             0          end       end != 1 group by dtref, to_char(dtref, 'mm/yy') order by dtref]]></expression>
+            <metadata>
+              <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+              <field name="DTREF_" label="Mês" type="S" visible="true" useFooter="false"/>
+              <field name="TIPO" label="TIPO" type="S" visible="true" useFooter="false"/>
+              <field name="CODLOT" label="CODLOT" type="S" visible="true" useFooter="false"/>
+              <field name="DESCRLOT" label="DESCRLOT" type="S" visible="true" useFooter="false"/>
+              <field name="GRAU" label="GRAU" type="S" visible="true" useFooter="false"/>
+              <field name="LABEL" label="LABEL" type="S" visible="true" useFooter="false"/>
+              <field name="G1" label="Fund." type="I" visible="true" useFooter="false"/>
+              <field name="G2" label="Médio" type="I" visible="true" useFooter="false"/>
+              <field name="G3" label="Superior" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <horizontal-axis>
+              <category field="DTREF_" rotation="0" dropLabel="false">
+                <initView value="first"/>
+              </category>
+            </horizontal-axis>
+            <series>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$G1</yField>
+                <display><![CDATA[Fund.]]></display>
+                <on-click navigate-to="lvl_99fll4">
+                  <param id="anl_grau">$GRAU</param>
+                  <param id="anl_label">$LABEL</param>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_codlot">$CODLOT</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_sexo"/>
+                  <param id="anl_idade"/>
+                  <param id="anl_escola">1</param>
+                  <param id="anl_uf"/>
+                  <param id="l_descrlot">$DESCRLOT</param>
+                </on-click>
+              </serie>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$G2</yField>
+                <display><![CDATA[Médio]]></display>
+                <on-click navigate-to="lvl_99fll4">
+                  <param id="anl_grau">$GRAU</param>
+                  <param id="anl_label">$LABEL</param>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_codlot">$CODLOT</param>
+                  <param id="l_descrlot">$DESCRLOT</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_sexo"/>
+                  <param id="anl_idade"/>
+                  <param id="anl_escola">2</param>
+                  <param id="anl_uf"/>
+                </on-click>
+              </serie>
+              <serie type="column">
+                <xField>$DTREF_</xField>
+                <yField>$G3</yField>
+                <display><![CDATA[Superior]]></display>
+                <on-click navigate-to="lvl_99fll4">
+                  <param id="anl_grau">$GRAU</param>
+                  <param id="anl_label">$LABEL</param>
+                  <param id="anl_dtref">$DTREF</param>
+                  <param id="anl_codlot">$CODLOT</param>
+                  <param id="l_descrlot">$DESCRLOT</param>
+                  <param id="anl_tipo">$TIPO</param>
+                  <param id="anl_sexo"/>
+                  <param id="anl_idade"/>
+                  <param id="anl_escola">3</param>
+                  <param id="anl_uf"/>
+                </on-click>
+              </serie>
+            </series>
+            <legend position="top" direction="v"/>
+          </chart>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <geochart id="gch_99fk62">
+            <title><![CDATA[:l_label por Estado no mês :l_dtref - <span style="color: red;">:l_descrlot</span>]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select dtref,       to_char(dtref, 'mm/yy') dtref_,  :l_tipo tipo, :l_codlot codlot, :l_descrlot descrlot, 	:l_grau grau, :l_label label,	  f.uf,       count(*) qtd  from ad_basefunc_fpw f where dtref = :l_dtref   and case         when :l_tipo = 'A' then          trunc(f.dtadmiss, 'fmmm')         when :l_tipo = 'D' then          trunc(f.dtdemiss, 'fmmm')  when :l_tipo in ('T', 'TA') then    f.dtref       end = dtrefand (case	when :l_grau = 1 then unidade 	when :l_grau = 2 then depto	when :l_grau = 3 then setor	when :l_grau = 4 then divisao 	else 0	end = :l_codlot or nvl(:l_codlot, 0) = 0)and case         when :l_tipo in ('A', 'D', 'T') then          0         when :l_tipo = 'TA' then          case            when exists (select 1                    from ad_prhsit s                   where s.codsit = f.codsit                     and s.gruporel = 'A'                     and subgruporel = 'AF') then             1            else             0          end       end != 1 group by dtref, to_char(dtref, 'mm/yy'), f.uf order by dtref, to_char(dtref, 'mm/yy'), f.uf]]></expression>
+            <metadata>
+              <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+              <field name="DTREF_" label="Mês" type="S" visible="true" useFooter="false"/>
+              <field name="TIPO" label="TIPO" type="S" visible="true" useFooter="false"/>
+              <field name="CODLOT" label="CODLOT" type="S" visible="true" useFooter="false"/>
+              <field name="DESCRLOT" label="DESCRLOT" type="S" visible="true" useFooter="false"/>
+              <field name="GRAU" label="GRAU" type="S" visible="true" useFooter="false"/>
+              <field name="LABEL" label="LABEL" type="S" visible="true" useFooter="false"/>
+              <field name="UF" label="UF" type="S" visible="true" useFooter="false"/>
+              <field name="QTD" label="Qtd" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <country>BR</country>
+            <legend show="true" colors="#FF0400,#00A300"/>
+            <region-marker>
+              <name>$UF</name>
+              <value>$QTD</value>
+              <on-click navigate-to="lvl_99fll4">
+                <param id="anl_grau">$GRAU</param>
+                <param id="anl_label">$LABEL</param>
+                <param id="anl_dtref">$DTREF</param>
+                <param id="anl_codlot">$CODLOT</param>
+                <param id="anl_tipo">$TIPO</param>
+                <param id="anl_sexo"/>
+                <param id="anl_idade"/>
+                <param id="anl_escola"/>
+                <param id="anl_uf">$UF</param>
+                <param id="l_descrlot">$DESCRLOT</param>
+              </on-click>
+            </region-marker>
+          </geochart>
+        </container>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_99fll4" description="AnaliticoLot">
+    <args>
+      <arg id="anl_grau" type="integer"/>
+      <arg id="anl_label" type="text"/>
+      <arg id="anl_dtref" type="date"/>
+      <arg id="anl_codlot" type="integer"/>
+      <arg id="anl_tipo" type="text"/>
+      <arg id="anl_sexo" type="integer"/>
+      <arg id="anl_idade" type="integer"/>
+      <arg id="anl_escola" type="integer"/>
+      <arg id="anl_uf" type="text"/>
+      <arg id="l_descrlot" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_99fll6" useNewGrid="S">
+        <title><![CDATA[:l_label em <span style="color: red;">:l_descrlot</span> em :l_dtref]]></title>
+        <expression type="sql" data-source="MGEDS"><![CDATA[select F.*, ad_pkg_func.get_descrformacao_func(f.codemp, f.matfunc, :anl_dtref) formacao  from ad_basefunc_fpw f where dtref = :anl_dtref   and case         when :anl_tipo = 'A' then          trunc(f.dtadmiss, 'fmmm')         when :anl_tipo = 'D' then          trunc(f.dtdemiss, 'fmmm')  	    when :anl_tipo in ('T', 'TA') then          f.dtref       end = dtref and (f.sexo = :anl_sexo or nvl(:anl_sexo,'0') = '0')  and  (case     when Round(ad_get.meses_entre_datas(f.dtnasc, :anl_dtref) / 12) between 18 and 20 then 1    when Round(ad_get.meses_entre_datas(f.dtnasc, :anl_dtref) / 12) between 21 and 25 then 2    when Round(ad_get.meses_entre_datas(f.dtnasc, :anl_dtref) / 12) between 26 and 30 then 3    when Round(ad_get.meses_entre_datas(f.dtnasc, :anl_dtref) / 12) between 31 and 35 then 4    when Round(ad_get.meses_entre_datas(f.dtnasc, :anl_dtref) / 12) between 36 and 40 then 5    when Round(ad_get.meses_entre_datas(f.dtnasc, :anl_dtref) / 12) > 40 then 6     end = :anl_idade or nvl(:anl_idade,0) = 0 ) and ( Case 	When grauinstr  In (1, 2, 3, 4, 5) Then 1	When grauinstr in (6, 7, 12, 13) Then 2	When grauinstr In (8, 9, 10, 11, 14, 15) Then 3	End = :anl_escola or nvl(:anl_escola, 0) = 0 ) and (uf = :anl_uf or nvl(:anl_uf, '0') = '0' ) and case when :anl_grau = 1 then unidade when :anl_grau = 2 then depto when :anl_grau = 3 then setor when :anl_grau = 4 then divisao else 0 end = nvl(:anl_codlot ,0)and case         when :anl_tipo in ('A', 'D', 'T') then          0         when :anl_tipo = 'TA' then          case            when exists (select 1                    from ad_prhsit s                   where s.codsit = f.codsit                     and s.gruporel = 'A'                     and subgruporel = 'AF') then             1            else             0          end       end != 1order by dtref]]></expression>
+        <metadata>
+          <field name="DTREF" label="Referência" type="D" visible="true" useFooter="false"/>
+          <field name="CODEMP" label="Cód Empresa" type="I" visible="true" useFooter="false"/>
+          <field name="MATFUNC" label="Matrícula" type="I" visible="true" useFooter="false"/>
+          <field name="NOMEFUNC" label="Nome" type="S" visible="true" useFooter="false"/>
+          <field name="SEXO" label="Sexo" type="S" visible="true" useFooter="false"/>
+          <field name="DTNASC" label="Dt. Nasc." type="D" visible="true" useFooter="false"/>
+          <field name="CODSIT" label="CODSIT" type="I" visible="false" useFooter="false"/>
+          <field name="DESCRSIT" label="Situação" type="S" visible="true" useFooter="false"/>
+          <field name="CIDADE" label="Cidade" type="S" visible="true" useFooter="false"/>
+          <field name="UF" label="UF" type="S" visible="true" useFooter="false"/>
+          <field name="DTADMISS" label="Dt. Adm" type="D" visible="true" useFooter="false"/>
+          <field name="DTDEMISS" label="Dt. Dem" type="D" visible="true" useFooter="false"/>
+          <field name="DTINISIT" label="Dt. Inicio Sit" type="D" visible="true" useFooter="false"/>
+          <field name="DIVISAO" label="Divisão" type="F" visible="true" useFooter="false"/>
+          <field name="LODESCLOT" label="Lotação" type="S" visible="true" useFooter="false"/>
+          <field name="SETOR" label="Setor" type="F" visible="false" useFooter="false"/>
+          <field name="DEPTO" label="Depto" type="F" visible="false" useFooter="false"/>
+          <field name="UNIDADE" label="Unidade" type="F" visible="false" useFooter="false"/>
+          <field name="GRAUINSTR" label="GRAUINSTR" type="I" visible="false" useFooter="false"/>
+          <field name="ESCOLARIDADE" label="Escolaridade" type="S" visible="true" useFooter="false"/>
+          <field name="CARGO" label="CARGO" type="I" visible="false" useFooter="false"/>
+          <field name="DESCRCARGO" label="Cargo" type="S" visible="true" useFooter="false"/>
+          <field name="FORMACAO" label="Formação" type="S" visible="true" useFooter="false"/>
+        </metadata>
+      </grid>
+    </container>
+  </level>
+</gadget>

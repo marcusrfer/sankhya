@@ -1,0 +1,1029 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<metadata>
+  <exportInfo>
+    <exportTime>20/12/2019 18:29:50</exportTime>
+    <systemVersion>4.0b90</systemVersion>
+    <systemCharSet>ISO-8859-1</systemCharSet>
+    <dbMetadata>
+      <dbUser>SANKHYA</dbUser>
+      <urlConnection><![CDATA[jdbc:oracle:thin:@192.168.1.65:1521/orcl]]></urlConnection>
+      <jdbcDriver><![CDATA[Oracle JDBC driver 12.1.0.1.0]]></jdbcDriver>
+      <DBMS><![CDATA[Oracle - Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
+With the Partitioning, OLAP, Advanced Analytics and Real Application Testing options]]></DBMS>
+    </dbMetadata>
+  </exportInfo>
+  <menu description="Parâmetros Comissão Integrado" name="MENU_ADICIONAL_71FAF5B3AE8B5A377760065ABDBE99CB">
+    <properties>
+      <tipoLancador><![CDATA[TA]]></tipoLancador>
+      <resourceID><![CDATA[br.com.sankhya.menu.adicional.AD_TSFFCICONF]]></resourceID>
+      <entityName><![CDATA[AD_TSFFCICONF]]></entityName>
+      <contexto><![CDATA[mge]]></contexto>
+    </properties>
+  </menu>
+  <instances>
+    <instance name="AD_TSFTCPOVO">
+      <instanceDescription><![CDATA[Custo Principal]]></instanceDescription>
+      <tableInfo name="AD_TSFTCPOVO" sequenceType="M">
+        <category><![CDATA[Integração - Comissão Postura]]></category>
+        <tableDescription><![CDATA[Custo Ovo]]></tableDescription>
+        <primaryKey>
+          <CODTABPOS />
+          <DTREF />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODTABPOS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Tabela]]></description>
+        </field>
+        <field name="DTREF" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Dt. Referência]]></description>
+        </field>
+        <field name="VLROVO" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Vlr. Custo]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[4]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+      </fields>
+    </instance>
+    <instance name="AD_TSFMGN">
+      <instanceDescription><![CDATA[Modelos Para Geração de Notas]]></instanceDescription>
+      <tableInfo name="AD_TSFMGN" sequenceType="A" sequenceField="NUMODELO" presentationField="DESCRMODELO">
+        <category><![CDATA[Util Comum]]></category>
+        <tableDescription><![CDATA[Modelos Para Geração de Notas]]></tableDescription>
+        <primaryKey>
+          <NUMODELO />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="NUMODELO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Nº Modelo]]></description>
+        </field>
+        <field name="DESCRMODELO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Descr. Modelo]]></description>
+        </field>
+        <field name="NUINSTANCIA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="N" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Núm. da Instância]]></description>
+        </field>
+        <field name="CODEMP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Empresa]]></description>
+        </field>
+        <field name="SERIENOTA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Serie Nota]]></description>
+        </field>
+        <field name="CODVEND" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Vendedor]]></description>
+        </field>
+        <field name="CODTIPVENDA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Tipo de Negociação]]></description>
+        </field>
+        <field name="CODCENCUS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. CR]]></description>
+        </field>
+        <field name="CODNAT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Natureza]]></description>
+        </field>
+        <field name="OBSPADRAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Obs. Padrão]]></description>
+        </field>
+        <field name="CONFAUTO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Confirma Automaticamente?]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="CODPROD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Produto]]></description>
+        </field>
+        <field name="CODVOL" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Sigla da Unidade]]></description>
+        </field>
+        <field name="CODLOCAL" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Local]]></description>
+        </field>
+        <field name="CODCTABCOINT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Código da conta bancária]]></description>
+        </field>
+        <field name="CODTIPTIT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Tipo de Título]]></description>
+        </field>
+        <field name="CODTIPOPER" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód.Tipo Operação]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Volume" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFVOL" />
+          <fields>
+            <field localName="CODVOL" targetName="CODVOL" />
+          </fields>
+        </relation>
+        <relation entityName="Natureza" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFNAT" />
+          <fields>
+            <field localName="CODNAT" targetName="CODNAT" />
+          </fields>
+        </relation>
+        <relation entityName="TipoTitulo" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFTIT" />
+          <fields>
+            <field localName="CODTIPTIT" targetName="CODTIPTIT" />
+          </fields>
+        </relation>
+        <relation entityName="Produto" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPRO" />
+          <fields>
+            <field localName="CODPROD" targetName="CODPROD" />
+          </fields>
+        </relation>
+        <relation entityName="Empresa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIEMP" />
+          <fields>
+            <field localName="CODEMP" targetName="CODEMP" />
+          </fields>
+        </relation>
+        <relation entityName="TipoNegociacao" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFTPV" />
+          <expression><![CDATA[@ref-param[force-one-to-one=true]]]></expression>
+          <fields>
+            <field localName="CODTIPVENDA" targetName="CODTIPVENDA" />
+          </fields>
+        </relation>
+        <relation entityName="CentroResultado" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICUS" />
+          <fields>
+            <field localName="CODCENCUS" targetName="CODCENCUS" />
+          </fields>
+        </relation>
+        <relation entityName="TipoOperacao" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFTOP" />
+          <expression><![CDATA[@ref-param[force-one-to-one=true]]]></expression>
+          <fields>
+            <field localName="CODTIPOPER" targetName="CODTIPOPER" />
+          </fields>
+        </relation>
+        <relation entityName="Vendedor" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFVEN" />
+          <fields>
+            <field localName="CODVEND" targetName="CODVEND" />
+          </fields>
+        </relation>
+        <relation entityName="ContaBancaria" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICTA" />
+          <fields>
+            <field localName="CODCTABCOINT" targetName="CODCTABCOINT" />
+          </fields>
+        </relation>
+        <relation entityName="LocalFinanceiro" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFLOC" />
+          <fields>
+            <field localName="CODLOCAL" targetName="CODLOCAL" />
+          </fields>
+        </relation>
+        <relation entityName="Instancia" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TDDINS" />
+          <fields>
+            <field localName="NUINSTANCIA" targetName="NUINSTANCIA" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="ADTSSACONFEMP">
+      <instanceDescription><![CDATA[Empresas Permitidas]]></instanceDescription>
+      <tableInfo name="AD_ADTSSACONFEMP" sequenceType="M">
+        <category><![CDATA[Adiantamento SSA]]></category>
+        <telaDescription><![CDATA[Detail da AD_ADTSSACONF]]></telaDescription>
+        <tableDescription><![CDATA[Empresas Permitidas]]></tableDescription>
+        <primaryKey>
+          <CODIGO />
+          <CODEMP />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODEMP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="5">
+          <description><![CDATA[Empresa]]></description>
+        </field>
+        <field name="CODIGO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Código]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Empresa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIEMP" />
+          <fields>
+            <field localName="CODEMP" targetName="CODEMP" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="ADTSSACONF">
+      <instanceDescription><![CDATA[Configuração de Adiantamento / Empréstimo SSA]]></instanceDescription>
+      <tableInfo name="AD_ADTSSACONF" sequenceType="A" sequenceField="CODIGO" presentationField="DESCRICAO">
+        <category><![CDATA[Adiantamento SSA]]></category>
+        <telaDescription><![CDATA[Tabela de Configurações da rotina de Adiantamento / Empréstimo SSA. Details desta:
+AD_ADTSSACONFEMP
+AD_ADTSSACONFUSU
+AD_ADTSSACONFNAT
+AD_ADTSSACONFCR]]></telaDescription>
+        <tableDescription><![CDATA[Configuração de Adiantamento / Empréstimo]]></tableDescription>
+        <primaryKey>
+          <CODIGO />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODIGO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Código]]></description>
+        </field>
+        <field name="DESCRICAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Descrição]]></description>
+        </field>
+        <field name="CODTIPOPERREC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Tipo Operação Receita]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="TIPOTITREC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S" size="5">
+          <description><![CDATA[Tipo Título Receita]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODTIPOPERDESP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Tipo Operação Despesa]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="JURO" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[% Juro Mínimo]]></description>
+        </field>
+        <field name="PARCELA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Nr. Máximo de Parcelas]]></description>
+        </field>
+        <field name="VLRMAX" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Vlr. Máximo Empréstimo]]></description>
+        </field>
+        <field name="TIPOJURO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Tipo de Juro]]></description>
+          <options>
+            <option value="S"><![CDATA[Simples]]></option>
+            <option value="C"><![CDATA[Composto]]></option>
+          </options>
+        </field>
+        <field name="JUROMENOR" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Se Juro Menor que Mínimo]]></description>
+          <options>
+            <option value="B"><![CDATA[Bloqueia Lançamento]]></option>
+            <option value="S"><![CDATA[Solicita Aprovação]]></option>
+            <option value="P" default="S"><![CDATA[Permite Continuar]]></option>
+          </options>
+        </field>
+        <field name="PARCELAMAIOR" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Se Parcelas Maior que Máximo]]></description>
+          <options>
+            <option value="B"><![CDATA[Bloqueia Lançamento]]></option>
+            <option value="S"><![CDATA[Solicita Aprovação]]></option>
+            <option value="P" default="S"><![CDATA[Permite Continuar]]></option>
+          </options>
+        </field>
+        <field name="VLRMAIOR" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Se Valor Maior que Máximo]]></description>
+          <options>
+            <option value="B"><![CDATA[Bloqueia Lançamento]]></option>
+            <option value="S"><![CDATA[Solicita Aprovação]]></option>
+            <option value="P" default="S"><![CDATA[Permite Continuar]]></option>
+          </options>
+        </field>
+        <field name="PERMPARCDIF" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Permite Parceiro Receita <> Despesa]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[S]]></prop>
+          </properties>
+        </field>
+        <field name="CODCTABCOINT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S" size="5">
+          <description><![CDATA[Conta Bancária Padrão]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="PARCELAR" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Parcelar?]]></description>
+          <options>
+            <option value="1"><![CDATA[Receita]]></option>
+            <option value="-1" default="S"><![CDATA[Despesa]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CARENCIA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Máximo Dias 1ª Parcela]]></description>
+        </field>
+        <field name="CARENCIAMAIOR" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Se Carência Maior que Máximo]]></description>
+          <options>
+            <option value="B"><![CDATA[Bloqueia Lançamento]]></option>
+            <option value="S"><![CDATA[Solicita Aprovação]]></option>
+            <option value="P" default="S"><![CDATA[Permite Continuar]]></option>
+          </options>
+        </field>
+        <field name="SEACUMULAR" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Se Acumular Adiantamentos]]></description>
+          <options>
+            <option value="B"><![CDATA[Bloqueia Lançamento]]></option>
+            <option value="S"><![CDATA[Solicita Aprovação]]></option>
+            <option value="P" default="S"><![CDATA[Permite Continuar]]></option>
+          </options>
+        </field>
+        <field name="EXIGAPRDESP" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Exige Aprovação Despesa]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[S]]></prop>
+          </properties>
+        </field>
+        <field name="FORMA" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Forma]]></description>
+          <options>
+            <option value="C"><![CDATA[Somente Compensação]]></option>
+            <option value="T" default="S"><![CDATA[Todas]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="AJUSTAVENC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="N">
+          <description><![CDATA[Dias p/ Ajuste Vencimento?]]></description>
+          <expression><![CDATA[if( $col_AJUSTAVENC.intValue() < 0 || $col_AJUSTAVENC.intValue() > 1000){
+      throw new IllegalArgumentException("Variação informada não pode ser superior a 1000 dias!");
+}
+
+return $col_AJUSTAVENC;]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CALCULAVENC" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Calcula Vencimento]]></description>
+          <options>
+            <option value="M"><![CDATA[Mensal]]></option>
+            <option value="B"><![CDATA[Bimestral]]></option>
+            <option value="S"><![CDATA[Semestral]]></option>
+            <option value="A" default="S"><![CDATA[Anual]]></option>
+          </options>
+        </field>
+        <field name="CODUSUAPR" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Usuário Apr. Financeira]]></description>
+        </field>
+        <field name="RENOVAR" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[É Renovar?]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="TipoTitulo" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFTIT" />
+          <fields>
+            <field localName="TIPOTITREC" targetName="CODTIPTIT" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <expression><![CDATA[EXISTS (Select 1 from TSILIM L Where l.evento = 1042 and l.codusu = this.CODUSU)]]></expression>
+          <fields>
+            <field localName="CODUSUAPR" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="TipoOperacao" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFTOP" />
+          <expression><![CDATA[@ref-param[force-one-to-one=true]]]></expression>
+          <fields>
+            <field localName="CODTIPOPERREC" targetName="CODTIPOPER" />
+          </fields>
+        </relation>
+        <relation entityName="ContaBancaria" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICTA" />
+          <fields>
+            <field localName="CODCTABCOINT" targetName="CODCTABCOINT" />
+          </fields>
+        </relation>
+        <relation entityName="TipoOperacao" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFTOP" />
+          <fields>
+            <field localName="CODTIPOPERDESP" targetName="CODTIPOPER" />
+          </fields>
+        </relation>
+        <relation entityName="ADTSSACONFEMP" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_ADTSSACONFEMP" />
+          <fields>
+            <field localName="CODIGO" targetName="CODIGO" />
+          </fields>
+        </relation>
+        <relation entityName="ADTSSACONFUSU" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_ADTSSACONFUSU" />
+          <fields>
+            <field localName="CODIGO" targetName="CODIGO" />
+          </fields>
+        </relation>
+        <relation entityName="ADTSSACONFNAT" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_ADTSSACONFNAT" />
+          <fields>
+            <field localName="CODIGO" targetName="CODIGO" />
+          </fields>
+        </relation>
+        <relation entityName="ADTSSACONFCR" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_ADTSSACONFCR" />
+          <fields>
+            <field localName="CODIGO" targetName="CODIGO" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="ADTSSACONFUSU">
+      <instanceDescription><![CDATA[Usuários Permitidos]]></instanceDescription>
+      <tableInfo name="AD_ADTSSACONFUSU" sequenceType="M">
+        <category><![CDATA[Adiantamento SSA]]></category>
+        <telaDescription><![CDATA[Detail da AD_ADTSSACONF]]></telaDescription>
+        <tableDescription><![CDATA[Usuários Permitidos]]></tableDescription>
+        <primaryKey>
+          <CODIGO />
+          <CODUSU />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODIGO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Código]]></description>
+        </field>
+        <field name="CODUSU" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="5">
+          <description><![CDATA[Cód. Usuário]]></description>
+        </field>
+        <field name="ALTVLRDESDOB" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Altera Vlr Desdobramento?]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="ALTVLRJUROS" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Altera Vlr. Juros?]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSU" targetName="CODUSU" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="AD_TSFFCIINC">
+      <instanceDescription><![CDATA[Incubatórios]]></instanceDescription>
+      <tableInfo name="AD_TSFFCIINC" sequenceType="M">
+        <category><![CDATA[Integração - Comissão FV]]></category>
+        <telaDescription><![CDATA[Aba "incubatórios" da tela de configuração]]></telaDescription>
+        <tableDescription><![CDATA[Incubatórios]]></tableDescription>
+        <primaryKey>
+          <NUCONF />
+          <CODCENCUS />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODCENCUS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. CR]]></description>
+        </field>
+        <field name="NUCONF" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Nro Configuração]]></description>
+        </field>
+        <field name="CODPARC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Parceiro]]></description>
+        </field>
+        <field name="CODTABPOS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Tabela]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Parceiro" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPAR" />
+          <fields>
+            <field localName="CODPARC" targetName="CODPARC" />
+          </fields>
+        </relation>
+        <relation entityName="CentroResultado" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICUS" />
+          <fields>
+            <field localName="CODCENCUS" targetName="CODCENCUS" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFTCP" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFTCP" />
+          <fields>
+            <field localName="CODTABPOS" targetName="CODTABPOS" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="AD_TSFTCPCUS">
+      <instanceDescription><![CDATA[Centro de Custos]]></instanceDescription>
+      <tableInfo name="AD_TSFTCPCUS" sequenceType="M">
+        <category><![CDATA[Integração - Comissão Postura]]></category>
+        <tableDescription><![CDATA[Centro de Custos]]></tableDescription>
+        <primaryKey>
+          <CODTABPOS />
+          <CODCENCUS />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODCENCUS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Centro de Custo]]></description>
+        </field>
+        <field name="CODTABPOS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Tabela]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="CentroResultado" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICUS" />
+          <fields>
+            <field localName="CODCENCUS" targetName="CODCENCUS" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="ADTSSACONFNAT">
+      <instanceDescription><![CDATA[Naturezas Permitidas]]></instanceDescription>
+      <tableInfo name="AD_ADTSSACONFNAT" sequenceType="M">
+        <category><![CDATA[Adiantamento SSA]]></category>
+        <telaDescription><![CDATA[Detail da AD_ADTSSACONF]]></telaDescription>
+        <tableDescription><![CDATA[Naturezas Permitidas]]></tableDescription>
+        <primaryKey>
+          <CODIGO />
+          <CODNAT />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODNAT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Natureza]]></description>
+        </field>
+        <field name="CODIGO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Código]]></description>
+        </field>
+        <field name="EXIGEPROJETO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Exige Projeto?]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Natureza" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFNAT" />
+          <fields>
+            <field localName="CODNAT" targetName="CODNAT" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="AD_TSFFCICONF">
+      <instanceDescription><![CDATA[Parâmetros para Comissão Integrado]]></instanceDescription>
+      <tableInfo name="AD_TSFFCICONF" sequenceType="A" sequenceField="NUCONF">
+        <category><![CDATA[Integração - Comissão FV]]></category>
+        <tableDescription><![CDATA[Parâmetros para Comissão Integrado]]></tableDescription>
+        <primaryKey>
+          <NUCONF />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="NUCONF" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Nro Configuração]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="UITabName"><![CDATA[Recria]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DTVIGOR" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Vigor]]></description>
+        </field>
+        <field name="PERCPRECOFEM" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[% Preco Fêmea]]></description>
+        </field>
+        <field name="PERCPRECOMAC" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[% Preco Macho]]></description>
+        </field>
+        <field name="PERCDIFPRECOSEX" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[% Diferença p/ Preço Sexado]]></description>
+        </field>
+        <field name="PERCMORTPREV" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[% Mort. Prevista]]></description>
+        </field>
+        <field name="PERCMORTPREVS1" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[% Mort. Prev. Semana 1]]></description>
+        </field>
+        <field name="PERCMORTPREVS2" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[% Mort. Prev. Semana 2]]></description>
+        </field>
+        <field name="PERCMORTPREVS3" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[% Mort. Prev. Semana 3]]></description>
+        </field>
+        <field name="PERCMORTPREVS4" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[% Mort. Prev. Semana 4]]></description>
+        </field>
+        <field name="CODNATADIANT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Natureza Adiantamentos]]></description>
+        </field>
+        <field name="CODTIPTITCOMP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Tipo de Título Compensação]]></description>
+        </field>
+        <field name="CODTIPTITCOM" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Tipo de Título Comissão]]></description>
+        </field>
+        <field name="PERMEDVLRCOM" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Média Meses Com. GPA]]></description>
+        </field>
+        <field name="CODCONFEMPREC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Adiant. Recria]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="UITabName"><![CDATA[Recria]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUMODCPAREC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Modelo Notas CPA Recria]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="UITabName"><![CDATA[Recria]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUMODPCAREC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Modelo Ped. Cpa Recria]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="UITabName"><![CDATA[Recria]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUMODCPAPOST" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Modelo Compra Postura]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="UITabName"><![CDATA[Postura]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUMODREMPOST" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Modelo Remessa Postura]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="UITabName"><![CDATA[Postura]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUMODPCAPOST" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Modelo Pedido Postura]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="UITabName"><![CDATA[Postura]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUMODCPAFRV" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Modelo Compra Frango Vivo]]></description>
+        </field>
+        <field name="NUMODREMFRV" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Modelo Remessa Frango Vivo]]></description>
+        </field>
+        <field name="NUMODBNFFRV" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Modelo Bonificação Frango Vivo]]></description>
+        </field>
+        <field name="NUMODMORFRV" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Modelo Mortalidade Frango Vivo]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Natureza" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFNAT" />
+          <fields>
+            <field localName="CODNATADIANT" targetName="CODNAT" />
+          </fields>
+        </relation>
+        <relation entityName="TipoTitulo" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFTIT" />
+          <fields>
+            <field localName="CODTIPTITCOMP" targetName="CODTIPTIT" />
+          </fields>
+        </relation>
+        <relation entityName="TipoTitulo" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFTIT" />
+          <fields>
+            <field localName="CODTIPTITCOM" targetName="CODTIPTIT" />
+          </fields>
+        </relation>
+        <relation entityName="ADTSSACONF" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_ADTSSACONF" />
+          <fields>
+            <field localName="CODCONFEMPREC" targetName="CODIGO" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFFCIINC" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFFCIINC" />
+          <fields>
+            <field localName="NUCONF" targetName="NUCONF" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFMGN" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFMGN" />
+          <fields>
+            <field localName="NUMODCPAREC" targetName="NUMODELO" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFMGN" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFMGN" />
+          <fields>
+            <field localName="NUMODPCAREC" targetName="NUMODELO" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFMGN" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFMGN" />
+          <fields>
+            <field localName="NUMODCPAPOST" targetName="NUMODELO" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFMGN" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFMGN" />
+          <fields>
+            <field localName="NUMODREMPOST" targetName="NUMODELO" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFMGN" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFMGN" />
+          <fields>
+            <field localName="NUMODPCAPOST" targetName="NUMODELO" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFMGN" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFMGN" />
+          <fields>
+            <field localName="NUMODCPAFRV" targetName="NUMODELO" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFMGN" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFMGN" />
+          <fields>
+            <field localName="NUMODREMFRV" targetName="NUMODELO" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFMGN" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFMGN" />
+          <fields>
+            <field localName="NUMODBNFFRV" targetName="NUMODELO" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFMGN" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFMGN" />
+          <fields>
+            <field localName="NUMODMORFRV" targetName="NUMODELO" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="ADTSSACONFCR">
+      <instanceDescription><![CDATA[CR Permitidos]]></instanceDescription>
+      <tableInfo name="AD_ADTSSACONFCR" sequenceType="M">
+        <category><![CDATA[Adiantamento SSA]]></category>
+        <telaDescription><![CDATA[Detail da AD_ADTSSACONF]]></telaDescription>
+        <tableDescription><![CDATA[CR Permitidos]]></tableDescription>
+        <primaryKey>
+          <CODIGO />
+          <CODCENCUS />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODCENCUS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Centro de Resultado]]></description>
+        </field>
+        <field name="CODIGO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Código]]></description>
+        </field>
+        <field name="EXIGEPROJETO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Exige Projeto]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[S]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="CentroResultado" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICUS" />
+          <fields>
+            <field localName="CODCENCUS" targetName="CODCENCUS" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="AD_TSFTCP">
+      <instanceDescription><![CDATA[Tabela Comissão Postura/Recria]]></instanceDescription>
+      <tableInfo name="AD_TSFTCP" sequenceType="A" sequenceField="CODTABPOS" presentationField="DESCRTAB">
+        <category><![CDATA[Integração - Comissão Postura]]></category>
+        <telaDescription><![CDATA[Autor: M. Rangel
+Tabela de Comissão para Postura]]></telaDescription>
+        <tableDescription><![CDATA[Tabela Comissão Postura]]></tableDescription>
+        <primaryKey>
+          <CODTABPOS />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODTABPOS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Tabela]]></description>
+        </field>
+        <field name="DESCRTAB" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Descrição da Tabela]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="AD_TSFTCPREF" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFTCPREF" />
+          <fields>
+            <field localName="CODTABPOS" targetName="CODTABPOS" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFTCPOVO" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFTCPOVO" />
+          <fields>
+            <field localName="CODTABPOS" targetName="CODTABPOS" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFTCPCUS" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFTCPCUS" />
+          <fields>
+            <field localName="CODTABPOS" targetName="CODTABPOS" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="AD_TSFTCPREF">
+      <instanceDescription><![CDATA[Referência]]></instanceDescription>
+      <tableInfo name="AD_TSFTCPREF" sequenceType="M">
+        <category><![CDATA[Integração - Comissão Postura]]></category>
+        <telaDescription><![CDATA[Aba "Referência" da tela de cadastro da Tabela de Comissão Postura]]></telaDescription>
+        <tableDescription><![CDATA[Referência]]></tableDescription>
+        <primaryKey>
+          <CODTABPOS />
+          <DTREF />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="DTREF" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Dt. Referência]]></description>
+        </field>
+        <field name="CODTABPOS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Tabela]]></description>
+        </field>
+        <field name="RECOPER" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Receita Operacional]]></description>
+          <expression><![CDATA[if($valorCampo == null){           
+      return java.math.BigDecimal.ZERO;
+} $valorCampo;]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[4]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="RECATRAT" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Receita Atratividade]]></description>
+          <expression><![CDATA[if($valorCampo == null){           
+      return java.math.BigDecimal.ZERO;
+} $valorCampo;]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[4]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="RECBONUS" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Receita Bônus]]></description>
+          <expression><![CDATA[if($valorCampo == null){           
+      return java.math.BigDecimal.ZERO;
+} $valorCampo;]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[4]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="RECTOTAL" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Receita Total]]></description>
+          <expression><![CDATA[$col_RECOPER .add($col_RECATRAT).add($col_RECBONUS);]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[4]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+      </fields>
+    </instance>
+  </instances>
+</metadata>
+

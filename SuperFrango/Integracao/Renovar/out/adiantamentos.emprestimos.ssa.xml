@@ -1,0 +1,3430 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<metadata>
+  <exportInfo>
+    <exportTime>14/11/2019 17:04:45</exportTime>
+    <systemVersion>4.0b34</systemVersion>
+    <systemCharSet>ISO-8859-1</systemCharSet>
+    <dbMetadata>
+      <dbUser>SANKHYA</dbUser>
+      <urlConnection><![CDATA[jdbc:oracle:thin:@192.168.1.65:1521/orcl]]></urlConnection>
+      <jdbcDriver><![CDATA[Oracle JDBC driver 12.1.0.1.0]]></jdbcDriver>
+      <DBMS><![CDATA[Oracle - Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
+With the Partitioning, OLAP, Advanced Analytics and Real Application Testing options]]></DBMS>
+    </dbMetadata>
+  </exportInfo>
+  <menu description="Adiantamento / Empréstimo SSA" name="MENU_ADICIONAL_cc1ed7c396e344adb12283a580a286fa">
+    <properties>
+      <tipoLancador><![CDATA[TA]]></tipoLancador>
+      <resourceID><![CDATA[br.com.sankhya.menu.adicional.ADTSSACAB]]></resourceID>
+      <entityName><![CDATA[ADTSSACAB]]></entityName>
+      <contexto><![CDATA[mge]]></contexto>
+    </properties>
+  </menu>
+  <instances>
+    <instance name="ADTSSACONFEMP">
+      <instanceDescription><![CDATA[Empresas Permitidas]]></instanceDescription>
+      <tableInfo name="AD_ADTSSACONFEMP" sequenceType="M">
+        <category><![CDATA[Adiantamento SSA]]></category>
+        <telaDescription><![CDATA[Detail da AD_ADTSSACONF]]></telaDescription>
+        <tableDescription><![CDATA[Empresas Permitidas]]></tableDescription>
+        <primaryKey>
+          <CODIGO />
+          <CODEMP />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODEMP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="5">
+          <description><![CDATA[Empresa]]></description>
+        </field>
+        <field name="CODIGO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Código]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Empresa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIEMP" />
+          <fields>
+            <field localName="CODEMP" targetName="CODEMP" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="ADTSSACONF">
+      <instanceDescription><![CDATA[Configuração de Adiantamento / Empréstimo SSA]]></instanceDescription>
+      <tableInfo name="AD_ADTSSACONF" sequenceType="A" sequenceField="CODIGO" presentationField="DESCRICAO">
+        <category><![CDATA[Adiantamento SSA]]></category>
+        <telaDescription><![CDATA[Tabela de Configurações da rotina de Adiantamento / Empréstimo SSA. Details desta:
+AD_ADTSSACONFEMP
+AD_ADTSSACONFUSU
+AD_ADTSSACONFNAT
+AD_ADTSSACONFCR]]></telaDescription>
+        <tableDescription><![CDATA[Configuração de Adiantamento / Empréstimo]]></tableDescription>
+        <primaryKey>
+          <CODIGO />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODIGO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Código]]></description>
+        </field>
+        <field name="DESCRICAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Descrição]]></description>
+        </field>
+        <field name="CODTIPOPERREC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Tipo Operação Receita]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="TIPOTITREC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S" size="5">
+          <description><![CDATA[Tipo Título Receita]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODTIPOPERDESP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Tipo Operação Despesa]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="JURO" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[% Juro Mínimo]]></description>
+        </field>
+        <field name="PARCELA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Nr. Máximo de Parcelas]]></description>
+        </field>
+        <field name="VLRMAX" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Vlr. Máximo Empréstimo]]></description>
+        </field>
+        <field name="TIPOJURO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Tipo de Juro]]></description>
+          <options>
+            <option value="S"><![CDATA[Simples]]></option>
+            <option value="C"><![CDATA[Composto]]></option>
+          </options>
+        </field>
+        <field name="JUROMENOR" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Se Juro Menor que Mínimo]]></description>
+          <options>
+            <option value="B"><![CDATA[Bloqueia Lançamento]]></option>
+            <option value="S"><![CDATA[Solicita Aprovação]]></option>
+            <option value="P" default="S"><![CDATA[Permite Continuar]]></option>
+          </options>
+        </field>
+        <field name="PARCELAMAIOR" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Se Parcelas Maior que Máximo]]></description>
+          <options>
+            <option value="B"><![CDATA[Bloqueia Lançamento]]></option>
+            <option value="S"><![CDATA[Solicita Aprovação]]></option>
+            <option value="P" default="S"><![CDATA[Permite Continuar]]></option>
+          </options>
+        </field>
+        <field name="VLRMAIOR" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Se Valor Maior que Máximo]]></description>
+          <options>
+            <option value="B"><![CDATA[Bloqueia Lançamento]]></option>
+            <option value="S"><![CDATA[Solicita Aprovação]]></option>
+            <option value="P" default="S"><![CDATA[Permite Continuar]]></option>
+          </options>
+        </field>
+        <field name="PERMPARCDIF" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Permite Parceiro Receita <> Despesa]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[S]]></prop>
+          </properties>
+        </field>
+        <field name="CODCTABCOINT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S" size="5">
+          <description><![CDATA[Conta Bancária Padrão]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="PARCELAR" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Parcelar?]]></description>
+          <options>
+            <option value="1"><![CDATA[Receita]]></option>
+            <option value="-1" default="S"><![CDATA[Despesa]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CARENCIA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Máximo Dias 1ª Parcela]]></description>
+        </field>
+        <field name="CARENCIAMAIOR" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Se Carência Maior que Máximo]]></description>
+          <options>
+            <option value="B"><![CDATA[Bloqueia Lançamento]]></option>
+            <option value="S"><![CDATA[Solicita Aprovação]]></option>
+            <option value="P" default="S"><![CDATA[Permite Continuar]]></option>
+          </options>
+        </field>
+        <field name="SEACUMULAR" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Se Acumular Adiantamentos]]></description>
+          <options>
+            <option value="B"><![CDATA[Bloqueia Lançamento]]></option>
+            <option value="S"><![CDATA[Solicita Aprovação]]></option>
+            <option value="P" default="S"><![CDATA[Permite Continuar]]></option>
+          </options>
+        </field>
+        <field name="EXIGAPRDESP" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Exige Aprovação Despesa]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[S]]></prop>
+          </properties>
+        </field>
+        <field name="FORMA" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Forma]]></description>
+          <options>
+            <option value="C"><![CDATA[Somente Compensação]]></option>
+            <option value="T" default="S"><![CDATA[Todas]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="AJUSTAVENC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="N">
+          <description><![CDATA[Dias p/ Ajuste Vencimento?]]></description>
+          <expression><![CDATA[if( $col_AJUSTAVENC.intValue() < 0 || $col_AJUSTAVENC.intValue() > 1000){
+      throw new IllegalArgumentException("Variação informada não pode ser superior a 1000 dias!");
+}
+
+return $col_AJUSTAVENC;]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CALCULAVENC" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Calcula Vencimento]]></description>
+          <options>
+            <option value="M"><![CDATA[Mensal]]></option>
+            <option value="B"><![CDATA[Bimestral]]></option>
+            <option value="S"><![CDATA[Semestral]]></option>
+            <option value="A" default="S"><![CDATA[Anual]]></option>
+          </options>
+        </field>
+        <field name="CODUSUAPR" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Usuário Apr. Financeira]]></description>
+        </field>
+        <field name="RENOVAR" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[É Renovar?]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="TipoTitulo" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFTIT" />
+          <fields>
+            <field localName="TIPOTITREC" targetName="CODTIPTIT" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <expression><![CDATA[EXISTS (Select 1 from TSILIM L Where l.evento = 1042 and l.codusu = this.CODUSU)]]></expression>
+          <fields>
+            <field localName="CODUSUAPR" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="TipoOperacao" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFTOP" />
+          <expression><![CDATA[@ref-param[force-one-to-one=true]]]></expression>
+          <fields>
+            <field localName="CODTIPOPERREC" targetName="CODTIPOPER" />
+          </fields>
+        </relation>
+        <relation entityName="ContaBancaria" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICTA" />
+          <fields>
+            <field localName="CODCTABCOINT" targetName="CODCTABCOINT" />
+          </fields>
+        </relation>
+        <relation entityName="TipoOperacao" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFTOP" />
+          <fields>
+            <field localName="CODTIPOPERDESP" targetName="CODTIPOPER" />
+          </fields>
+        </relation>
+        <relation entityName="ADTSSACONFEMP" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_ADTSSACONFEMP" />
+          <fields>
+            <field localName="CODIGO" targetName="CODIGO" />
+          </fields>
+        </relation>
+        <relation entityName="ADTSSACONFUSU" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_ADTSSACONFUSU" />
+          <fields>
+            <field localName="CODIGO" targetName="CODIGO" />
+          </fields>
+        </relation>
+        <relation entityName="ADTSSACONFNAT" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_ADTSSACONFNAT" />
+          <fields>
+            <field localName="CODIGO" targetName="CODIGO" />
+          </fields>
+        </relation>
+        <relation entityName="ADTSSACONFCR" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_ADTSSACONFCR" />
+          <fields>
+            <field localName="CODIGO" targetName="CODIGO" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="ADTSSACONFUSU">
+      <instanceDescription><![CDATA[Usuários Permitidos]]></instanceDescription>
+      <tableInfo name="AD_ADTSSACONFUSU" sequenceType="M">
+        <category><![CDATA[Adiantamento SSA]]></category>
+        <telaDescription><![CDATA[Detail da AD_ADTSSACONF]]></telaDescription>
+        <tableDescription><![CDATA[Usuários Permitidos]]></tableDescription>
+        <primaryKey>
+          <CODIGO />
+          <CODUSU />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODIGO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Código]]></description>
+        </field>
+        <field name="CODUSU" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="5">
+          <description><![CDATA[Cód. Usuário]]></description>
+        </field>
+        <field name="ALTVLRDESDOB" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Altera Vlr Desdobramento?]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="ALTVLRJUROS" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Altera Vlr. Juros?]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSU" targetName="CODUSU" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="AD_ADTSSAPARRENOVAR">
+      <instanceDescription><![CDATA[Adiantamento SSA Renovar]]></instanceDescription>
+      <tableInfo name="AD_ADTSSAPARRENOVAR" sequenceType="A" sequenceField="SEQUENCIA">
+        <category><![CDATA[Adiantamento SSA]]></category>
+        <tableDescription><![CDATA[Adiantamento SSA Renovar]]></tableDescription>
+        <primaryKey>
+          <NUNICO />
+          <SEQUENCIA />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="SEQUENCIA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Sequencia]]></description>
+        </field>
+        <field name="NUNICO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Nr. Processo]]></description>
+        </field>
+        <field name="DTVENC" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Vencimento]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUFINREC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nº Único Receita]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUFINDESP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Nº Único Despesa]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="VLRDESDOB" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Vlr. Desdobramento]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="CODPARC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Fornecedor]]></description>
+        </field>
+        <field name="NUMNOTA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nro. Nota]]></description>
+        </field>
+        <field name="HISTORICO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Histórico]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Financeiro" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFFIN" />
+          <fields>
+            <field localName="NUFINDESP" targetName="NUFIN" />
+          </fields>
+        </relation>
+        <relation entityName="ParceiroFornecedorCotacao" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPAR" />
+          <fields>
+            <field localName="CODPARC" targetName="CODPARC" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="ADTSSACAB">
+      <instanceDescription><![CDATA[Adiantamento / Empréstimo SSA]]></instanceDescription>
+      <tableInfo name="AD_ADTSSACAB" sequenceType="A" sequenceField="NUNICO">
+        <category><![CDATA[Adiantamento SSA]]></category>
+        <telaDescription><![CDATA[Rotina Adiantamento / Empréstimo SSA]]></telaDescription>
+        <tableDescription><![CDATA[Adiantamento / Empréstimo SSA]]></tableDescription>
+        <primaryKey>
+          <NUNICO />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="NUNICO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Nr. Processo]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[0]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Nr. Processo]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="TIPO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Tipo de Processo]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[1]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Tipo de Processo]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODEMP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Empresa]]></description>
+          <properties>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[2]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Cód Empresa]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODPARC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Parceiro Despesa]]></description>
+          <properties>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[3]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="apresentacao"><![CDATA[RAZAOSOCIAL]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Parceiro Despesa]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODPARCREC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Parceiro Receita]]></description>
+        </field>
+        <field name="SITUACAO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Situação]]></description>
+          <options>
+            <option value="E"><![CDATA[Elaborando]]></option>
+            <option value="P"><![CDATA[Pendente de Aprovação]]></option>
+            <option value="A"><![CDATA[Aprovado]]></option>
+            <option value="R" default="S"><![CDATA[Reprovado]]></option>
+          </options>
+          <properties>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[4]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Situação]]></prop>
+          </properties>
+        </field>
+        <field name="DTNEG" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Negociação]]></description>
+          <properties>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[5]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Dt. Negociação]]></prop>
+            <prop name="filterType"><![CDATA[period]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados da Negociação]]></prop>
+          </properties>
+        </field>
+        <field name="DTVENC" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Débito / Crédito em?]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados da Negociação]]></prop>
+          </properties>
+        </field>
+        <field name="FORMA" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Forma]]></description>
+          <options>
+            <option value="1"><![CDATA[Ted/Doc]]></option>
+            <option value="2"><![CDATA[Cheque]]></option>
+            <option value="3"><![CDATA[Espécie]]></option>
+            <option value="4"><![CDATA[Compensação]]></option>
+            <option value="5" default="S"><![CDATA[Boleto]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados da Negociação]]></prop>
+          </properties>
+        </field>
+        <field name="VLRDESDOB" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Valor]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados da Negociação]]></prop>
+          </properties>
+        </field>
+        <field name="NRPARCELAS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nr. Parcelas]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados Parcelamento]]></prop>
+          </properties>
+        </field>
+        <field name="DTVENC1" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Vencto 1º Parcela]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados Parcelamento]]></prop>
+          </properties>
+        </field>
+        <field name="TAXA" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Taxa Juros (%)]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados Parcelamento]]></prop>
+          </properties>
+        </field>
+        <field name="TIPOJURO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Tipo de Juro]]></description>
+          <expression><![CDATA[tipoJuro = null;
+
+$sql.select("C.TIPOJURO","AD_ADTSSACONF C","C.CODIGO = " + $col_TIPO);
+
+if( $sql.next() ){
+   tipoJuro = $sql.getString(1);
+}
+
+return tipoJuro;]]></expression>
+          <options>
+            <option value="S"><![CDATA[Simples]]></option>
+            <option value="C"><![CDATA[Composto]]></option>
+            <option value="N" default="S"><![CDATA[Não Cobra Juros]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados Parcelamento]]></prop>
+          </properties>
+        </field>
+        <field name="HISTORICO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Histórico]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados da Negociação]]></prop>
+          </properties>
+        </field>
+        <field name="CODPROJ" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Projeto]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados da Negociação]]></prop>
+          </properties>
+        </field>
+        <field name="CODNAT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Natureza]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados da Negociação]]></prop>
+          </properties>
+        </field>
+        <field name="CODCENCUS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[CR]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados da Negociação]]></prop>
+          </properties>
+        </field>
+        <field name="CODCENCUSRESP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[CR. Solicitante (Apr. Despesa)]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados da Negociação]]></prop>
+          </properties>
+        </field>
+        <field name="CODCTABCOINT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Conta Bancária]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados da Negociação]]></prop>
+          </properties>
+        </field>
+        <field name="RESUMO" systemField="N" dataType="S" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Resumo]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados Integração]]></prop>
+          </properties>
+        </field>
+        <field name="NUFIN" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nr. Único Despesa Gerado]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados Integração]]></prop>
+          </properties>
+        </field>
+        <field name="NUACERTO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nr. Adiantamento]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados Integração]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSUINC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Usuário Inclusão]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Log]]></prop>
+          </properties>
+        </field>
+        <field name="DHINC" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh Inclusão]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Log]]></prop>
+          </properties>
+        </field>
+        <field name="DHSOLICITACAO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh Solicitação Aprovação]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Log]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSUFIN" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Usuário Apr. Financeira]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Log]]></prop>
+          </properties>
+        </field>
+        <field name="DHAPROVFIN" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh Aprovação Financeira]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Log]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSUAPR" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Usuário Apr. Adiantamento]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Log]]></prop>
+          </properties>
+        </field>
+        <field name="DHAPROVADT" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh Aprovação Adiantamento]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Log]]></prop>
+          </properties>
+        </field>
+        <field name="MODCRED" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Modalidade de Crédito (Finan. Bancário)]]></description>
+          <options>
+            <option value="E.G.F."><![CDATA[E.G.F.]]></option>
+            <option value="F.C.O"><![CDATA[F.C.O]]></option>
+            <option value="FINAME"><![CDATA[FINAME]]></option>
+            <option value="FINEP."><![CDATA[FINEP.]]></option>
+            <option value="FINIMP"><![CDATA[FINIMP]]></option>
+            <option value="INOVAGRO"><![CDATA[INOVAGRO]]></option>
+            <option value="N.C.E."><![CDATA[N.C.E.]]></option>
+            <option value="N.P.R."><![CDATA[N.P.R.]]></option>
+            <option value="PROGEREM"><![CDATA[PROGEREM]]></option>
+            <option value="CUSTEIO PECUÁRIO"><![CDATA[CUSTEIO PECUÁRIO]]></option>
+            <option value="CUSTEIO LAVOURA"><![CDATA[CUSTEIO LAVOURA]]></option>
+            <option value="CARTA FIANÇA"><![CDATA[CARTA FIANÇA]]></option>
+            <option value="CAPITAL DE GIRO"><![CDATA[CAPITAL DE GIRO]]></option>
+            <option value="C.P.R."><![CDATA[C.P.R.]]></option>
+            <option value="A.C.C. - EXPORTAÇÃO"><![CDATA[A.C.C. - EXPORTAÇÃO]]></option>
+            <option value="4131-FINEX"><![CDATA[4131-FINEX]]></option>
+            <option value="A.B.C." default="S"><![CDATA[A.B.C.]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados Integração]]></prop>
+          </properties>
+        </field>
+        <field name="NUMNOTA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nr. Documento]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Dados da Negociação]]></prop>
+          </properties>
+        </field>
+        <field name="NUMCONTRATO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Número do contrato]]></description>
+        </field>
+        <field name="DHALTER" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Alteração]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Parceiro" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPAR" />
+          <expression><![CDATA[this.ATIVO = 'S']]></expression>
+          <fields>
+            <field localName="CODPARC" targetName="CODPARC" />
+          </fields>
+        </relation>
+        <relation entityName="Contrato" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TCSCON" />
+          <fields>
+            <field localName="NUMCONTRATO" targetName="NUMCONTRATO" />
+          </fields>
+        </relation>
+        <relation entityName="Natureza" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFNAT" />
+          <expression><![CDATA[@form-filter[this.CODNAT IN (SELECT CODNAT FROM AD_ADTSSACONFNAT N WHERE N.CODIGO = form.TIPO)
+]this.ATIVA = 'S']]></expression>
+          <fields>
+            <field localName="CODNAT" targetName="CODNAT" />
+          </fields>
+        </relation>
+        <relation entityName="Empresa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIEMP" />
+          <expression><![CDATA[@form-filter[this.CODEMP IN (SELECT CODEMP FROM AD_ADTSSACONFEMP C WHERE  C.CODIGO = form.TIPO)]]]></expression>
+          <fields>
+            <field localName="CODEMP" targetName="CODEMP" />
+          </fields>
+        </relation>
+        <relation entityName="Projeto" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TCSPRJ" />
+          <fields>
+            <field localName="CODPROJ" targetName="CODPROJ" />
+          </fields>
+        </relation>
+        <relation entityName="CentroResultado" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICUS" />
+          <expression><![CDATA[@form-filter[this.CODCENCUS IN (SELECT CODCENCUS FROM AD_ADTSSACONFCR N WHERE N.CODIGO = form.TIPO)]this.ATIVO = 'S']]></expression>
+          <fields>
+            <field localName="CODCENCUS" targetName="CODCENCUS" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSUINC" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="ContaBancaria" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICTA" />
+          <fields>
+            <field localName="CODCTABCOINT" targetName="CODCTABCOINT" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSUFIN" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="CentroResultado" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICUS" />
+          <fields>
+            <field localName="CODCENCUSRESP" targetName="CODCENCUS" />
+          </fields>
+        </relation>
+        <relation entityName="Parceiro" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPAR" />
+          <fields>
+            <field localName="CODPARCREC" targetName="CODPARC" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSUAPR" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="ADTSSACONF" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_ADTSSACONF" />
+          <expression><![CDATA[this.CODIGO In (SELECT CODIGO FROM AD_ADTSSACONFUSU U Where U.CODUSU IN stp_get_codusulogado) or stp_get_codusulogado = 0]]></expression>
+          <fields>
+            <field localName="TIPO" targetName="CODIGO" />
+          </fields>
+        </relation>
+        <relation entityName="ADTSSALGTV" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_ADTSSALGTV" />
+          <fields>
+            <field localName="NUNICO" targetName="NUNICO" />
+          </fields>
+        </relation>
+        <relation entityName="ADTSSAPAR" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_ADTSSAPAR" />
+          <fields>
+            <field localName="NUNICO" targetName="NUNICO" />
+          </fields>
+        </relation>
+        <relation entityName="AD_ADTSSAPARRENOVAR" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_ADTSSAPARRENOVAR" />
+          <fields>
+            <field localName="NUNICO" targetName="NUNICO" />
+          </fields>
+        </relation>
+      </relationShip>
+      <actions>
+        <action type="SP">
+          <description><![CDATA[Gera Parcelas - old]]></description>
+          <actionConfig>
+            <dbCall name="STP_ADTSSACAB_GERAPAR_SF" refreshType="SEL" txManual="false" rootEntity="ADTSSACAB" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "STP_ADTSSACAB_GERAPAR_SF" (p_codusu    number,
+                                                       p_idsessao  varchar2,
+                                                       p_qtdlinhas number,
+                                                       p_mensagem  out varchar2) as
+ field_nunico number;
+
+ r_cab  ad_adtssacab%rowtype;
+ r_conf ad_adtssaconf%rowtype;
+
+ v_dif              float;
+ v_dt               int := 1;
+ v_dtvenc           date;
+ v_maxparcela       int;
+ v_mensagemusu      varchar2(200);
+ v_nufin            number;
+ v_nrparcela        number := 1;
+ v_recdesp          number;
+ v_sequencia        number;
+ v_solicitacarencia number := 0;
+ v_solicitajuro     number := 0;
+ v_solicitaparcela  number := 0;
+ v_solicitavalor    number := 0;
+ --v_Valorjuro        Float;
+ --v_Valortotal       Float;
+ p_vlrtot       float;
+ p_vlr_jur_parc float;
+ p_vlr_parc     float;
+ p_vlrtot_juro  float;
+
+ v_titulo   varchar(4000);
+ v_mensagem varchar(4000);
+ p_count    int;
+ v_incluir  boolean;
+
+begin
+
+ /**************************
+ Autor:     Ricardo Soares de Oliveira
+ Criado em: 09/02/2018
+ Objetivo:  Gerar as parcelas, primeiro faço essa geração para que o usuário possa por exemplo mudar a data de vencimento, se eu mando direto como despesa vai bloquear
+            tanto por conta de sábado/domingo/feriado quanto por causa do teto.
+ **************************/
+
+ if p_qtdlinhas > 1 then
+  raise_application_error(-20101, fc_formatahtml_sf('Selecione apenas um registro por vez', null, null));
+ end if;
+
+ field_nunico := act_int_field(p_idsessao, 1, 'NUNICO');
+
+ --- by rodrigo 05/07/2019  projeto renovar  
+ select count(*) into p_count from ad_adtssaparrenovar a where a.nunico = field_nunico;
+
+ if p_count > 0 then
+  raise_application_error(-20101,
+                          fc_formatahtml_sf('Existe parcela lançada na aba  <i>Adiantamento SSA Renovar</i>',
+                                            'Cancelando.',
+                                            null));
+ 
+ end if;
+
+ select c.* into r_cab from ad_adtssacab c where c.nunico = field_nunico;
+
+ if r_cab.situacao not in ('E', 'R') then
+  raise_application_error(-20101,
+                          fc_formatahtml_sf('Registro com situação diferente de <i>Elaborando</i>',
+                                            'Se necessário reabra a solicitação.',
+                                            null));
+ end if;
+
+ select max(data) into v_dtvenc from table(func_dias_uteis_mmac(trunc(sysdate), trunc(sysdate) + 10, 1, 4));
+
+ if v_dtvenc > r_cab.dtvenc then
+  raise_application_error(-20101,
+                          fc_formatahtml_sf('Ação não permitida!',
+                                            'Altere a data informada no campo "Débito / Crédito em"',
+                                            'A solicitação deve ser para pelo menos 3 dias uteis a partir da solicitação.'));
+ 
+ end if;
+
+ select c.* into r_conf from ad_adtssaconf c where c.codigo = r_cab.tipo;
+
+ -- Verifica se a carencia é maior que o permitido
+ if nvl(r_conf.carencia, 0) > 0 and nvl(r_conf.carencia, 0) < (r_cab.dtvenc1 - r_cab.dtvenc) and
+    r_conf.carenciamaior = 'B' then
+  raise_application_error(-20101,
+                          fc_formatahtml_sf('Ação Cancelada!',
+                                            'Carência de vencimento da primeira parcela maior que o permitido para o tipo de processo selecionado!',
+                                            null));
+ 
+ elsif nvl(r_conf.carencia, 0) > 0 and nvl(r_conf.carencia, 0) < (r_cab.dtvenc1 - r_cab.dtvenc) and
+       r_conf.carenciamaior = 'S' and r_cab.codnat not in (9053900, 9054000, 9054200, 9054300) then
+  -- Naturezas 9053900,9054000,9054200,9054300 relativo a Fundo de Retenção, as parcelas serão geradas todas para a mesma data, neste caso não há necessidade de solicitar aprovação do financeiro 
+  v_solicitacarencia := 1;
+ end if;
+
+ -- Verifica se o valor concedido esta dentro do limite permitido
+ if nvl(r_conf.vlrmax, 1) < nvl(r_cab.vlrdesdob, 1) and r_conf.vlrmaior = 'B' then
+  raise_application_error(-20101,
+                          fc_formatahtml_sf('Ação Cancelada!',
+                                            'Valor máximo nesse tipo de processo não pode ser superior a ' ||
+                                            to_char(ad_get.formatavalor(r_conf.vlrmax)),
+                                            null));
+ 
+ elsif nvl(r_conf.vlrmax, 1) < nvl(r_cab.vlrdesdob, 1) and r_conf.vlrmaior = 'S' and
+       r_cab.codnat not in (9053900, 9054000, 9054200, 9054300) then
+  -- Naturezas 9053900,9054000,9054200,9054300 relativo a Fundo de Retenção, as parcelas serão geradas todas para a mesma data, neste caso não há necessidade de solicitar aprovação do financeiro
+  v_solicitavalor := 1;
+ end if;
+
+ -- Verifica se o número de parcelas informado esta dentro do limite permitido.
+ if nvl(r_conf.parcela, 12) < nvl(r_cab.nrparcelas, 1) and r_conf.parcelamaior = 'B' then
+  raise_application_error(-20101,
+                          fc_formatahtml_sf('Ação Cancelada!',
+                                            'Número de parcelas nesse tipo de processo não pode ser superior a ' ||
+                                            r_conf.parcela,
+                                            null));
+ 
+ elsif nvl(r_conf.parcela, 12) < nvl(r_cab.nrparcelas, 1) and r_conf.parcelamaior = 'S' and
+       r_cab.codnat not in (9053900, 9054000, 9054200, 9054300) then
+  -- Naturezas 9053900,9054000,9054200,9054300 relativo a Fundo de Retenção, as parcelas serão geradas todas para a mesma data, neste caso não há necessidade de solicitar aprovação do financeiro
+  v_solicitaparcela := 1;
+ end if;
+
+ -- Verifica se o juro informado esta dentro do limite permitido.
+ if nvl(r_conf.juro, 0) > 0 and nvl(r_conf.juro, 0) > nvl(r_cab.taxa, 0) and r_conf.juromenor = 'B' then
+  raise_application_error(-20101,
+                          fc_formatahtml_sf('Ação Cancelada!',
+                                            'Juro cobrado nesse tipo de processo não pode ser inferior a ' ||
+                                            r_conf.juro || '%',
+                                            null));
+ 
+ elsif nvl(r_conf.juro, 0) > 0 and nvl(r_conf.juro, 0) > nvl(r_cab.taxa, 0) and r_conf.juromenor = 'S' and
+       r_cab.codnat not in (9053900, 9054000, 9054200, 9054300) then
+  -- Naturezas 9053900,9054000,9054200,9054300 relativo a Fundo de Retenção, as parcelas serão geradas todas para a mesma data, neste caso não há necessidade de solicitar aprovação do financeiro
+  v_solicitajuro := 1;
+ end if;
+
+ -- Se o registro esta pendente de aprovação em função de juro, nr de parcelas ou valor do adiantamento envia uma requisição de aprovação para o financeiro, caso contrário faz a inclusão na TGFFIN pela
+ -- Stp_ADTSSAcab_Gerafin_Sf e a solicitação de aprovação vai direto para o responsável. 
+ -- Se estiver pendente de aprovação financeira, quem vai chamar a inclusão do financeiro vai ser a trigger da LIB
+ if (v_solicitajuro = 1 or v_solicitaparcela = 1 or v_solicitavalor = 1 or v_solicitacarencia = 1) and
+    r_conf.exigaprdesp = 'S' then
+ 
+  if v_solicitajuro = 1 then
+   v_mensagemusu := ' Juro';
+  end if;
+ 
+  if v_solicitaparcela = 1 then
+   v_mensagemusu := case
+                     when v_mensagemusu is not null then
+                      v_mensagemusu || ' e Nr. de Parcelas'
+                     else
+                      v_mensagemusu || ' Nr. de Parcelas'
+                    end;
+  end if;
+ 
+  if v_solicitavalor = 1 then
+   v_mensagemusu := case
+                     when v_mensagemusu is not null then
+                      v_mensagemusu || ' e Valor '
+                     else
+                      v_mensagemusu || ' Valor'
+                    end;
+  end if;
+ 
+  if v_solicitacarencia = 1 then
+   v_mensagemusu := case
+                     when v_mensagemusu is not null then
+                      v_mensagemusu || ' e Carência '
+                     else
+                      v_mensagemusu || ' Carência'
+                    end;
+  
+  end if;
+ 
+  v_titulo   := 'Verifique dados do adiantamento!';
+  v_mensagem := 'As configurações de ' || v_mensagemusu ||
+                ' estão divergentes das regras definidas para esse tipo de adiantamento.\n\n<font color="#FF0000">Ao gerar a solicitação, alem da aprovação do responsável será também encaminhado uma solicitação de aprovação para o departamento financeiro</font>.\n\nDeseja Continuar?';
+  v_incluir  := act_confirmar(v_titulo, v_mensagem, p_idsessao, 1);
+ 
+ end if;
+
+ -- Gerando a Receita / Despesa Despesa
+
+ delete from ad_adtssapar where nunico = r_cab.nunico;
+
+ update ad_adtssacab c
+    set c.dhsolicitacao = null,
+        c.codusufin     = null,
+        c.dhaprovfin    = null,
+        c.codusuapr     = null,
+        c.dhaprovadt    = null,
+        c.situacao      = 'E'
+  where c.nunico = field_nunico;
+
+ v_recdesp := case
+               when r_conf.parcelar = '-1' then
+                1
+               else
+                -1
+              end;
+
+ insert into ad_adtssapar
+  (nunico, sequencia, nufin, dtvenc, vlrdesdob, vlrjuros, vlrtotal, recdesp, provisao, nrparcela, dtvencinic)
+ values
+  (r_cab.nunico, 1, null, r_cab.dtvenc, r_cab.vlrdesdob, 0, r_cab.vlrdesdob, v_recdesp, 'S', 1, r_cab.dtvenc);
+
+ -- Inserindo a(s) contrapartida
+ -- Se o tipo selecionado está configurado para parcelar receita ou despesa
+ v_recdesp := case
+               when r_conf.parcelar = '-1' then
+                -1
+               else
+                1
+              end;
+ v_sequencia := 2;
+
+ while v_nrparcela <= r_cab.nrparcelas
+ loop
+ 
+  --p_Vlr_Parc     := Round(v_Valortotal / r_Cab.Nrparcelas, 2);
+  p_vlr_parc     := round(r_cab.vlrdesdob / r_cab.nrparcelas, 2);
+  p_vlr_jur_parc := case
+                     when nvl(r_cab.taxa, 0) > 0 then
+                      ad_get.calculajuroprice(i => r_cab.taxa --Taxa
+                                             ,
+                                              n => r_cab.nrparcelas
+                                              --Nr de Parcelas
+                                             ,
+                                              pv => r_cab.vlrdesdob
+                                              --Valor Empréstimo*/
+                                             ,
+                                              p_dtneg => r_cab.dtvenc
+                                              --Data em que o empréstimo foi concedido
+                                             ,
+                                              p_dtprimvenc => r_cab.dtvenc1
+                                              --Data primeiro vencimento
+                                             ,
+                                              p_parcela => v_nrparcela
+                                              -- Nr. Parcela 
+                                             ,
+                                              p_tipojuro => r_cab.tipojuro
+                                              -- Tipo de Parcela S Simples ou C Composto
+                                             ,
+                                              p_tipocalculo => r_conf.calculavenc
+                                              -- Tipo de Cálculo M - Mensal, B - Bimestral, S - Semestral, A - Anual
+                                              )
+                     else
+                      0
+                    end;
+ 
+  insert into ad_adtssapar
+   (nunico, sequencia, nufin, dtvenc, vlrdesdob, vlrjuros, vlrtotal, recdesp, provisao, nrparcela, dtvencinic)
+  values
+   (field_nunico, v_sequencia, v_nufin,
+    case when v_nrparcela = 1 or r_cab.codnat in (9053900, 9054000, 9054200, 9054300)
+    -- Naturezas 9053900,9054000,9054200,9054300 relativo a Fundo de Retenção, as parcelas serão geradas todas para a mesma data
+     then r_cab.dtvenc1 else
+     ad_get.dia_util_ultimo(add_months(r_cab.dtvenc1,
+                                       (v_nrparcela * case when r_conf.calculavenc = 'B' then 2 when
+                                        r_conf.calculavenc = 'S' then 6 when r_conf.calculavenc = 'A' then 12 else 1 end) - case when
+                                       r_conf.calculavenc = 'B' then 2 when r_conf.calculavenc = 'S' then 6 when
+                                       r_conf.calculavenc = 'A' then 12 else 1 end)
+                            
+                           ,
+                            'P') end, round(p_vlr_parc, 2), round(p_vlr_jur_parc, 2),
+    round(p_vlr_parc + p_vlr_jur_parc, 2), v_recdesp, 'S', v_nrparcela,
+    case when v_nrparcela = 1 then r_cab.dtvenc1 else
+     ad_get.dia_util_ultimo(add_months(r_cab.dtvenc1,
+                                       (v_nrparcela * case when r_conf.calculavenc = 'B' then 2 when
+                                        r_conf.calculavenc = 'S' then 6 when r_conf.calculavenc = 'A' then 12 else 1 end) - case when
+                                       r_conf.calculavenc = 'B' then 2 when r_conf.calculavenc = 'S' then 6 when
+                                       r_conf.calculavenc = 'A' then 12 else 1 end)
+                            
+                           ,
+                            'P') end);
+ 
+  v_dt          := v_dt + 1;
+  v_nrparcela   := v_nrparcela + 1;
+  v_maxparcela  := v_maxparcela + 1;
+  v_sequencia   := v_sequencia + 1;
+  p_vlrtot      := nvl(p_vlrtot, 0) + p_vlr_parc;
+  p_vlrtot_juro := nvl(p_vlrtot_juro, 0) + p_vlr_jur_parc;
+ 
+ end loop;
+
+ v_dif := r_cab.vlrdesdob - p_vlrtot;
+
+ if v_dif <> 0 then
+  update ad_adtssapar p
+     set p.vlrdesdob = p.vlrdesdob + v_dif,
+         p.vlrtotal  = p.vlrtotal + v_dif
+   where p.sequencia = 2
+     and p.nunico = field_nunico;
+ end if;
+
+ if r_conf.exigaprdesp = 'S' then
+ 
+  p_mensagem := 'Parcelas Geradas! Verifique se as informações estão de acordo com o solicitado e encaminhe o registro para aprovação executando a rotina "Confirma / Solicita Aprovação"';
+ 
+ else
+  p_mensagem := 'Parcelas Geradas! Verifique se as informações estão de acordo com o solicitado e finalize executando a rotina "Confirma / Solicita Aprovação"';
+ 
+ end if;
+end;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Reabre Solicitação]]></description>
+          <actionConfig>
+            <dbCall name="STP_ADTSSACAB_CAN_SF" refreshType="SEL" txManual="false" rootEntity="ADTSSACAB" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "STP_ADTSSACAB_CAN_SF" (p_codusu    number, -- Código do usuário logado
+                                                   p_idsessao  varchar2, -- Identificador da execução. Serve para buscar informações dos parâmetros/campos da execução.
+                                                   p_qtdlinhas number, -- Informa a quantidade de registros selecionados no momento da execução.
+                                                   p_mensagem  out varchar2 -- Caso seja passada uma mensagem aqui, ela será exibida como uma informação ao usuário.
+                                                   ) as
+ field_nunico number;
+
+ r_cab   ad_adtssacab%rowtype;
+ v_count int;
+
+ v_incluir  boolean;
+ v_titulo   varchar(40);
+ v_mensagem varchar(200);
+ v_msgerro  varchar2(4000);
+
+begin
+
+ stp_set_atualizando('S');
+ ad_pkg_var.permite_update := true;
+
+ /**************************
+ Autor:     Ricardo Soares de Oliveira
+ Criado em: 31/07/2017
+ Objetivo:  Cancelar um adiantamento, desde que a despesa não tenha sido baixada ou enviada para o banco na rotina "Adiantamento / Empréstimo SSA"
+ 
+ Autor:     Ricardo Soares de Oliveira
+ Criado em: 18/06/2018
+ Objetivo:  Ajustei a procedure para efetuar as alterações a partir da Ad_Set.Del_Adiantamento e com isso centralizar os processos das telas Rateio de Valores por Parceiro, Adiantamento / Empréstimo SSA e Despesas integrado
+ **************************/
+ if p_qtdlinhas > 1 then
+  raise_application_error(-20101, fc_formatahtml_sf('Selecione apenas um registro por vez', null, null));
+ end if;
+
+ -- A variável "I" representa o registro corrente.
+ field_nunico := act_int_field(p_idsessao, 1, 'NUNICO');
+
+ select c.* into r_cab from ad_adtssacab c where c.nunico = field_nunico;
+
+ /* If r_Cab.Situacao In ('E') Then
+    Raise_Application_Error(-20101,
+                            Fc_Formatahtml_Sf('Registro já se encontra com situação <i>Elaborando</i>', Null, Null));
+ End If;*/
+
+ v_titulo   := 'Atenção';
+ v_mensagem := 'Deseja cancelar a solicitação?\nA situação voltará para <i>Elaborando</i>';
+ v_incluir  := act_confirmar(v_titulo, v_mensagem, p_idsessao, 1);
+
+ ad_set.del_adiantamento(p_nuacerto    => r_cab.nuacerto,
+                         p_tabela      => 'AD_ADTSSACAB',
+                         p_chavetabela => field_nunico,
+                         p_mensagem    => v_msgerro);
+
+ /*** 
+ Por Ricardo em 18/06/2018, as ações abaixo foram substituidas pela execução do pacote Ad_Set.Del_Adiantamento afim de centralizar as ações e facilitar ajustes futuros
+ 
+ Delete From Ad_Tblcmf t Where t.Nometaborig = 'AD_ADTSSACAB' And t.Nuchaveorig = Field_Nunico;
+ Delete From Tsilib l Where l.Nuchave = Field_Nunico And l.Tabela = 'AD_ADTSSACAB';
+ Delete From Tgffre Where Nuacerto = r_Cab.Nuacerto;
+ For r In (Select Nufin From Ad_Adtssapar l Where l.Nunico = Field_Nunico)
+ Loop
+    Select Count(*) Into v_Count From Tgffin f Where f.Nufin = r.Nufin And (f.Dhbaixa Is Not Null Or f.Numremessa Is Not Null);
+    If v_Count > 0 Then Raise_Application_Error(-20101, Fc_Formatahtml_Sf('Registro baixado ou enviado para banco, entre em contato com departamento financeiro', Null, Null));
+    Else Delete From Tgffin f Where f.Nufin = r.Nufin;
+    End If;
+ End Loop;
+ 
+ ***/
+
+ if v_msgerro is not null then
+  raise_application_error(-20191, fc_formatahtml('Ação Cancelada', v_msgerro || '. ', null));
+ end if;
+
+ delete from ad_adtssapar t where t.nunico = r_cab.nunico;
+ --- by rodrigo dia 4/07/2019 novo processo renovar
+ delete from ad_adtssaparrenovar t where t.nunico = r_cab.nunico;
+
+ update ad_adtssacab c
+    set c.codusuapr     = null,
+        c.codusufin     = null,
+        c.dhaprovadt    = null,
+        c.dhaprovfin    = null,
+        c.dhsolicitacao = null,
+        c.nuacerto      = null,
+        c.nufin         = null,
+        c.situacao      = 'E'
+  where c.nunico = field_nunico;
+
+ insert into ad_adtssalgtt
+  (nunico, dhalter, acao, codusu)
+ values
+  (r_cab.nunico, sysdate, 'Cancelada solicitações!', p_codusu);
+
+ p_mensagem := 'Solicitação cancelada com sucesso!';
+
+ stp_set_atualizando('N');
+ ad_pkg_var.permite_update := false;
+
+end;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Confirma / Solicita Aprovação - old]]></description>
+          <actionConfig>
+            <dbCall name="STP_ADTSSACAB_SOL_SF" refreshType="SEL" txManual="false" rootEntity="ADTSSACAB" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "STP_ADTSSACAB_SOL_SF" (p_Codusu    Number,
+                                                 p_Idsessao  Varchar2,
+                                                 p_Qtdlinhas Number,
+                                                 p_Mensagem  Out Varchar2) As
+   Field_Nunico Number;
+
+   r_Cab  Ad_Adtssacab%Rowtype;
+   r_Conf Ad_Adtssaconf%Rowtype;
+
+   v_Aprfin           Number := 0;
+   v_Count            Int;
+   v_Diascarencia     Number;
+   v_Dtvenc           Date;
+   v_Log              Varchar2(100);
+   v_Mensagemusu      Varchar2(500);
+   v_Solicitacarencia Number := 0;
+   v_Solicitajuro     Number := 0;
+   v_Solicitaparcela  Number := 0;
+   v_Solicitavalor    Number := 0;
+   v_Tipojuro         Varchar2(30);
+   v_Totdesp          Number;
+   v_Totrec           Number;
+
+   v_Titulo   Varchar(4000);
+   v_Mensagem Varchar(4000);
+   v_Incluir  Boolean;
+   v_Count1 INT;
+   p_Errmsg VARCHAR(200);
+   Errmsg VARCHAR(200);
+
+Begin
+
+   /**************************
+   Autor:     Ricardo Soares de Oliveira
+   Criado em: 27/07/2017
+   Objetivo:  Gerar o adiantamento com provisão = S, vai gerar receita e despesa, e após aprovado (TSILIB) a provisão para para N
+   
+   Autor:     Ricardo Soares de Oliveira
+   Alterado:  24/07/2018
+   Objetivo:  Foi habilitado para alterações o campo VLRDESDOB e criado um campo na AD_ADTSSACONFUSU para identificar se o usuário tem permissão de alterar o valor do desdobramento, que até então era bloqueado para alterações, e criado aqui uma regra que valida se o usuário pode ou não alterar e com isso houve a necessidade de validar se o valor total bate com o valor do adiantamento
+   
+   **************************/
+   If p_Qtdlinhas > 1 Then
+      Raise_Application_Error(-20101, Fc_Formatahtml_Sf('Selecione apenas um registro por vez', Null, Null));
+   End If;
+
+   Field_Nunico := Act_Int_Field(p_Idsessao, 1, 'NUNICO');
+
+   Select Count(*) Into v_Count From Ad_Adtssapar p Where p.Nunico = Field_Nunico;
+   --- BY RODRIGO DIA 4/07/2019 O.S 49204 projeto renovar
+   Select Count(*) Into v_Count1 From AD_ADTSSAPARRENOVAR  p Where p.Nunico = Field_Nunico;
+
+   If v_Count = 0  and v_Count1 = 0 Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Gere as parcelas antes de encaminhar para aprovação', Null, Null));
+   End If;
+
+   Select c.* Into r_Cab From Ad_Adtssacab c Where c.Nunico = Field_Nunico;
+
+   If r_Cab.Situacao Not In ('E') Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Registro com situação diferente de <i>Elaborando</i>', Null, Null));
+   End If;
+
+   If r_Cab.Dtvenc <= Trunc(Sysdate) + 1 Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Ação não permitida!',
+                                                 'Data informada no campo "Débito / Crédito em" inválida', Null));
+   End If;
+
+   Select Max(Data) Into v_Dtvenc From Table(Func_Dias_Uteis_Mmac(Trunc(Sysdate), Trunc(Sysdate) + 10, 1, 4));
+
+   If v_Dtvenc > r_Cab.Dtvenc Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Ação não permtitida!',
+                                                 'Altere a data informada no campo "Débito / Crédito em"',
+                                                 'A solicitação deve ser para pelo menos 3 dias uteis a partir da solicitação.'));
+   
+   End If;
+
+   Select Sum(Decode(p.Recdesp, 1, p.Vlrdesdob, 0)),
+          Sum(Decode(p.Recdesp, -1, p.Vlrdesdob, 0))
+     Into v_Totrec,
+          v_Totdesp
+     From Ad_Adtssapar p
+    Where p.Nunico = Field_Nunico;
+
+   If r_Cab.Vlrdesdob <> v_Totrec Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Ação Cancelada!',
+                                                 'A soma da coluna "Vlr Desdobramento" para Receitas da aba parcelas não bate com o "Valor do Empréstimo"',
+                                                 Null));
+   
+   End If;
+
+   If r_Cab.Vlrdesdob <> v_Totdesp Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Ação Cancelada!',
+                                                 'A soma da coluna "Vlr Desdobramento" para Despesas da aba parcelas não bate com o "Valor do Empréstimo"',
+                                                 Null));
+   
+   End If;
+
+   Select c.* Into r_Conf From Ad_Adtssaconf c Where c.Codigo = r_Cab.Tipo;
+
+   -- Verifica se exige aprovação e se informou CR Aprovador
+   If r_Conf.Exigaprdesp = 'S' And Nvl(r_Cab.Codcencusresp, 0) = 0 Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Ação Cancelada!', 'Informe o CR responsável pela aprovação da despesa',
+                                                 Null));
+   
+   End If;
+
+   -- Verifica se a carencia é maior que o permitido
+   If Nvl(r_Conf.Carencia, 0) > 0 And Nvl(r_Conf.Carencia, 0) < (r_Cab.Dtvenc1 - r_Cab.Dtvenc) And
+      r_Conf.Carenciamaior = 'B' Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Ação Cancelada!',
+                                                 'Carência de vencimento da primeira parcela maior que o permitido para o tipo de processo selecionado!',
+                                                 Null));
+   
+   Elsif Nvl(r_Conf.Carencia, 0) > 0 And Nvl(r_Conf.Carencia, 0) < (r_Cab.Dtvenc1 - r_Cab.Dtvenc) And
+         r_Conf.Carenciamaior = 'S' And r_Conf.Carenciamaior = 'S' And
+         r_Cab.Codnat Not In (9053900, 9054000, 9054200, 9054300) Then
+      -- Naturezas 9053900,9054000,9054200,9054300 relativo a Fundo de Retenção, as parcelas serão geradas todas para a mesma data, neste caso não há necessidade de solicitar aprovação do financeiro 
+      v_Solicitacarencia := 1;
+      v_Diascarencia     := (r_Cab.Dtvenc1 - r_Cab.Dtvenc);
+   End If;
+
+   -- Verifica se o valor concedido esta dentro do limite permitido
+   If Nvl(r_Conf.Vlrmax, 1) < Nvl(r_Cab.Vlrdesdob, 1) And r_Conf.Vlrmaior = 'B' Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Ação Cancelada!',
+                                                 'Valor máximo nesse tipo de processo não pode ser superior a ' ||
+                                                  To_Char(Ad_Get.Formatavalor(r_Conf.Vlrmax)), Null));
+   
+   Elsif Nvl(r_Conf.Vlrmax, 1) < Nvl(r_Cab.Vlrdesdob, 1) And r_Conf.Vlrmaior = 'S' And
+         r_Cab.Codnat Not In (9053900, 9054000, 9054200, 9054300) Then
+      -- Naturezas 9053900,9054000,9054200,9054300 relativo a Fundo de Retenção, as parcelas serão geradas todas para a mesma data, neste caso não há necessidade de solicitar aprovação do financeiro 
+      v_Solicitavalor := 1;
+   End If;
+
+   -- Verifica se o número de parcelas informado esta dentro do limite permitido
+   If Nvl(r_Conf.Parcela, 12) < Nvl(r_Cab.Nrparcelas, 1) And r_Conf.Parcelamaior = 'B' Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Ação Cancelada!',
+                                                 'Número de parcelas nesse tipo de processo não pode ser superior a ' ||
+                                                  r_Conf.Parcela, Null));
+   
+   Elsif Nvl(r_Conf.Parcela, 12) < Nvl(r_Cab.Nrparcelas, 1) And r_Conf.Parcelamaior = 'S' And
+         r_Cab.Codnat Not In (9053900, 9054000, 9054200, 9054300) Then
+      -- Naturezas 9053900,9054000,9054200,9054300 relativo a Fundo de Retenção, as parcelas serão geradas todas para a mesma data, neste caso não há necessidade de solicitar aprovação do financeiro 
+      v_Solicitaparcela := 1;
+   End If;
+
+   -- Verifica se o juro informado esta dentro do limite permitido
+   If Nvl(r_Conf.Juro, 0) > 0 And Nvl(r_Conf.Juro, 0) > Nvl(r_Cab.Taxa, 0) And r_Conf.Juromenor = 'B' Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Ação Cancelada!',
+                                                 'Juro cobrado nesse tipo de processo não pode ser inferior a ' ||
+                                                  r_Conf.Juro || '%', Null));
+   
+   Elsif Nvl(r_Conf.Juro, 0) > 0 And Nvl(r_Conf.Juro, 0) > Nvl(r_Cab.Taxa, 0) And r_Conf.Juromenor = 'S' And
+         r_Cab.Codnat Not In (9053900, 9054000, 9054200, 9054300) Then
+      -- Naturezas 9053900,9054000,9054200,9054300 relativo a Fundo de Retenção, as parcelas serão geradas todas para a mesma data, neste caso não há necessidade de solicitar aprovação do financeiro 
+      v_Solicitajuro := 1;
+   End If;
+
+   --Raise_Application_Error(-20105, v_Solicitavalor);
+   -- Se o registro esta pendente de aprovação em função de juro, nr de parcelas ou valor do adiantamento envia uma requisição de aprovação para o financeiro, caso contrário faz a inclusão na TGFFIN pela
+   If (v_Solicitajuro = 1 Or v_Solicitaparcela = 1 Or v_Solicitavalor = 1 Or v_Solicitacarencia = 1) And
+      r_Conf.Exigaprdesp = 'S' Then
+   
+      If v_Solicitajuro = 1 Then
+         v_Mensagemusu := 'Juro Minimo: ' || Nvl(r_Conf.Juro, 0) || '% - Juro Negociado: ' || Nvl(r_Cab.Taxa, 0) ||
+                          '%. ';
+      End If;
+   
+      If v_Solicitaparcela = 1 Then
+         v_Mensagemusu := Case
+                             When v_Mensagemusu Is Not Null Then
+                              v_Mensagemusu || '\nNr. Máximo Parcelas: ' || r_Conf.Parcela || ' Nr. Parcelas Negociado: ' || r_Cab.Nrparcelas || '. '
+                             Else
+                              v_Mensagemusu || 'Nr. Máximo Parcelas: ' || r_Conf.Parcela || ' Nr. Parcelas Negociado: ' || r_Cab.Nrparcelas || '. '
+                          End;
+      End If;
+   
+      If v_Solicitavalor = 1 Then
+         v_Mensagemusu := Case
+                             When v_Mensagemusu Is Not Null Then
+                              v_Mensagemusu || '\nVlr Máx Configurado: ' || Ad_Get.Formatavalor(r_Conf.Vlrmax) || ' Vlr Negociado: ' ||
+                              Ad_Get.Formatavalor(r_Cab.Vlrdesdob) || '. '
+                             Else
+                              v_Mensagemusu || 'Vlr Máx Configurado: ' || Ad_Get.Formatavalor(r_Conf.Vlrmax) || ' Vlr Negociado: ' ||
+                              Ad_Get.Formatavalor(r_Cab.Vlrdesdob) || '. '
+                          End;
+      End If;
+   
+      If v_Solicitacarencia = 1 Then
+         v_Mensagemusu := Case
+                             When v_Mensagemusu Is Not Null Then
+                              v_Mensagemusu || '\nDias Máximo Carência: ' || r_Conf.Carencia || ' Dias Carência Negociado: ' || v_Diascarencia || '. '
+                             Else
+                              v_Mensagemusu || 'Dias Máximo Carência: ' || r_Conf.Carencia || ' Dias Carência Negociado: ' || v_Diascarencia || '. '
+                          End;
+      
+      End If;
+   
+      v_Titulo   := 'Verifique dados do adiantamento!';
+      v_Mensagem := 'Divergência de:\n' || v_Mensagemusu ||
+                    '\n\n<font color="#FF0000">Será encaminhado uma solicitação de aprovação para o departamento financeiro</font>.\n\nDeseja Continuar?';
+      v_Incluir  := Act_Confirmar(v_Titulo, v_Mensagem, p_Idsessao, 1);
+   
+      If v_Incluir Then
+      
+         v_Aprfin := 1;
+      
+         p_Mensagem := 'Solicitação encaminhada para Responsável CR e Departamento Financeiro. Caso tenha urgência no processo entre em contato e informe sua necessidade!';
+      
+         v_Log := 'Aguardando Aprovação Financeira e da Gerência';
+      
+      Else
+         v_Log := 'Aguardando aprovação da gerência!';
+      End If;
+   
+   End If;
+
+   -- Gera Movimento Financeiro de Receita e Despesa
+   IF v_Count1 = 0 THEN -- CASO EXISTA PARCELA DO RENOVAR NÃO HA GEREAÇÃO DE PARCELAS
+        Stp_Adtssacab_Gerafin_Sf(Field_Nunico, v_Aprfin, v_Mensagemusu);
+     else
+          Ad_Set.Ins_Liberacao(p_Tabela => 'AD_ADTSSACAB', p_Nuchave => Field_Nunico, p_Evento => 1035, p_Valor =>r_Cab.VLRDESDOB,
+                              p_Codusulib => 114,
+                              p_Obslib => 'Adiantamento ' || r_Cab.NUACERTO,
+                              p_Errmsg => Errmsg);
+   END IF;
+
+   If p_Mensagem Is Not Null Then
+      p_Mensagem := p_Mensagem;
+   Elsif r_Conf.Exigaprdesp = 'N' Then
+      p_Mensagem := 'Adiantamento Finalizado com Sucesso!';
+   Else
+      p_Mensagem := 'Solicitação encaminhada para aprovação do Responsável CR. Caso tenha urgência no processo entre em contato com o aprovador e informe sua necessidade!';
+   End If;
+
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Gera Parcelas Renovar - old]]></description>
+          <actionConfig>
+            <dbCall name="STP_ADTSSACAB_GERAPAR_RENOV_SF" refreshType="SEL" txManual="false" rootEntity="ADTSSACAB" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "STP_ADTSSACAB_GERAPAR_RENOV_SF" (
+       P_CODUSU NUMBER,        -- Código do usuário logado
+       P_IDSESSAO VARCHAR2,    -- Identificador da execução. Serve para buscar informações dos parâmetros/campos da execução.
+       P_QTDLINHAS NUMBER,     -- Informa a quantidade de registros selecionados no momento da execução.
+       P_MENSAGEM OUT VARCHAR2 -- Caso seja passada uma mensagem aqui, ela será exibida como uma informação ao usuário.
+) AS
+       FIELD_NUNICO NUMBER;
+         
+
+   r_Cab  Ad_Adtssacab%Rowtype;
+   r_Conf Ad_Adtssaconf%Rowtype;
+
+   v_Dif              Float;
+   v_Dt               Int := 1;
+   v_Dtvenc           Date;
+   v_Maxparcela       Int;
+   v_Mensagemusu      Varchar2(200);
+   v_Nufin            Number;
+   v_Nrparcela        Number := 1;
+   v_Recdesp          Number;
+   v_Sequencia        Number;
+   v_Solicitacarencia Number := 0;
+   v_Solicitajuro     Number := 0;
+   v_Solicitaparcela  Number := 0;
+   v_Solicitavalor    Number := 0;
+   p_nufind number := 0;
+   --v_Valorjuro        Float;
+   --v_Valortotal       Float;
+   p_Vlrtot       Float;
+   p_Vlr_Jur_Parc Float;
+   p_Vlr_Parc     Float;
+   p_Vlrtot_Juro  Float;
+
+   v_Titulo   Varchar(4000);
+   v_Mensagem Varchar(4000);
+   v_Incluir  Boolean;
+   p_nufinrecdesp number := 0;
+   p_nuacerto number := 0;
+   v_Codusu      Number := Stp_Get_Codusulogado;
+   p_nufinrec  number := 0;
+   P_VLRDESDOB NUMBER := 0;
+   p_sequencia NUMBER := 0;
+BEGIN
+
+       -- Os valores informados pelo formulário de parâmetros, podem ser obtidos com as funções:
+       --     ACT_INT_PARAM
+       --     ACT_DEC_PARAM
+       --     ACT_TXT_PARAM
+       --     ACT_DTA_PARAM
+       -- Estas funções recebem 2 argumentos:
+       --     ID DA SESSÃO - Identificador da execução (Obtido através de P_IDSESSAO))
+       --     NOME DO PARAMETRO - Determina qual parametro deve se deseja obter.
+
+
+       FOR I IN 1..P_QTDLINHAS -- Este loop permite obter o valor de campos dos registros envolvidos na execução.
+       LOOP                    -- A variável "I" representa o registro corrente.
+           -- Para obter o valor dos campos utilize uma das seguintes funções:
+           --     ACT_INT_FIELD (Retorna o valor de um campo tipo NUMÉRICO INTEIRO))
+           --     ACT_DEC_FIELD (Retorna o valor de um campo tipo NUMÉRICO DECIMAL))
+           --     ACT_TXT_FIELD (Retorna o valor de um campo tipo TEXTO),
+           --     ACT_DTA_FIELD (Retorna o valor de um campo tipo DATA)
+           -- Estas funções recebem 3 argumentos:
+           --     ID DA SESSÃO - Identificador da execução (Obtido através do parâmetro P_IDSESSAO))
+           --     NÚMERO DA LINHA - Relativo a qual linha selecionada.
+           --     NOME DO CAMPO - Determina qual campo deve ser obtido.
+           FIELD_NUNICO := ACT_INT_FIELD(P_IDSESSAO, I, 'NUNICO');
+
+
+
+-- <ESCREVA SEU CÓDIGO AQUI (SERÁ EXECUTADO PARA CADA REGISTRO SELECIONADO)> --
+
+
+
+       END LOOP;
+       
+       
+     If p_Qtdlinhas > 1 Then
+      Raise_Application_Error(-20101, Fc_Formatahtml_Sf('Selecione apenas um registro por vez', Null, Null));
+   End If;
+
+   Field_Nunico := Act_Int_Field(p_Idsessao, 1, 'NUNICO');
+
+   Select c.* Into r_Cab From Ad_Adtssacab c Where c.Nunico = Field_Nunico;
+
+   If r_Cab.Situacao Not In ('E', 'R') Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Registro com situação diferente de <i>Elaborando</i>',
+                                                 'Se necessário reabra a solicitação.', Null));
+   End If;
+
+   Select Max(Data) Into v_Dtvenc From Table(Func_Dias_Uteis_Mmac(Trunc(Sysdate), Trunc(Sysdate) + 10, 1, 4));
+
+   If v_Dtvenc > r_Cab.Dtvenc Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Ação não permitida!',
+                                                 'Altere a data informada no campo "Débito / Crédito em"',
+                                                 'A solicitação deve ser para pelo menos 3 dias uteis a partir da solicitação.'));
+   
+   End If;
+
+   Select c.* Into r_Conf From Ad_Adtssaconf c Where c.Codigo = r_Cab.Tipo;
+
+   -- Verifica se a carencia é maior que o permitido
+   If Nvl(r_Conf.Carencia, 0) > 0 And Nvl(r_Conf.Carencia, 0) < (r_Cab.Dtvenc1 - r_Cab.Dtvenc) And
+      r_Conf.Carenciamaior = 'B' Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Ação Cancelada!',
+                                                 'Carência de vencimento da primeira parcela maior que o permitido para o tipo de processo selecionado!',
+                                                 Null));
+   
+   Elsif Nvl(r_Conf.Carencia, 0) > 0 And Nvl(r_Conf.Carencia, 0) < (r_Cab.Dtvenc1 - r_Cab.Dtvenc) And
+         r_Conf.Carenciamaior = 'S' And r_Cab.Codnat Not In (9053900, 9054000, 9054200, 9054300) Then
+      -- Naturezas 9053900,9054000,9054200,9054300 relativo a Fundo de Retenção, as parcelas serão geradas todas para a mesma data, neste caso não há necessidade de solicitar aprovação do financeiro 
+      v_Solicitacarencia := 1;
+   End If;
+
+   -- Verifica se o valor concedido esta dentro do limite permitido
+   If Nvl(r_Conf.Vlrmax, 1) < Nvl(r_Cab.Vlrdesdob, 1) And r_Conf.Vlrmaior = 'B' Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Ação Cancelada!',
+                                                 'Valor máximo nesse tipo de processo não pode ser superior a ' ||
+                                                  To_Char(Ad_Get.Formatavalor(r_Conf.Vlrmax)), Null));
+   
+   Elsif Nvl(r_Conf.Vlrmax, 1) < Nvl(r_Cab.Vlrdesdob, 1) And r_Conf.Vlrmaior = 'S' And
+         r_Cab.Codnat Not In (9053900, 9054000, 9054200, 9054300) Then
+      -- Naturezas 9053900,9054000,9054200,9054300 relativo a Fundo de Retenção, as parcelas serão geradas todas para a mesma data, neste caso não há necessidade de solicitar aprovação do financeiro
+      v_Solicitavalor := 1;
+   End If;
+
+   -- Verifica se o número de parcelas informado esta dentro do limite permitido.
+   If Nvl(r_Conf.Parcela, 12) < Nvl(r_Cab.Nrparcelas, 1) And r_Conf.Parcelamaior = 'B' Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Ação Cancelada!',
+                                                 'Número de parcelas nesse tipo de processo não pode ser superior a ' ||
+                                                  r_Conf.Parcela, Null));
+   
+   Elsif Nvl(r_Conf.Parcela, 12) < Nvl(r_Cab.Nrparcelas, 1) And r_Conf.Parcelamaior = 'S' And
+         r_Cab.Codnat Not In (9053900, 9054000, 9054200, 9054300) Then
+      -- Naturezas 9053900,9054000,9054200,9054300 relativo a Fundo de Retenção, as parcelas serão geradas todas para a mesma data, neste caso não há necessidade de solicitar aprovação do financeiro
+      v_Solicitaparcela := 1;
+   End If;
+
+   -- Verifica se o juro informado esta dentro do limite permitido.
+   If Nvl(r_Conf.Juro, 0) > 0 And Nvl(r_Conf.Juro, 0) > Nvl(r_Cab.Taxa, 0) And r_Conf.Juromenor = 'B' Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Ação Cancelada!',
+                                                 'Juro cobrado nesse tipo de processo não pode ser inferior a ' ||
+                                                  r_Conf.Juro || '%', Null));
+   
+   Elsif Nvl(r_Conf.Juro, 0) > 0 And Nvl(r_Conf.Juro, 0) > Nvl(r_Cab.Taxa, 0) And r_Conf.Juromenor = 'S' And
+         r_Cab.Codnat Not In (9053900, 9054000, 9054200, 9054300) Then
+      -- Naturezas 9053900,9054000,9054200,9054300 relativo a Fundo de Retenção, as parcelas serão geradas todas para a mesma data, neste caso não há necessidade de solicitar aprovação do financeiro
+      v_Solicitajuro := 1;
+   End If;
+   
+   SELECT SUM(VLRDESDOB) INTO P_VLRDESDOB FROM AD_ADTSSAPARRENOVAR WHERE NUNICO =FIELD_NUNICO;
+   
+   IF r_Cab.vlrdesdob <> P_VLRDESDOB THEN
+         Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Ação Cancelada!',
+                                                 'Valor das parcelas difere do valor total - Erro verifique por favor ', Null));
+   END IF;
+   
+     
+   IF R_CAB.NUACERTO > 0 THEN
+              Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Ação Cancelada!',
+                                                 'Já foi gerado o adiantamento - CANCELANDO ', Null));
+   END IF;
+   
+   
+     ----- INSERE DESPESA
+   
+      stp_obtemid('TGFFIN', p_nufind);
+    
+      p_nufinrecdesp := p_nufind; -- usado para o update mais abaixo
+    
+      select max(ultcod) + 1
+        into p_nuacerto
+        from tgfnum
+       where arquivo = 'TGFFRE'
+         and serie = 'E';
+    
+      --tgfnum
+      update tgfnum
+         set ultcod = p_nuacerto
+       where arquivo = 'TGFFRE'
+         and serie = 'E';
+     COMMIT;   
+        
+       p_sequencia := 1; 
+        
+
+    
+      
+    
+     -- Gerando a Receita / Despesa Despesa
+      Insert Into Tgffin
+         (Nufin,
+          Codemp,
+          Numnota,
+          Dtneg,
+          Desdobramento,
+          Dhmov,
+          Dtvenc,
+          Dtvencinic,
+          Codparc,
+          Codtipoper,
+          Dhtipoper,
+          Codctabcoint,
+          Codnat,
+          Codcencus,
+          Codproj,
+          Codtiptit,
+          Vlrdesdob,
+          Vlrjuroembut,
+          Recdesp,
+          Provisao,
+          Origem,
+          Codusu,
+          Dtalter,
+          Desdobdupl,
+          Historico,
+          Codbco,
+          Ad_Variacao,
+          Ad_Modcred,
+          nucompens,
+          Numdupl
+         )
+      Values
+         (p_nufind,
+          r_Cab.Codemp,
+          Nvl(r_Cab.Numnota, r_Cab.Nunico),
+          r_Cab.Dtneg, --Trunc(Sysdate), alterado por Ricardo Soares em 25/07/2018 conforme solicitação do João Paulo
+          1,
+          Sysdate,
+          r_Cab.Dtvenc,
+          r_Cab.Dtvenc,--r.Dtvenc,
+          r_Cab.Codparc,--Case When r.Recdesp = -1 Then r_Cab.Codparc Else Nvl(r_Cab.Codparcrec, r_Cab.Codparc) End,
+          169,
+          (SELECT MAX(TOP.DHALTER) FROM TGFTOP TOP WHERE TOP.CODTIPOPER = 169),
+          Nvl(r_Cab.Codctabcoint, r_Conf.Codctabcoint),
+          r_Cab.Codnat,
+          r_Cab.Codcencus,
+          r_Cab.Codproj,
+          0,--Case When r.Sequencia = 1 Then Case When r_Cab.Forma = '1' /*Crédito em conta*/ Then 56 When VERIFICAR
+          --0,--r_Cab.Forma = '2' /*Cheque*/ Then 4 When r_Cab.Forma = '3' /*Espécie*/ Then 6 When r_Cab.Forma = '4' /*Compensação*/ Then 61 When VERIFICAR
+          --r_Cab.Forma= '36' /*Boleto*/ Then 5 Else 3 End Else 61 End,
+          Round( r_Cab.VLRDESDOB, 2),
+          0,
+          -1,
+          'N',--Case When r_Conf.Exigaprdesp = 'N' Then 'N' Else r.Provisao End,
+          'F',
+          v_Codusu,
+          Sysdate,
+          'ZZ',
+          r_Cab.Historico,
+          1,
+          'adtSsa',
+          r_Cab.Modcred,
+          p_nuacerto,
+          p_nuacerto);
+          
+          
+      insert into tgffre
+        (codusu, dhalter, nuacerto, nufin, sequencia, tipacerto)
+      values
+        (p_codusu, sysdate, p_nuacerto, p_nufind, p_sequencia, 'A');    
+         
+      commit;
+   
+    FOR CUR IN (SELECT DTVENC,NUNICO,VLRDESDOB,SEQUENCIA FROM AD_ADTSSAPARRENOVAR WHERE NUNICO = Field_Nunico ) LOOP
+    
+      stp_obtemid('TGFFIN', p_nufinrec);
+    
+       
+      Insert Into Tgffin
+         (Nufin,
+          Codemp,
+          Numnota,
+          Dtneg,
+          Desdobramento,
+          Dhmov,
+          Dtvenc,
+          Dtvencinic,
+          Codparc,
+          Codtipoper,
+          Dhtipoper,
+          Codctabcoint,
+          Codnat,
+          Codcencus,
+          Codproj,
+          Codtiptit,
+          Vlrdesdob,
+          Vlrjuroembut,
+          Recdesp,
+          Provisao,
+          Origem,
+          Codusu,
+          Dtalter,
+          Desdobdupl,
+          Historico,
+          Codbco,
+          Ad_Variacao,
+          Ad_Modcred,
+          nucompens,
+          Numdupl)
+      Values
+         (p_nufinrec,
+          r_Cab.Codemp,
+          Nvl(r_Cab.Numnota, r_Cab.Nunico),
+          r_Cab.Dtneg, --Trunc(Sysdate), alterado por Ricardo Soares em 25/07/2018 conforme solicitação do João Paulo
+          1,
+          Sysdate,
+          TRUNC(CUR.DTVENC),--r.Dtvenc,
+          TRUNC(CUR.DTVENC),--r.Dtvenc,
+          r_Cab.CodparcREC,--Case When r.Recdesp = -1 Then r_Cab.Codparc Else Nvl(r_Cab.Codparcrec, r_Cab.Codparc) End,
+          182,
+          (SELECT MAX(TOP.DHALTER) FROM TGFTOP TOP WHERE TOP.CODTIPOPER = 182),
+          Nvl(r_Cab.Codctabcoint, r_Conf.Codctabcoint),
+          r_Cab.Codnat,
+          r_Cab.Codcencus,
+          r_Cab.Codproj,
+          3,--Case When r.Sequencia = 1 Then Case When r_Cab.Forma = '1' /*Crédito em conta*/ Then 56 When VERIFICAR
+          --0,--r_Cab.Forma = '2' /*Cheque*/ Then 4 When r_Cab.Forma = '3' /*Espécie*/ Then 6 When r_Cab.Forma = '4' /*Compensação*/ Then 61 When VERIFICAR
+          --r_Cab.Forma= '36' /*Boleto*/ Then 5 Else 3 End Else 61 End,
+          Round( CUR.VLRDESDOB, 2),
+          0,
+          1,
+          'N',--Case When r_Conf.Exigaprdesp = 'N' Then 'N' Else r.Provisao End,
+          'F',
+          v_Codusu,
+          Sysdate,
+          'ZZ',
+          r_Cab.Historico,
+          1,
+          'adtSsa',
+          r_Cab.Modcred,
+          p_nuacerto,
+           p_nuacerto);
+         
+          
+          
+         p_sequencia := p_sequencia + 1; 
+        
+       insert into tgffre
+        (codusu, dhalter, nuacerto, nufin, sequencia, tipacerto)
+      values
+        (p_codusu, sysdate, p_nuacerto,p_nufinrec, p_sequencia, 'A');    
+      
+          
+        UPDATE AD_ADTSSAPARRENOVAR SET NUFINREC = p_nufinrec, NUFINDESP = p_nufind  WHERE NUNICO = CUR.NUNICO AND SEQUENCIA = CUR.SEQUENCIA;
+      
+           
+    END LOOP;
+    
+    
+     UPDATE Ad_Adtssacab c SET C.NUFIN  = p_nufind , C.NUACERTO = p_nuacerto   Where c.Nunico = Field_Nunico;
+   
+   
+   P_MENSAGEM := 'Gerado, favor conferir!!!';
+
+   commit;
+
+-- <ESCREVA SEU CÓDIGO DE FINALIZAÇÃO AQUI> --
+
+
+
+END;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Confirma / Sol. Aprovação]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_ADTSSA_SOLAPROV_SF" refreshType="SEL" txManual="false" rootEntity="ADTSSACAB" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_ADTSSA_SOLAPROV_SF" (p_codusu    number,
+                                                      p_idsessao  varchar2,
+                                                      p_qtdlinhas number,
+                                                      p_mensagem  out varchar2) as
+ cab  ad_adtssacab%rowtype;
+ conf ad_adtssaconf%rowtype;
+
+ v_aprfin           number := 0;
+ v_count            int;
+ v_diascarencia     number;
+ v_dtvenc           date;
+ v_log              varchar2(100);
+ v_mensagemusu      varchar2(500);
+ v_solicitacarencia number := 0;
+ v_solicitajuro     number := 0;
+ v_solicitaparcela  number := 0;
+ v_solicitavalor    number := 0;
+ v_tipojuro         varchar2(30);
+
+ v_totdesp    float;
+ v_totrec     float;
+ v_totdespren float;
+ v_totrecren  float;
+
+ v_titulo   varchar(4000);
+ v_mensagem varchar(4000);
+ v_incluir  boolean;
+ v_count1   int;
+ p_errmsg   varchar(200);
+ errmsg     varchar(200);
+begin
+ stp_set_atualizando('S');
+
+ if p_qtdlinhas > 1 then
+  p_mensagem := 'Selecione apenas um registro por vez';
+  return;
+ end if;
+
+ cab.nunico := act_int_field(p_idsessao, 1, 'NUNICO');
+ --cab.nunico := 3500;
+
+ select c.* into cab from ad_adtssacab c where c.nunico = cab.nunico;
+
+ select max(data)
+   into v_dtvenc
+   from table(func_dias_uteis_mmac(trunc(sysdate), trunc(sysdate) + 10, 1, 4));
+
+ select c.* into conf from ad_adtssaconf c where c.codigo = cab.tipo;
+
+ select sum(decode(p.recdesp, 1, p.vlrdesdob, 0)), sum(decode(p.recdesp, -1, p.vlrdesdob, 0))
+   into v_totrec, v_totdesp
+   from ad_adtssapar p
+  where p.nunico = cab.nunico;
+
+ -- VALIDAÇÕES
+ begin
+  if nvl(conf.renovar, 'N') = 'S' then
+  
+   select nvl(sum(p.vlrdesdob), 0)
+     into v_totdespren
+     from ad_adtssaparrenovar p
+    where p.nunico = cab.nunico;
+  
+   --- se possui as parcelas renovar
+   if v_totdespren = 0 then
+    p_mensagem := 'Não foi encontrado valor total de despesa, por favor verifique ' ||
+                  ' se as depesas foram lançadas na aba de parcelamento.';
+    return;
+   end if;
+  
+   if cab.vlrdesdob != v_totdespren then
+    p_mensagem := 'O valor total de despesa é diferente do valor total do empréstimo.' ||
+                  ' Verifique se todas as despesas foram lançadas no sistema.';
+    return;
+   end if;
+  
+  end if;
+ 
+  -- validação dos demais campos
+  begin
+   ad_stp_adtssa_valida_cab_sf(p_nunico      => cab.nunico,
+                               p_val_total   => case
+                                                 when nvl(conf.renovar, 'N') = 'S' then
+                                                  'N'
+                                                 else
+                                                  'S'
+                                                end,
+                               p_solcarencia => v_solicitacarencia,
+                               p_solvalor    => v_solicitavalor,
+                               p_soljuro     => v_solicitajuro,
+                               p_solparc     => v_solicitaparcela,
+                               p_mensagem    => p_mensagem);
+   if p_mensagem is not null then
+    return;
+   end if;
+  end;
+ end;
+ -- fim validações
+
+ -- mensageria
+ begin
+ 
+  /* Se o registro esta pendente de aprovação em função de juro, 
+  nr de parcelas ou valor do adiantamento envia uma requisição 
+  de aprovação para o financeiro, caso contrário faz a inclusão na TGFFIN pela */
+ 
+  if (v_solicitajuro = 1 or v_solicitaparcela = 1 or v_solicitavalor = 1 or v_solicitacarencia = 1) and
+     conf.exigaprdesp = 'S' then
+  
+   if v_solicitajuro = 1 then
+    v_mensagemusu := 'Juro Minimo: ' || nvl(conf.juro, 0) || '% - Juro Negociado: ' ||
+                     nvl(cab.taxa, 0) || '%. ';
+   end if;
+  
+   if v_solicitaparcela = 1 then
+    v_mensagemusu := case
+                      when v_mensagemusu is not null then
+                       v_mensagemusu || '\nNr. Máximo Parcelas: ' || conf.parcela || ' Nr. Parcelas Negociado: ' ||
+                       cab.nrparcelas || '. '
+                      else
+                       v_mensagemusu || 'Nr. Máximo Parcelas: ' || conf.parcela || ' Nr. Parcelas Negociado: ' ||
+                       cab.nrparcelas || '. '
+                     end;
+   end if;
+  
+   if v_solicitavalor = 1 then
+    v_mensagemusu := case
+                      when v_mensagemusu is not null then
+                       v_mensagemusu || '\nVlr Máx Configurado: ' || ad_get.formatavalor(conf.vlrmax) ||
+                       ' Vlr Negociado: ' || ad_get.formatavalor(cab.vlrdesdob) || '. '
+                      else
+                       v_mensagemusu || 'Vlr Máx Configurado: ' || ad_get.formatavalor(conf.vlrmax) ||
+                       ' Vlr Negociado: ' || ad_get.formatavalor(cab.vlrdesdob) || '. '
+                     end;
+   end if;
+  
+   if v_solicitacarencia = 1 then
+    v_mensagemusu := case
+                      when v_mensagemusu is not null then
+                       v_mensagemusu || '\nDias Máximo Carência: ' || conf.carencia || ' Dias Carência Negociado: ' ||
+                       v_diascarencia || '. '
+                      else
+                       v_mensagemusu || 'Dias Máximo Carência: ' || conf.carencia || ' Dias Carência Negociado: ' ||
+                       v_diascarencia || '. '
+                     end;
+   
+   end if;
+  
+   v_titulo   := 'Verifique dados do adiantamento!';
+   v_mensagem := 'Divergência de:\n' || v_mensagemusu ||
+                 '\n\n<font color="#FF0000">Será encaminhado uma solicitação ' ||
+                 'de aprovação para o departamento financeiro</font>.\n\nDeseja Continuar?';
+   v_incluir  := act_confirmar(v_titulo, v_mensagem, p_idsessao, 1);
+  
+   if v_incluir then
+   
+    v_aprfin := 1;
+   
+    p_mensagem := 'Solicitação encaminhada para Responsável CR e Departamento Financeiro. ' ||
+                  'Caso tenha urgência no processo entre em contato e informe sua necessidade!';
+   
+    v_log := 'Aguardando Aprovação Financeira e da Gerência';
+   
+   else
+    v_log := 'Aguardando aprovação da gerência!';
+   end if;
+  
+  end if;
+ 
+ end;
+ -- fim mensageria
+
+ --insert financeiro
+ begin
+ 
+  p_mensagem := null;
+ 
+  if nvl(conf.renovar, 'N') = 'S' then
+   ad_stp_adtssa_gerafinren_sf(p_nunico      => cab.nunico,
+                               p_aprov_fin   => v_aprfin,
+                               p_mensagemusu => v_mensagemusu);
+  else
+   stp_adtssacab_gerafin_sf(cab.nunico, v_aprfin, v_mensagemusu);
+  end if;
+ 
+  if p_mensagem is not null then
+   return;
+  elsif conf.exigaprdesp = 'N' then
+   p_mensagem := 'Adiantamento Finalizado com Sucesso!';
+  else
+   p_mensagem := 'Solicitação encaminhada para aprovação do Responsável CR. ' ||
+                 'Caso tenha urgência no processo entre em contato com o aprovador e informe sua necessidade!';
+  end if;
+ 
+ end;
+ stp_set_atualizando('N');
+end;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Gerar Parcelas]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_ADTSSA_GERAPARCELA_SF" refreshType="NONE" txManual="false" rootEntity="ADTSSACAB" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_ADTSSA_GERAPARCELA_SF" (p_codusu    number,
+                                                         p_idsessao  varchar2,
+                                                         p_qtdlinhas number,
+                                                         p_mensagem  out varchar2) as
+
+ /*
+   Autor: MARCUS.RANGEL 29/10/2019 09:53:37
+   Processo: Adiantamento ; Emprestimo SSA
+   Objetivo: Botão de ação "Gerar Parcelas" da tela de adiantamentos SSA. Gera as 
+             parcelas das receitas e despesas dos adiantamentos
+ */
+
+ cab  ad_adtssacab%rowtype;
+ conf ad_adtssaconf%rowtype;
+
+ v_dif         float;
+ v_dt          int := 1;
+ v_dtvenc      date;
+ v_maxparcela  int;
+ v_mensagemusu varchar2(200);
+ v_nufin       number;
+ v_nrparcela   number := 1;
+ v_recdesp     number;
+ v_sequencia   int := 0;
+ v_solcarencia int := 0;
+ v_soljuro     int := 0;
+ v_solparc     number := 0;
+ v_solvalor    number := 0;
+
+ p_vlrtot       float;
+ p_vlr_jur_parc float;
+ p_vlr_parc     float;
+ p_vlrtot_juro  float;
+ v_prazo        int;
+
+ v_titulo   varchar(4000);
+ v_mensagem varchar(4000);
+ p_count    int;
+ v_incluir  boolean;
+
+begin
+
+ if p_qtdlinhas > 1 then
+  p_mensagem := 'Selecione apenas um registro por vez';
+  return;
+ end if;
+
+ cab.nunico := act_int_field(p_idsessao, 1, 'NUNICO');
+
+ -- busca dados relacionados com o lançamento
+ begin
+  select c.* into cab from ad_adtssacab c where c.nunico = cab.nunico;
+  select max(data)
+    into v_dtvenc
+    from table(func_dias_uteis_mmac(trunc(sysdate), trunc(sysdate) + 10, 1, 4));
+  select c.* into conf from ad_adtssaconf c where c.codigo = cab.tipo;
+ exception
+  when others then
+   p_mensagem := 'Erro ao buscar os dados do registro selecionado (' || cab.nunico || ' - ' ||
+                 cab.tipo || ' ). ' || sqlerrm;
+   return;
+ end;
+
+ -- VALIDAÇÕES
+
+ /*Naturezas 9053900,9054000,9054200,9054300 relativo a Fundo de Retenção, 
+ as parcelas serão geradas todas para a mesma data, 
+ neste caso não há necessidade de solicitar aprovação do financeiro*/
+
+ ad_stp_adtssa_valida_cab_sf(p_nunico      => cab.nunico,
+                             p_val_total   => case
+                                               when nvl(conf.renovar, 'N') = 'S' then
+                                                'N'
+                                               else
+                                                'S'
+                                              end,
+                             p_solcarencia => v_solcarencia,
+                             p_solvalor    => v_solvalor,
+                             p_soljuro     => v_soljuro,
+                             p_solparc     => v_solparc,
+                             p_mensagem    => p_mensagem);
+ if p_mensagem is not null then
+  return;
+ end if;
+
+ /* Se o registro esta pendente de aprovação em função de juro, nr de parcelas ou valor 
+ do adiantamento envia uma requisição de aprovação para o financeiro, caso contrário 
+ faz a inclusão na TGFFIN pela Stp_ADTSSAcab_Gerafin_Sf e a solicitação de aprovação 
+ vai direto para o responsável. Se estiver pendente de aprovação financeira, quem vai 
+ chamar a inclusão do financeiro vai ser a trigger da LIB*/
+
+ begin
+ 
+  if (v_soljuro = 1 or v_solparc = 1 or v_solvalor = 1 or v_solcarencia = 1) and
+     conf.exigaprdesp = 'S' then
+  
+   if v_soljuro = 1 then
+    v_mensagemusu := ' Juro';
+   end if;
+  
+   if v_solparc = 1 then
+    v_mensagemusu := case
+                      when v_mensagemusu is not null then
+                       v_mensagemusu || ' e Nr. de Parcelas'
+                      else
+                       v_mensagemusu || ' Nr. de Parcelas'
+                     end;
+   end if;
+  
+   if v_solvalor = 1 then
+    v_mensagemusu := case
+                      when v_mensagemusu is not null then
+                       v_mensagemusu || ' e Valor '
+                      else
+                       v_mensagemusu || ' Valor'
+                     end;
+   end if;
+  
+   if v_solcarencia = 1 then
+    v_mensagemusu := case
+                      when v_mensagemusu is not null then
+                       v_mensagemusu || ' e Carência '
+                      else
+                       v_mensagemusu || ' Carência'
+                     end;
+   
+   end if;
+  
+   v_titulo   := 'Verifique dados do adiantamento!';
+   v_mensagem := 'As configurações de ' || v_mensagemusu ||
+                 ' estão divergentes das regras definidas para esse tipo de adiantamento.' ||
+                 '\n\n<font color="#FF0000">Ao gerar a solicitação, alem da aprovação do responsável ' ||
+                 'será também encaminhado uma solicitação de aprovação para o departamento financeiro' ||
+                 '</font>.\n\nDeseja Continuar?';
+  
+   v_incluir := act_confirmar(v_titulo, v_mensagem, p_idsessao, 1);
+  
+  end if;
+ 
+ end;
+
+ -- geração das parcelas
+ begin
+ 
+  ad_pkg_var.permite_update := true;
+ 
+  --- limpa registros existentes
+  delete from ad_adtssapar where nunico = cab.nunico;
+ 
+  update ad_adtssacab c
+     set c.dhsolicitacao = null,
+         c.codusufin     = null,
+         c.dhaprovfin    = null,
+         c.codusuapr     = null,
+         c.dhaprovadt    = null,
+         c.situacao      = 'E'
+   where c.nunico = cab.nunico;
+ 
+  --- determina prazo que será usado
+  if conf.calculavenc = 'B' then
+   v_prazo := 2;
+  elsif conf.calculavenc = 'S' then
+   v_prazo := 6;
+  elsif conf.calculavenc = 'A' then
+   v_prazo := 12;
+  else
+   v_prazo := 1;
+  end if;
+ 
+  --- tratativa para renovar, insere apenas a receita
+  if conf.renovar = 'S' then
+   v_recdesp := 1;
+  else
+  
+   v_recdesp := case
+                 when conf.parcelar = '-1' then
+                  1
+                 else
+                  -1
+                end;
+  
+   v_sequencia := 1;
+  
+   insert into ad_adtssapar
+    (nunico, sequencia, nufin, dtvenc, vlrdesdob, vlrjuros, vlrtotal, recdesp, provisao, nrparcela,
+     dtvencinic)
+   values
+    (cab.nunico, v_sequencia, null, cab.dtvenc, cab.vlrdesdob, 0, cab.vlrdesdob, v_recdesp, 'S', 1,
+     cab.dtvenc);
+  
+   -- Inserindo a(s) contrapartida
+   -- Se o tipo selecionado está configurado para parcelar receita ou despesa
+   v_recdesp := case
+                 when conf.parcelar = '-1' then
+                  -1
+                 else
+                  1
+                end;
+   --v_sequencia := 2;
+  end if;
+ 
+  while v_nrparcela <= cab.nrparcelas
+  loop
+  
+   -- Tipo de Cálculo M - Mensal, B - Bimestral, S - Semestral, A - Anual
+   p_vlr_parc     := round(cab.vlrdesdob / cab.nrparcelas, 2);
+   p_vlr_jur_parc := case
+                      when nvl(cab.taxa, 0) > 0 then
+                       ad_get.calculajuroprice(i             => cab.taxa,
+                                               n             => cab.nrparcelas,
+                                               pv            => cab.vlrdesdob,
+                                               p_dtneg       => cab.dtvenc,
+                                               p_dtprimvenc  => cab.dtvenc1,
+                                               p_parcela     => v_nrparcela,
+                                               p_tipojuro    => cab.tipojuro,
+                                               p_tipocalculo => conf.calculavenc)
+                      else
+                       0
+                     end;
+  
+   --- monta o dtvenc
+   if v_nrparcela = 1 or cab.codnat in (9053900, 9054000, 9054200, 9054300) then
+    v_dtvenc := cab.dtvenc1;
+   else
+    v_dtvenc := ad_get.dia_util_ultimo(add_months(cab.dtvenc1, (v_nrparcela * v_prazo) - v_prazo),
+                                       'P');
+   end if;
+  
+   v_sequencia := v_sequencia + 1;
+  
+   --- insert da parcela
+   insert into ad_adtssapar
+    (nunico, sequencia, nufin, dtvenc, vlrdesdob, vlrjuros, vlrtotal, recdesp, provisao, nrparcela,
+     dtvencinic)
+   values
+    (cab.nunico, v_sequencia, v_nufin, v_dtvenc, round(p_vlr_parc, 2), round(p_vlr_jur_parc, 2),
+     round(p_vlr_parc + p_vlr_jur_parc, 2), v_recdesp, 'S', v_nrparcela, v_dtvenc);
+  
+   v_dt          := v_dt + 1;
+   v_nrparcela   := v_nrparcela + 1;
+   v_maxparcela  := v_maxparcela + 1;
+   p_vlrtot      := nvl(p_vlrtot, 0) + p_vlr_parc;
+   p_vlrtot_juro := nvl(p_vlrtot_juro, 0) + p_vlr_jur_parc;
+  
+  end loop;
+ 
+  ad_pkg_var.permite_update := false;
+ 
+ exception
+  when others then
+   p_mensagem := 'Erro ao inserir as parcelas. <br>' || sqlerrm;
+   return;
+ end;
+
+ v_dif := cab.vlrdesdob - p_vlrtot;
+
+ if v_dif <> 0 then
+  begin
+   update ad_adtssapar p
+      set p.vlrdesdob = p.vlrdesdob + v_dif,
+          p.vlrtotal  = p.vlrtotal + v_dif
+    where p.sequencia = 2
+      and p.nunico = cab.nunico;
+  exception
+   when others then
+    p_mensagem := 'Erro ao atualizar a diferença.<br>' || sqlerrm;
+    return;
+  end;
+ 
+ end if;
+
+ if conf.exigaprdesp = 'S' then
+ 
+  p_mensagem := 'Parcelas Geradas! Verifique se as informações estão de acordo ' ||
+                'com o solicitado e encaminhe o registro para aprovação ' ||
+                'executando a rotina "Confirma / Solicita Aprovação"';
+ 
+ else
+  p_mensagem := 'Parcelas Geradas! Verifique se as informações estão ' ||
+                'de acordo com o solicitado e finalize executando a ' ||
+                'rotina "Confirma / Solicita Aprovação"';
+ 
+ end if;
+
+end;]]></storedProcedure>
+        </action>
+      </actions>
+      <events>
+        <event type="SP">
+          <description><![CDATA[Stp_Ad_Adtssacab_Sf]]></description>
+          <eventConfig>
+            <dbCall name="STP_AD_ADTSSACAB_SF" rootEntity="ADTSSACAB" />
+          </eventConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "STP_AD_ADTSSACAB_SF" (p_Tipoevento Int, -- Identifica o tipo de evento
+                                                p_Idsessao   Varchar2, -- Identificador da execução. Serve para buscar informações dos campos da execução.
+                                                p_Codusu     Int -- Código do usuário logado
+                                                ) As
+   Before_Insert Int;
+   After_Insert  Int;
+   --Before_Delete Int;
+   --After_Delete  Int;
+   Before_Update Int;
+   After_Update  Int;
+   --Before_Commit Int;
+
+   r_Cab           Ad_Adtssacab%Rowtype;
+   r_Conf          Ad_Adtssaconf%Rowtype;
+   v_Codparcmatriz Number;
+   v_Count         Number;
+   v_Descrnat      Varchar2(50);
+   v_Nomeparc      Varchar2(50);
+   v_Tipoparcadt   Varchar(30);
+   v_Vlrdesdob     Float;
+Begin
+   Before_Insert := 0;
+   After_Insert  := 1;
+   --Before_Delete := 2;
+   --After_Delete  := 3;
+   Before_Update := 4;
+   After_Update  := 5;
+   --Before_Commit := 10;
+
+   /*******************************************************************************
+      É possível obter o valor dos campos através das Functions:
+      
+     EVP_GET_CAMPO_DTA(P_IDSESSAO, 'NOMECAMPO') -- PARA CAMPOS DE DATA
+     EVP_GET_CAMPO_INT(P_IDSESSAO, 'NOMECAMPO') -- PARA CAMPOS NUMÉRICOS INTEIROS
+     EVP_GET_CAMPO_DEC(P_IDSESSAO, 'NOMECAMPO') -- PARA CAMPOS NUMÉRICOS DECIMAIS
+     EVP_GET_CAMPO_TEXTO(P_IDSESSAO, 'NOMECAMPO')   -- PARA CAMPOS TEXTO
+     
+     O primeiro argumento é uma chave para esta execução. O segundo é o nome do campo.
+     
+     Para os eventos BEFORE UPDATE, BEFORE INSERT e AFTER DELETE todos os campos estarão disponíveis.
+     Para os demais, somente os campos que pertencem à PK
+     
+     * Os campos CLOB/TEXT serão enviados convertidos para VARCHAR(4000)
+     
+     Também é possível alterar o valor de um campo através das Stored procedures:
+     
+     EVP_SET_CAMPO_DTA(P_IDSESSAO,  'NOMECAMPO', VALOR) -- VALOR DEVE SER UMA DATA
+     EVP_SET_CAMPO_INT(P_IDSESSAO,  'NOMECAMPO', VALOR) -- VALOR DEVE SER UM NÚMERO INTEIRO
+     EVP_SET_CAMPO_DEC(P_IDSESSAO,  'NOMECAMPO', VALOR) -- VALOR DEVE SER UM NÚMERO DECIMAL
+     EVP_SET_CAMPO_TEXTO(P_IDSESSAO,  'NOMECAMPO', VALOR) -- VALOR DEVE SER UM TEXTO
+   ********************************************************************************/
+
+   -- Inicio de Validações antes de incluir
+   If p_Tipoevento = Before_Insert Then
+   
+      Evp_Set_Campo_Texto(p_Idsessao, 'SITUACAO', 'E');
+      Evp_Set_Campo_Int(p_Idsessao, 'CODUSUINC', p_Codusu);
+      Evp_Set_Campo_Dta(p_Idsessao, 'DHINC', Sysdate);
+   
+      r_Cab.Codcencusresp := Evp_Get_Campo_Int(p_Idsessao, 'CODCENCUSRESP');
+      r_Cab.Codnat        := Evp_Get_Campo_Int(p_Idsessao, 'CODNAT');
+      r_Cab.Codparc       := Evp_Get_Campo_Int(p_Idsessao, 'CODPARC');
+      r_Cab.Codparcrec    := Evp_Get_Campo_Int(p_Idsessao, 'CODPARCREC');
+      r_Cab.Codproj       := Evp_Get_Campo_Int(p_Idsessao, 'CODPROJ');
+      r_Cab.Dtneg         := Evp_Get_Campo_Dta(p_Idsessao, 'DTNEG');
+      r_Cab.Dtvenc        := Evp_Get_Campo_Dta(p_Idsessao, 'DTVENC');
+      r_Cab.Dtvenc1       := Evp_Get_Campo_Dta(p_Idsessao, 'DTVENC1');
+      r_Cab.Forma         := Evp_Get_Campo_Texto(p_Idsessao, 'FORMA');
+      r_Cab.Nrparcelas    := Evp_Get_Campo_Int(p_Idsessao, 'NRPARCELAS');
+      r_Cab.Tipo          := Evp_Get_Campo_Int(p_Idsessao, 'TIPO');
+      r_Cab.Vlrdesdob     := Evp_Get_Campo_Dec(p_Idsessao, 'VLRDESDOB');
+   
+      Select Count(*)
+        Into v_Count
+        From Ad_Adtssaconfusu u
+       Where u.Codusu = p_Codusu
+         And u.Codigo = Evp_Get_Campo_Int(p_Idsessao, 'TIPO');
+   
+      If v_Count = 0 Then
+         Raise_Application_Error(-20101,
+                                 Fc_Formatahtml_Sf('Cancelando Inclusão',
+                                                    'Usuário logado não tem permissão para incluir esse tipo de adiantamento!',
+                                                    Null));
+      
+      End If;
+   
+      Select Nvl(c.Permparcdif, 'N'), Nvl(c.Seacumular, 'B'), Nvl(c.Forma, 'C'), Nvl(c.Exigaprdesp, 'S')
+        Into r_Conf.Permparcdif, r_Conf.Seacumular, r_Conf.Forma, r_Conf.Exigaprdesp
+        From Ad_Adtssaconf c
+       Where c.Codigo = r_Cab.Tipo;
+   
+      -- Só é permitido parceiro de despesa diferente do parceiro da receita se o processo de adiantamento estiver configurado para tal.
+      If r_Cab.Codparc <> Nvl(r_Cab.Codparcrec, r_Cab.Codparc) And r_Conf.Permparcdif = 'N' Then
+         Raise_Application_Error(-20101,
+                                 Fc_Formatahtml_Sf('Inclusão Cancelada',
+                                                    'Tipo de Processo selecionado não permite que o parceiro da receita seja diferente do parceiro da despesa',
+                                                    Null));
+      End If;
+   
+      If r_Cab.Forma <> '4' And r_Conf.Forma = 'C' Then
+         Raise_Application_Error(-20101,
+                                 Fc_Formatahtml_Sf('Inclusão Cancelada',
+                                                    'Tipo de Processo selecionado só permite selecionar a forma "Compensação"',
+                                                    Null));
+      
+      End If;
+   
+      If r_Conf.Seacumular = 'B' Then
+      
+         Select Count(*)
+           Into v_Count
+           From Ad_Centparampar p
+          Where p.Codparc = r_Cab.Codparc
+            And p.Nupar = 9;
+      
+         If v_Count = 0 Then
+            -- Se o parceiro esta na lista de exceções é porque pode lançar mais de um adiantamento para ele
+            v_Codparcmatriz := Ad_Analise_Credito.Codparcmatriz(p_Codparc => r_Cab.Codparc);
+         
+            Begin
+               Select Sum(Vlrdesdob)
+                 Into v_Vlrdesdob
+                 From Tgffin f, Tgfpar p
+                Where f.Codparc = p.Codparc
+                  And p.Codparcmatriz = v_Codparcmatriz
+                  And f.Recdesp = 1
+                  And f.Provisao = 'N'
+                  And f.Dhbaixa Is Null;
+            Exception
+               When No_Data_Found Then
+                  v_Vlrdesdob := 0;
+            End;
+         
+            If v_Vlrdesdob > 0 Then
+               Raise_Application_Error(-20101,
+                                       Fc_Formatahtml_Sf('Inclusão Cancelada',
+                                                          'Existem valores pendentes para esse parceiro, não é permitido lançar um segundo adiantamento',
+                                                          Null));
+            End If;
+         
+         End If;
+      End If;
+   
+      -- Valida se data de negociação é inferior a data atual
+      If r_Cab.Dtneg < Trunc(Sysdate) - 5 And r_Cab.Tipo Not In (15) 
+				--15 - Clientes - Adiantamento de Vendas, Se o tipo for 15 pode acontecer fora do prazo, vai barrar apenas no DATAFECHA, que já é padrão do sistema.
+       Then
+         Raise_Application_Error(-20101,
+                                 Fc_Formatahtml_Sf('Inclusão Cancelada',
+                                                    'Data Negociação não pode ser inferior a ' ||
+                                                     To_Date(Trunc(Sysdate) - 5, 'DD/MM/YYYY'), Null));
+      End If;
+   
+      -- Valida se data de negociação é muito superior a data atual
+      If r_Cab.Dtneg > Trunc(Sysdate) + 30
+       Then
+         Raise_Application_Error(-20101,
+                                 Fc_Formatahtml_Sf('Inclusão Cancelada',
+                                                    'Data Negociação não pode ser superior a ' ||
+                                                     To_Date(Trunc(Sysdate) + 30, 'DD/MM/YYYY'), Null));
+      End If;
+      -- Data de vencimento não pode ser programada para final de semana e feriados
+      If Ad_Get.Dia_Util(p_Data => r_Cab.Dtvenc) > 0 Or Ad_Get.Dia_Util(p_Data => r_Cab.Dtvenc1) > 0 Then
+         Raise_Application_Error(-20101,
+                                 Fc_Formatahtml_Sf('Inclusão Cancelada',
+                                                    'Vencimento não pode ser programado para finais de semana e feriados!!',
+                                                    Null));
+      
+      End If;
+   
+      If r_Cab.Dtvenc1 < r_Cab.Dtvenc Then
+         Raise_Application_Error(-20101,
+                                 Fc_Formatahtml_Sf('Cancelando Alterações',
+                                                    'Data Vencimento da Primeira Parcela não pode ser inferior a Data de Vencimento da Despesa',
+                                                    Null));
+      End If;
+   
+      -- Valor não pode ser menor que zero
+      If r_Cab.Vlrdesdob <= 0 Then
+         Raise_Application_Error(-20101, Fc_Formatahtml_Sf('Valor deve ser maior que zero', Null, Null));
+      End If;
+   
+      -- Valida número de parcelas
+      If r_Cab.Nrparcelas <= 0 Or r_Cab.Nrparcelas > 360 Then
+         Raise_Application_Error(-20101, Fc_Formatahtml_Sf('Número de Parcelas inválido', Null, Null));
+      End If;
+   
+      -- Valida o CR
+      /*If Nvl(r_Cab.Codcencusresp, 0) = 0 Then
+         Raise_Application_Error(-20101, Fc_Formatahtml_Sf('Obrigatório informar CR Aprovador', Null, Null));
+      
+      Else*/
+      If Nvl(r_Cab.Codcencusresp, 0) > 0 Then
+         Select Count(*)
+           Into v_Count
+           From Tsicus c
+          Where c.Codcencus = r_Cab.Codcencusresp
+            And c.Analitico = 'S'
+            And Exists (Select 1
+                   From Ad_Itesolcpalibcr Cr
+                  Where c.Codcencus = Cr.Codcencus
+                    And Nvl(Cr.Aprova, 'N') = 'S');
+      
+         If v_Count = 0 Then
+            Raise_Application_Error(-20101,
+                                    Fc_Formatahtml_Sf('CR Aprovador informado não está ativo ou não é analítico ou não tem aprovador vinculado!',
+                                                       Null, Null));
+         End If;
+      
+      End If;
+   
+      -- Valida se a natureza ou o centro de resultado exige projeto
+   
+      Select Count(*)
+        Into v_Count
+        From Ad_Adtssaconfnat c
+       Where c.Codnat = r_Cab.Codnat
+         And Nvl(c.Exigeprojeto, 'N') = 'S'
+         And c.Codigo = r_Cab.Tipo;
+   
+      If v_Count > 0 And r_Cab.Codproj = 0 Then
+         Raise_Application_Error(-20101, Fc_Formatahtml_Sf('Natureza exige que seja informado projeto', Null, Null));
+      End If;
+   
+      If r_Cab.Codproj > 0 Then
+         Select Count(*)
+           Into v_Count
+           From Tcsprj p
+          Where p.Codproj = r_Cab.Codproj
+            And p.Analitico = 'S';
+      
+         If v_Count = 0 Then
+            Raise_Application_Error(-20101,
+                                    Fc_Formatahtml_Sf('Projeto informado não está ativo ou não é analítico!', Null, Null));
+         End If;
+      
+      End If;
+   
+      Select Nvl(p.Ad_Tipadt, 'Não Informado')
+        Into v_Tipoparcadt
+        From Tgfpar p
+       Where p.Codparc = Ad_Analise_Credito.Codparcmatriz(p_Codparc => Nvl(r_Cab.Codparcrec, r_Cab.Codparc));
+   
+      If v_Tipoparcadt = 'Não Informado' Then
+         Raise_Application_Error(-20101,
+                                 Fc_Formatahtml_Sf('Ação Cancelada',
+                                                    'O processo de adiantamento exige que o campo "Tipo de Parceiro Adto" do cadastro do parceiro seja informado',
+                                                    'Corrija ou solicite ao responsável pelo cadastro que efetue a correção no parceiro ' ||
+                                                     Ad_Analise_Credito.Codparcmatriz(p_Codparc => r_Cab.Codparc)));
+      
+      End If;
+   
+      If r_Cab.Codnat In (9053900, 9054000, 9054200, 9054300) Then
+         --Raise_Application_Error(-20101, 'erro');
+         Select Descrnat Into v_Descrnat From Tgfnat n Where n.Codnat = r_Cab.Codnat;
+         Select Nomeparc Into v_Nomeparc From Tgfpar p Where p.Codparc = r_Cab.Codparc;
+      
+         Evp_Set_Campo_Texto(p_Idsessao, 'HISTORICO', v_Descrnat || ' - ' || v_Nomeparc);
+      End If;
+   
+   End If;
+   -- Fim de validações antes de incluir
+
+   -- Inicio das ações após inserir
+   If p_Tipoevento = After_Insert Then
+      Insert Into Ad_Adtssalgtt
+         (Nunico, Dhalter, Acao, Codusu)
+      Values
+         (Evp_Get_Campo_Int(p_Idsessao, 'NUNICO'), Sysdate, 'Inclusão', p_Codusu);
+   End If;
+   -- Fim das ações após inserir
+
+   -- Inicio das ações antes de alterar
+   If p_Tipoevento = Before_Update Then
+      -- Obtem valores antigos
+      Select c.* Into r_Cab From Ad_Adtssacab c Where c.Nunico = Evp_Get_Campo_Int(p_Idsessao, 'NUNICO');
+   
+      -- Não é permitido efetuar alterações se o adiantamento não esta em elaboração. O usuário deve desfazer e reiniciar o processo
+      If r_Cab.Situacao <> 'E' Then
+         Raise_Application_Error(-20101,
+                                 Fc_Formatahtml_Sf('Cancelando Alterações',
+                                                    'Alteração não permitida pois Situação diferente de <i>Elaborando</i>',
+                                                    Null));
+      
+      End If;
+   
+      Select Nvl(c.Permparcdif, 'N'), Nvl(c.Seacumular, 'B'), Nvl(c.Forma, 'C')
+        Into r_Conf.Permparcdif, r_Conf.Seacumular, r_Conf.Forma
+        From Ad_Adtssaconf c
+       Where c.Codigo = Evp_Get_Campo_Int(p_Idsessao, 'TIPO');
+   
+      If Evp_Get_Campo_Texto(p_Idsessao, 'FORMA') <> '4' And r_Conf.Forma = 'C' Then
+         Raise_Application_Error(-20101,
+                                 Fc_Formatahtml_Sf('Alteração Cancelada',
+                                                    'Tipo de Processo selecionado só permite selecionar a forma "Compensação"',
+                                                    Null));
+      
+      End If;
+   
+      Select Count(*)
+        Into v_Count
+        From Ad_Adtssaconfusu u
+       Where u.Codusu = p_Codusu
+         And u.Codigo = Evp_Get_Campo_Int(p_Idsessao, 'TIPO');
+   
+      If v_Count = 0 Then
+         Raise_Application_Error(-20101,
+                                 Fc_Formatahtml_Sf('Cancelando Alterações',
+                                                    'Usuário logado não tem permissão para editar esse tipo de adiantamento!',
+                                                    Null));
+      
+      End If;
+   
+      -- Se alterar valor, número de parcelas ou algum dos vencimentos deve gerar novamente as parcelas
+      If r_Cab.Vlrdesdob <> Evp_Get_Campo_Dec(p_Idsessao, 'VLRDESDOB') Or
+         r_Cab.Nrparcelas <> Evp_Get_Campo_Int(p_Idsessao, 'NRPARCELAS') Or
+         r_Cab.Dtvenc <> Evp_Get_Campo_Dta(p_Idsessao, 'DTVENC') Or
+         r_Cab.Dtvenc1 <> Evp_Get_Campo_Dta(p_Idsessao, 'DTVENC1') Or
+         r_Cab.Tipo <> Evp_Get_Campo_Int(p_Idsessao, 'TIPO') Or
+         Nvl(r_Cab.Taxa, 0) <> Nvl(Evp_Get_Campo_Dec(p_Idsessao, 'TAXA'), 0) Then
+      
+         Delete From Ad_Adtssapar Where Nunico = Evp_Get_Campo_Int(p_Idsessao, 'NUNICO');
+      
+         Evp_Set_Campo_Int(p_Idsessao, 'CODUSUFIN', Null);
+         Evp_Set_Campo_Int(p_Idsessao, 'CODUSUAPR', Null);
+         Evp_Set_Campo_Dta(p_Idsessao, 'DHAPROVADT', Null);
+         Evp_Set_Campo_Dta(p_Idsessao, 'DHAPROVFIN', Null);
+         Evp_Set_Campo_Dta(p_Idsessao, 'DHSOLICITACAO', Null);
+      
+      End If;
+   
+      Select Nvl(p.Ad_Tipadt, 'Não Informado')
+        Into v_Tipoparcadt
+        From Tgfpar p
+       Where p.Codparc = Ad_Analise_Credito.Codparcmatriz(p_Codparc => Evp_Get_Campo_Int(p_Idsessao, 'CODPARC'));
+   
+      If v_Tipoparcadt = 'Não Informado' Then
+         Raise_Application_Error(-20101,
+                                 Fc_Formatahtml_Sf('Ação Cancelada',
+                                                    'O processo de adiantamento exige que o campo "Tipo de Parceiro Adto" do cadastro do parceiro seja informado',
+                                                    'Corrija ou solicite ao responsável pelo cadastro que efetue a correção no parceiro ' ||
+                                                     Ad_Analise_Credito.Codparcmatriz(p_Codparc => r_Cab.Codparc)));
+      
+      End If;
+   
+      If r_Cab.Codparc <> Evp_Get_Campo_Int(p_Idsessao, 'CODPARC') Then
+         -- Verifica se o processo escolhido permite acumular mais de um adiantamento em aberto               
+      
+         If r_Conf.Seacumular = 'B' Then
+         
+            Select Count(*)
+              Into v_Count
+              From Ad_Centparampar p
+             Where p.Codparc = Evp_Get_Campo_Int(p_Idsessao, 'CODPARC')
+               And p.Nupar = 9;
+         
+            If v_Count = 0 Then
+               -- Se o parceiro esta na lista de exceções é porque pode lançar mais de um adiantamento para ele
+               v_Codparcmatriz := Ad_Analise_Credito.Codparcmatriz(p_Codparc => Evp_Get_Campo_Int(p_Idsessao, 'CODPARC'));
+            
+               Begin
+                  Select Sum(Vlrdesdob)
+                    Into v_Vlrdesdob
+                    From Tgffin f, Tgfpar p
+                   Where f.Codparc = p.Codparc
+                     And p.Codparcmatriz = v_Codparcmatriz
+                     And f.Recdesp = 1
+                     And f.Provisao = 'N'
+                     And f.Dhbaixa Is Null;
+               Exception
+                  When No_Data_Found Then
+                     v_Vlrdesdob := 0;
+               End;
+            
+               If v_Vlrdesdob > 0 Then
+                  Raise_Application_Error(-20101,
+                                          Fc_Formatahtml_Sf('Inclusão Cancelada',
+                                                             'Existem valores pendentes para esse parceiro, não é permitido lançar um segundo adiantamento',
+                                                             Null));
+               End If;
+            
+            End If;
+         End If;
+      
+      End If;
+   
+      -- Valida o CR
+      --If r_Cab.Codcencusresp <> Evp_Get_Campo_Int(p_Idsessao, 'CODCENCUSRESP') Then
+      /*If Nvl(r_Cab.Codcencusresp, 0) = 0 Then
+         Raise_Application_Error(-20101, Fc_Formatahtml_Sf('Obrigatório informar CR Aprovador', Null, Null));
+      
+      Else*/
+      If Evp_Get_Campo_Int(p_Idsessao, 'CODCENCUSRESP') > 0 Then
+         Select Count(*)
+           Into v_Count
+           From Tsicus c
+          Where c.Codcencus = Evp_Get_Campo_Int(p_Idsessao, 'CODCENCUSRESP')
+            And c.Analitico = 'S'
+            And Exists (Select 1
+                   From Ad_Itesolcpalibcr Cr
+                  Where c.Codcencus = Cr.Codcencus
+                    And Nvl(Cr.Aprova, 'N') = 'S');
+      
+         If v_Count = 0 Then
+            Raise_Application_Error(-20101,
+                                    Fc_Formatahtml_Sf('CR Aprovador informado não está ativo ou não é analítico ou não tem aprovador vinculado!',
+                                                       Null, Null));
+         End If;
+      
+      End If;
+   
+      --End If;
+   
+   End If;
+   -- Fim das ações Before_Update
+
+   -- Inicio das ações depois de alterar
+   If p_Tipoevento = After_Update Then
+   
+      Select c.* Into r_Cab From Ad_Adtssacab c Where c.Nunico = Evp_Get_Campo_Int(p_Idsessao, 'NUNICO');
+   
+      -- Só é permitido parceiro de despesa diferente do parceiro da receita se o processo de adiantamento estiver configurado para tal.
+      If r_Cab.Codparc <> Nvl(r_Cab.Codparcrec, r_Cab.Codparc) Then
+      
+         Select Count(*)
+           Into v_Count
+           From Ad_Adtssaconf c
+          Where c.Codigo = r_Cab.Tipo
+            And Nvl(c.Permparcdif, 'N') = 'N';
+      
+         If v_Count > 0 Then
+            Raise_Application_Error(-20101,
+                                    Fc_Formatahtml_Sf('Inclusão Cancelada',
+                                                       'Tipo de Processo selecionado não permite que o parceiro da receita seja diferente do parceiro da despesa',
+                                                       Null));
+         End If;
+      End If;
+   
+      -- Valida inclusão das datas
+      -- Data de vencimento não pode ser programada para final de semana e feriados
+      If Ad_Get.Dia_Util(p_Data => r_Cab.Dtvenc) > 0 Or Ad_Get.Dia_Util(p_Data => r_Cab.Dtvenc1) > 0 Then
+         Raise_Application_Error(-20101,
+                                 Fc_Formatahtml_Sf('Inclusão Cancelada',
+                                                    'Vencimento não pode ser programado para finais de semana e feriados!',
+                                                    Null));
+      
+      End If;
+   
+      If r_Cab.Dtvenc1 < r_Cab.Dtvenc Then
+         Raise_Application_Error(-20101,
+                                 Fc_Formatahtml_Sf('Cancelando Alterações',
+                                                    'Data Vencimento da Primeira Parcela não pode ser inferior a Data de Vencimento da Despesa',
+                                                    Null));
+      End If;
+   
+      If r_Cab.Vlrdesdob <= 0 Then
+         Raise_Application_Error(-20101, Fc_Formatahtml_Sf('Cancelando Alterações', 'Valor Inválido!', Null));
+      End If;
+   
+      If r_Cab.Nrparcelas < 1 Or r_Cab.Nrparcelas > 360 Then
+         Raise_Application_Error(-20101, Fc_Formatahtml_Sf('Cancelando Alterações', 'Nr. de Parcelas inválido!', Null));
+      
+      End If;
+   
+   End If;
+   -- Fim das ações After_Update
+
+End;]]></storedProcedure>
+        </event>
+      </events>
+    </instance>
+    <instance name="ADTSSALGTV">
+      <instanceDescription><![CDATA[Log de Alterações]]></instanceDescription>
+      <tableInfo name="AD_ADTSSALGTV" sequenceType="M">
+        <category><![CDATA[Adiantamento SSA]]></category>
+        <telaDescription><![CDATA[Detail da AD_ADTSSACAB]]></telaDescription>
+        <tableDescription><![CDATA[Log de Alterações]]></tableDescription>
+        <primaryKey>
+          <DHALTER />
+          <NUNICO />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="DHALTER" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Data / Hora]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="PKOrder"><![CDATA[4]]></prop>
+          </properties>
+        </field>
+        <field name="NUNICO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Nr. Único]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="PKOrder"><![CDATA[5]]></prop>
+          </properties>
+        </field>
+        <field name="ACAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Ação]]></description>
+          <options>
+            <option value="I"><![CDATA[Inclusão]]></option>
+            <option value="S"><![CDATA[Solicitação]]></option>
+            <option value="C"><![CDATA[Cancelamento]]></option>
+            <option value="A" default="S"><![CDATA[Aprovação]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSU" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Usuário]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSU" targetName="CODUSU" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="ADTSSACONFNAT">
+      <instanceDescription><![CDATA[Naturezas Permitidas]]></instanceDescription>
+      <tableInfo name="AD_ADTSSACONFNAT" sequenceType="M">
+        <category><![CDATA[Adiantamento SSA]]></category>
+        <telaDescription><![CDATA[Detail da AD_ADTSSACONF]]></telaDescription>
+        <tableDescription><![CDATA[Naturezas Permitidas]]></tableDescription>
+        <primaryKey>
+          <CODIGO />
+          <CODNAT />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODNAT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Natureza]]></description>
+        </field>
+        <field name="CODIGO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Código]]></description>
+        </field>
+        <field name="EXIGEPROJETO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Exige Projeto?]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Natureza" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFNAT" />
+          <fields>
+            <field localName="CODNAT" targetName="CODNAT" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="ADTSSACONFCR">
+      <instanceDescription><![CDATA[CR Permitidos]]></instanceDescription>
+      <tableInfo name="AD_ADTSSACONFCR" sequenceType="M">
+        <category><![CDATA[Adiantamento SSA]]></category>
+        <telaDescription><![CDATA[Detail da AD_ADTSSACONF]]></telaDescription>
+        <tableDescription><![CDATA[CR Permitidos]]></tableDescription>
+        <primaryKey>
+          <CODIGO />
+          <CODCENCUS />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODCENCUS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Centro de Resultado]]></description>
+        </field>
+        <field name="CODIGO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Código]]></description>
+        </field>
+        <field name="EXIGEPROJETO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Exige Projeto]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[S]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="CentroResultado" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICUS" />
+          <fields>
+            <field localName="CODCENCUS" targetName="CODCENCUS" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="ADTSSAPAR">
+      <instanceDescription><![CDATA[Parcelas]]></instanceDescription>
+      <tableInfo name="AD_ADTSSAPAR" sequenceType="M">
+        <category><![CDATA[Adiantamento SSA]]></category>
+        <telaDescription><![CDATA[Detail da AD_ADTSSACAB]]></telaDescription>
+        <tableDescription><![CDATA[Log Adiantamento SSA - Tabela]]></tableDescription>
+        <primaryKey>
+          <NUNICO />
+          <SEQUENCIA />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="NUNICO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[NUNICO]]></description>
+        </field>
+        <field name="SEQUENCIA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Sequência]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUFIN" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nr. Único Financeiro]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DTVENC" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Vencimento]]></description>
+        </field>
+        <field name="VLRDESDOB" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Vlr. Desdobramento]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="VLRJUROS" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Vlr. Juros]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="VLRTOTAL" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Vlr. Total]]></description>
+          <expression><![CDATA[double VLRDESDOB = 0;
+double VLRJUROS = 0;
+resultado = 0;
+
+if( $col_VLRDESDOB !=null){
+   VLRDESDOB = $col_VLRDESDOB.doubleValue();
+}
+if( $col_VLRJUROS != null){
+   VLRJUROS = $col_VLRJUROS.doubleValue();
+}
+double resultado = (VLRDESDOB + VLRJUROS);
+return java.math.BigDecimal.valueOf(resultado);]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="RECDESP" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Receita/Despesa]]></description>
+          <options>
+            <option value="-1"><![CDATA[Despesa]]></option>
+            <option value="1" default="S"><![CDATA[Receita]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="PROVISAO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Provisão?]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NRPARCELA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nr. Parcela]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DTVENCINIC" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Vencimento Inicial]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="ADTSSACAB" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_ADTSSACAB" />
+          <fields>
+            <field localName="NUNICO" targetName="NUNICO" />
+          </fields>
+        </relation>
+      </relationShip>
+      <events>
+        <event type="SP">
+          <description><![CDATA[AD_ADTSSAPAR]]></description>
+          <eventConfig>
+            <dbCall name="STP_AD_ADTSSAPAR_SF" rootEntity="ADTSSAPAR" />
+          </eventConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "STP_AD_ADTSSAPAR_SF" (p_Tipoevento Int,
+                                                p_Idsessao   Varchar2,
+                                                p_Codusu     Int) As
+   Before_Insert Int;
+   After_Insert  Int;
+   Before_Delete Int;
+   After_Delete  Int;
+   Before_Update Int;
+   After_Update  Int;
+   Before_Commit Int;
+
+   r_Par          Ad_Adtssapar%Rowtype;
+   v_Ajustavenc   Int;
+   v_Altvlrdesdob Char(1);
+
+Begin
+   Before_Insert := 0;
+   After_Insert  := 1;
+   Before_Delete := 2;
+   After_Delete  := 3;
+   Before_Update := 4;
+   After_Update  := 5;
+   Before_Commit := 10;
+
+   /**************************
+   Autor:     Ricardo Soares de Oliveira
+   Criado em: 09/02/2018
+   Objetivo:  Controle de Alterações feitas pelo usuário em tela, procedure vinculado a evento da tabela.
+
+   Autor:     Ricardo Soares de Oliveira
+   Alterado:  24/07/2018
+   Objetivo:  Foi habilitado para alterações o campo VLRDESDOB e criado um campo na AD_ADTSSACONFUSU para identificar se o usuário tem permissão de alterar o valor do desdobramento, que até então era bloqueado para alterações, e criado aqui uma regra que valida se o usuário pode ou não alterar.
+
+   **************************/
+
+   /*******************************************************************************
+      É possível obter o valor dos campos através das Functions:
+      
+     EVP_GET_CAMPO_DTA(P_IDSESSAO, 'NOMECAMPO') -- PARA CAMPOS DE DATA
+     EVP_GET_CAMPO_INT(P_IDSESSAO, 'NOMECAMPO') -- PARA CAMPOS NUMÉRICOS INTEIROS
+     EVP_GET_CAMPO_DEC(P_IDSESSAO, 'NOMECAMPO') -- PARA CAMPOS NUMÉRICOS DECIMAIS
+     EVP_GET_CAMPO_TEXTO(P_IDSESSAO, 'NOMECAMPO')   -- PARA CAMPOS TEXTO
+     
+     O primeiro argumento é uma chave para esta execução. O segundo é o nome do campo.
+     
+     Para os eventos BEFORE UPDATE, BEFORE INSERT e AFTER DELETE todos os campos estarão disponíveis.
+     Para os demais, somente os campos que pertencem à PK
+     
+     * Os campos CLOB/TEXT serão enviados convertidos para VARCHAR(4000)
+     
+     Também é possível alterar o valor de um campo através das Stored procedures:
+     
+     EVP_SET_CAMPO_DTA(P_IDSESSAO,  'NOMECAMPO', VALOR) -- VALOR DEVE SER UMA DATA
+     EVP_SET_CAMPO_INT(P_IDSESSAO,  'NOMECAMPO', VALOR) -- VALOR DEVE SER UM NÚMERO INTEIRO
+     EVP_SET_CAMPO_DEC(P_IDSESSAO,  'NOMECAMPO', VALOR) -- VALOR DEVE SER UM NÚMERO DECIMAL
+     EVP_SET_CAMPO_TEXTO(P_IDSESSAO,  'NOMECAMPO', VALOR) -- VALOR DEVE SER UM TEXTO
+   ********************************************************************************/
+
+   If p_Tipoevento = Before_Insert Then
+      Raise_Application_Error(-20101, Fc_Formatahtml_Sf('Inclusão não permitida', 'Utilize a ação gerar parcela', Null));
+   End If;
+
+   If p_Tipoevento = Before_Delete Then
+      Raise_Application_Error(-20101,
+                              Fc_Formatahtml_Sf('Exclusão não permitida, as parcelas são geradas automáticamente ao executar a opção "Gerar Parcelas" ou então ao alterar algum registro no cabeçalho',
+                                                 Null, Null));
+   End If;
+
+   If p_Tipoevento = Before_Update Then
+      -- r_par = Recebe o valor atual ou seja o Old
+      -- Evp_Get = Recebe o novo valor ou seja o New
+      Select p.*
+        Into r_Par
+        From Ad_Adtssapar p
+       Where p.Nunico = Evp_Get_Campo_Int(p_Idsessao, 'NUNICO')
+         And p.Sequencia = Evp_Get_Campo_Int(p_Idsessao, 'SEQUENCIA');
+   
+      Select Nvl(Conf.Ajustavenc, 0),
+             Nvl(Usu.Altvlrdesdob, 'N')
+        Into v_Ajustavenc,
+             v_Altvlrdesdob
+        From Ad_Adtssaconf    Conf,
+             Ad_Adtssacab     Cab,
+             Ad_Adtssaconfusu Usu
+       Where Conf.Codigo = Cab.Tipo
+         And Conf.Codigo = Usu.Codigo
+         And Cab.Nunico = Evp_Get_Campo_Int(p_Idsessao, 'NUNICO')
+         And Usu.Codusu = p_Codusu;
+   
+      If Evp_Get_Campo_Dta(p_Idsessao, 'DTVENC') <> r_Par.Dtvenc Then
+      
+         If ((Evp_Get_Campo_Dta(p_Idsessao, 'DTVENC') - Evp_Get_Campo_Dta(p_Idsessao, 'DTVENCINIC')) > 0 And
+            (Evp_Get_Campo_Dta(p_Idsessao, 'DTVENC') - Evp_Get_Campo_Dta(p_Idsessao, 'DTVENCINIC')) > v_Ajustavenc) Then
+            Raise_Application_Error(-20101,
+                                    Fc_Formatahtml_Sf('Alteração Cancelada', 'Ajuste vencimento superior ao permitido',
+                                                       Null));
+         End If;
+      End If;
+   
+      If r_Par.Vlrdesdob <> Evp_Get_Campo_Dec(p_Idsessao, 'VLRDESDOB') And v_Altvlrdesdob = 'N' Then
+         Raise_Application_Error(-20101,
+                                 Fc_Formatahtml_Sf('Alteração Cancelada',
+                                                    'Usuário logado não tem permissão para promover alterações no campo valor do desdobramento!',
+                                                    Null));
+      End If;
+   
+      If Ad_Get.Dia_Util(p_Data => Evp_Get_Campo_Dta(p_Idsessao, 'DTVENC')) > 0 Then
+         Raise_Application_Error(-20101,
+                                 Fc_Formatahtml_Sf('Inclusão Cancelada',
+                                                    'Vencimento não pode ser programado para finais de semana e feriados!!',
+                                                    Null));
+      
+      End If;
+   
+   End If;
+
+End;]]></storedProcedure>
+        </event>
+      </events>
+    </instance>
+  </instances>
+</metadata>
+

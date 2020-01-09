@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="estoqueEstrategico2" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.5026296018031553"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="br.com.sankhya.jasperfuncs.*"/>
+	<style name="Crosstab Data Text" hAlign="Center" pattern="">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{VLREVENTOMeasure}.signum()== -1]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{VLREVENTOMeasure} == null]]></conditionExpression>
+			<style backcolor="#00FFFF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="dtini" class="java.sql.Timestamp">
+		<parameterDescription><![CDATA[Dt. Início]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dtfin" class="java.sql.Timestamp">
+		<parameterDescription><![CDATA[Dt. Final]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="codprod" class="java.math.BigDecimal">
+		<property name="nomeTabela" value="TGFPRO"/>
+		<parameterDescription><![CDATA[Cód. Produto]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[Select *
+From (select e.codeee,
+	Case
+	When Length(e.codeeepai) = 5 Then
+	Substr(e.codeeepai,1,1)
+	Else
+	Substr(e.codeeepai,1,2)
+	End As grupopai,
+	e.descricao , to_char(r.dtref,'yyyy/mm') dtref, to_number(r.vlrevento) vlrevento
+     from ad_tsfeee e
+     left join ad_tsfree r on r.codeee = e.codeee
+    where e.query is not null
+     and e.codeee < 110000
+     and trunc(r.dtref,'mm') >= trunc( $P{dtini},'mm')
+     and trunc(r.dtref,'mm') <= trunc( $P{dtfin},'mm')
+     and r.codprod = $P{codprod}
+    order by r.codeee, dtref
+      )]]>
+	</queryString>
+	<field name="CODEEE" class="java.math.BigDecimal"/>
+	<field name="GRUPOPAI" class="java.lang.String"/>
+	<field name="DESCRICAO" class="java.lang.String"/>
+	<field name="DTREF" class="java.lang.String"/>
+	<field name="VLREVENTO" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="47">
+			<textField>
+				<reportElement x="0" y="0" width="595" height="30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Análise do Estoque Estratégico"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="30" width="595" height="17"/>
+				<box leftPadding="5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Período de: </b>"+
+new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{dtini})+
+" <b>a</b> "+
+new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{dtfin})]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<summary>
+		<band height="159" splitType="Stretch">
+			<crosstab>
+				<reportElement x="0" y="0" width="595" height="105"/>
+				<crosstabDataset isDataPreSorted="true"/>
+				<rowGroup name="DESCRICAO" width="92" totalPosition="End">
+					<bucket>
+						<bucketExpression class="java.lang.String"><![CDATA[$F{DESCRICAO}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="92" height="16"/>
+								<box leftPadding="5"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font size="7"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$V{DESCRICAO}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="DTREF" height="19" totalPosition="End">
+					<bucket>
+						<bucketExpression class="java.lang.String"><![CDATA[$F{DTREF}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="18"/>
+								<textElement verticalAlignment="Middle">
+									<font size="7" isBold="true"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$V{DTREF}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="50" height="18"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="VLREVENTOMeasure" class="java.math.BigDecimal" calculation="Sum">
+					<measureExpression><![CDATA[$F{VLREVENTO}]]></measureExpression>
+				</measure>
+				<crosstabCell width="50" height="16">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField pattern="#,##0.00;-#,##0.00">
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="16">
+								<printWhenExpression><![CDATA[$V{VLREVENTOMeasure}.signum() != 0]]></printWhenExpression>
+							</reportElement>
+							<box leftPadding="3"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle" markup="styled">
+								<font size="7"/>
+							</textElement>
+							<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{VLREVENTOMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell height="6" rowTotalGroup="DESCRICAO">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" height="16" columnTotalGroup="DTREF">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField pattern="#,##0.00">
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="16"/>
+							<textElement verticalAlignment="Middle">
+								<font size="7"/>
+							</textElement>
+							<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{VLREVENTOMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell height="6" rowTotalGroup="DESCRICAO" columnTotalGroup="DTREF">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+			<subreport>
+				<reportElement key="EstoqueEstrategico_bottom" positionType="Float" x="0" y="106" width="595" height="50"/>
+				<subreportParameter name="CODPROD">
+					<subreportParameterExpression><![CDATA[$P{codprod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="DTFIN">
+					<subreportParameterExpression><![CDATA[$P{dtfin}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "EstoqueEstrategico_bottom.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>

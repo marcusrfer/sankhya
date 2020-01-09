@@ -1,0 +1,851 @@
+Create Or Replace Package Ad_Pkg_Jur Is
+
+	-- Author  : M.RANGEL
+	-- Created : 24/01/2018 13:42:00
+	-- Purpose : Atender o processo de despesas jurídicas
+	v_Nulog            Number;
+	v_Numtransf        Number;
+	v_Ctacontrapartida Number;
+	v_Reclamante       Ad_Jurcab.Reclamante%Type;
+	v_Codctacp         Number;
+	v_Nubco            Number;
+	v_Acao             Varchar2(100);
+	Jur                Ad_Jurite%Rowtype;
+	Fin                Tgffin%Rowtype;
+	Tmp                Ad_Jurtmp%Rowtype;
+
+	--Pragma Serially_Reusable;
+
+	Processo_Juridico Boolean Default False;
+
+	Errmsg_Inserefin Constant Varchar2(4000) := 'Erro ao inserir o financeiro do processo';
+	Errmsg_Inserembc Constant Varchar2(4000) := 'Erro ao inserir a movimentaçõo bancária do financeiro de número único ';
+	Errmsg_Baixafin  Constant Varchar2(4000) := 'Erro ao realizar a baixa do financeiro de número único ';
+	Errmsg_Transfmbc Constant Varchar2(4000) := 'Erro ao gerar a transferência bancária do processo de número ';
+
+	Function Gera_Numdoc(p_Nupasta Number, p_Seq Int) Return Number;
+
+	Function Get_Nro_Processo_Jur(p_Nupasta Number, p_Sequencia Number) Return Varchar2;
+
+	Function Get_Nulog_Ultcod(p_Nupasta Number, p_Sequencia Number) Return Number;
+
+	Function Get_Nome_Reclamante(p_Nupasta Number) Return Varchar2;
+
+	Function Fmt_Numprocesso(p_Numprocesso Varchar2) Return Varchar2;
+
+	Procedure Grava_Log_Transf_Bancaria(p_Nupasta Number, p_Seq Number, p_Numtransf Number);
+
+	Procedure Grava_Log_Transf_Bancaria(p_Nupasta Number, p_Seq Number, p_Numtransf Number, p_Tipo Varchar2);
+
+	Procedure Atualiza_Situacao(p_Nupasta Number, p_Seq Number, p_Situacao Varchar2);
+
+	Procedure Atualiza_Status(p_Nupasta Number, p_Seq Number, p_Status Varchar2);
+
+	Type Type_Rec_Desp_Jur Is Record(
+		Nupasta       Number,
+		Seq           Number,
+		Codtopdesp    Number,
+		Codtoprec     Number,
+		Codtopbxrec   Number,
+		Codtopbxdesp  Number,
+		Codtoptransf  Number,
+		Codtiptit     Number,
+		Nueventojur   Number,
+		Nueventofin   Number,
+		Nueventoreemb Number,
+		Usulibjur     Number,
+		Usulibfin     Number,
+		Codnatrec     Number,
+		Codnatdesp    Number);
+
+	Procedure Get_Param_Jur(p_Nupasta       Number,
+													p_Seq           Number,
+													p_Codtopdesp    Out Number,
+													p_Codtoprec     Out Number,
+													p_Codtopbxrec   Out Number,
+													p_Codtopbxdesp  Out Number,
+													p_Codtoptransf  Out Number,
+													p_Codtiptit     Out Number,
+													p_Nueventojur   Out Number,
+													p_Nueventofin   Out Number,
+													p_Nueventoreemb Out Number,
+													p_Usulibjur     Out Number,
+													p_Usulibfin     Out Number,
+													p_Codnatdesp    Out Number,
+													p_Codnatrec     Out Number);
+
+	Procedure Encerra_Proc_Reclamada(p_Nupasta Number, p_Seq Number, p_Seqcasc Number Default 0);
+
+	Procedure Encerra_Proc_Reclamante(p_Nupasta Number, p_Seq Number, p_Seqcasc Number Default 0);
+
+	Procedure Realiza_Transf_Mbc(p_Top        Number,
+															 p_Dtlanc     Date,
+															 p_Predata    Date,
+															 p_Ctaorig    Number,
+															 p_Ctadestino Number,
+															 p_Numdoc     Number,
+															 p_Valor      Float,
+															 p_Historico  Tgfmbc.Historico%Type,
+															 p_Numtransf  Out Number);
+	/*
+  Procedure insere_lancjur_baixada(p_Nupasta   Number,
+                                   p_Seq       Number,
+                                   p_recdesp   Char,
+                                   p_codnat    Number,
+                                   p_codcencus Number,
+                                   p_valor     Float,
+                                   p_conta     Number,
+                                   p_nufin     Out Number);*/
+
+End Ad_Pkg_Jur;
+/
+Create Or Replace Package Body Ad_Pkg_Jur Is
+
+	--Pragma Serially_Reusable;
+
+	Function Gera_Numdoc(p_Nupasta Number, p_Seq Int) Return Number Is
+		v_Numdoc Number;
+	Begin
+		v_Numdoc := p_Nupasta || Lpad(p_Seq, 3, 0);
+		Return v_Numdoc;
+	End Gera_Numdoc;
+
+	Function Fmt_Numprocesso(p_Numprocesso Varchar2) Return Varchar2 Is
+		v_Numprocesso   Varchar2(50);
+		v_Procformatado Varchar2(25);
+	Begin
+		v_Numprocesso := Substr(Lpad(Replace(Replace(Ltrim(Rtrim(Regexp_Replace(p_Numprocesso, '[^0-9]+', Null))),
+																								 '-',
+																								 ''),
+																				 '/',
+																				 ''),
+																 20,
+																 '0'),
+														1,
+														20);
+	
+		If Length(v_Numprocesso) < 20 Then
+			v_Numprocesso := Lpad(v_Numprocesso, 20, '0');
+		End If;
+	
+		v_Procformatado := Regexp_Replace(v_Numprocesso,
+																			'([0-9]{7})([0-9]{2})([0-9]{4})([0-9]{1})([0-9]{2})([0-9]{4})',
+																			'\1.\2.\3.\4.\5.\6');
+		Return v_Procformatado;
+	Exception
+		When Others Then
+			Raise;
+	End Fmt_Numprocesso;
+
+	Procedure Atualiza_Situacao(p_Nupasta Number, p_Seq Number, p_Situacao Varchar2) Is
+	Begin
+		Update Ad_Jurite Ji
+			 Set Ji.Situacao = p_Situacao
+		 Where Nupasta = p_Nupasta
+			 And Seq = p_Seq;
+	Exception
+		When Others Then
+			Raise_Application_Error(-20105, 'Erro ao atualizar a Situação do processo!');
+	End Atualiza_Situacao;
+
+	Procedure Atualiza_Status(p_Nupasta Number, p_Seq Number, p_Status Varchar2) Is
+	Begin
+		Update Ad_Jurite Ji
+			 Set Ji.Status = p_Status
+		 Where Nupasta = p_Nupasta
+			 And Seq = p_Seq;
+	Exception
+		When Others Then
+			Raise_Application_Error(-20105, 'Erro ao atualizar o Status do processo!');
+	End Atualiza_Status;
+
+	Procedure Grava_Log_Transf_Bancaria(p_Nupasta Number, p_Seq Number, p_Numtransf Number) Is
+	Begin
+		Grava_Log_Transf_Bancaria(p_Nupasta, p_Seq, p_Numtransf, Null);
+	
+	End Grava_Log_Transf_Bancaria;
+
+	Procedure Grava_Log_Transf_Bancaria(p_Nupasta Number, p_Seq Number, p_Numtransf Number, p_Tipo Varchar2) Is
+	Begin
+	
+		For t In (Select Nubco, Recdesp, Codctabcoint, m.Vlrlanc From Tgfmbc m Where Numtransf = p_Numtransf)
+		Loop
+			Begin
+				Insert Into Ad_Jurlog
+					(Nulog, Seq, Nupasta, Dhmov, Nufin, Nubco, Descroper, Codctabcoint, Recdesp, Vlrdesdob, Tipo)
+				Values
+					(Ad_Pkg_Jur.Get_Nulog_Ultcod(p_Nupasta, p_Seq), p_Seq, p_Nupasta, Sysdate, Null, t.Nubco,
+					 'Reembolso Adiantamento', t.Codctabcoint, t.Recdesp, t.Vlrlanc, p_Tipo);
+				--Commit;
+			Exception
+				When Others Then
+					--Rollback;
+					Raise_Application_Error(-20105,
+																	Ad_Fnc_Formataerro('Erro ao vincular os lanaçamentos ao processo. ' ||
+																										 Sqlerrm));
+			End;
+		End Loop;
+	
+	End Grava_Log_Transf_Bancaria;
+
+	Function Get_Nro_Processo_Jur(p_Nupasta Number, p_Sequencia Number) Return Varchar2 Is
+		v_Nroprocesso Varchar2(200);
+		Pragma Autonomous_Transaction;
+	Begin
+		Select j.Numprocesso
+			Into v_Nroprocesso
+			From Ad_Jurite j
+		 Where j.Nupasta = p_Nupasta
+			 And j.Seq = p_Sequencia;
+	
+		v_Nroprocesso := Fmt_Numprocesso(v_Nroprocesso);
+	
+		Return v_Nroprocesso;
+	End;
+
+	Function Get_Nulog_Ultcod(p_Nupasta Number, p_Sequencia Number) Return Number Is
+		v_Ultcod Number;
+	Begin
+		Select Max(Nulog) + 1
+			Into v_Ultcod
+			From Ad_Jurlog
+		 Where Nupasta = p_Nupasta
+			 And Seq = p_Sequencia;
+	
+		Return Nvl(v_Ultcod, 1);
+	
+	Exception
+		When Others Then
+			Return 1;
+	End;
+
+	Function Get_Nome_Reclamante(p_Nupasta Number) Return Varchar2 Is
+	Begin
+		Select c.Reclamante Into v_Reclamante From Ad_Jurcab c Where Nupasta = p_Nupasta;
+	
+		Return v_Reclamante;
+	End;
+
+	Procedure Get_Param_Jur(p_Nupasta       Number,
+													p_Seq           Number,
+													p_Codtopdesp    Out Number,
+													p_Codtoprec     Out Number,
+													p_Codtopbxrec   Out Number,
+													p_Codtopbxdesp  Out Number,
+													p_Codtoptransf  Out Number,
+													p_Codtiptit     Out Number,
+													p_Nueventojur   Out Number,
+													p_Nueventofin   Out Number,
+													p_Nueventoreemb Out Number,
+													p_Usulibjur     Out Number,
+													p_Usulibfin     Out Number,
+													p_Codnatdesp    Out Number,
+													p_Codnatrec     Out Number) Is
+		v_Count Int := 0;
+		Jur     Ad_Jurite%Rowtype;
+		Pragma Autonomous_Transaction;
+	Begin
+	
+		-- pooula variáveis do lançamento
+		Select *
+			Into Jur
+			From Ad_Jurite Ji
+		 Where Ji.Nupasta = p_Nupasta
+			 And Ji.Seq = p_Seq;
+	
+		-- verifica exceções por natureza
+		Select Count(*)
+			Into v_Count
+			From Ad_Jurexcnat n
+			Join Ad_Jurparam p
+				On p.Nujurpar = n.Nujurpar
+		 Where p.Nujurpar = 1
+			 And n.Codnat = Jur.Codnat;
+	
+		If v_Count > 0 Then
+			Select n.Codtopdesp,
+						 n.Codtoprec,
+						 n.Codtiptit,
+						 n.Nuevento,
+						 n.Codusulib,
+						 p.Codtopbxrec,
+						 p.Codtopbxdesp,
+						 p.Nuevento,
+						 p.Codusulib,
+						 p.Nueventolibreemb,
+						 n.Codnat,
+						 p.Codnatrec
+				Into p_Codtopdesp,
+						 p_Codtoprec,
+						 p_Codtiptit,
+						 p_Nueventofin,
+						 p_Usulibfin,
+						 p_Codtopbxrec,
+						 p_Codtopbxdesp,
+						 p_Nueventojur,
+						 p_Usulibjur,
+						 p_Nueventoreemb,
+						 p_Codnatdesp,
+						 p_Codnatrec
+				From Ad_Jurexcnat n
+				Join Ad_Jurparam p
+					On p.Nujurpar = n.Nujurpar
+			 Where n.Codnat = Jur.Codnat
+				 And p.Nujurpar = 1;
+		Else
+			Select p.Codtopdesp,
+						 p.Codtoprec,
+						 p.Codtoptransf,
+						 p.Nuevento,
+						 p.Codusulib,
+						 p.Codusulibfin,
+						 p.Codtopbxrec,
+						 p.Codtopbxdesp,
+						 p.Nueventofin,
+						 p.Nueventolibreemb,
+						 p.Codnatdesp,
+						 p.Codnatrec
+				Into p_Codtopdesp,
+						 p_Codtoprec,
+						 p_Codtoptransf,
+						 p_Nueventojur,
+						 p_Usulibjur,
+						 p_Usulibfin,
+						 p_Codtopbxrec,
+						 p_Codtopbxdesp,
+						 p_Nueventofin,
+						 p_Nueventoreemb,
+						 p_Codnatdesp,
+						 p_Codnatrec
+				From Ad_Jurparam p
+			 Where p.Nujurpar = 1;
+		
+			Begin
+				Select t.Codtiptit
+					Into p_Codtiptit
+					From Ad_Jurparam p
+					Join Ad_Jurtippag t
+						On p.Nujurpar = t.Nujurpar
+				 Where p.Nujurpar = 1
+					 And t.Forma = Jur.Forma;
+			Exception
+				When No_Data_Found Then
+					Raise_Application_Error(-20105,
+																	Fc_Formatahtml_Sf(p_Mensagem => 'Não foi possível encontrar o tipo de título relacionado a esta forma de pagamento',
+																										p_Motivo   => 'Possivelmente não há vinculação entre a forma de pagamento e o tipo de título',
+																										p_Solucao  => 'Verifique na tela de parâmentros se o mesmo possui tipo de título vinculado',
+																										p_Error    => Null));
+				When Others Then
+					Raise_Application_Error(-20105,
+																	Ad_Fnc_Formataerro('Erro ao buscar os parâmetros do processo. ' || Sqlerrm));
+			End;
+		
+		End If;
+	Exception
+		When Others Then
+			Raise_Application_Error(-20105, Ad_Fnc_Formataerro(Sqlerrm));
+	End Get_Param_Jur;
+
+	Procedure Ins_Lancjur_Baixado_Transf(p_Nupasta     Number,
+																			 p_Seq         Number,
+																			 p_Recdesp     Varchar2,
+																			 p_Codtipoper  Number,
+																			 p_Codtopbaixa Number,
+																			 p_Conta       Number,
+																			 p_Codnat      Number,
+																			 p_Codtiptit   Number,
+																			 p_Vlrdesdob   Float,
+																			 p_Nufin       Out Number) Is
+	
+		Jur            Ad_Jurite%Rowtype;
+		v_Historico    Tgffin.Historico%Type;
+		v_Codtoptransf Number;
+	
+	Begin
+	
+		Select *
+			Into Jur
+			From Ad_Jurite
+		 Where Nupasta = p_Nupasta
+			 And Seq = p_Seq;
+	
+		If Jur.Numdoc Is Null Then
+			Jur.Numdoc := Gera_Numdoc(Jur.Nupasta, Jur.Seq);
+		End If;
+	
+		Ad_Set.Ins_Financeiro(p_Codemp     => Jur.Codemp,
+													p_Numnota    => Jur.Numdoc,
+													p_Dtneg      => Trunc(Sysdate),
+													p_Dtvenc     => Sysdate,
+													p_Codparc    => Jur.Codparc,
+													p_Top        => p_Codtipoper,
+													p_Contabanco => p_Conta,
+													p_Codnat     => p_Codnat,
+													p_Codcencus  => Jur.Codcencus,
+													p_Codproj    => Jur.Codproj,
+													p_Codtiptit  => p_Codtiptit,
+													p_Origem     => 'F',
+													p_Nunota     => Null,
+													p_Valor      => p_Vlrdesdob,
+													p_Nufin      => p_Nufin);
+	
+		Insert Into Ad_Tblcmf
+			(Nometaborig, Nuchaveorig, Nometabdest, Nuchavedest)
+		Values
+			('AD_JURITE', Jur.Nupasta || Jur.Seq, 'TGFFIN', p_Nufin);
+		Begin
+		
+			v_Historico := Substr('Processo: ' || Jur.Numprocesso || ' - ' ||
+														Ad_Pkg_Jur.Get_Nome_Reclamante(p_Nupasta),
+														1,
+														255);
+		
+			Update Tgffin Set Historico = v_Historico, Recdesp = p_Recdesp, Provisao = 'N' Where Nufin = p_Nufin;
+		
+		Exception
+			When Others Then
+				--Rollback;
+				Raise_Application_Error(-20105, Ad_Fnc_Formataerro(Errmsg_Inserefin || p_Nufin || '.' || Sqlerrm));
+		End;
+	
+		-- insere na movimentação bancária
+		Begin
+			Stp_Keygen_Tgfnum('TGFMBC', 1, 'TGFMBC', 'NUBCO', 0, v_Nubco);
+		
+			Insert Into Tgfmbc
+				(Nubco, Codlanc, Dtlanc, Codtipoper, Dhtipoper, Dtcontab, Historico, Codctabcoint, Numdoc, Vlrlanc,
+				 Talao, Predata, Conciliado, Dhconciliacao, Origmov, Numtransf, Recdesp, Dtalter, Dtinclusao, Codusu,
+				 Ad_Nufinproc)
+			Values
+				(v_Nubco, 1, Sysdate, p_Codtopbaixa, Ad_Get.Maxdhtipoper(p_Codtopbaixa), Sysdate,
+				 Substr(v_Historico, 1, 60), p_Conta, Jur.Numdoc, p_Vlrdesdob, Null, Sysdate, 'N', Null, 'F', Null,
+				 p_Recdesp, Sysdate, Sysdate, Stp_Get_Codusulogado, Jur.Nufin);
+		Exception
+			When Others Then
+				Raise_Application_Error(-20105, Ad_Fnc_Formataerro(Errmsg_Inserembc || p_Nufin || '. ' || Sqlerrm));
+		End;
+	
+		-- baixa o lançamento
+		Begin
+			Update Tgffin
+				 Set Dhbaixa         = Sysdate,
+						 Codtipoperbaixa = p_Codtopbaixa,
+						 Dhtipoperbaixa  = Ad_Get.Maxdhtipoper(p_Codtopbaixa),
+						 Vlrbaixa        = p_Vlrdesdob,
+						 Codempbaixa     = Jur.Codemp,
+						 Nubco           = v_Nubco
+			 Where Nufin = p_Nufin;
+		Exception
+			When Others Then
+				Raise_Application_Error(-20105, Ad_Fnc_Formataerro(Errmsg_Baixafin || p_Nufin || '. ' || Sqlerrm));
+		End;
+	
+		Begin
+			Select Cta.Ad_Codctabcocp Into v_Ctacontrapartida From Tsicta Cta Where Cta.Codctabcoint = p_Conta;
+		Exception
+			When Others Then
+				Raise_Application_Error(-20105,
+																Ad_Fnc_Formataerro('Não foi informada a conta contra partida para a conta ' ||
+																									 p_Conta));
+		End;
+	
+		--transfere o acrescimo
+		Select Codtoptransf Into v_Codtoptransf From Ad_Jurparam Where Nujurpar = 1;
+	
+		Realiza_Transf_Mbc(p_Top        => v_Codtoptransf,
+											 p_Dtlanc     => Sysdate,
+											 p_Predata    => Sysdate,
+											 p_Ctaorig    => p_Conta,
+											 p_Ctadestino => v_Ctacontrapartida,
+											 p_Numdoc     => Jur.Numdoc,
+											 p_Valor      => p_Vlrdesdob,
+											 p_Historico  => Substr('Transf. ' || v_Historico, 1, 60),
+											 p_Numtransf  => v_Numtransf);
+	
+		Begin
+			If p_Conta Is Null Then
+				Raise_Application_Error(-20105,
+																Ad_Fnc_Formataerro('Não foi informada a conta ou a mesma está inativa!'));
+			Elsif v_Ctacontrapartida Is Null Then
+				Raise_Application_Error(-20105,
+																Ad_Fnc_Formataerro('Verifique o cadastro da conta ' || p_Conta ||
+																									 ', pois não foi encontrata a contra-partida.'));
+			End If;
+		End;
+	
+		Begin
+			Update Tgfmbc m Set m.Ad_Nufinproc = Jur.Nufin Where Numtransf = v_Numtransf;
+		Exception
+			When Others Then
+				Raise_Application_Error(-20105,
+																Ad_Fnc_Formataerro(Errmsg_Transfmbc || Jur.Numprocesso || '. ' || Sqlerrm));
+		End;
+	
+		Grava_Log_Transf_Bancaria(Jur.Nupasta, Jur.Seq, v_Numtransf);
+	
+	End Ins_Lancjur_Baixado_Transf;
+
+	Procedure Ins_Lancjur_Baixado_Semtransf(p_Nupasta     Number,
+																					p_Seq         Number,
+																					p_Recdesp     Varchar2,
+																					p_Codtipoper  Number,
+																					p_Codtopbaixa Number,
+																					p_Conta       Number,
+																					p_Codnat      Number,
+																					p_Codtiptit   Number,
+																					p_Vlrdesdob   Float,
+																					p_Nufin       Out Number) Is
+	
+		Jur         Ad_Jurite%Rowtype;
+		v_Historico Tgffin.Historico%Type;
+	
+	Begin
+	
+		Select *
+			Into Jur
+			From Ad_Jurite
+		 Where Nupasta = p_Nupasta
+			 And Seq = p_Seq;
+	
+		If Jur.Numdoc Is Null Then
+			--jur.numdoc := jur.nupasta || jur.seq;
+			--jur.numdoc := Replace(To_Char(Sysdate), '/', '');
+			Jur.Numdoc := Gera_Numdoc(Jur.Nupasta, Jur.Seq);
+		End If;
+	
+		Ad_Set.Ins_Financeiro(p_Codemp     => Jur.Codemp,
+													p_Numnota    => Jur.Numdoc,
+													p_Dtneg      => Sysdate,
+													p_Dtvenc     => Trunc(Sysdate) + 4,
+													p_Codparc    => Jur.Codparc,
+													p_Top        => p_Codtipoper,
+													p_Contabanco => p_Conta,
+													p_Codnat     => p_Codnat,
+													p_Codcencus  => Jur.Codcencus,
+													p_Codproj    => Jur.Codproj,
+													p_Codtiptit  => p_Codtiptit,
+													p_Origem     => 'F',
+													p_Nunota     => Null,
+													p_Valor      => p_Vlrdesdob,
+													p_Nufin      => p_Nufin);
+	
+		Insert Into Ad_Tblcmf
+			(Nometaborig, Nuchaveorig, Nometabdest, Nuchavedest)
+		Values
+			('AD_JURITE', Jur.Nupasta || Jur.Seq, 'TGFFIN', p_Nufin);
+	
+		Begin
+		
+			v_Historico := Substr('Processo: ' || Jur.Numprocesso || ' - ' ||
+														Ad_Pkg_Jur.Get_Nome_Reclamante(p_Nupasta),
+														1,
+														255);
+		
+			Update Tgffin Set Historico = v_Historico, Recdesp = p_Recdesp, Provisao = 'N' Where Nufin = p_Nufin;
+		
+		Exception
+			When Others Then
+				--Rollback;
+				Raise_Application_Error(-20105, Ad_Fnc_Formataerro(Errmsg_Inserefin || p_Nufin || '. ' || Sqlerrm));
+		End;
+	
+		-- insere na movimentação bancária
+		Begin
+			Stp_Keygen_Tgfnum('TGFMBC', 1, 'TGFMBC', 'NUBCO', 0, v_Nubco);
+		
+			Insert Into Tgfmbc
+				(Nubco, Codlanc, Dtlanc, Codtipoper, Dhtipoper, Dtcontab, Historico, Codctabcoint, Numdoc, Vlrlanc,
+				 Talao, Predata, Conciliado, Dhconciliacao, Origmov, Numtransf, Recdesp, Dtalter, Dtinclusao, Codusu,
+				 Ad_Nufinproc)
+			Values
+				(v_Nubco, 1, Sysdate, p_Codtopbaixa, Ad_Get.Maxdhtipoper(p_Codtopbaixa), Sysdate,
+				 Substr(v_Historico, 1, 60), p_Conta, Jur.Numdoc, p_Vlrdesdob, Null, Sysdate, 'S', Sysdate, 'F', Null,
+				 p_Recdesp, Sysdate, Sysdate, Stp_Get_Codusulogado, Jur.Nufin);
+		Exception
+			When Others Then
+				Raise_Application_Error(-20105, Ad_Fnc_Formataerro(Errmsg_Inserembc || p_Nufin || '. ' || Sqlerrm));
+		End;
+	
+		-- baixa o lançamento
+		Begin
+			Update Tgffin
+				 Set Dhbaixa         = Sysdate,
+						 Codtipoperbaixa = p_Codtopbaixa,
+						 Dhtipoperbaixa  = Ad_Get.Maxdhtipoper(p_Codtopbaixa),
+						 Vlrbaixa        = p_Vlrdesdob,
+						 Codempbaixa     = Jur.Codemp,
+						 Nubco           = v_Nubco
+			 Where Nufin = p_Nufin;
+		Exception
+			When Others Then
+				Raise_Application_Error(-20105, Ad_Fnc_Formataerro(Errmsg_Baixafin || p_Nufin || '. ' || Sqlerrm));
+		End;
+	
+		--grava_log_transf_bancaria(jur.nupasta, jur.seq, v_numtransf);
+	
+		Begin
+			Insert Into Ad_Jurlog
+				(Nulog, Seq, Nupasta, Dhmov, Nufin, Nubco, Descroper, Codctabcoint, Recdesp, Vlrdesdob)
+			Values
+				(Ad_Pkg_Jur.Get_Nulog_Ultcod(Jur.Nupasta, Jur.Seq), Jur.Seq, Jur.Nupasta, Sysdate, p_Nufin, Null,
+				 v_Historico, p_Conta, p_Recdesp, p_Vlrdesdob);
+			--Commit;
+		Exception
+			When Others Then
+				--Rollback;
+				Raise_Application_Error(-20105,
+																Ad_Fnc_Formataerro('Erro ao vincular os lanaçamentos ao processo. ' ||
+																									 Sqlerrm));
+		End;
+	
+	End Ins_Lancjur_Baixado_Semtransf;
+
+	Procedure Realiza_Transf_Mbc(p_Top        Number,
+															 p_Dtlanc     Date,
+															 p_Predata    Date,
+															 p_Ctaorig    Number,
+															 p_Ctadestino Number,
+															 p_Numdoc     Number,
+															 p_Valor      Float,
+															 p_Historico  Tgfmbc.Historico%Type,
+															 p_Numtransf  Out Number) Is
+	
+		v_Nubco   Number;
+		v_Nubcocp Number;
+	Begin
+	
+		Begin
+			If p_Ctaorig Is Null Then
+				Raise_Application_Error(-20105, Ad_Fnc_Formataerro('Conta Origem não informada corretamente.'));
+			Elsif p_Ctadestino Is Null Then
+				Raise_Application_Error(-20105, Ad_Fnc_Formataerro('Conta Destino não foi informada corrtamente.'));
+			End If;
+		End;
+	
+		Select Max(Nvl(Numtransf, 0)) + 1 Into p_Numtransf From Tgfmbc Where Origmov = 'T';
+	
+		Stp_Keygen_Tgfnum('TGFMBC', 1, 'TGFMBC', 'NUBCO', 0, v_Nubco);
+	
+		-- retirada
+		Begin
+			Insert Into Tgfmbc
+				(Nubco, Nubcocp, Codlanc, Dtlanc, Codtipoper, Dhtipoper, Historico, Codctabcoint, Codctabcocontra,
+				 Numdoc, Vlrlanc, Predata, Origmov, Numtransf, Recdesp, Dtalter, Dtinclusao, Codusu, Conciliado,
+				 Dhconciliacao)
+			Values
+				(v_Nubco, v_Nubcocp, 2, p_Dtlanc, p_Top, Ad_Get.Maxdhtipoper(p_Top), Substr(p_Historico, 1, 60),
+				 p_Ctaorig, p_Ctadestino, p_Numdoc, p_Valor, p_Predata, 'T', p_Numtransf, -1, Sysdate, Sysdate,
+				 Stp_Get_Codusulogado, 'N', Null);
+		Exception
+			When Others Then
+				Raise_Application_Error(-20105, Ad_Fnc_Formataerro(Errmsg_Inserembc || v_Nubco || '. ' || Sqlerrm));
+		End;
+	
+		--entrada
+		v_Nubcocp := v_Nubco;
+	
+		Stp_Keygen_Tgfnum('TGFMBC', 1, 'TGFMBC', 'NUBCO', 0, v_Nubco);
+	
+		Begin
+			Update Tgfmbc Set Nubcocp = v_Nubco Where Nubco = v_Nubcocp;
+		Exception
+			When Others Then
+				Raise_Application_Error(-20105, Ad_Fnc_Formataerro(Errmsg_Inserembc || v_Nubco || '. ' || Sqlerrm));
+		End;
+	
+		Begin
+			Insert Into Tgfmbc
+				(Nubco, Nubcocp, Codlanc, Dtlanc, Codtipoper, Dhtipoper, Historico, Codctabcoint, Codctabcocontra,
+				 Numdoc, Vlrlanc, Predata, Origmov, Numtransf, Recdesp, Dtalter, Dtinclusao, Codusu, Conciliado,
+				 Dhconciliacao)
+			Values
+				(v_Nubco, v_Nubcocp, 1, p_Dtlanc, p_Top, Ad_Get.Maxdhtipoper(p_Top), Substr(p_Historico, 1, 60),
+				 p_Ctadestino, p_Ctaorig, p_Numdoc, p_Valor, p_Predata, 'T', p_Numtransf, 1, Sysdate, Sysdate,
+				 Stp_Get_Codusulogado, 'N', Null);
+		Exception
+			When Others Then
+				Raise_Application_Error(-20105, Ad_Fnc_Formataerro(Errmsg_Inserembc || v_Nubco || '. ' || Sqlerrm));
+		End;
+	
+		Begin
+			Update Tgfmbc Set Nubcocp = v_Nubcocp Where Nubco = v_Nubco;
+		Exception
+			When Others Then
+				Raise;
+		End;
+	
+	End Realiza_Transf_Mbc;
+
+	Procedure Realiza_Oper_Processos(p_Nupasta Number, p_Seq Number, p_Seqcasc Number Default 0) Is
+		p      Type_Rec_Desp_Jur;
+		Errmsg Varchar2(4000);
+	Begin
+	
+		Select *
+			Into Jur
+			From Ad_Jurite Ite
+		 Where Ite.Nupasta = p_Nupasta
+			 And Ite.Seq = p_Seq;
+	
+		Select *
+			Into Tmp
+			From Ad_Jurtmp
+		 Where Nupasta = p_Nupasta
+			 And Seq = p_Seq
+			 And Nvl(Seqcascata, 0) = p_Seqcasc;
+	
+		-- popular paramêtros
+		Get_Param_Jur(Jur.Nupasta,
+									Jur.Seq,
+									p.Codtopdesp,
+									p.Codtoprec,
+									p.Codtopbxrec,
+									p.Codtopbxdesp,
+									p.Codtoptransf,
+									p.Codtiptit,
+									p.Nueventojur,
+									p.Nueventofin,
+									p.Nueventoreemb,
+									p.Usulibjur,
+									p.Usulibfin,
+									p.Codnatdesp,
+									p.Codnatrec);
+	
+		-- se possui conta CP diferente do cadastro
+		If Nvl(Tmp.Ctadeb, 0) = 0 Then
+		
+			Begin
+				Select Cta.Ad_Codctabcocp Into v_Ctacontrapartida From Tsicta Cta Where Cta.Codctabcoint = Tmp.Conta;
+			Exception
+				When Others Then
+					Errmsg := 'Não foi informada a conta contra partida para a conta ' || Tmp.Conta;
+					Raise_Application_Error(-20105, Ad_Fnc_Formataerro(Errmsg));
+			End;
+		
+		Else
+			v_Ctacontrapartida := Tmp.Ctadeb;
+		End If;
+	
+		If v_Ctacontrapartida Is Null Then
+			Raise_Application_Error(-20105, Ad_Fnc_Formataerro('Conta contra-partida não foi encontrada!'));
+		End If;
+	
+		-- se reembolso
+		-- no reembolso, o valor foi retornado, vencida pela reclamada
+		-- o saldo deve ser devolvido
+		-- um crédito na conta de origem do adiantamento 
+		-- um débito na conta do adiantamento
+		If Tmp.Valor > 0 Then
+		
+			Fin.Historico := 'Ref. Reembolso do processo ' || Jur.Numprocesso || ' - ' ||
+											 Get_Nome_Reclamante(Jur.Nupasta);
+		
+			Realiza_Transf_Mbc(p_Top        => p.Codtoptransf,
+												 p_Dtlanc     => Sysdate,
+												 p_Predata    => Sysdate,
+												 p_Ctaorig    => v_Ctacontrapartida, -- debito
+												 p_Ctadestino => Tmp.Conta, --credito
+												 p_Numdoc     => Jur.Numdoc,
+												 p_Valor      => Tmp.Valor,
+												 p_Historico  => Fin.Historico,
+												 p_Numtransf  => v_Numtransf);
+		
+			Begin
+				Update Tgfmbc m
+					 Set m.Ad_Nufinproc = Jur.Nufin, Historico = Substr(Fin.Historico, 1, 60)
+				 Where Numtransf = v_Numtransf;
+			Exception
+				When Others Then
+					Errmsg := Errmsg_Transfmbc || v_Nubco || '. ' || Sqlerrm;
+					Raise_Application_Error(-20105, Ad_Fnc_Formataerro(Errmsg));
+			End;
+		
+			Grava_Log_Transf_Bancaria(Jur.Nupasta, Jur.Seq, v_Numtransf, 'R');
+		
+		End If;
+	
+		-- tarifas bancárias / despesas financeiras
+		If Tmp.Vlrdesp > 0 Then
+		
+			Ins_Lancjur_Baixado_Semtransf(p_Nupasta     => Jur.Nupasta,
+																		p_Seq         => Jur.Seq,
+																		p_Recdesp     => -1,
+																		p_Codtipoper  => p.Codtopdesp,
+																		p_Codtopbaixa => p.Codtopbxdesp,
+																		p_Conta       => Tmp.Conta,
+																		p_Codnat      => p.Codnatdesp,
+																		p_Codtiptit   => p.Codtiptit,
+																		p_Vlrdesdob   => Tmp.Vlrdesp,
+																		p_Nufin       => Fin.Nufin);
+		
+			Update Ad_Jurlog
+				 Set Tipo = 'F'
+			 Where Nupasta = Jur.Nupasta
+				 And Seq = Jur.Seq
+				 And Nufin = Fin.Nufin;
+		
+		End If;
+	
+		-- despesas jurídicas 
+		If Tmp.Vlrdespjur > 0 Then
+		
+			Ins_Lancjur_Baixado_Semtransf(p_Nupasta     => Jur.Nupasta,
+																		p_Seq         => Jur.Seq,
+																		p_Recdesp     => -1,
+																		p_Codtipoper  => p.Codtopdesp,
+																		p_Codtopbaixa => p.Codtopbxdesp,
+																		p_Conta       => Tmp.Ctadeb,
+																		p_Codnat      => Case
+																											 When Nvl(Tmp.Codnat, 0) > 0 Then
+																												Tmp.Codnat
+																											 Else
+																												Jur.Codnat
+																										 End,
+																		p_Codtiptit   => p.Codtiptit,
+																		p_Vlrdesdob   => Tmp.Vlrdespjur,
+																		p_Nufin       => Fin.Nufin);
+			Update Ad_Jurlog
+				 Set Tipo = 'S'
+			 Where Nupasta = Jur.Nupasta
+				 And Seq = Jur.Seq
+				 And Nufin = Fin.Nufin;
+		
+		End If;
+	
+		-- se possui rendimentos
+		-- os rendimentos devem ser lançados e baixados no financeiro
+		-- creditando a conta do parametro
+		If Tmp.Vlrjuros > 0 Then
+		
+			Ins_Lancjur_Baixado_Semtransf(p_Nupasta     => Jur.Nupasta,
+																		p_Seq         => Jur.Seq,
+																		p_Recdesp     => 1,
+																		p_Codtipoper  => p.Codtopbxrec,
+																		p_Codtopbaixa => p.Codtopbxrec,
+																		p_Conta       => Tmp.Conta,
+																		p_Codnat      => p.Codnatrec,
+																		p_Codtiptit   => p.Codtiptit,
+																		p_Vlrdesdob   => Tmp.Vlrjuros,
+																		p_Nufin       => Fin.Nufin);
+			Update Ad_Jurlog
+				 Set Tipo = 'J'
+			 Where Nufin = Fin.Nufin
+				 And Nupasta = Jur.Nupasta
+				 And Seq = Jur.Seq;
+		
+		End If;
+	
+	End Realiza_Oper_Processos;
+
+	Procedure Encerra_Proc_Reclamante(p_Nupasta Number, p_Seq Number, p_Seqcasc Number Default 0) Is
+	Begin
+		Realiza_Oper_Processos(p_Nupasta, p_Seq, p_Seqcasc);
+	End Encerra_Proc_Reclamante;
+
+	Procedure Encerra_Proc_Reclamada(p_Nupasta Number, p_Seq Number, p_Seqcasc Number Default 0) Is
+	Begin
+		Realiza_Oper_Processos(p_Nupasta, p_Seq, p_Seqcasc);
+	End Encerra_Proc_Reclamada;
+
+End Ad_Pkg_Jur;
+/

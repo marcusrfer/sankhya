@@ -1,0 +1,130 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="codprod" description="Cód. Produto" metadata="entity:ProdutoMateriaPrima@CODPROD" required="true" keep-last="true" keep-date="false" order="0"/>
+    <parameter id="data" description="Data" metadata="datePeriod" required="true" keep-last="true" keep-date="false" order="1"/>
+  </prompt-parameters>
+  <level id="lvl_7673ut" description="Principal">
+    <args>
+      <arg id="dtentsai" type="date"/>
+      <arg id="contrato" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="H" tamanhoRelativo="50">
+          <container orientacao="V" tamanhoRelativo="50">
+            <container orientacao="V" tamanhoRelativo="50">
+              <grid id="grd_7673uu">
+                <title><![CDATA[Movimentação Diária]]></title>
+                <expression type="sql" data-source="MGEDS"><![CDATA[Select dtentsai,  codprod, sum(qtdnegsc) qtdtotsc, Sum(qtdnegsc) * avg(vlrsaca) As vlrtotsc,avg(vlrsaca) vlrsaca, sum(vlrfrete) vlrtotfrete, sum(vlrfrete)/sum(qtdnegsc) vlrfretesc ,sum(descUmidade) umidade from (Select Trunc(cc.datafimdescarga) dtentsai,            ic.nunotaorig numcontrato,            ic.codprod,            ic.qtde qtdneg,            ic.qtde/60 qtdnegsc,            ad_pkg_cmp.get_vlrContrato(ic.nunotaorig, ic.codprod) * 60 vlrsaca,            Nvl(ic.vlrfrete, 0) vlrfrete,            Nvl(ic.umidade, 0) umidade,            nvl(amz.codtdc,0) codtdc,            nvl(ad_pkg_cmp.get_VlrDescUmidade(ic.nunotaorig, ic.codprod),0) descUmidade        From ad_itecargto ic            Join ad_contcargto cc On ic.sequencia = cc.sequencia            Join tgfcab cab On ic.nunota = cab.nunota            Join tcscon amz On cab.numcontrato = amz.numcontrato        Where             ic.qtde > 0            And Nvl(ic.nunota, 0) > 0            And nvl(ic.nunotaorig ,0) > 0        )  Where codprod  = :codprod   And  dtentsai Between :data.ini And :data.fin Group By dtentsai, codprod Order By 1]]></expression>
+                <metadata>
+                  <field name="DTENTSAI" label="Dt. Ent/Sai" type="D" visible="true" useFooter="false"/>
+                  <field name="CODPROD" label="Cód. Produto" type="F" visible="false" useFooter="false"/>
+                  <field name="QTDTOTSC" label="Qtd. Total SC" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+                  <field name="VLRTOTSC" label="Vlr. Total SC" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+                  <field name="VLRSACA" label="Vlr SC" type="F" visible="true" useFooter="AVG" mask="#.##0,00"/>
+                  <field name="VLRTOTFRETE" label="Vlr. Total Frete" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+                  <field name="VLRFRETESC" label="Vlr. Frete/SC" type="F" visible="true" useFooter="AVG" mask="#.##0,00"/>
+                  <field name="UMIDADE" label="Umidade" type="F" visible="true" useFooter="AVG" mask="#.##0,00"/>
+                  <field name="vlrcusto" label="Vlr. Custo" type="F" visible="true" useFooter="AVG" mask="#.##0,00">
+                    <calculated>
+                      <formula><![CDATA[$VLRSACA + $VLRFRETESC + $UMIDADE]]></formula>
+                    </calculated>
+                  </field>
+                </metadata>
+                <refresh-details ui-list="grd_9dys6a">
+                  <param id="dtentsai">$DTENTSAI</param>
+                </refresh-details>
+              </grid>
+            </container>
+            <container orientacao="V" tamanhoRelativo="50">
+              <grid id="grd_87uspq">
+                <args>
+                  <arg id="dtentsai" type="date"/>
+                </args>
+                <title><![CDATA[Contratos Movimentados no Período]]></title>
+                <expression type="sql" data-source="MGEDS"><![CDATA[Select numcontrato,  t.CODPARC,  par.RAZAOSOCIAL,  cid.NOMECID,  codprod,  ad_get.DESCRPRODUTO(codprod) descrprod,  ad_pkg_cmp.GET_QTDCONTRATO(numcontrato, codprod)/60 qtdcontrato,  sum(qtdnegsc) qtdrecebida,  Sum(qtdnegsc) * avg(vlrsaca) As vlrtotsc,avg(vlrsaca) vlrsaca, sum(vlrfrete) vlrtotfrete, sum(vlrfrete)/sum(qtdnegsc) vlrfretesc ,trunc(avg(umidade),1) umidade,sum(descUmidade) descumidade from (Select Trunc(cc.datafimdescarga) dtentsai,            ic.nunotaorig numcontrato,            ic.codprod,            ic.CODPARC,            ic.qtde qtdneg,            ic.qtde/60 qtdnegsc,            ad_pkg_cmp.get_vlrContrato(ic.nunotaorig, ic.codprod) * 60 vlrsaca,            Nvl(ic.vlrfrete, 0) vlrfrete,            Nvl(ic.umidade, 0) umidade,            nvl(amz.codtdc,0) codtdc,            nvl(ad_pkg_cmp.get_VlrDescUmidade(ic.nunotaorig, ic.codprod),0) descUmidade        From ad_itecargto ic            Join ad_contcargto cc On ic.sequencia = cc.sequencia            Join tgfcab cab On ic.nunota = cab.nunota            Join tcscon amz On cab.numcontrato = amz.numcontrato        Where             ic.qtde > 0            And Nvl(ic.nunota, 0) > 0            And nvl(ic.nunotaorig ,0) > 0        ) t   join tgfpar par on t.CODPARC = par.CODPARC   left join TSICID cid on cid.CODCID = par.CODCID  Where t.codprod  = :codprod   And  t.dtentsai between :data.ini and :data.fin Group By numcontrato, t.CODPARC, par.RAZAOSOCIAL, cid.NOMECID, codprod Order By 1]]></expression>
+                <metadata>
+                  <field name="NUMCONTRATO" label="Nro Contrato" type="I" visible="true" useFooter="false"/>
+                  <field name="CODPARC" label="Cód. Parceiro" type="I" visible="true" useFooter="false"/>
+                  <field name="RAZAOSOCIAL" label="Razão Social" type="S" visible="true" useFooter="false"/>
+                  <field name="NOMECID" label="Cidade" type="S" visible="true" useFooter="false"/>
+                  <field name="CODPROD" label="Cód. Produto" type="I" visible="true" useFooter="false"/>
+                  <field name="DESCRPROD" label="Produto" type="S" visible="true" useFooter="false"/>
+                  <field name="QTDCONTRATO" label="Qtd. Contrato/SC" type="I" visible="true" useFooter="SUM" mask="#.##0,00"/>
+                  <field name="QTDRECEBIDA" label="Qtd. Recebida/SC" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+                  <field name="VLRTOTSC" label="Vlr. Total" type="I" visible="true" useFooter="SUM" mask="#.##0,00"/>
+                  <field name="VLRSACA" label="Vlr. Saca" type="F" visible="true" useFooter="AVG" mask="#.##0,00"/>
+                  <field name="VLRTOTFRETE" label="Vlr. Total Frete" type="I" visible="true" useFooter="SUM" mask="#.##0,00"/>
+                  <field name="VLRFRETESC" label="Vlr. Frete/SC" type="F" visible="true" useFooter="AVG" mask="#.##0,00"/>
+                  <field name="UMIDADE" label="Umidade" type="F" visible="true" useFooter="AVG" mask="#.##0,00"/>
+                  <field name="DESCUMIDADE" label="Vlr. Desc. Umid." type="I" visible="true" useFooter="AVG" mask="#.##0,00"/>
+                  <field name="vlrcusto" label="Custo Saca" type="F" visible="true" useFooter="AVG" mask="#.##0,00">
+                    <calculated>
+                      <formula><![CDATA[$DESCUMIDADE + $VLRSACA + $VLRFRETESC]]></formula>
+                    </calculated>
+                  </field>
+                </metadata>
+                <refresh-details ui-list="grd_9dys72">
+                  <param id="contrato">$NUMCONTRATO</param>
+                </refresh-details>
+              </grid>
+            </container>
+          </container>
+          <container orientacao="V" tamanhoRelativo="50">
+            <container orientacao="V" tamanhoRelativo="50">
+              <grid id="grd_9dys6a">
+                <args>
+                  <arg id="dtentsai" type="date"/>
+                </args>
+                <title><![CDATA[Extrato do dia :dtentsai]]></title>
+                <expression type="sql" data-source="MGEDS"><![CDATA[Select  i.sequencia ordcarreg,   i.numnota,  i.codparc, ad_get.nome_parceiro(i.codparc, 'razao') razarparceiro, TRUNC(c.datafimdescarga) dtcarregamento,  i.qtde,  i.qtde/60 qtdsacas,  ad_pkg_cmp.get_vlrContrato(i.nunotaorig, i.codprod) * 60 vlrsaca, cab.vlrnota,  i.vlrfrete,  i.vlrfrete/(i.qtde/60) vlrfretesc,  i.umidade, nvl(ad_pkg_cmp.get_VlrDescUmidade(i.nunotaorig, i.codprod) ,0) vlrdescUmid/*, nvl(ad_pkg_cmp.get_VlrDescUmidade(i.nunotaorig, i.codprod) ,0) vlrdesconto, (ad_pkg_cmp.get_vlrContrato(i.nunotaorig, i.codprod) * 60) + i.vlrfrete/(i.qtde/60)  +  nvl(ad_pkg_cmp.get_VlrDescUmidade(i.nunotaorig, i.codprod) ,0) vlrcusto*/  From ad_itecargto i  Join ad_contcargto c    On i.sequencia = c.sequencia   Left Join tgfcab cab    On cab.nunota = i.nunota   Left Join tcscon amz    On cab.numcontrato = amz.numcontrato Where i.codprod = :codprod   And trunc(c.datafimdescarga) = :dtentsai   And i.qtde > 0 And nvl(i.nunota ,0) > 0   And i.cancelado = 'NÃO']]></expression>
+                <metadata>
+                  <field name="ORDCARREG" label="Ord. Carreg." type="I" visible="true" useFooter="false"/>
+                  <field name="NUMNOTA" label="Nro Nota" type="I" visible="true" useFooter="false"/>
+                  <field name="CODPARC" label="CODPARC" type="I" visible="true" useFooter="false"/>
+                  <field name="RAZARPARCEIRO" label="RAZARPARCEIRO" type="S" visible="true" useFooter="false"/>
+                  <field name="DTCARREGAMENTO" label="Dt. Carreg." type="D" visible="true" useFooter="false"/>
+                  <field name="QTDE" label="Qtd/Kg" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+                  <field name="QTDSACAS" label="Qtd/SC" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+                  <field name="VLRSACA" label=" Vlrl Saca" type="F" visible="true" useFooter="AVG" mask="#.##0,00"/>
+                  <field name="VLRNOTA" label="Vlr. Nota" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+                  <field name="VLRFRETE" label="Vlr. Frete" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+                  <field name="VLRFRETESC" label="Vlr. Frete/SC" type="F" visible="true" useFooter="AVG" mask="#.##0,00"/>
+                  <field name="UMIDADE" label="Umidade" type="F" visible="true" useFooter="AVG" mask="#.##0,00"/>
+                  <field name="VLRDESCUMID" label="Vlr. Desc. Umid" type="F" visible="true" useFooter="AVG" mask="#.##0,00"/>
+                  <field name="vlrcusto" label="Vlr. Custo" type="F" visible="true" useFooter="AVG" mask="#.##0,00">
+                    <calculated>
+                      <formula><![CDATA[$VLRDESCUMID + $VLRFRETESC  + $VLRSACA]]></formula>
+                    </calculated>
+                  </field>
+                </metadata>
+              </grid>
+            </container>
+            <container orientacao="V" tamanhoRelativo="50">
+              <grid id="grd_9dys72">
+                <args>
+                  <arg id="contrato" type="integer"/>
+                </args>
+                <title><![CDATA[Extrato de Mov. Contrato - :contrato]]></title>
+                <expression type="sql" data-source="MGEDS"><![CDATA[Select  i.sequencia ordcarreg,   i.numnota,  TRUNC(c.datafimdescarga) dtcarregamento, i.qtde,  i.qtde/60 qtdsacas,  cab.vlrnota,  i.vlrfrete,  i.vlrfrete/(i.qtde/60) vlrfretesc,  i.umidade, nvl(ad_pkg_cmp.get_VlrDescUmidade(i.nunotaorig, i.codprod) ,0) vlrdesconto, (ad_pkg_cmp.get_vlrContrato(i.nunotaorig, i.codprod) * 60) + i.vlrfrete/(i.qtde/60)  +  nvl(ad_pkg_cmp.get_VlrDescUmidade(i.nunotaorig, i.codprod) ,0) vlrcusto  From ad_itecargto i  Join ad_contcargto c    On i.sequencia = c.sequencia   Left Join tgfcab cab    On cab.nunota = i.nunota   Left Join tcscon amz    On cab.numcontrato = amz.numcontrato Where i.codprod = :codprod   And i.nunotaorig = :contrato   And i.qtde > 0 And nvl(i.nunota ,0) > 0   And i.cancelado = 'NÃO']]></expression>
+                <metadata>
+                  <field name="ORDCARREG" label="Ord. Carreg." type="I" visible="true" useFooter="false"/>
+                  <field name="NUMNOTA" label="Nro Nota" type="I" visible="true" useFooter="false"/>
+                  <field name="DTCARREGAMENTO" label="Dt. Carregamento" type="D" visible="true" useFooter="false"/>
+                  <field name="QTDE" label="Qtd / Kg" type="F" visible="true" useFooter="false"/>
+                  <field name="QTDSACAS" label="Qtd / SC" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+                  <field name="VLRNOTA" label="Vlr. Nota" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+                  <field name="VLRFRETE" label="Vlr. Frete" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+                  <field name="VLRFRETESC" label="Vlr. Frete/SC" type="F" visible="true" useFooter="AVG" mask="#.##0,00"/>
+                  <field name="UMIDADE" label="Umidade" type="F" visible="true" useFooter="AVG" mask="#.##0,00"/>
+                  <field name="VLRDESCONTO" label="Vlr. desc Umid" type="F" visible="true" useFooter="AVG" mask="#.##0,00"/>
+                  <field name="VLRCUSTO" label="Vlr. Custo" type="F" visible="true" useFooter="AVG" mask="#.##0,00"/>
+                </metadata>
+              </grid>
+            </container>
+          </container>
+        </container>
+      </container>
+    </container>
+  </level>
+</gadget>

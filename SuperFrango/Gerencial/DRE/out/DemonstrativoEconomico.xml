@@ -1,0 +1,2481 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<metadata>
+  <exportInfo>
+    <exportTime>29/06/2019 11:08:30</exportTime>
+    <systemVersion>3.29b325</systemVersion>
+    <systemCharSet>ISO-8859-1</systemCharSet>
+    <dbMetadata>
+      <dbUser>SANKHYA</dbUser>
+      <urlConnection><![CDATA[jdbc:oracle:thin:@ssaprod-scan.ssa-br.com:1521/ORCL]]></urlConnection>
+      <jdbcDriver><![CDATA[Oracle JDBC driver 12.1.0.1.0]]></jdbcDriver>
+      <DBMS><![CDATA[Oracle - Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
+With the Partitioning, Real Application Clusters, Automatic Storage Management, OLAP,
+Advanced Analytics and Real Application Testing options]]></DBMS>
+    </dbMetadata>
+  </exportInfo>
+  <menu description="Demonstrativo de Resultados - Novo" name="MENU_ADICIONAL_d30a233790384026b18b842504fa06b3">
+    <menu description="Hierarquia Indicadores DRE" name="MENU_ADICIONAL_70ea4b52d26a4cd38236051497e07e89">
+      <properties>
+        <tipoLancador><![CDATA[TA]]></tipoLancador>
+        <resourceID><![CDATA[br.com.sankhya.menu.adicional.DREESTRUTURA]]></resourceID>
+        <entityName><![CDATA[DREESTRUTURA]]></entityName>
+        <contexto><![CDATA[mge]]></contexto>
+      </properties>
+    </menu>
+    <menu description="Cadastro Ind. Padrão DRE" name="MENU_ADICIONAL_a2ac16629ea84cb4b0777d74ee0fd888">
+      <properties>
+        <tipoLancador><![CDATA[TA]]></tipoLancador>
+        <resourceID><![CDATA[br.com.sankhya.menu.adicional.CADINDPAD]]></resourceID>
+        <entityName><![CDATA[CADINDPAD]]></entityName>
+        <contexto><![CDATA[mge]]></contexto>
+      </properties>
+    </menu>
+    <menu description="Exceções/Restrições DRE" name="MENU_ADICIONAL_5141fc5288c742cf9e3dd718be0c78f3">
+      <properties>
+        <tipoLancador><![CDATA[TA]]></tipoLancador>
+        <resourceID><![CDATA[br.com.sankhya.menu.adicional.EXCECOES]]></resourceID>
+        <entityName><![CDATA[EXCECOES]]></entityName>
+        <contexto><![CDATA[mge]]></contexto>
+      </properties>
+    </menu>
+    <menu description="Cadastro Ind. Gerenciais DRE" name="MENU_ADICIONAL_889341d53ad240f887c53849107fc447">
+      <properties>
+        <tipoLancador><![CDATA[TA]]></tipoLancador>
+        <resourceID><![CDATA[br.com.sankhya.menu.adicional.CADINDGER]]></resourceID>
+        <entityName><![CDATA[CADINDGER]]></entityName>
+        <contexto><![CDATA[mge]]></contexto>
+      </properties>
+    </menu>
+    <menu description="Result. Ind. Gerenciais DRE" name="MENU_ADICIONAL_e716c17ba9a14dbb991df21dc11799d5">
+      <properties>
+        <tipoLancador><![CDATA[TA]]></tipoLancador>
+        <resourceID><![CDATA[br.com.sankhya.menu.adicional.RESINDGER]]></resourceID>
+        <entityName><![CDATA[RESINDGER]]></entityName>
+        <contexto><![CDATA[mge]]></contexto>
+      </properties>
+    </menu>
+    <menu description="Estrutura Hierarquica - DRE" name="MENU_ADICIONAL_5035c43fdcdc4a92abb6d5702a97c5f2">
+      <properties>
+        <tipoLancador><![CDATA[TA]]></tipoLancador>
+        <resourceID><![CDATA[br.com.sankhya.menu.adicional.DREESTRUTURA]]></resourceID>
+        <entityName><![CDATA[DREESTRUTURA]]></entityName>
+        <contexto><![CDATA[mge]]></contexto>
+      </properties>
+    </menu>
+    <menu description="Result. Ind. Padrões - DRE" name="MENU_ADICIONAL_F64C99E2DCFEF7A2F636CBA9834E3C02">
+      <properties>
+        <tipoLancador><![CDATA[TA]]></tipoLancador>
+        <resourceID><![CDATA[br.com.sankhya.menu.adicional.RESINDPAD]]></resourceID>
+        <entityName><![CDATA[RESINDPAD]]></entityName>
+        <contexto><![CDATA[mge]]></contexto>
+      </properties>
+    </menu>
+    <menu description="Fórmulas para DRE" name="MENU_ADICIONAL_7ECC353416FF50C4C6E2C8E3C07C43EA">
+      <properties>
+        <tipoLancador><![CDATA[TA]]></tipoLancador>
+        <resourceID><![CDATA[br.com.sankhya.menu.adicional.Formulas]]></resourceID>
+        <entityName><![CDATA[Formulas]]></entityName>
+        <contexto><![CDATA[mge]]></contexto>
+      </properties>
+    </menu>
+  </menu>
+  <instances>
+    <instance name="CADINDPAD">
+      <instanceDescription><![CDATA[Cadastro de Indicador Padrão]]></instanceDescription>
+      <tableInfo name="DRE_CADINDPAD" sequenceType="A" sequenceField="CODINDPAD" presentationField="DESCRINDPAD">
+        <category><![CDATA[New DRE]]></category>
+        <telaDescription><![CDATA[/*Autor: M. Rangel */
+Cadastro de indicadores padrões.
+São os valores resultantes das movimentações de vendas]]></telaDescription>
+        <tableDescription><![CDATA[Cadastro de Indicador Padrão]]></tableDescription>
+        <primaryKey>
+          <CODINDPAD />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODINDPAD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Indicador]]></description>
+        </field>
+        <field name="DESCRINDPAD" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Descrição Ind. Padrão]]></description>
+        </field>
+        <field name="ATIVO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Ativo]]></description>
+          <expression><![CDATA[if ($valorCampo ==  null){
+ return "S";
+}
+ $valorCampo;]]></expression>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="TOTALIZADOR" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Totalizador]]></description>
+          <expression><![CDATA[if($valorCampo == null){
+ return "N";
+}
+ return $valorCampo;]]></expression>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="TEMEXC" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Tem Exceção]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="CODUSU" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Usuário]]></description>
+          <expression><![CDATA[$ctx_usuario_logado]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DHALTER" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Alteração]]></description>
+          <expression><![CDATA[$ctx_dh_atual]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DHULTEXEC" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Ult. Execução]]></description>
+        </field>
+        <field name="STATUSEXEC" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Status Ult. Exec]]></description>
+          <options>
+            <option value="S"><![CDATA[Sucesso]]></option>
+            <option value="F" default="S"><![CDATA[Falhou]]></option>
+          </options>
+        </field>
+        <field name="ABREV" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Abreviação]]></description>
+          <expression><![CDATA[import java.lang.Exception;
+if($col_ATIVO.equals("S") && $col_TOTALIZADOR.equals("N") && $valorCampo == null){
+ throw new Exception("Informação obrigatória!!!\n Este valor é o título da coluna no dash de alíquotas.");
+} else {
+ return $valorCampo;
+}]]></expression>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSU" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="FORINDPAD" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="DRE_FORINDPAD" />
+          <fields>
+            <field localName="CODINDPAD" targetName="CODINDPAD" />
+          </fields>
+        </relation>
+      </relationShip>
+      <actions>
+        <action type="SP">
+          <description><![CDATA[Recriar Base de Dados]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_DRE_CRIABASEINDPAD" refreshType="NONE" txManual="false" rootEntity="CADINDPAD" />
+            <params>
+              <promptParam label="Dt. Referência" name="DTREF" required="true" saveLast="true" paramType="DT" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_DRE_CRIABASEINDPAD" (P_CODUSU Number, P_IDSESSAO Varchar2, P_QTDLINHAS Number,
+																												P_MENSAGEM Out Varchar2) As
+
+	p_referencia Date;
+
+Begin
+	/*
+  * Autor: M. Rangel
+  * Processo: New DRE
+  * Objetivo: Criar base de dados para os cálculos na referência, utilizado na ação "Recriar Base de Dados" na tela de cadastro de indicador padrão
+  */
+
+	p_referencia := Act_dta_param(P_IDSESSAO, 'DTREF');
+
+	If p_referencia Is Null Then
+		p_referencia := To_Date(Substr(Replace(Act_dec_param(P_IDSESSAO, 'DTREF'), '.', ''), 1, 8), 'yyyymmdd');
+	End If;
+
+	Ad_pkg_var.Sufixo := To_Char(p_referencia, 'YYYY') || To_Char(p_referencia, 'MM');
+
+	Begin
+		Execute Immediate 'SELECT COUNT(*) FROM DRE_BASEINDPAD_' || Ad_pkg_var.Sufixo
+			Into Ad_pkg_var.Count;
+	
+	Exception
+		When Others Then
+			Dbms_Output.Put_Line(Sqlerrm);
+	End;
+
+	If Ad_pkg_var.Count > 0 Then
+	
+		If Act_escolher_simnao(P_titulo    => 'Sobreposição de lançamentos.',
+													 P_texto     => 'Já existem lançamentos gerados para a referência informada.\nDeseja Sobrescrever essas informações?',
+													 P_chave     => P_IDSESSAO,
+													 P_sequencia => 0) = 'N' Then
+			Return;
+		End If;
+	
+	End If;
+
+	Ad_pkg_var.Init_time := Dbms_utility.Get_time;
+
+	Ad_pkg_dre.Set_baseindpad(p_referencia, Ad_pkg_var.Errmsg);
+
+	Ad_pkg_var.End_time := Round((((Dbms_utility.Get_time - Ad_pkg_var.Init_time) / 100) / 60), 2);
+
+	If Ad_pkg_var.Errmsg Is Null Then
+		P_MENSAGEM := '<img src="http://chittagongit.com/images/green-check-mark-icon-png/green-check-mark-icon-png-13.jpg" ' ||
+									' style="width:64px;height:64px;float:left">' || '<p style="text-align:center;padding:10px 3px">' || '
+		Base de dados recriada com sucesso' || ' em ' || Trunc(Ad_pkg_var.End_time) || ' Mins.</p>';
+	Else
+		P_MENSAGEM := Ad_pkg_var.Errmsg;
+	End If;
+
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Ajuda]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_DRE_SHOWHELP_SF" refreshType="NONE" txManual="false" rootEntity="CADINDPAD" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_DRE_SHOWHELP_SF" (p_codusu Number, p_idsessao Varchar2, p_qtdlinhas Number,
+																										 p_mensagem Out Varchar2) As
+	v_Campos    Varchar2(4000);
+	v_CodIndPad Number;
+	v_CodindGer Number;
+	v_TypeName  Varchar2(100);
+Begin
+	v_CodindGer := act_int_field(p_idsessao, 1, 'CODINDGER');
+	v_CodIndPad := act_int_field(p_idsessao, 1, 'CODINDPAD');
+
+	If v_CodIndPad Is Not Null Then
+		v_TypeName := 'TYPE_REC_BASEINDPAD';
+	Elsif v_CodindGer Is Not Null Then
+		v_typename := 'TYPE_REC_BASEINDGER';
+	End If;
+
+	Select Listagg(atr.ATTR_NAME, ', ') Within Group(Order By atr.ATTR_NAME)
+		Into v_Campos
+		From User_Type_Attrs atr
+	 Where atr.TYPE_NAME = v_TypeName
+		 And atr.attr_type_name = 'FLOAT';
+
+	p_mensagem := '<h3>Campos disponíveis para cálculos: </h3>' || '<p>' || v_Campos || '</p>' ||
+								'<h3>Funções Disponíveis:</h3> Sum(), Avg(), Min(), Max(),<br> fc_Divide( <i>{expr1}</i>, <i>{expr2}</i>),<br>' ||
+								'VALOR_INDICADOR(<i>cod_ind</i>), <br>VLRIND_GERENCIAL(<i>cod_ind</i>),  <br>' ||
+								'AD_PKG_DRE.GET_RESINDPAD(DTREF, <i>cod_ind</i>,CODEMP, CODUNE, CODUF)<br>' ||
+								'AD_PKG_DRE.GET_RESINDGER(DTREF, <i>cod_ind</i>,CODEMP, CODUNE, CODUF)<br><br>' ||
+								'<small>As funções <i>GET_RESINDPAD</i> e <i>GET_RESINDGER</i> devem corresponder ' ||
+								'ao formato dos dados de seus respectivos indicadores, se por Empresa e/ou Unidade e /ou UF.</small>';
+
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Recalcular Indicadores]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_DRE_CALCINDPAD_SF" refreshType="NONE" txManual="false" rootEntity="CADINDPAD" />
+            <params>
+              <promptParam label="Dt. Referência" name="DTREF" required="true" saveLast="true" paramType="DT" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_DRE_CALCINDPAD_SF" (p_codusu    Number,
+                                                       p_idsessao  Varchar2,
+                                                       p_qtdlinhas Number,
+                                                       p_mensagem  Out Nocopy Varchar2) Is
+  it           Number;
+  ft           Number;
+  x            Number;
+  v_time       Varchar2(100);
+  v_individual Varchar2(1);
+  v_todos      Varchar2(1);
+  v_descrind   Varchar2(256);
+  v_mensagem   Varchar2(4000);
+  p_referencia Date;
+
+  ind ad_type_of_number := ad_type_of_number();
+  rel ad_type_of_number := ad_type_of_number();
+
+Begin
+  /*
+  * autor: Marcus Rangel
+  * processo: New DRE
+  * objetivo: Calcular os valores dos indicadores padrões. Ação "Recalcular Indicadores" da tela de cadatro de ind. padrões
+  
+  22/10/18 - alterado para calcular tudo ao mandar recalcular
+  */
+
+  -- get referencia
+  Begin
+    p_referencia := act_dta_param(p_idsessao, 'DTREF');
+  
+    If p_referencia Is Null Then
+      p_referencia := To_Date(Substr(Replace(act_dec_param(p_idsessao, 'DTREF'), '.', ''), 1, 8),
+                              'yyyymmdd');
+    End If;
+  End;
+
+  -- questionamentos sobre execução
+  Begin
+  
+    If stp_get_atualizando Then
+      -- depuração do processo
+      v_individual := 'N';
+      v_todos      := 'S';
+    Else
+    
+      v_individual := act_escolher_simnao(p_titulo => 'Cálculo dos valores dos Índices padrões',
+                                          p_texto => 'Deseja efetuar os cálculos somente para os indicadores selecionados?',
+                                          p_chave => p_idsessao, p_sequencia => 1);
+    
+      If v_individual = 'N' Then
+        -- confirmar se realmente irá executar todos os indicadores
+        v_todos := act_escolher_simnao(p_titulo => 'Confirmação para cálculo',
+                                       p_texto => 'Confirma o processamento para todos os indicadores?',
+                                       p_chave => p_idsessao, p_sequencia => 2);
+      End If;
+    
+    End If;
+  
+  End;
+
+  it := dbms_utility.get_time;
+
+  -- inicio do processamento
+
+  --- nesse momentos, vou construir a array com os códigos dos indicadores selecionados ou todos
+  Begin
+    If v_individual = 'S' Then
+    
+      For l In 1 .. p_qtdlinhas
+      Loop
+        ind.extend;
+        ind(l) := act_int_field(p_idsessao, l, 'CODINDPAD');
+      End Loop;
+    
+    Elsif v_individual = 'N' And v_todos = 'S' Then
+    
+      For l In (Select codindpad
+                  From dre_cadindpad
+                 Where ativo = 'S'
+                   And totalizador = 'N' --ao recalcular todos, os totalizadores serão processados ao final
+                 Order By totalizador, codindpad)
+      Loop
+        ind.extend;
+        x := ind.last;
+        ind(x) := l.codindpad;
+      End Loop;
+    End If;
+  End;
+
+  -- processamento
+  --percorre os indicadores e checa os relacionamentos
+  Begin
+    If v_individual = 'S' Then
+      -- calcula os selecioanados e os totalizadores dos mesmos e seus dependentes
+      For w In ind.first .. ind.Last
+      Loop
+        ad_pkg_dre.get_relacionamento_indpad(ind(w), rel);
+      End Loop w;
+    
+    Else
+    
+      rel := ind;
+    
+    End If;
+  
+    For z In rel.first .. rel.last
+    Loop
+    
+      -- monta a mensagem de saída com os indicadores relacionados ao selecionado.
+      If Nvl(v_todos, 'N') = 'N' Then
+      
+        Select descrindpad
+          Into v_descrind
+          From dre_cadindpad
+         Where codindpad = rel(z);
+      
+        If v_mensagem Is Null Then
+          v_mensagem := rel(z) || ' - ' || v_descrind;
+        Else
+          v_mensagem := v_mensagem || Chr(13) || '<br> ' || rel(z) || ' - ' || v_descrind;
+        End If;
+      End If;
+    
+      -- calcula os indicadores, seja o individual ou no caso de "todos", calcula os que não são totalizadores
+      -- Dbms_Output.Put_Line('Indicadores padrões: ' || rel(z));
+      ad_pkg_dre.set_ResIndPad(p_referencia, rel(z), p_mensagem);
+      If p_mensagem Is Not Null Then
+        Return;
+      End If;
+    
+    End Loop z;
+  
+    -- até este momento, no caso de recalculo de todos, os totalizadores não foram calculados ainda
+    -- montagem da array com os relacionamentos entre os totalizadores
+    If Nvl(v_todos, 'N') = 'S' Then
+    
+      Begin
+        rel.delete;
+        --percorre totalizadores
+        For c_ind In (Select f.codindpad, f.formindpad
+                        From dre_cadindpad c
+                        Join dre_forindpad f
+                          On c.codindpad = f.codindpad
+                       Where c.ativo = 'S'
+                         And c.totalizador = 'S'
+                         And f.dhvigor = (Select Max(dhvigor)
+                                            From dre_forindpad f2
+                                           Where f2.codindpad = f.codindpad
+                                             And f2.dhvigor < Sysdate)
+                       Order By 1)
+        Loop
+          -- percorre os indicadores dentro da fórmulas
+          For c_rel In (With f As
+                           (Select c_ind.codindpad, c_ind.formindpad
+                             From dual)
+                          Select Regexp_Substr(f.formindpad, '[0-9]+', 1, Level) codind
+                            From f
+                          Connect By Level <= Regexp_count(f.formindpad, '[0-9]+')
+                           Order By codind Desc)
+          Loop
+            -- se ativo, totalizador e se o filhor é maior que o pai
+            Select Count(*)
+              Into x
+              From dre_cadindpad
+             Where codindpad = c_rel.codind
+               And ativo = 'S'
+               And totalizador = 'S';
+          
+            -- popula com os que serão calculados no final
+            If x > 0 And c_ind.codindpad < c_rel.codind Then
+              rel.extend;
+              rel(rel.last) := c_ind.codindpad;
+              ad_pkg_dre.set_ResIndPad(p_referencia, c_rel.codind, p_Mensagem);
+              Exit;
+            End If;
+          
+          End Loop c_rel;
+        
+          --If x > 0 Then
+          --Continue;
+          --Else
+          --Dbms_Output.Put_Line('Run ' || c_ind.codindpad);
+          ad_pkg_dre.set_ResIndPad(p_referencia, c_ind.codindpad, p_Mensagem);
+          --End If;
+        
+        End Loop c_ind;
+      
+        /*For z In rel.first .. rel.last
+        Loop
+          Dbms_Output.Put_Line('Run later: ' || rel(z));
+          ad_pkg_dre.set_ResIndPad(p_referencia, rel(z), p_Mensagem);
+        End Loop;*/
+      
+        If p_mensagem Is Not Null Then
+          Return;
+        End If;
+      
+      End;
+    
+    End If;
+  
+  End;
+  -- encerra processamento dos indicadores
+
+  -- popula uma outra tabela que é base para um dash de conciliação dos valores
+  Begin
+    ad_pkg_dre.set_dre_report(p_referencia);
+  Exception
+    When Others Then
+      p_mensagem := 'Erro ao montar o dash de analíse dos valores da DRE. <br>' || Sqlerrm;
+      Return;
+  End;
+
+  ft := Round(((dbms_utility.get_time - it) / 100), 2);
+
+  If Trunc(ft) > 60 Then
+    v_time := To_Char(Round(ft / 60, 2)) || ' min(s)';
+  Else
+    v_time := To_Char(ft) || ' seg(s)';
+  End If;
+
+  p_mensagem := 'Indicadores calculados com SUCESSO!!!<br> Dependentes recalculados:<br>' ||
+                v_mensagem || '.<br> Temp de execução: ' || v_time || '.';
+
+End;]]></storedProcedure>
+        </action>
+      </actions>
+    </instance>
+    <instance name="CADINDGER">
+      <instanceDescription><![CDATA[Cadastro Ind. Gerenciais - DRE]]></instanceDescription>
+      <tableInfo name="DRE_CADINDGER" sequenceType="A" sequenceField="CODINDGER" presentationField="DESCRINDGER">
+        <category><![CDATA[New DRE]]></category>
+        <telaDescription><![CDATA[/*Autor: M. Rangel */
+Cadastro de indicadores gerenciais.
+São normalmente os valores resultantes de somas financeiras.]]></telaDescription>
+        <tableDescription><![CDATA[Cadastro Ind. Gerenciais - DRE]]></tableDescription>
+        <primaryKey>
+          <CODINDGER />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODINDGER" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Côd. Indicador]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="filterOrder"><![CDATA[0]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="DESCRINDGER" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Descr. Indicador]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="ATIVO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Ativo]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[S]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSU" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Usuário]]></description>
+          <expression><![CDATA[$ctx_usuario_logado]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DHALTER" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Alteração]]></description>
+          <expression><![CDATA[$ctx_dh_atual]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSU" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="FORINDGER" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="DRE_FORINDGER" />
+          <fields>
+            <field localName="CODINDGER" targetName="CODINDGER" />
+          </fields>
+        </relation>
+      </relationShip>
+      <actions>
+        <action type="SP">
+          <description><![CDATA[Recriar base de Cálculo]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_DRE_CRIABASEINDGER" refreshType="NONE" txManual="false" rootEntity="CADINDGER" />
+            <params>
+              <promptParam label="Referência" name="DTREF" required="true" saveLast="true" paramType="DT" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_DRE_CRIABASEINDGER" (P_CODUSU Number, P_IDSESSAO Varchar2, P_QTDLINHAS Number,
+																												P_MENSAGEM Out Varchar2) As
+	p_Referencia Date;
+	Errmsg       Varchar2(4000);
+Begin
+
+	p_referencia := Act_dta_param(P_IDSESSAO, 'DTREF');
+
+	If Upper(P_IDSESSAO) = 'DEBUG' Then
+		p_Referencia := '01/01/2018';
+	End If;
+
+	If p_referencia Is Null Then
+		p_referencia := To_Date(Substr(Replace(act_dec_param(P_IDSESSAO, 'DTREF'), '.', ''), 1, 8), 'yyyymmdd');
+	End If;
+
+	ad_pkg_var.Sufixo  := To_Char(p_referencia, 'YYYY') || To_Char(p_referencia, 'MM');
+	ad_pkg_var.NomeTab := 'DRE_BASEINDGER_' || ad_pkg_var.Sufixo;
+
+	Begin
+		Execute Immediate 'Select count(*) from ' || ad_pkg_var.nometab || ' '
+			Into ad_pkg_var.Count;
+	Exception
+		When Others Then
+			ad_pkg_var.Count := 0;
+	End;
+
+	If ad_pkg_var.Count > 0 Then
+	
+		If act_escolher_simnao(p_titulo    => 'Sobreposição de lançamentos.',
+													 p_texto     => 'Já existem lançamentos gerados para a referência informada.\nDeseja Sobrescrever essas informações?',
+													 p_chave     => P_IDSESSAO,
+													 p_sequencia => 0) = 'S' Then
+			Execute Immediate 'Truncate table ' || ad_pkg_var.NomeTab;
+		Else
+			Return;
+		End If;
+	
+	End If;
+
+	ad_pkg_var.init_time := Dbms_utility.Get_time;
+
+	ad_pkg_dre.set_baseindger(p_referencia, Errmsg);
+
+	ad_pkg_var.end_time := (Dbms_utility.Get_time - ad_pkg_var.init_time) / 60;
+
+	If Errmsg Is Null Then
+		P_MENSAGEM := 'Base de dados recriada com sucesso' || ' em ' || Trunc(ad_pkg_var.end_time) || 'segs';
+	Else
+		P_MENSAGEM := Errmsg;
+	End If;
+
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Recalcular Indicadores]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_DRE_CALCINDGER" refreshType="NONE" txManual="false" rootEntity="CADINDGER" />
+            <params>
+              <promptParam label="Referência" name="DTREF" required="true" saveLast="true" paramType="DT" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_DRE_CALCINDGER" (P_CODUSU Number, P_IDSESSAO Varchar2, P_QTDLINHAS Number,
+																										P_MENSAGEM Out Varchar2) As
+	p_referencia Date;
+	p_codindger  Number;
+	ErrMsg       Varchar2(4000);
+	i            Number;
+	t            Number;
+	v_time       Varchar2(100);
+	v_Select     Varchar2(1);
+	v_todos      Varchar2(1);
+	v_Count      Int := 0;
+
+Begin
+	/*
+  * autor: Marcus Rangel
+  * processo: New DRE
+  * objetivo: Calcular os valores dos indicadores gerenciais. Ação "Recalcular Indicadores" da tela de cadatro de ind. gerenciais
+  */
+
+	p_referencia := Act_dta_param(P_IDSESSAO, 'DTREF');
+
+	If p_referencia Is Null Then
+		p_referencia := To_Date(Substr(Replace(act_dec_param(P_IDSESSAO, 'DTREF'), '.', ''), 1, 8), 'yyyymmdd');
+	End If;
+
+	i := dbms_utility.get_time;
+
+	v_Select := act_escolher_simnao(p_titulo    => 'Cálculo dos valores dos Índices gerenciais',
+																	p_texto     => 'Deseja efetuar os cálculos somente para os indicadores selecionados?',
+																	p_chave     => p_idsessao,
+																	p_sequencia => 1);
+
+	If v_Select = 'N' Then
+	
+		v_todos := act_escolher_simnao(p_titulo    => 'Confirmação para cálculo',
+																	 p_texto     => 'Confirma o processamento para todos os indicadores?',
+																	 p_chave     => p_idsessao,
+																	 p_sequencia => 2);
+	
+		-- processa todos os ativos com fórmula
+		If v_todos = 'S' Then
+		
+			ad_pkg_dre.set_resindger(p_referencia, Null, errmsg);
+		
+			If errmsg Is Not Null Then
+				p_mensagem := errmsg;
+				Return;
+			End If;
+		
+		Else
+			Null;
+		End If;
+	
+	Else
+		-- processa apenas os selecionados
+		For l In 1 .. p_qtdlinhas
+		Loop
+		
+			p_codindger := act_int_field(p_idsessao, l, 'CODINDGER');
+		
+			Select Count(*)
+				Into v_Count
+				From dre_cadindger
+			 Where codindger = p_codindger
+				 And Nvl(ativo, 'N') = 'S';
+		
+			If v_Count = 0 Then
+				p_mensagem := 'Desculpe, o indicador selecionado não está ativo!';
+				Return;
+			End If;
+		
+			ad_pkg_dre.set_resindger(p_referencia, p_codindger, errmsg);
+		
+			If errmsg Is Not Null Then
+				p_mensagem := errmsg;
+				Return;
+			End If;
+		
+		End Loop l;
+	
+	End If;
+
+	t := Round((dbms_utility.get_time - i) / 100, 2);
+
+	If Trunc(t) > 60 Then
+		v_time := To_Char(t) || ' min(s)';
+	Else
+		v_time := To_Char(t) || ' seg(s)';
+	End If;
+
+	p_mensagem := 'Indicadores calculados com sucesso!!!<br> ' || ' Temp de execução: ' || v_time;
+
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Ajuda]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_DRE_SHOWHELP_SF" refreshType="NONE" txManual="false" rootEntity="CADINDGER" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_DRE_SHOWHELP_SF" (p_codusu Number, p_idsessao Varchar2, p_qtdlinhas Number,
+																										 p_mensagem Out Varchar2) As
+	v_Campos    Varchar2(4000);
+	v_CodIndPad Number;
+	v_CodindGer Number;
+	v_TypeName  Varchar2(100);
+Begin
+	v_CodindGer := act_int_field(p_idsessao, 1, 'CODINDGER');
+	v_CodIndPad := act_int_field(p_idsessao, 1, 'CODINDPAD');
+
+	If v_CodIndPad Is Not Null Then
+		v_TypeName := 'TYPE_REC_BASEINDPAD';
+	Elsif v_CodindGer Is Not Null Then
+		v_typename := 'TYPE_REC_BASEINDGER';
+	End If;
+
+	Select Listagg(atr.ATTR_NAME, ', ') Within Group(Order By atr.ATTR_NAME)
+		Into v_Campos
+		From User_Type_Attrs atr
+	 Where atr.TYPE_NAME = v_TypeName
+		 And atr.attr_type_name = 'FLOAT';
+
+	p_mensagem := '<h3>Campos disponíveis para cálculos: </h3>' || '<p>' || v_Campos || '</p>' ||
+								'<h3>Funções Disponíveis:</h3> Sum(), Avg(), Min(), Max(),<br> fc_Divide( <i>{expr1}</i>, <i>{expr2}</i>),<br>' ||
+								'VALOR_INDICADOR(<i>cod_ind</i>), <br>VLRIND_GERENCIAL(<i>cod_ind</i>),  <br>' ||
+								'AD_PKG_DRE.GET_RESINDPAD(DTREF, <i>cod_ind</i>,CODEMP, CODUNE, CODUF)<br>' ||
+								'AD_PKG_DRE.GET_RESINDGER(DTREF, <i>cod_ind</i>,CODEMP, CODUNE, CODUF)<br><br>' ||
+								'<small>As funções <i>GET_RESINDPAD</i> e <i>GET_RESINDGER</i> devem corresponder ' ||
+								'ao formato dos dados de seus respectivos indicadores, se por Empresa e/ou Unidade e /ou UF.</small>';
+
+End;]]></storedProcedure>
+        </action>
+      </actions>
+    </instance>
+    <instance name="FORINDGER">
+      <instanceDescription><![CDATA[Fórmula Ind. Gerenciais]]></instanceDescription>
+      <tableInfo name="DRE_FORINDGER" sequenceType="A" sequenceField="CODFORGER">
+        <category><![CDATA[New DRE]]></category>
+        <telaDescription><![CDATA[/*Autor: M. Rangel */
+Tabela detalhe do cadastro de indicadores gerenciais.]]></telaDescription>
+        <tableDescription><![CDATA[Fórmula Ind. Ger.]]></tableDescription>
+        <primaryKey>
+          <CODINDGER />
+          <CODFORGER />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODFORGER" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Fórmula]]></description>
+        </field>
+        <field name="CODINDGER" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Côd. Indicador]]></description>
+        </field>
+        <field name="SIGLA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Sigla]]></description>
+        </field>
+        <field name="CODEMP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Empresa]]></description>
+        </field>
+        <field name="CODUNE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Un. Negócio]]></description>
+        </field>
+        <field name="CODUF" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Unidade Federativa]]></description>
+        </field>
+        <field name="FORMINDGER" systemField="N" dataType="S" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Fórmula]]></description>
+        </field>
+        <field name="CLACUS" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Classif. Custo]]></description>
+        </field>
+        <field name="CLACUSCONT" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Classif. Custo Contábil]]></description>
+        </field>
+        <field name="CODFORM" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Fórmula Base]]></description>
+        </field>
+        <field name="DHVIGOR" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Vigor]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSU" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Usuário]]></description>
+          <expression><![CDATA[$ctx_usuario_logado]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DHALTER" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Alteração]]></description>
+          <expression><![CDATA[$ctx_dh_atual]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="UnidadeFederativa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUFS" />
+          <fields>
+            <field localName="CODUF" targetName="CODUF" />
+          </fields>
+        </relation>
+        <relation entityName="Empresa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIEMP" />
+          <fields>
+            <field localName="CODEMP" targetName="CODEMP" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSU" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="TSFUNE" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFUNE" />
+          <fields>
+            <field localName="CODUNE" targetName="CODUNE" />
+          </fields>
+        </relation>
+        <relation entityName="Formulas" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="DRE_FORMULAS" />
+          <fields>
+            <field localName="CODFORM" targetName="CODFORM" />
+          </fields>
+        </relation>
+      </relationShip>
+      <actions>
+        <action type="SP">
+          <description><![CDATA[Validar Fórmulas]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_DRE_VALFORMULA" refreshType="NONE" txManual="false" rootEntity="FORINDGER" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_DRE_VALFORMULA" (P_CODUSU Number, P_IDSESSAO Varchar2, P_QTDLINHAS Number,
+																										P_MENSAGEM Out Varchar2) As
+	v_CodIndPad  Number;
+	v_CodIndGer  Number;
+	v_CodFormula Number;
+	nome_tabela  Varchar2(100);
+	nome_tabger  Varchar2(100);
+	p_Referencia Date;
+	v_Query      Varchar2(4000);
+	v_Sufix      Varchar2(6);
+	r_pad        dre_cadindpad%Rowtype;
+	r_form       dre_forindpad%Rowtype;
+	ErrMsg       Varchar2(400);
+	ErrCompl     Varchar2(400);
+	Error Exception;
+Begin
+
+	/* Autor: Marcus Rangel
+  * Processo: DRE
+  * Objetivo: Validar as fórmulas informadas nos cadastros de indicadores 
+  */
+
+	Select o.OBJECT_NAME
+		Into nome_tabela
+		From dba_objects o
+	 Where o.OBJECT_TYPE = 'TABLE'
+		 And O.OBJECT_NAME Like 'DRE_BASEINDPAD_%'
+		 And rownum = 1
+	 Order By O.OBJECT_NAME Desc;
+
+	Select o.OBJECT_NAME
+		Into nome_tabger
+		From dba_objects o
+	 Where o.OBJECT_TYPE = 'TABLE'
+		 And O.OBJECT_NAME Like 'DRE_BASEINDGER_%'
+		 And rownum = 1
+	 Order By O.OBJECT_NAME Desc;
+
+	For L In 1 .. P_QTDLINHAS
+	Loop
+	
+		v_CodIndPad  := ACT_INT_FIELD(P_IDSESSAO, L, 'CODINDPAD');
+		v_CodIndGer  := ACT_INT_FIELD(P_IDSESSAO, L, 'CODINDGER');
+		v_CodFormula := act_int_field(p_idsessao, L, 'CODFORPAD');
+	
+		If v_CodFormula Is Null Then
+			v_CodFormula := act_int_field(p_idsessao, L, 'CODFORGER');
+		End If;
+	
+		If v_CodIndPad Is Not Null Then
+		
+			Select *
+				Into r_pad
+				From dre_cadindpad d
+			 Where d.codindpad = v_CodIndPad;
+		
+			Select *
+				Into r_form
+				From dre_forindpad fip
+			 Where fip.codindpad = v_CodIndPad
+				 And fip.codforpad = v_CodFormula
+				 And fip.dhvigor = (Select Max(dhvigor)
+															From dre_forindpad ff
+														 Where ff.codindpad = fip.codindpad
+															 And ff.codforpad = fip.codforpad
+															 And ff.dhvigor <= Sysdate);
+		
+			If r_pad.totalizador = 'S' Then
+				errmsg := 'Esse funcionalidade não valida as fórmulas dos totalizadores, por se tratarem de fórmulas diferentes.';
+				Raise error;
+			End If;
+		
+			v_Query := 'Select ' || r_form.formindpad || ' from ' || nome_tabela || ' where rownum = 1';
+		
+			Begin
+				Execute Immediate v_Query;
+			Exception
+				When Others Then
+					errmsg := Sqlerrm;
+					Raise error;
+			End;
+		
+		Elsif v_CodIndGer Is Not Null Then
+		
+			For I In (Select g.codindger, f.formindger, Nvl(f.coduf, 0) coduf, Nvl(f.codune, 0) codune, Nvl(f.codemp, 0) codemp, f.sigla,
+											 f.clacus, f.clacuscont, f.codform, f.dhvigor
+									From Dre_cadindger g
+									Join dre_forindger f
+										On g.codindger = f.codindger
+								 Where f.Formindger Is Not Null
+									 And Nvl(g.ativo, 'N') = 'S'
+									 And (g.codindger = v_codindger Or Nvl(v_codindger, 0) = 0)
+									 And f.dhvigor = (Select Max(dhvigor)
+																			From dre_forindger ff
+																		 Where ff.codindger = f.codindger
+																			 And ff.codforger = f.codforger
+																			 And ff.codforger = v_CodFormula
+																			 And ff.dhvigor <= Sysdate)
+								 Order By g.Codindger)
+			Loop
+			
+				Begin
+					Select query
+						Into v_Query
+						From dre_formulas
+					 Where codform = i.codform;
+				Exception
+					When no_data_found Then
+						P_MENSAGEM := ad_pkg_dre.v_Fail_img || '<p ' || ad_pkg_dre.v_parag_style || '>Fórmula não encontrada. ' ||
+													'Verifique o cadastro do indicador, se o mesmo possui fórmula informada.</p>';
+						Return;
+				End;
+			
+				v_Sufix := Substr(nome_tabger, Length(nome_tabger) - 5, Length(nome_tabger));
+			
+				V_QUERY := Replace(v_query, ':FORMULA', i.formindger);
+				v_query := Replace(v_query, ':NOMETABELA', nome_tabger);
+				v_query := Replace(v_query, ':SUFIXO', v_Sufix);
+			
+				p_referencia := To_Date('01/' || Substr(v_sufix, Length(v_sufix) - 1, Length(v_sufix)) || '/' || Substr(v_sufix, 1, 4),
+																'dd/mm/yyyy');
+			
+				Begin
+					Execute Immediate v_Query
+						Using p_Referencia, i.codemp, i.codune, i.coduf, i.clacus, i.clacuscont;
+				Exception
+					When Others Then
+						errmsg := Sqlerrm;
+						Raise error;
+						Exit;
+				End;
+			
+			End Loop I;
+		
+		End If;
+	
+		p_mensagem := ad_pkg_dre.v_Sucess_img || '<p ' || ad_pkg_dre.v_parag_style || '>Fórmula configurada corretamente!!!</p>';
+	
+	End Loop;
+Exception
+	When error Then
+		If ErrMsg Like Lower('%identificador%inválido%') Then
+			errmsg   := Replace(Regexp_Replace(Upper(Sqlerrm), '\d', ''), 'ORA-: ', '');
+			ErrCompl := 'Verifique o campo em questão, pois o mesmo pode não existir na tabela ou possui alias diferente.';
+		Elsif ErrMsg Like '%ORA-01403%' Then
+			errmsg   := Replace(Regexp_Replace(Upper(Sqlerrm), '\d', ''), 'ORA-: ', '');
+			ErrCompl := 'Não foram encontrados nenhum resultado que atenda a consulta realizada.';
+		Elsif ErrMsg Like '%NO_DATA_FOUND%' Then
+			errmsg   := Replace(Regexp_Replace(Upper(Sqlerrm), '\d', ''), 'ORA-: ', '');
+			ErrCompl := 'Ocorre quando o comando SELECT ... INTO não retorna nenhuma linha';
+		Elsif ErrMsg Like '%TOO_MANY_ROWS%' Then
+			errmsg   := Replace(Regexp_Replace(Upper(Sqlerrm), '\d', ''), 'ORA-: ', '');
+			errcompl := 'Ocorre quando um comando SELECT ... INTO retornar mais de uma linha';
+			/*Else
+      errmsg   := Replace(Regexp_Replace(Upper(Sqlerrm), '\d', ''), 'ORA-: ', '');
+      errcompl := Sqlerrm;*/
+		End If;
+		P_MENSAGEM := ad_pkg_dre.v_Fail_img || ' <p' || ad_pkg_dre.v_parag_style || '>Fórmula Incorreta.<br>' || ErrMsg ||
+									'<br><b>Dica: </b>' || ErrCompl || '</p>';
+End;]]></storedProcedure>
+        </action>
+      </actions>
+    </instance>
+    <instance name="FORINDPAD">
+      <instanceDescription><![CDATA[Fórmula Ind. Padrões]]></instanceDescription>
+      <tableInfo name="DRE_FORINDPAD" sequenceType="A" sequenceField="CODFORPAD">
+        <category><![CDATA[New DRE]]></category>
+        <telaDescription><![CDATA[/*Autor: M. Rangel */
+Tabela detalhe do cadastro de indicadores padrões.]]></telaDescription>
+        <tableDescription><![CDATA[Fórmula Ind. Padrões]]></tableDescription>
+        <primaryKey>
+          <CODINDPAD />
+          <CODFORPAD />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODFORPAD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Fórmula]]></description>
+        </field>
+        <field name="CODINDPAD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Indicador]]></description>
+        </field>
+        <field name="FORMINDPAD" systemField="N" dataType="S" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Fórmula]]></description>
+        </field>
+        <field name="DHVIGOR" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Vigor]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSU" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Usuário]]></description>
+          <expression><![CDATA[$ctx_usuario_logado]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DHALTER" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Alteração]]></description>
+          <expression><![CDATA[$ctx_dh_atual]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSU" targetName="CODUSU" />
+          </fields>
+        </relation>
+      </relationShip>
+      <actions>
+        <action type="SP">
+          <description><![CDATA[Validar Fórmula]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_DRE_VALFORMULA" refreshType="NONE" txManual="false" rootEntity="FORINDPAD" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_DRE_VALFORMULA" (P_CODUSU Number, P_IDSESSAO Varchar2, P_QTDLINHAS Number,
+																										P_MENSAGEM Out Varchar2) As
+	v_CodIndPad  Number;
+	v_CodIndGer  Number;
+	v_CodFormula Number;
+	nome_tabela  Varchar2(100);
+	nome_tabger  Varchar2(100);
+	p_Referencia Date;
+	v_Query      Varchar2(4000);
+	v_Sufix      Varchar2(6);
+	r_pad        dre_cadindpad%Rowtype;
+	r_form       dre_forindpad%Rowtype;
+	ErrMsg       Varchar2(400);
+	ErrCompl     Varchar2(400);
+	Error Exception;
+Begin
+
+	/* Autor: Marcus Rangel
+  * Processo: DRE
+  * Objetivo: Validar as fórmulas informadas nos cadastros de indicadores 
+  */
+
+	Select o.OBJECT_NAME
+		Into nome_tabela
+		From dba_objects o
+	 Where o.OBJECT_TYPE = 'TABLE'
+		 And O.OBJECT_NAME Like 'DRE_BASEINDPAD_%'
+		 And rownum = 1
+	 Order By O.OBJECT_NAME Desc;
+
+	Select o.OBJECT_NAME
+		Into nome_tabger
+		From dba_objects o
+	 Where o.OBJECT_TYPE = 'TABLE'
+		 And O.OBJECT_NAME Like 'DRE_BASEINDGER_%'
+		 And rownum = 1
+	 Order By O.OBJECT_NAME Desc;
+
+	For L In 1 .. P_QTDLINHAS
+	Loop
+	
+		v_CodIndPad  := ACT_INT_FIELD(P_IDSESSAO, L, 'CODINDPAD');
+		v_CodIndGer  := ACT_INT_FIELD(P_IDSESSAO, L, 'CODINDGER');
+		v_CodFormula := act_int_field(p_idsessao, L, 'CODFORPAD');
+	
+		If v_CodFormula Is Null Then
+			v_CodFormula := act_int_field(p_idsessao, L, 'CODFORGER');
+		End If;
+	
+		If v_CodIndPad Is Not Null Then
+		
+			Select *
+				Into r_pad
+				From dre_cadindpad d
+			 Where d.codindpad = v_CodIndPad;
+		
+			Select *
+				Into r_form
+				From dre_forindpad fip
+			 Where fip.codindpad = v_CodIndPad
+				 And fip.codforpad = v_CodFormula
+				 And fip.dhvigor = (Select Max(dhvigor)
+															From dre_forindpad ff
+														 Where ff.codindpad = fip.codindpad
+															 And ff.codforpad = fip.codforpad
+															 And ff.dhvigor <= Sysdate);
+		
+			If r_pad.totalizador = 'S' Then
+				errmsg := 'Esse funcionalidade não valida as fórmulas dos totalizadores, por se tratarem de fórmulas diferentes.';
+				Raise error;
+			End If;
+		
+			v_Query := 'Select ' || r_form.formindpad || ' from ' || nome_tabela || ' where rownum = 1';
+		
+			Begin
+				Execute Immediate v_Query;
+			Exception
+				When Others Then
+					errmsg := Sqlerrm;
+					Raise error;
+			End;
+		
+		Elsif v_CodIndGer Is Not Null Then
+		
+			For I In (Select g.codindger, f.formindger, Nvl(f.coduf, 0) coduf, Nvl(f.codune, 0) codune, Nvl(f.codemp, 0) codemp, f.sigla,
+											 f.clacus, f.clacuscont, f.codform, f.dhvigor
+									From Dre_cadindger g
+									Join dre_forindger f
+										On g.codindger = f.codindger
+								 Where f.Formindger Is Not Null
+									 And Nvl(g.ativo, 'N') = 'S'
+									 And (g.codindger = v_codindger Or Nvl(v_codindger, 0) = 0)
+									 And f.dhvigor = (Select Max(dhvigor)
+																			From dre_forindger ff
+																		 Where ff.codindger = f.codindger
+																			 And ff.codforger = f.codforger
+																			 And ff.codforger = v_CodFormula
+																			 And ff.dhvigor <= Sysdate)
+								 Order By g.Codindger)
+			Loop
+			
+				Begin
+					Select query
+						Into v_Query
+						From dre_formulas
+					 Where codform = i.codform;
+				Exception
+					When no_data_found Then
+						P_MENSAGEM := ad_pkg_dre.v_Fail_img || '<p ' || ad_pkg_dre.v_parag_style || '>Fórmula não encontrada. ' ||
+													'Verifique o cadastro do indicador, se o mesmo possui fórmula informada.</p>';
+						Return;
+				End;
+			
+				v_Sufix := Substr(nome_tabger, Length(nome_tabger) - 5, Length(nome_tabger));
+			
+				V_QUERY := Replace(v_query, ':FORMULA', i.formindger);
+				v_query := Replace(v_query, ':NOMETABELA', nome_tabger);
+				v_query := Replace(v_query, ':SUFIXO', v_Sufix);
+			
+				p_referencia := To_Date('01/' || Substr(v_sufix, Length(v_sufix) - 1, Length(v_sufix)) || '/' || Substr(v_sufix, 1, 4),
+																'dd/mm/yyyy');
+			
+				Begin
+					Execute Immediate v_Query
+						Using p_Referencia, i.codemp, i.codune, i.coduf, i.clacus, i.clacuscont;
+				Exception
+					When Others Then
+						errmsg := Sqlerrm;
+						Raise error;
+						Exit;
+				End;
+			
+			End Loop I;
+		
+		End If;
+	
+		p_mensagem := ad_pkg_dre.v_Sucess_img || '<p ' || ad_pkg_dre.v_parag_style || '>Fórmula configurada corretamente!!!</p>';
+	
+	End Loop;
+Exception
+	When error Then
+		If ErrMsg Like Lower('%identificador%inválido%') Then
+			errmsg   := Replace(Regexp_Replace(Upper(Sqlerrm), '\d', ''), 'ORA-: ', '');
+			ErrCompl := 'Verifique o campo em questão, pois o mesmo pode não existir na tabela ou possui alias diferente.';
+		Elsif ErrMsg Like '%ORA-01403%' Then
+			errmsg   := Replace(Regexp_Replace(Upper(Sqlerrm), '\d', ''), 'ORA-: ', '');
+			ErrCompl := 'Não foram encontrados nenhum resultado que atenda a consulta realizada.';
+		Elsif ErrMsg Like '%NO_DATA_FOUND%' Then
+			errmsg   := Replace(Regexp_Replace(Upper(Sqlerrm), '\d', ''), 'ORA-: ', '');
+			ErrCompl := 'Ocorre quando o comando SELECT ... INTO não retorna nenhuma linha';
+		Elsif ErrMsg Like '%TOO_MANY_ROWS%' Then
+			errmsg   := Replace(Regexp_Replace(Upper(Sqlerrm), '\d', ''), 'ORA-: ', '');
+			errcompl := 'Ocorre quando um comando SELECT ... INTO retornar mais de uma linha';
+			/*Else
+      errmsg   := Replace(Regexp_Replace(Upper(Sqlerrm), '\d', ''), 'ORA-: ', '');
+      errcompl := Sqlerrm;*/
+		End If;
+		P_MENSAGEM := ad_pkg_dre.v_Fail_img || ' <p' || ad_pkg_dre.v_parag_style || '>Fórmula Incorreta.<br>' || ErrMsg ||
+									'<br><b>Dica: </b>' || ErrCompl || '</p>';
+End;]]></storedProcedure>
+        </action>
+      </actions>
+    </instance>
+    <instance name="FORMULASLOG">
+      <instanceDescription><![CDATA[Histórico de Fórmulas]]></instanceDescription>
+      <tableInfo name="DRE_FORMULAS_LOG" sequenceType="A" sequenceField="SEQHIST">
+        <category><![CDATA[New DRE]]></category>
+        <telaDescription><![CDATA[/*Autor: M. Rangel */
+Tabela de log das alterações realizadas na tabela de fórmulas.]]></telaDescription>
+        <tableDescription><![CDATA[Histórico de Fórmulas]]></tableDescription>
+        <primaryKey>
+          <CODFORM />
+          <SEQHIST />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODFORM" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Fórmula]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="SEQHIST" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Seq.]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="QUERY" systemField="N" dataType="S" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Query]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSU" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Usuário]]></description>
+          <expression><![CDATA[$ctx_usuario_logado]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DHALTER" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Alteração]]></description>
+          <expression><![CDATA[$ctx_dh_atual]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="OPERACAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Operação]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="TIPOIND" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Tipo Indicador]]></description>
+          <options>
+            <option value="P"><![CDATA[Padrão]]></option>
+            <option value="G" default="S"><![CDATA[Gerecial]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="BASE" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Base]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSU" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="Formulas" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="DRE_FORMULAS" />
+          <fields>
+            <field localName="CODFORM" targetName="CODFORM" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="Formulas">
+      <instanceDescription><![CDATA[Fórmulas]]></instanceDescription>
+      <tableInfo name="DRE_FORMULAS" sequenceType="A" sequenceField="CODFORM" presentationField="DESCRFOR">
+        <category><![CDATA[New DRE]]></category>
+        <telaDescription><![CDATA[/*Autor: M. Rangel */
+Tabela cadastro de fórmulas utilizadas na criação das bases de cálculos e dos indicadores gerenciais]]></telaDescription>
+        <tableDescription><![CDATA[Fórmulas]]></tableDescription>
+        <primaryKey>
+          <CODFORM />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODFORM" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Fórmula]]></description>
+        </field>
+        <field name="DESCRFOR" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Descrição]]></description>
+        </field>
+        <field name="TIPOIND" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Tipo de Indicador]]></description>
+          <options>
+            <option value="P"><![CDATA[Padrão]]></option>
+            <option value="G" default="S"><![CDATA[Gerencial]]></option>
+          </options>
+        </field>
+        <field name="QUERY" systemField="N" dataType="S" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Query]]></description>
+          <expression><![CDATA[if ($valorCampo != null){
+ return $valorCampo.toUpperCase();
+}
+$valorCampo;]]></expression>
+        </field>
+        <field name="BASE" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Base?]]></description>
+          <expression><![CDATA[if($valorCampo == null){
+ return "N";
+} $valorCampo;]]></expression>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="CODFORMPAI" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Fórmula Pai]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="FORMULASLOG" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="DRE_FORMULAS_LOG" />
+          <fields>
+            <field localName="CODFORM" targetName="CODFORM" />
+          </fields>
+        </relation>
+        <relation entityName="Formulas" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="DRE_FORMULAS" />
+          <expression><![CDATA[@ref-param[description=Descr. Fórm. Pai]nvl(this.BASE,'N') = 'S']]></expression>
+          <fields>
+            <field localName="CODFORMPAI" targetName="CODFORM" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="EXCECOES">
+      <instanceDescription><![CDATA[Exceções DRE]]></instanceDescription>
+      <tableInfo name="DRE_EXCECOES" sequenceType="A" sequenceField="CODEXC">
+        <category><![CDATA[New DRE]]></category>
+        <telaDescription><![CDATA[/*Autor: M. Rangel */
+Tabela na qual serão cadastradas as exceções utilizadas para obtenção dos valores dos indicadores padrões]]></telaDescription>
+        <tableDescription><![CDATA[Exceções DRE]]></tableDescription>
+        <primaryKey>
+          <CODEXC />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODEXC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Exceção]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODUF" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="5">
+          <description><![CDATA[UF]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[2]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODPROD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Produto]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[5]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODGRUPOPROD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Grupo de Produtos]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="filterOrder"><![CDATA[4]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODEMP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Empresa]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[1]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Cód. Empresa]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODUNE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Un. Negócio]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[3]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="DESCREXC" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Descrição Exceção]]></description>
+        </field>
+        <field name="TIPOEXC" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Tipo Exceção]]></description>
+          <options>
+            <option value="E"><![CDATA[Exceção (Todos menos Informado)]]></option>
+            <option value="R" default="S"><![CDATA[Restrição (Somente Informados)]]></option>
+          </options>
+        </field>
+        <field name="CODINDPAD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Indicador]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[0]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="TIPOVLR" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Tipo Valor]]></description>
+          <options>
+            <option value="V"><![CDATA[Valor]]></option>
+            <option value="P"><![CDATA[Percentual]]></option>
+            <option value="F" default="S"><![CDATA[Fórmula]]></option>
+          </options>
+        </field>
+        <field name="FORMEXC" systemField="N" dataType="S" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Fórmula]]></description>
+          <expression><![CDATA[if ($valorCampo != null){
+ return $valorCampo.toUpperCase();
+ }$valorCampo;]]></expression>
+        </field>
+        <field name="VLRPERC" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Valor/Percentual]]></description>
+          <expression><![CDATA[if ($valorCampo == null){
+ return java.math.BigDecimal.ZERO;
+}
+ return $valorCampo;]]></expression>
+        </field>
+        <field name="DTINCLUSAO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Inclusão]]></description>
+          <expression><![CDATA[if ($valorCampo == null){
+return $ctx_dh_atual;
+}
+ return $valorCampo;]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSUINC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Usuário]]></description>
+          <expression><![CDATA[if ($valorCampo == null){
+ return $ctx_usuario_logado;
+}
+ return $valorCampo;]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="ATIVO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Ativo]]></description>
+          <expression><![CDATA[if ($valorCampo == null){
+ return "S";
+}
+ return $valorCampo;]]></expression>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="DHVIGOR" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Vigor Exceção]]></description>
+        </field>
+        <field name="OBS" systemField="N" dataType="S" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Obsevações]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="UnidadeFederativa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUFS" />
+          <fields>
+            <field localName="CODUF" targetName="CODUF" />
+          </fields>
+        </relation>
+        <relation entityName="Produto" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPRO" />
+          <fields>
+            <field localName="CODPROD" targetName="CODPROD" />
+          </fields>
+        </relation>
+        <relation entityName="GrupoProduto" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFGRU" />
+          <expression><![CDATA[this.ANALITICO = 'S']]></expression>
+          <fields>
+            <field localName="CODGRUPOPROD" targetName="CODGRUPOPROD" />
+          </fields>
+        </relation>
+        <relation entityName="Empresa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIEMP" />
+          <fields>
+            <field localName="CODEMP" targetName="CODEMP" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSUINC" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="TSFUNE" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFUNE" />
+          <fields>
+            <field localName="CODUNE" targetName="CODUNE" />
+          </fields>
+        </relation>
+        <relation entityName="CADINDPAD" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="DRE_CADINDPAD" />
+          <expression><![CDATA[this.ATIVO = 'S' and
+nvl( this.TOTALIZADOR,'N') = 'N']]></expression>
+          <fields>
+            <field localName="CODINDPAD" targetName="CODINDPAD" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="RESINDPAD">
+      <instanceDescription><![CDATA[Result. Ind. Padrões]]></instanceDescription>
+      <tableInfo name="DRE_RESINDPAD" sequenceType="M">
+        <category><![CDATA[New DRE]]></category>
+        <telaDescription><![CDATA[/*Autor: M. Rangel */
+Tabela de registro dos valores calculados dos indicadores padrões.]]></telaDescription>
+        <tableDescription><![CDATA[Result. Ind. Padrões]]></tableDescription>
+        <primaryKey>
+          <CODINDPAD />
+          <DTREF />
+          <CODEMP />
+          <CODUNE />
+          <CODGRUPOPROD />
+          <CODPROD />
+          <CODUF />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODINDPAD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Indicador Padrão]]></description>
+          <expression><![CDATA[if( $valorCampo == null ){
+  return $ctx_usuario_logado;
+}
+$valorCampo;]]></expression>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="filterOrder"><![CDATA[0]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="DTREF" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Dt. Referência]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[1]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODEMP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="5">
+          <description><![CDATA[Cód. Empresa]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="filterOrder"><![CDATA[2]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODUNE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Unid. Negócio]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[3]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODGRUPOPROD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Grupo de Produtos]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="filterOrder"><![CDATA[4]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[mult-list]]></prop>
+          </properties>
+        </field>
+        <field name="CODPROD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Produto]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="filterOrder"><![CDATA[5]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODUF" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="5">
+          <description><![CDATA[UF]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[6]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="VLRINDPAD" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Valor]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[4]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="CODFORPAD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Fórmula]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Informações Adicionais]]></prop>
+          </properties>
+        </field>
+        <field name="CODEXC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Exceção]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Informações Adicionais]]></prop>
+          </properties>
+        </field>
+        <field name="CODUDUINC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Usuário]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Informações Adicionais]]></prop>
+          </properties>
+        </field>
+        <field name="DHINCLUSAO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Inclusao]]></description>
+          <expression><![CDATA[if( $valorCampo == null ){
+  return $ctx_dh_atual;
+}
+$valorCampo;]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Informações Adicionais]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="UnidadeFederativa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUFS" />
+          <fields>
+            <field localName="CODUF" targetName="CODUF" />
+          </fields>
+        </relation>
+        <relation entityName="Produto" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPRO" />
+          <fields>
+            <field localName="CODPROD" targetName="CODPROD" />
+          </fields>
+        </relation>
+        <relation entityName="GrupoProduto" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFGRU" />
+          <fields>
+            <field localName="CODGRUPOPROD" targetName="CODGRUPOPROD" />
+          </fields>
+        </relation>
+        <relation entityName="Empresa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIEMP" />
+          <fields>
+            <field localName="CODEMP" targetName="CODEMP" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUDUINC" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="TSFUNE" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFUNE" />
+          <fields>
+            <field localName="CODUNE" targetName="CODUNE" />
+          </fields>
+        </relation>
+        <relation entityName="EXCECOES" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="DRE_EXCECOES" />
+          <fields>
+            <field localName="CODEXC" targetName="CODEXC" />
+          </fields>
+        </relation>
+        <relation entityName="CADINDPAD" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="DRE_CADINDPAD" />
+          <fields>
+            <field localName="CODINDPAD" targetName="CODINDPAD" />
+          </fields>
+        </relation>
+        <relation entityName="FORINDPAD" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="DRE_FORINDPAD" />
+          <expression><![CDATA[@ref-param[force-one-to-one=true]]]></expression>
+          <fields>
+            <field localName="CODFORPAD" targetName="CODFORPAD" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="RESINDGER">
+      <instanceDescription><![CDATA[Result Ind. Gerenciais DRE]]></instanceDescription>
+      <tableInfo name="DRE_RESINDGER" sequenceType="M">
+        <category><![CDATA[New DRE]]></category>
+        <telaDescription><![CDATA[/*Autor: M. Rangel */
+Tabela de registro dos valores calculados dos indicadores gerenciais.]]></telaDescription>
+        <tableDescription><![CDATA[Result Ind. Gerenciais DRE]]></tableDescription>
+        <primaryKey>
+          <DTREF />
+          <CODINDGER />
+          <CODEMP />
+          <CODUNE />
+          <CODUF />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="DTREF" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Dt. Referência]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[0]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODINDGER" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Indicador]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[1]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODEMP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="5">
+          <description><![CDATA[Cód. Empresa]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[2]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODUNE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Un. Negócio]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[3]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODUF" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="5">
+          <description><![CDATA[Cód. Unidade Federativa]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[4]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="VLRINDGER" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Valor]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[4]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="CODFORGER" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Fórmula]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="UnidadeFederativa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUFS" />
+          <fields>
+            <field localName="CODUF" targetName="CODUF" />
+          </fields>
+        </relation>
+        <relation entityName="Empresa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIEMP" />
+          <fields>
+            <field localName="CODEMP" targetName="CODEMP" />
+          </fields>
+        </relation>
+        <relation entityName="TSFUNE" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFUNE" />
+          <fields>
+            <field localName="CODUNE" targetName="CODUNE" />
+          </fields>
+        </relation>
+        <relation entityName="CADINDGER" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="DRE_CADINDGER" />
+          <fields>
+            <field localName="CODINDGER" targetName="CODINDGER" />
+          </fields>
+        </relation>
+        <relation entityName="FORINDGER" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="DRE_FORINDGER" />
+          <expression><![CDATA[@ref-param[force-one-to-one=true]]]></expression>
+          <fields>
+            <field localName="CODFORGER" targetName="CODFORGER" />
+          </fields>
+        </relation>
+      </relationShip>
+      <events>
+        <event type="SP">
+          <description><![CDATA[Valida Fechamento do Período]]></description>
+          <eventConfig>
+            <dbCall name="AD_STP_DRE_BLOQREF_SF" />
+          </eventConfig>
+          <resourceID><![CDATA[br.com.sankhya.menu.adicional.RESINDGER]]></resourceID>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_DRE_BLOQREF_SF" (p_tipoevento Int, p_idsessao Varchar2, p_codusu Int) As
+	before_insert Int;
+	before_delete Int;
+	before_update Int;
+	before_commit Int;
+	v_referencia  Date;
+Begin
+	before_insert := 0;
+	before_delete := 2;
+	before_update := 4;
+	before_commit := 10;
+
+	/*
+  after_insert  := 1;
+  after_delete  := 3;
+  after_update  := 5;
+  
+  */
+
+	--evp_get_campo_{tipo do campo}(p_idsessao, 'NOMECAMPO')
+	--evp_set_campo_{tipo_do_campo}(p_idsessao,  'NOMECAMPO', valor)
+
+	If p_tipoevento = before_insert Or p_tipoevento = before_delete Or p_tipoevento = before_update Or p_tipoevento = before_commit Then
+	
+		v_referencia := evp_get_campo_dta(p_idsessao, 'DTREF');
+	
+		If ad_pkg_dre.periodofechado(v_referencia) Then
+			Raise_Application_Error(-20105,
+															fc_formatahtml_sf('Alterações não permitidas',
+																								'O período em questão já se encontra fechado!.',
+																								'<br> Entre em constato com a direção contábil para reabertura do período'));
+		End If;
+	
+	End If;
+
+End;]]></storedProcedure>
+        </event>
+      </events>
+    </instance>
+    <instance name="TSFUNE">
+      <instanceDescription><![CDATA[Unidades de Negócios DRE]]></instanceDescription>
+      <tableInfo name="AD_TSFUNE" sequenceType="A" sequenceField="CODUNE" presentationField="DESCRUNE">
+        <category><![CDATA[New DRE]]></category>
+        <telaDescription><![CDATA[/*Autor: M. Rangel */
+Cadastro de Unidades de Negócios, visa substituir o campo texto utilizado no Centro de Resultados.]]></telaDescription>
+        <tableDescription><![CDATA[Unidades de Negócios]]></tableDescription>
+        <primaryKey>
+          <CODUNE />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODUNE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Un. Negócio]]></description>
+        </field>
+        <field name="DESCRUNE" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Descrição Un. Negócio]]></description>
+        </field>
+        <field name="CODEMP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Empresa]]></description>
+        </field>
+        <field name="SIGLA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Sigla]]></description>
+        </field>
+        <field name="CODEMPNEG" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Empresa Neg.]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Empresa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIEMP" />
+          <fields>
+            <field localName="CODEMP" targetName="CODEMP" />
+          </fields>
+        </relation>
+        <relation entityName="Empresa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIEMP" />
+          <fields>
+            <field localName="CODEMPNEG" targetName="CODEMP" />
+          </fields>
+        </relation>
+      </relationShip>
+      <references>
+        <reference entityName="CentroResultado" tableName="TSICUS" type="I" insert="N" update="N" remove="N">
+          <!--Esse elemento "reference" diz respeito a campos da entidade exportada que são mencionados em tabelas do sistema.-->
+          <fields>
+            <field name="AD_CODUNE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" localName="CODUNE">
+              <description><![CDATA[Cód. Un. Negócio DRE]]></description>
+            </field>
+          </fields>
+        </reference>
+      </references>
+    </instance>
+    <instance name="DREESTRUTURA">
+      <instanceDescription><![CDATA[Estrutura Hierarquica DRE]]></instanceDescription>
+      <tableInfo name="DRE_ESTRUTURA" sequenceType="M" presentationField="DESCRICAO">
+        <category><![CDATA[New DRE]]></category>
+        <telaDescription><![CDATA[/*Autor: M. Rangel */
+Hierarquia para impressão da DRE.]]></telaDescription>
+        <tableDescription><![CDATA[Estrutura Hierarquica DRE]]></tableDescription>
+        <primaryKey>
+          <SEQIND />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="SEQIND" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Sequencia Indicador]]></description>
+          <properties>
+            <prop name="mascaraHierarquia"><![CDATA[MASC_DREESTRUTU_PARAMVALUE=##.##.##]]></prop>
+          </properties>
+        </field>
+        <field name="GRAU" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Grau]]></description>
+          <properties>
+            <prop name="visivel"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DESCRICAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Descrição]]></description>
+          <properties>
+            <prop name="visivel"><![CDATA[S]]></prop>
+          </properties>
+        </field>
+        <field name="ANALITICO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Analítico]]></description>
+          <options>
+            <option value="N"><![CDATA[Não]]></option>
+            <option value="S" default="S"><![CDATA[Sim]]></option>
+          </options>
+          <properties>
+            <prop name="UITabName"><![CDATA[__main]]></prop>
+          </properties>
+        </field>
+        <field name="SEQINDPAI" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[SEQIND pai]]></description>
+          <properties>
+            <prop name="visivel"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODINDPAD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Indicador]]></description>
+        </field>
+        <field name="FORMREL" systemField="N" dataType="S" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Fórmula Relatório]]></description>
+          <expression><![CDATA[if ($valorCampo != null){
+ return $valorCampo.toUpperCase();
+}
+$valorCampo;]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="ORDEM" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Ordem de Exibição]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="CADINDPAD" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="DRE_CADINDPAD" />
+          <expression><![CDATA[nvl(this.ATIVO,'N') =  'S']]></expression>
+          <fields>
+            <field localName="CODINDPAD" targetName="CODINDPAD" />
+          </fields>
+        </relation>
+      </relationShip>
+      <actions>
+        <action type="SP">
+          <description><![CDATA[Fechamento/Reabertura de Período]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_DRE_FECHPERIODO_SF" refreshType="NONE" txManual="false" rootEntity="DREESTRUTURA" />
+            <params>
+              <promptParam label="Referência" name="DTREF" required="true" saveLast="false" paramType="DT" />
+              <promptParam label="Tipo de Operação" name="TIPOOPER" required="false" saveLast="false" options="1=Abertura;2=Fechamento" paramType="SO" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_DRE_FECHPERIODO_SF" (p_codusu Number, p_idsessao Varchar2, p_qtdlinhas Number,
+																												p_mensagem Out Varchar2) As
+	p_dtref    Date;
+	p_tipooper Varchar2(1);
+	v_seqind   Pls_Integer;
+	v_Numfech  Pls_Integer;
+Begin
+	/* Autor: M. Rangel
+  * Processo: DRE
+  * Objetivo: Fechar ou Reabrir determinados períodos impedindo ou permitindo alteração nos registros bases.
+  */
+
+	p_dtref    := act_dta_param(p_idsessao, 'DTREF');
+	p_tipooper := act_txt_param(p_idsessao, 'TIPOOPER');
+
+	For i In 1 .. p_qtdlinhas
+	Loop
+		Begin
+			v_seqind := act_int_field(p_idsessao, i, 'SEQIND');
+		
+			stp_keygen_tgfnum('DRE_FECHAMENTOS', 1, 'DRE_FECHAMENTOS', 'NUMFECH', 0, v_Numfech);
+		
+			Insert Into dre_fechamentos
+				(numfech, dtref, codusu, dhalter, operacao)
+			Values
+				(v_Numfech, p_dtref, stp_get_codusulogado, Sysdate, Case When p_tipooper = '1' Then 'A' Else 'F' End);
+		
+		Exception
+			When Others Then
+				p_mensagem := ad_fnc_formataerro('Erro ao realizar operação. <br> Detalhes: ' || Sqlerrm);
+				Return;
+		End;
+	
+	End Loop;
+
+	p_mensagem := 'Operação realizada com sucesso!!!';
+
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Recria Bases]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_DRE_RECRIABASES_SF" refreshType="NONE" txManual="false" rootEntity="DREESTRUTURA" />
+            <params>
+              <promptParam label="Dt. Referência" name="DTREF" required="true" saveLast="true" paramType="DT" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_DRE_RECRIABASES_SF" (p_codusu    Number,
+                                                        p_idsessao  Varchar2,
+                                                        p_qtdlinhas Number,
+                                                        p_mensagem  Out Varchar2) As
+  p_dtref Date;
+  ti      Number;
+  tt      Number;
+  vt      Varchar2(100);
+Begin
+
+  /* 
+  Autor: M. Rangel
+  Processo: DRE
+  Objetivo: Botão de ação da tela de hierarquia da DRE, intuito de recriar as bases simultaneamente
+  */
+
+  p_dtref := act_dta_param(p_idsessao, 'DTREF');
+
+  ti := dbms_utility.get_time;
+
+  Begin
+    ad_pkg_dre.set_baseindpad(p_dtref, p_mensagem);
+    --Commit;
+  End;
+  -- base ind ger
+  Begin
+    ad_pkg_dre.set_baseindger(p_dtref, p_mensagem);
+    --Commit;
+  End;
+
+  If p_mensagem Is Not Null Then
+    Return;
+  End If;
+
+  tt := Round(((dbms_utility.get_time - ti) / 100), 2);
+
+  If Trunc(tt) > 60 Then
+    vt := To_Char(Round(tt / 60, 2)) || ' min(s)';
+  Else
+    vt := To_Char(tt) || ' seg(s)';
+  End If;
+
+  p_mensagem := 'Bases recriadas em ' || vt;
+
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Recalcula Indicadores]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_DRE_RECALCIND_SF" refreshType="NONE" txManual="false" rootEntity="DREESTRUTURA" />
+            <params>
+              <promptParam label="Dt. Referência" name="DTREF" required="true" saveLast="true" paramType="DT" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_DRE_RECALCIND_SF" (p_codusu    Number,
+                                                      p_idsessao  Varchar2,
+                                                      p_qtdlinhas Number,
+                                                      p_mensagem  Out Varchar2) As
+  p_dtref Date;
+  ti      Number;
+  tt      Number;
+  vt      Varchar2(100);
+Begin
+
+  /* 
+  Autor: M. Rangel
+  Processo: DRE
+  Objetivo: Botão de ação da tela de hierarquia da DRE, intuito de recalcular os indicadores gerenciais e padrões
+  */
+
+  p_dtref := act_dta_param(p_idsessao, 'DTREF');
+
+  ti := dbms_utility.get_time;
+
+  Begin
+    ad_pkg_dre.set_resindger(p_dtref, Null, p_mensagem);
+    --Commit;
+  End;
+  -- valores pad
+  Begin
+    ad_pkg_dre.Set_Resindpad(p_dtref, Null, p_Mensagem);
+    --Commit;
+  End;
+
+  If p_mensagem Is Not Null Then
+    Return;
+  End If;
+
+  tt := Round(((dbms_utility.get_time - ti) / 100), 2);
+
+  If Trunc(tt) > 60 Then
+    vt := To_Char(Round(tt / 60, 2)) || ' min(s)';
+  Else
+    vt := To_Char(tt) || ' seg(s)';
+  End If;
+
+  p_mensagem := 'Indicadores recalculados em ' || vt;
+
+End;]]></storedProcedure>
+        </action>
+      </actions>
+    </instance>
+  </instances>
+</metadata>
+

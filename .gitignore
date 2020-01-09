@@ -1,5 +1,13 @@
 
+<<<<<<< HEAD
 doc/
 *.xlsx
 *.docx
 *.pdf
+=======
+*.doc
+*.docx
+*.pdf
+*.xls
+*.xlsx
+>>>>>>> d1bfc0101c392b50e365a30f6ff239b3e9be4cfd

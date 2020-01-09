@@ -1,2 +1,5 @@
 
 doc/
+*.xlsx
+*.docx
+*.pdf

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<cart>
+<connections>
+<connection>
+<displayname><![CDATA[snk@ssadev_new]]></displayname>
+<connectionname><![CDATA[IdeConnections%23snk%40ssadev_new]]></connectionname>
+<connectionuser><![CDATA[SANKHYA]]></connectionuser>
+</connection>
+</connections>
+<objects>
+<dbobject>
+	<objectconnection><![CDATA[IdeConnections%23snk%40ssadev_new]]></objectconnection>
+	<objecttype><![CDATA[PROCEDURE]]></objecttype>
+	<objectschema><![CDATA[SANKHYA]]></objectschema>
+	<objectname><![CDATA[AD_STP_FCP_GETDATA_SF]]></objectname>
+	<include><![CDATA[true]]></include>
+	<meta><![CDATA[true]]></meta>
+	<data><![CDATA[false]]></data>
+	<filter><![CDATA[]]></filter>
+</dbobject>
+<dbobject>
+	<objectconnection><![CDATA[IdeConnections%23snk%40ssadev_new]]></objectconnection>
+	<objecttype><![CDATA[PROCEDURE]]></objecttype>
+	<objectschema><![CDATA[SANKHYA]]></objectschema>
+	<objectname><![CDATA[AD_STP_FCP_GETREFTABELA_SF]]></objectname>
+	<include><![CDATA[true]]></include>
+	<meta><![CDATA[true]]></meta>
+	<data><![CDATA[false]]></data>
+	<filter><![CDATA[]]></filter>
+</dbobject>
+<dbobject>
+	<objectconnection><![CDATA[IdeConnections%23snk%40ssadev_new]]></objectconnection>
+	<objecttype><![CDATA[PROCEDURE]]></objecttype>
+	<objectschema><![CDATA[SANKHYA]]></objectschema>
+	<objectname><![CDATA[AD_STP_FCP_GERARNOTA_SF]]></objectname>
+	<include><![CDATA[true]]></include>
+	<meta><![CDATA[true]]></meta>
+	<data><![CDATA[false]]></data>
+	<filter><![CDATA[]]></filter>
+</dbobject>
+<dbobject>
+	<objectconnection><![CDATA[IdeConnections%23snk%40ssadev_new]]></objectconnection>
+	<objecttype><![CDATA[FUNCTION]]></objecttype>
+	<objectschema><![CDATA[SANKHYA]]></objectschema>
+	<objectname><![CDATA[AD_FNC_FCP_GETCUSTOAVE_SF]]></objectname>
+	<include><![CDATA[true]]></include>
+	<meta><![CDATA[true]]></meta>
+	<data><![CDATA[false]]></data>
+	<filter><![CDATA[]]></filter>
+</dbobject>
+</objects>
+</cart>

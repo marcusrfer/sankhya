@@ -1,0 +1,1154 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<metadata>
+  <exportInfo>
+    <exportTime>01/11/2019 13:58:59</exportTime>
+    <systemVersion>3.31b215</systemVersion>
+    <systemCharSet>ISO-8859-1</systemCharSet>
+    <dbMetadata>
+      <dbUser>SANKHYA</dbUser>
+      <urlConnection><![CDATA[jdbc:oracle:thin:@ssaprod-scan.ssa-br.com:1521/ORCL]]></urlConnection>
+      <jdbcDriver><![CDATA[Oracle JDBC driver 12.1.0.1.0]]></jdbcDriver>
+      <DBMS><![CDATA[Oracle - Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
+With the Partitioning, Real Application Clusters, Automatic Storage Management, OLAP,
+Advanced Analytics and Real Application Testing options]]></DBMS>
+    </dbMetadata>
+  </exportInfo>
+  <menu description="Program. Pega Frango Vivo" name="MENU_ADICIONAL_1267DBEEF71029CE18A01AAA832065C5">
+    <properties>
+      <tipoLancador><![CDATA[TA]]></tipoLancador>
+      <resourceID><![CDATA[br.com.sankhya.menu.adicional.ProgramPegaFrangovivo]]></resourceID>
+      <entityName><![CDATA[ProgramPegaFrangovivo]]></entityName>
+      <contexto><![CDATA[mge]]></contexto>
+    </properties>
+  </menu>
+  <instances>
+    <instance name="TSFTFV">
+      <instanceDescription><![CDATA[Pega Frango Vivo Temp]]></instanceDescription>
+      <tableInfo name="AD_TSFTFV" sequenceType="A" sequenceField="NUMTFV">
+        <category><![CDATA[Frango Vivo]]></category>
+        <telaDescription><![CDATA[/*Autor: M. Rangel*/
+Tabela temporária que recebe os dados do Avecom para agendamento]]></telaDescription>
+        <tableDescription><![CDATA[Pega Frango Vivo Temp]]></tableDescription>
+        <primaryKey>
+          <NUMTFV />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="NUMTFV" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[NUMTFV]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DTDESCARTE" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Descarte]]></description>
+        </field>
+        <field name="HORAPEGA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Hora Pega]]></description>
+        </field>
+        <field name="UNIDADE" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Unidade]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[0]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="NUCLEO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Núcleo]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[1]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="AVIARIO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Aviário]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[2]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="IDADE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Idade]]></description>
+        </field>
+        <field name="SEXO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Sexo]]></description>
+        </field>
+        <field name="PESO" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Peso]]></description>
+        </field>
+        <field name="LOCALIDADE" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Localidade]]></description>
+        </field>
+        <field name="KM" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Km]]></description>
+        </field>
+        <field name="PEGA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Pega]]></description>
+        </field>
+        <field name="TECNICO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Técnico]]></description>
+        </field>
+        <field name="QTDPEGA" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Quantidade]]></description>
+        </field>
+        <field name="DHPEGA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Pega]]></description>
+        </field>
+      </fields>
+      <actions>
+        <action type="RJ">
+          <description><![CDATA[Popula informações de laudo]]></description>
+          <actionConfig>
+            <javaCall className="com.ssa.custom.BuscaLaudoFrango" entityName="TSFTFV" refreshType="ALL" txManual="false" />
+          </actionConfig>
+          <moduleName><![CDATA[Ações Frango vivo]]></moduleName>
+          <moduleResourceID><![CDATA[com.ssa.custom]]></moduleResourceID>
+        </action>
+        <action type="RJ">
+          <description><![CDATA[Busca Dados - SQL Server]]></description>
+          <actionConfig>
+            <javaCall className="com.ssa.custom.AcoesFrangoVivo" entityName="TSFTFV" refreshType="ALL" txManual="false" />
+            <params>
+              <promptParam label="Início Descarte" name="DTDESCARTEINI" required="true" saveLast="false" paramType="DT" />
+              <promptParam label="Fim Descarte" name="DTDESCARTEFIN" required="true" saveLast="false" precision="" paramType="DT" />
+            </params>
+          </actionConfig>
+          <moduleName><![CDATA[Ações Frango vivo]]></moduleName>
+          <moduleResourceID><![CDATA[com.ssa.custom]]></moduleResourceID>
+        </action>
+      </actions>
+    </instance>
+    <instance name="ProgramPegaFrangovivo">
+      <instanceDescription><![CDATA[Programação de Pega Frango vivo]]></instanceDescription>
+      <tableInfo name="AD_TSFPFV2" sequenceType="A" sequenceField="NUPFV">
+        <category><![CDATA[Frango Vivo]]></category>
+        <telaDescription><![CDATA[/*Autor: M. Rangel */
+Variação da tela de programação de pega de frango vivo. Tela totalmente vertical sem detalhe]]></telaDescription>
+        <tableDescription><![CDATA[Programação Pega Frango Vivo]]></tableDescription>
+        <primaryKey>
+          <NUPFV />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="DTDESCARTE" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Descarte]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[1]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Dt. Descarte]]></prop>
+            <prop name="filterType"><![CDATA[period]]></prop>
+          </properties>
+        </field>
+        <field name="DTAGEND" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Agendamento]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[2]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Dt. Agendamento]]></prop>
+            <prop name="filterType"><![CDATA[period]]></prop>
+          </properties>
+        </field>
+        <field name="NUPFV" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Seq]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODUNE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Unidade]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[4]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Unidade]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="NUCLEO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Núcleo]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[5]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Núcleo]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODPARC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Parceiro]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[3]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Cód. Parceiro]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODCID" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Cidade]]></description>
+        </field>
+        <field name="SEXO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Sexo]]></description>
+          <options>
+            <option value="M"><![CDATA[Macho]]></option>
+            <option value="F"><![CDATA[Fêmea]]></option>
+            <option value="X" default="S"><![CDATA[Misto]]></option>
+          </options>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[6]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Sexo]]></prop>
+          </properties>
+        </field>
+        <field name="DISTANCIA" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Distância]]></description>
+        </field>
+        <field name="DTMAREK" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Marek]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Vacinas]]></prop>
+          </properties>
+        </field>
+        <field name="DTBOUBA" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Bouba]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Vacinas]]></prop>
+          </properties>
+        </field>
+        <field name="DTGUMBORO" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Gumboro]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Vacinas]]></prop>
+          </properties>
+        </field>
+        <field name="STATUS" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Status]]></description>
+          <options>
+            <option value="P"><![CDATA[Pendente]]></option>
+            <option value="A"><![CDATA[Agendado]]></option>
+            <option value="C" default="S"><![CDATA[Cancelado]]></option>
+          </options>
+          <properties>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[7]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+            <prop name="filterLabel"><![CDATA[Status]]></prop>
+          </properties>
+        </field>
+        <field name="CODPROD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Produto]]></description>
+        </field>
+        <field name="QTDNEG" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Qtd.]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+            <prop name="UIGroupName"><![CDATA[Programação]]></prop>
+          </properties>
+        </field>
+        <field name="TECNICO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Técnico]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Pega]]></prop>
+          </properties>
+        </field>
+        <field name="PEGADOR" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Pegador]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Pega]]></prop>
+          </properties>
+        </field>
+        <field name="HORAPEGA" systemField="N" dataType="T" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Horário Pega]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Pega]]></prop>
+          </properties>
+        </field>
+        <field name="NUMTFV" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[NUMTFV]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DHPEGA" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Pega]]></description>
+          <properties>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[0]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Dh. Pega]]></prop>
+            <prop name="filterType"><![CDATA[period]]></prop>
+            <prop name="UIGroupName"><![CDATA[Pega]]></prop>
+          </properties>
+        </field>
+        <field name="QTDPEGA" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Qtd. Pega]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Pega]]></prop>
+          </properties>
+        </field>
+        <field name="NUMLFV" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Nro Laudo]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Pega]]></prop>
+          </properties>
+        </field>
+        <field name="PRIORIDADE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Prioridade]]></description>
+        </field>
+        <field name="CODVEICULO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Veículo]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="apresentacao"><![CDATA[PLACA]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Programação]]></prop>
+          </properties>
+        </field>
+        <field name="CODPARCTRANSP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Parc. Transp.]]></description>
+          <expression><![CDATA[if($valorCampo == null){
+$sql.select("CODPARC","TGFVEI","CODVEICULO = "+$col_CODVEICULO);
+ if ($sql.next()){
+  return $sql.getBigDecimal(1);
+ }
+}$valorCampo;]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Programação]]></prop>
+          </properties>
+        </field>
+        <field name="CODMOTORISTA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Motorista]]></description>
+          <expression><![CDATA[if($valorCampo == null){
+$sql.select("CODMOTORISTA","TGFVEI","CODVEICULO = "+$col_CODVEICULO);
+ if ($sql.next()){
+  return $sql.getBigDecimal(1);
+ }
+}$valorCampo;]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Programação]]></prop>
+          </properties>
+        </field>
+        <field name="QTDNEGALT" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Qts. Neg. CX]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Programação]]></prop>
+          </properties>
+        </field>
+        <field name="QTDVOLALT" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Un. por CX]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Programação]]></prop>
+          </properties>
+        </field>
+        <field name="STATUSVEI" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Status Veículo]]></description>
+          <options>
+            <option value="A"><![CDATA[Abatido]]></option>
+            <option value="C"><![CDATA[Carregado (Granja)]]></option>
+            <option value="D"><![CDATA[Descanço]]></option>
+            <option value="I"><![CDATA[Estrada (Ida)]]></option>
+            <option value="V"><![CDATA[Estrada (Volta)]]></option>
+            <option value="P"><![CDATA[Programado]]></option>
+            <option value="M" default="S"><![CDATA[Manutenção]]></option>
+          </options>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Programação]]></prop>
+          </properties>
+        </field>
+        <field name="NUNOTA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="N" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Nro. Único]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Outras Informações]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSU" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Usuário]]></description>
+          <expression><![CDATA[$ctx_usuario_logado]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Outras Informações]]></prop>
+          </properties>
+        </field>
+        <field name="DHALTER" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Alteração]]></description>
+          <expression><![CDATA[$ctx_dh_atual]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Outras Informações]]></prop>
+          </properties>
+        </field>
+        <field name="ORIGPINTO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Origem Pintinho]]></description>
+        </field>
+        <field name="QTDMORTES" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Mortalidade]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Vacinas]]></prop>
+          </properties>
+        </field>
+        <field name="SEQABATE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Seq. Abate]]></description>
+          <properties>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[8]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+            <prop name="filterLabel"><![CDATA[Sequencial]]></prop>
+          </properties>
+        </field>
+        <field name="NUMLOTE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nro Lote]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Pega]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Parceiro" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPAR" />
+          <fields>
+            <field localName="CODPARC" targetName="CODPARC" />
+          </fields>
+        </relation>
+        <relation entityName="Cidade" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICID" />
+          <fields>
+            <field localName="CODCID" targetName="CODCID" />
+          </fields>
+        </relation>
+        <relation entityName="Produto" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPRO" />
+          <fields>
+            <field localName="CODPROD" targetName="CODPROD" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSU" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="CabecalhoNota" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFCAB" />
+          <fields>
+            <field localName="NUNOTA" targetName="NUNOTA" />
+          </fields>
+        </relation>
+        <relation entityName="Veiculo" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFVEI" />
+          <fields>
+            <field localName="CODVEICULO" targetName="CODVEICULO" />
+          </fields>
+        </relation>
+        <relation entityName="Parceiro" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPAR" />
+          <fields>
+            <field localName="CODPARCTRANSP" targetName="CODPARC" />
+          </fields>
+        </relation>
+        <relation entityName="Parceiro" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPAR" />
+          <fields>
+            <field localName="CODMOTORISTA" targetName="CODPARC" />
+          </fields>
+        </relation>
+        <relation entityName="TSFTFV" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFTFV" />
+          <fields>
+            <field localName="NUMTFV" targetName="NUMTFV" />
+          </fields>
+        </relation>
+        <relation entityName="TSFLFV" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFLFV" />
+          <fields>
+            <field localName="NUMLFV" targetName="NUMLFV" />
+          </fields>
+        </relation>
+      </relationShip>
+      <actions>
+        <action type="RJ">
+          <description><![CDATA[Atualizar Programação]]></description>
+          <actionConfig>
+            <javaCall className="com.ssa.custom.AcoesFrangoVivo" entityName="ProgramPegaFrangovivo" refreshType="ALL" txManual="false" />
+            <params>
+              <promptParam label="Dt. Início Descarte" name="DTDESCARTEINI" required="true" saveLast="false" paramType="DT" />
+              <promptParam label="Dt. Fim Descarte" name="DTDESCARTEFIN" required="true" saveLast="false" precision="" paramType="DT" />
+            </params>
+          </actionConfig>
+          <moduleName><![CDATA[Ações Frango vivo]]></moduleName>
+          <moduleResourceID><![CDATA[com.ssa.custom]]></moduleResourceID>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Cancelar Programação]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_PFV_CANCELAPROG_SF" refreshType="SEL" txManual="false" rootEntity="ProgramPegaFrangovivo" />
+            <params>
+              <promptParam label="Motivo do Cancelamento" name="MOTIVO" required="false" saveLast="false" paramType="S" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_PFV_CANCELAPROG_SF" (p_codusu    Number,
+																																																								p_idsessao  Varchar2,
+																																																								p_qtdlinhas Number,
+																																																								p_mensagem  Out Varchar2) As
+		v_Motivo Varchar2(4000);
+		pfv      ad_tsfpfv2%Rowtype;
+		cab      tgfcab%Rowtype;
+
+Begin
+
+		/* 
+  * Dt. Criação: 20/12/2018
+  * Autor: M. Rangel
+  * Processo: Programação Frango Vivo
+  * Objetivo: Cancelar as programações geradas automaticamente pelo sistema
+  */
+
+		v_motivo := act_txt_param(p_idsessao, 'MOTIVO');
+
+		For i In 1 .. p_qtdlinhas
+		Loop
+		
+				pfv.nupfv := act_int_field(p_idsessao, i, 'NUPFV');
+		
+				Select * Into pfv From ad_tsfpfv2 Where nupfv = pfv.nupfv;
+		
+				-- IMPLEMENTAR    
+				-- se tem nota gerada
+				If pfv.nunota Is Not Null Then
+						p_mensagem := 'Nota confirmada, programação não pode ser cancelada!';
+										Return;
+				End If;
+		
+				Begin
+				
+						Insert Into ad_tsfcpfv
+								Select p.nupfv,
+															p.codune,
+															p.nucleo,
+															p.sexo,
+															p.codcid,
+															p.distancia,
+															p.dtmarek,
+															p.dtbouba,
+															p.dtgumboro,
+															p.dtagend,
+															p.qtdneg,
+															p.status,
+															p.codparc,
+															p.codprod,
+															p.tecnico,
+															p.pegador,
+															p.dtdescarte,
+															p.horapega,
+															p.numtfv,
+															p.dhpega,
+															p.qtdpega,
+															p.dhalter,
+															p.codusu,
+															p.numlfv,
+															p.prioridade,
+															p.codveiculo,
+															p.codparctransp,
+															p.codmotorista,
+															p.qtdnegalt,
+															p.qtdvolalt,
+															p.statusvei,
+															p.nunota,
+															p.origpinto,
+															p.qtdmortes,
+															Sysdate,
+															p_codusu,
+															v_Motivo
+										From ad_tsfpfv2 p
+									Where p.nupfv = pfv.nupfv;
+				
+						Delete From ad_tsfpfv2 p Where p.nupfv = pfv.nupfv;
+				
+						Begin
+								Select * Into cab From tgfcab Where nunota = pfv.nunota;
+								If cab.statusnota != 'L' Then
+										Delete From tgfcab Where nunota = pfv.nunota;
+								Else
+										Rollback;
+										p_mensagem := 'Nota confirmada, programação não pode ser cancelada!';
+										Return;
+								End If;
+						Exception
+								When no_data_found Then
+										Null;
+						End;
+				
+						p_Mensagem := 'Cancelamento Frango Vivo - ' || v_Motivo;
+				
+				Exception
+						When Others Then
+								p_mensagem := 'Erro ao cancelar a programação. Erro: ' || Sqlerrm;
+								Return;
+				End;
+		
+		End Loop;
+
+		p_mensagem := 'Lançamentos cancelados com sucesso!!!';
+
+End;]]></storedProcedure>
+        </action>
+        <action type="RJ">
+          <description><![CDATA[Atualizar Laudos]]></description>
+          <actionConfig>
+            <javaCall className="com.ssa.custom.BuscaLaudoFrango" entityName="ProgramPegaFrangovivo" refreshType="SEL" txManual="false" />
+          </actionConfig>
+          <moduleName><![CDATA[Ações Frango vivo]]></moduleName>
+          <moduleResourceID><![CDATA[com.ssa.custom]]></moduleResourceID>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Gerar Nota de Transporte]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_PFV2_GERAPEDTRANSP_SF" refreshType="SEL" txManual="false" rootEntity="ProgramPegaFrangovivo" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_PFV2_GERAPEDTRANSP_SF" (p_codusu    Number,
+																																																											p_idsessao  Varchar2,
+																																																											p_qtdlinhas Number,
+																																																											p_mensagem  Out Varchar2) As
+
+		pfv            ad_tsfpfv2%Rowtype;
+		cab            tgfcab%Rowtype;
+		v_Nutab        Number;
+		v_VlrUnit      Float;
+		v_Nunotas      Varchar2(400);
+		v_GeraOrdCarga Varchar2(1) := 'S';
+		erro_confirma Exception;
+		Pragma Exception_Init(erro_confirma, -20101);
+
+Begin
+		/* Autor: Marcus Rangel
+   * Processo: Programação Frango Vivo
+   * Objetivo: Gerar as notas no portal de vendas de acordo com a programação de coleta do frango vivo.
+  */
+
+		ad_pkg_pfv.v_GeraPedido := True;
+
+		For i In 1 .. p_qtdlinhas
+		Loop
+				pfv.nupfv := act_int_field(p_idsessao, i, 'NUPFV');
+		
+				Select * Into pfv From ad_tsfpfv2 Where nupfv = pfv.nupfv;
+		
+				If pfv.numlfv Is Null Then
+				
+						If act_escolher_simnao(P_TITULO => 'Geração de notas de transportes',
+																													P_TEXTO => 'As datas de vacinação não foram preenchidas, deseja gerar os documentos assim mesmmo?',
+																													P_CHAVE => p_idsessao, P_SEQUENCIA => 1) = 'S' Then
+								Null;
+						Else
+								Return;
+						End If;
+				
+				End If;
+		
+				If pfv.status = 'P' Then
+						p_mensagem := 'Verifique os agendamentos pois o status da pega ainda está como "Pendente" e precisa ser "Agendado"';
+						Return;
+				End If;
+		
+				/* bloco comentado, pois já é realizado incodicionalmente por trigger
+    --Begin*/
+				v_geraordCarga := act_escolher_simnao(p_titulo => 'Geração de Ordem de Carga',
+																																										p_texto => 'Deseja gerar Ordem de Carga para a(s) nota(s) que será(ão) gerada(s)?',
+																																										p_chave => P_IDSESSAO, p_sequencia => 2);
+				/* Exception
+      When erro_confirma Then
+        v_GeraOrdCarga := 'S';
+    End;*/
+		
+				/* Retorna se status diferente de Programado ou se Nunota preenchido */
+				If Nvl(pfv.statusvei, 'N') = 'N' Then
+						p_mensagem := 'Lançamentos sem status não podem ser faturados';
+						Return;
+				End If;
+		
+				If pfv.nunota Is Not Null Then
+						p_mensagem := 'Pedido/Nota já gerado! Nro Único: ' || pfv.nunota;
+						Return;
+				End If;
+		
+				/* Valida se os campos foram informados corretamente */
+				If Nvl(pfv.codparctransp, 0) = 0 Or Nvl(pfv.codparc, 0) = 0 Or Nvl(pfv.codprod, 0) = 0 Or
+							Nvl(pfv.codveiculo, 0) = 0 Then
+						p_mensagem := 'Verifique se o código dos parceiros/veículos foram informados corretamente.';
+						Return;
+				End If;
+		
+				/*Busca os valores na central de parametros*/
+				Begin
+						Select e.codemp,
+													u.codcencus,
+													n.codnat,
+													t.codtipoper,
+													v.codtipvenda
+								Into cab.codemp,
+													cab.codcencus,
+													cab.codnat,
+													cab.codtipoper,
+													cab.codtipvenda
+								From ad_centparam c
+								Join ad_centparamemp e
+										On c.nupar = e.nupar
+								Join ad_centparamcus u
+										On c.nupar = u.nupar
+								Join ad_centparamnat n
+										On c.nupar = n.nupar
+								Join ad_centparamtop t
+										On c.nupar = t.nupar
+								Join ad_centparamtpv v
+										On c.nupar = v.nupar
+							Where c.nupar = 7;
+				Exception
+						When Others Then
+								p_mensagem := 'Erro ao consutar os parâmetros na Central de Parâmetros, regra 7. Verifique se a mesma existe.';
+								Return;
+				End;
+		
+				cab.codparc       := pfv.codparc;
+				cab.codveiculo    := pfv.codveiculo;
+				cab.codparctransp := pfv.codparctransp;
+				cab.codmotorista  := pfv.codmotorista;
+		
+				-- valida cr nat proj
+				Begin
+						ad_stp_valida_natcrproj_sf(p_codemp => cab.codemp, p_Codtipoper => cab.codtipoper,
+																																	p_codnat => cab.codnat, p_codcencus => cab.codcencus, p_codproj => 0,
+																																	p_tipoSaida => 0, p_errmsg => p_mensagem);
+				
+						If p_mensagem Is Not Null Then
+								Return;
+						End If;
+				
+				End;
+		
+				-- valida distância entre parceiros, necessária para o cálculo do frete
+				Begin
+						If Nvl(pfv.distancia, 0) = 0 Then
+								pfv.distancia := ad_pkg_fre.Distancia_entre_parceiros(38, pfv.codparc);
+								If Nvl(pfv.distancia, 0) = 0 Then
+										p_mensagem := 'Não foi encontrada a distância entre os parceiros, favor atualize o cadastro para continuarmos.';
+										Return;
+								End If;
+						End If;
+				End;
+		
+				/*insere o cabeçalho da nota*/
+				ad_set.ins_pedidocab(p_codemp => cab.codemp, p_codparc => cab.codparc, p_codvend => 0,
+																									p_codtipoper => cab.codtipoper, p_codtipvenda => cab.codtipvenda,
+																									p_dtneg => trunc(sysdate), p_vlrnota => 0, p_codnat => cab.codnat,
+																									p_codcencus => cab.codcencus, p_codproj => 0, p_obs => Null, p_nunota => cab.nunota);
+		
+				/*Busca a tabela de preços*/
+				Select e.codtabfrangovivo Into v_Nutab From ad_tsfelt e Where e.nuelt = 1;
+		
+				/*Busca o valor*/
+				stp_obtem_preco2(p_nutab => v_nutab, p_codprod => pfv.codprod, p_dtvigor => Trunc(Sysdate),
+																					p_preco => v_VlrUnit);
+		
+				/*Insere o produto na nota*/
+				ad_set.ins_pedidoitens(p_nunota => cab.nunota, p_codprod => pfv.codprod, p_qtdneg => pfv.qtdneg,
+																											p_vlrunit => v_vlrunit, p_vlrtotal => pfv.qtdneg * v_vlrunit,
+																											p_mensagem => p_mensagem);
+				If p_mensagem Is Not Null Then
+						Return;
+				End If;
+		
+				/* Busca a ordem de carga e o veiculo 
+    Bloco comentado pelo fato de que já existe esse método
+    que gera a ordem de carga incondicionalmente, código incluído
+    no objeto TRG_UPD_TGFCAB_SF, linha 172*/
+		
+				Begin
+				
+						If v_geraOrdCarga = 'S' Then
+						
+								stp_keygen_tgfnum(p_arquivo => 'TGFORD', p_codemp => cab.codemp, p_tabela => 'TGFORD',
+																										p_campo => 'ORDEMCARGA', p_dsync => 0, p_ultcod => cab.ordemcarga);
+						
+								Begin
+										Insert Into tgford
+												(codemp, ordemcarga, dtinic, codparcorig, codparctransp, codveiculo, situacao, codreg, ROTEIRO,
+													ad_tipofrete, tipcalcfrete)
+										Values
+												(cab.codemp, cab.ordemcarga, Sysdate, 38, cab.codparc, cab.codveiculo, 'A', 1010101,
+													'Frete Frango Vivo', 'CIF', 1);
+								Exception
+										When Others Then
+												p_mensagem := 'Erro ao Inserir a Ordem de carga. ' || Sqlerrm;
+												Return;
+								End;
+						
+						Else
+								Null;
+						End If;
+				End;
+		
+				/*Atualiza os campo especificos do processo na nota*/
+				Begin
+				
+						-- busca a sequencia de carga
+						Select Count(*) + 1
+								Into cab.seqcarga
+								From tgfcab c
+							Where dtneg = cab.dtneg
+									And codparc = cab.codparc
+									And codtipoper = cab.codtipoper
+									And nunota != cab.nunota;
+				
+						cab.vlrfrete := ad_pkg_fre.get_vlrfrete_formula(cab.nunota, cab.codemp, cab.codparc, cab.OrdemCarga,
+																																																						cab.codveiculo);
+				
+						Update tgfcab c
+									Set c.serienota = 5,
+													c.ad_dtmarek = pfv.dtmarek,
+													c.ad_dtbouba = pfv.dtbouba,
+													c.ad_dtgumboro = pfv.dtgumboro,
+													c.ad_origpto = pfv.origpinto,
+													c.codparctransp = cab.codparctransp,
+													c.codveiculo = cab.codveiculo,
+													c.codmotorista = cab.codmotorista,
+													c.Cif_Fob = 'C',
+													c.observacao = 'Gerado a partir da programação nro ' || pfv.nupfv,
+													c.codusuinc = p_codusu,
+													c.dtfatur = trunc(sysdate), --Trunc(pfv.dtdescarte)/*pfv.dtagend  + 1*/,
+													c.dtentsai = trunc(sysdate),--Trunc(pfv.dtdescarte),
+													c.vlrfrete = cab.vlrfrete,
+													c.ordemcarga = cab.ordemcarga,
+													c.seqcarga = pfv.seqabate,
+													c.dtval = Trunc(pfv.dtdescarte) + 3,
+													c.tipfrete = 'N'
+							Where nunota = cab.nunota;
+				
+				Exception
+						When Others Then
+								p_mensagem := 'Erro ao atualizar dados no cabeçalho da nota.<br>' || Sqlerrm;
+								Return;
+				End;
+		
+				Begin
+						Insert Into ad_tblcmf
+								(nometaborig, nuchaveorig, nometabdest, nuchavedest)
+						Values
+								('AD_TSFAFV', pfv.nupfv, 'TGFCAB', cab.nunota);
+				Exception
+						When Others Then
+								Null;
+				End;
+		
+				Begin
+						Update ad_tsfpfv2 Set nunota = cab.nunota Where nupfv = pfv.nupfv;
+				Exception
+						When Others Then
+								p_mensagem := 'Erro ao atualizar o número único no agendamento. <br>' || Sqlerrm;
+								Return;
+				End;
+		
+		End Loop i;
+
+		If p_qtdlinhas = 1 Then
+				p_mensagem := 'Nota de Trasnporte Nro Único <a title="Abrir Tela" target="_parent" href="' ||
+																		ad_fnc_urlskw(p_tabela => 'TGFCAB', p_nuchave => cab.nunota, p_nomedet => Null,
+																																p_iditem => Null) || '"><b><span style="color:blue">' || cab.nunota ||
+																		'</span>' || '</b></a> gerada com sucesso.';
+		Elsif p_qtdlinhas > 1 Then
+				p_mensagem := 'Foram geradas as seguintes notas de transporte: ' || v_nunotas;
+		End If;
+
+End;]]></storedProcedure>
+        </action>
+        <action type="LC">
+          <description><![CDATA[Visualizar Nota Gerada]]></description>
+          <actionConfig>
+            <laucher resourceID="br.com.sankhya.com.mov.CentralNotas" />
+            <params>
+              <param localField="NUNOTA" targetField="NUNOTA" />
+            </params>
+          </actionConfig>
+        </action>
+      </actions>
+    </instance>
+    <instance name="TSFLFV">
+      <instanceDescription><![CDATA[Laudos Frango Vivo]]></instanceDescription>
+      <tableInfo name="AD_TSFLFV" sequenceType="A" sequenceField="NUMLFV">
+        <category><![CDATA[Frango Vivo]]></category>
+        <telaDescription><![CDATA[/*Autor: M. Rangel*/
+Tela que exibe as inforações já tratadas dos laudos.]]></telaDescription>
+        <tableDescription><![CDATA[Laudos Frango Vivo]]></tableDescription>
+        <primaryKey>
+          <NUMLFV />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="NUMLFV" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[NUMLFV]]></description>
+        </field>
+        <field name="CODPARC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Parceiro]]></description>
+        </field>
+        <field name="CODPROD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Código]]></description>
+        </field>
+        <field name="QTDAVES" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Qtd. Aves]]></description>
+        </field>
+        <field name="DESCRABREVAVE" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Descr. Abrev. Ave]]></description>
+        </field>
+        <field name="DTALOJAMENTO" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Alojamento]]></description>
+        </field>
+        <field name="QTDMORTES" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Qtd. Mortes]]></description>
+        </field>
+        <field name="PESOFINAL" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Peso Final]]></description>
+        </field>
+        <field name="RISCO" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Risco]]></description>
+        </field>
+        <field name="DERMATOSE" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dermatose]]></description>
+        </field>
+        <field name="AEROSACULITE" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Aerosacullite]]></description>
+        </field>
+        <field name="CALO" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Calo]]></description>
+        </field>
+        <field name="IRRITACAO" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Irritação]]></description>
+        </field>
+        <field name="DTABATE" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Abate]]></description>
+        </field>
+        <field name="DHPEGA" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Pega]]></description>
+        </field>
+        <field name="DHRACAO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Ração]]></description>
+        </field>
+        <field name="OBS" systemField="N" dataType="S" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Observações]]></description>
+        </field>
+        <field name="OBSMEDICAMENTO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Obs. Medicação]]></description>
+        </field>
+        <field name="OBSCARENCIA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Obs. Carência]]></description>
+        </field>
+        <field name="DTSUSPMED" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Suspensão Medicamento]]></description>
+        </field>
+        <field name="GTA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[GTA]]></description>
+        </field>
+        <field name="NUMLOTE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nro Lote]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Parceiro" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPAR" />
+          <fields>
+            <field localName="CODPARC" targetName="CODPARC" />
+          </fields>
+        </relation>
+        <relation entityName="Produto" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPRO" />
+          <fields>
+            <field localName="CODPROD" targetName="CODPROD" />
+          </fields>
+        </relation>
+      </relationShip>
+      <actions>
+        <action type="RJ">
+          <description><![CDATA[Atualizar Laudos]]></description>
+          <actionConfig>
+            <javaCall className="com.ssa.custom.BuscaLaudoFrango" entityName="TSFLFV" refreshType="ALL" txManual="false" />
+          </actionConfig>
+          <moduleName><![CDATA[Ações Frango vivo]]></moduleName>
+          <moduleResourceID><![CDATA[com.ssa.custom]]></moduleResourceID>
+        </action>
+      </actions>
+    </instance>
+  </instances>
+</metadata>
+

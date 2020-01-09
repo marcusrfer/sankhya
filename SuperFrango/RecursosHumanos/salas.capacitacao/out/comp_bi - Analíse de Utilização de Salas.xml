@@ -1,0 +1,61 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="dtref" description="Dt. Referência" metadata="date" required="true" keep-last="false" keep-date="false" order="0"/>
+  </prompt-parameters>
+  <local-vars>
+    <var id="qtd_dias">
+      <expression type="sql" data-source="MGEDS"><![CDATA[Select Count(*) From Table(Func_Dias_Uteis_Mmac(Add_Months(Last_Day(:dtref), -1) + 1, Last_Day(:dtref), 1, Null))]]></expression>
+    </var>
+    <var id="mes">
+      <expression type="sql" data-source="MGEDS"><![CDATA[Select to_char(:dtref, 'MM/YYYY') from dual]]></expression>
+    </var>
+  </local-vars>
+  <level id="lvl_20v6ew" description="Principal">
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_20v6ex" type="column" tamTexto="18" nroColuna="6">
+            <title><![CDATA[<h2 style="font-size:24px">Porcentagem de reservas de Sala x Dia útil</h2><br><p>Referência: $mes - com $qtd_dias dias úteis</p>]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select s.Codsala,     initcap( Substr(p.Nomesala, Instr(p.Nomesala, '-') + 2, Length(p.Nomesala)) ) As nomesala,       Count(*) qtd_reservas,	Case         When (Select Count(*)                 From Table(Func_Dias_Uteis_Mmac(Add_Months(Last_Day(:dtref), -1) + 1, Last_Day(:dtref), 1, Null))) > 0 Then          (Select Count(*)             From Table(Func_Dias_Uteis_Mmac(Add_Months(Last_Day(:dtref), -1) + 1, Last_Day(:dtref), 1, Null)))         Else          0       End As qtd_dias  From Ad_tsfssca s  Join Ad_Prhsalas p    On s.Codsala = p.Codsala   And ad_pkg_ssc.get_vlr_parametro('NUPRH') = 1 Where status In ('A')   And dtreserva between Add_Months(Last_Day(:dtref), -1) + 1 and Last_Day(:dtref) Group By s.codsala, p.Nomesala]]></expression>
+            <metadata>
+              <field name="CODSALA" label="Cód. Sala" type="I" visible="true" useFooter="false"/>
+              <field name="NOMESALA" label="Sala" type="S" visible="true" useFooter="false"/>
+              <field name="QTD_RESERVAS" label="Qtd Reservas" type="I" visible="true" useFooter="false"/>
+              <field name="QTD_DIAS" label="Qtd Dias" type="I" visible="true" useFooter="false"/>
+              <field name="perc" label="Percentual" type="F" visible="true" useFooter="false" mask="###0">
+                <calculated>
+                  <formula><![CDATA[($QTD_RESERVAS / $QTD_DIAS) * 100]]></formula>
+                </calculated>
+              </field>
+            </metadata>
+            <horizontal-axis>
+              <category field="CODSALA" rotation="0" dropLabel="false">
+                <initView value="first"/>
+              </category>
+            </horizontal-axis>
+            <vertical-axis>
+              <linear resultRotation="-90" vResizing="true">
+                <mask/>
+                <showStackLabels/>
+                <title>%</title>
+              </linear>
+            </vertical-axis>
+            <series>
+              <serie type="column">
+                <xField>$NOMESALA</xField>
+                <yField>$perc</yField>
+                <display><![CDATA[%]]></display>
+              </serie>
+              <serie type="column">
+                <xField>$NOMESALA</xField>
+                <yField>$QTD_RESERVAS</yField>
+                <display><![CDATA[Qtd]]></display>
+              </serie>
+            </series>
+            <legend position="top" direction="v"/>
+          </chart>
+        </container>
+      </container>
+    </container>
+  </level>
+</gadget>

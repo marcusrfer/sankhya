@@ -1,0 +1,22 @@
+body{
+  font-family: 'Helvetica Neue', Helvetica, Arial;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #3b3b3b;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+}
+
+.table{
+  width: 100%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  display: table;
+  @media screen and (max-width: 580px);
+}
+
+.header{
+   font-weight: 900;
+   color: #ffffff;
+   background: #ea6153;
+}

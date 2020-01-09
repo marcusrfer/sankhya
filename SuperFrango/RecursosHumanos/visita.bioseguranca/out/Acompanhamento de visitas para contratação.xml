@@ -1,0 +1,90 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="data" description="Período" metadata="datePeriod" required="false" keep-last="false" keep-date="false" order="0"/>
+    <parameter id="nome" description="Nome Visitado" metadata="text" required="false" keep-last="false" keep-date="false" order="1"/>
+  </prompt-parameters>
+  <level id="lvl_ip9id0" description="Principal">
+    <container orientacao="H" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_iwq1tv" useNewGrid="S">
+            <title><![CDATA[Visitas Realizadas]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[with pontuacao as (select pes.codpesquisa, sum(l.peso) peso    from ad_tsfpes pes    join ad_tsfpesp p      on p.codquest = pes.codquest    left join ad_tsfpesr r      on r.codpesquisa = pes.codpesquisa     and r.codquest = pes.codquest     and r.codperg = p.codperg    left join ad_tsfpesl l      on l.codquest = pes.codquest     and l.codperg = p.codperg     and l.valor = dbms_lob.substr(r.resposta, length(r.resposta), 1)   where pes.status = 'F'   group by pes.codpesquisa)select t.nomevisitado, t.dhprevis, t.dhvisita,       ad_get.opcoescampo(t.status, 'STATUS', 'AD_TSFAVS') as status,	  ad_get.opcoescampo(t.reagend, 'REAGEND', 'AD_TSFAVS') as reagendado,       initcap(app.nomeusu) entrevistador, t.codquest, t.codpesquisa, t.coduni, l.lodesclot,	  ad_get.opcoescampo(t.resultvis,'RESULTVIS','AD_TSFAVS') as resultado,	case        when status ='prog' then '#D8D8D8'	  when status ='conc' and resultvis = 'A' then '#58ACFA'	  when status = 'conc' and resultvis = 'R' then '#DA81F5' 	  when status ='conf' and resultvis is null then '#A4A4A4'	  when status ='conf' and resultvis = 'L' then '#F78181'		end BKCOLOR  from ad_tsfavs t  left join pontuacao p    on p.codpesquisa = t.codpesquisa  left join ad_appssapesquisa app    on app.codusuapp = t.codusuapp  left join fpwpower.lotacoes l     on l.locodlot = t.coduni     and l.locodemp = t.codemp where 1 = 1   and t.tipovisita = 'C'   and (t.dhvisita between :data.ini and :data.fin    or t.nomevisitado like '%'||upper(:nome)||'%' )]]></expression>
+            <metadata>
+              <field name="NOMEVISITADO" label="Candidato" type="S" visible="true" useFooter="false"/>
+              <field name="DHPREVIS" label="Dh. Prev. Visita" type="D" visible="true" useFooter="false"/>
+              <field name="DHVISITA" label="Dh. Visita" type="D" visible="true" useFooter="false"/>
+              <field name="STATUS" label="Situação" type="S" visible="true" useFooter="false"/>
+              <field name="REAGENDADO" label="Reagendada" type="S" visible="true" useFooter="false"/>
+              <field name="ENTREVISTADOR" label="Executante" type="S" visible="true" useFooter="false"/>
+              <field name="CODQUEST" label="CODQUEST" type="I" visible="false" useFooter="false"/>
+              <field name="CODPESQUISA" label="Cód. Pesquisa" type="I" visible="true" useFooter="false"/>
+              <field name="CODUNI" label="Cód. Unidade" type="I" visible="true" useFooter="false"/>
+              <field name="LODESCLOT" label="Lotação" type="S" visible="true" useFooter="false"/>
+              <field name="RESULTADO" label="Resultado" type="S" visible="true" useFooter="false"/>
+              <field name="BKCOLOR" label="BKCOLOR" type="S" visible="true" useFooter="false"/>
+            </metadata>
+            <refresh-details ui-list="grd_iwq1ty">
+              <param id="codpesquisa">$CODPESQUISA</param>
+            </refresh-details>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_iwq1ut" type="donut">
+            <title><![CDATA[Índice de Aprovação/Reprovação de Pesquisas]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select resultado as tipo, count(*) qtd  from (        select t.nomevisitado, t.dhprevis, t.dhvisita, reagend,               ad_get.opcoescampo(t.resultvis, 'RESULTVIS', 'AD_TSFAVS') resultado,               ad_get.opcoescampo(t.status, 'STATUS', 'AD_TSFAVS') status          from ad_tsfavs t         where 1 = 1           and t.tipovisita = 'C'           and t.status = 'conc'           and (t.dhvisita between :data.ini and :data.fin or               upper(t.nomevisitado) like '%' || upper(:nome) || '%'))         group by resultado]]></expression>
+            <metadata>
+              <field name="TIPO" label="TIPO" type="S" visible="true" useFooter="false"/>
+              <field name="QTD" label="Qtd" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <series>
+              <serie type="donut">
+                <field>$QTD</field>
+                <nameField>$TIPO</nameField>
+                <tipoDonut>completo</tipoDonut>
+              </serie>
+            </series>
+          </chart>
+        </container>
+      </container>
+      <container orientacao="V" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_iwq1ty" useNewGrid="S">
+            <args>
+              <arg id="codpesquisa" type="integer"/>
+            </args>
+            <title><![CDATA[Resposta da Entrevista :codpesquisa]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select pes.codpesquisa, q.descrquest, pes.dhrealizacao,        ad_get.opcoescampo(pes.status, 'STATUS', 'AD_TSFPES') status,  p.codperg, p.pergunta,       dbms_lob.substr(r.resposta, 4000, 1) respostas,	dbms_lob.substr(r.obs, 4000, 1) obs  from ad_tsfpes pes  join ad_tsfpesq q    on q.codquest = pes.codquest  join ad_tsfpesp p    on p.codquest = q.codquest  left join ad_tsfpesr r    on r.codpesquisa = pes.codpesquisa   and r.codquest = q.codquest   and r.codperg = p.codperg where pes.codpesquisa = :codpesquisa order by pes.codpesquisa, p.codperg]]></expression>
+            <metadata>
+              <field name="CODPESQUISA" label="CODPESQUISA" type="I" visible="false" useFooter="false"/>
+              <field name="DESCRQUEST" label="DESCRQUEST" type="S" visible="false" useFooter="false"/>
+              <field name="DHREALIZACAO" label="DHREALIZACAO" type="D" visible="false" useFooter="false"/>
+              <field name="STATUS" label="Situação da Pesquisa" type="S" visible="true" useFooter="false"/>
+              <field name="CODPERG" label="CODPERG" type="I" visible="false" useFooter="false"/>
+              <field name="PERGUNTA" label="Pergunta" type="S" visible="true" useFooter="false"/>
+              <field name="RESPOSTAS" label="Resposta" type="S" visible="true" useFooter="false"/>
+              <field name="OBS" label="Obs." type="S" visible="true" useFooter="false"/>
+            </metadata>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_8qnmm5" type="donut">
+            <title><![CDATA[Pesquisas por Status]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select status, count(*) qtd  from (with pontuacao as (select pes.codpesquisa, sum(l.peso) peso                             from ad_tsfpes pes                             join ad_tsfpesp p                               on p.codquest = pes.codquest                             left join ad_tsfpesr r                               on r.codpesquisa = pes.codpesquisa                              and r.codquest = pes.codquest                              and r.codperg = p.codperg                             left join ad_tsfpesl l                               on l.codquest = pes.codquest                              and l.codperg = p.codperg                              and l.valor = dbms_lob.substr(r.resposta, length(r.resposta), 1)                            where pes.status = 'F'                            group by pes.codpesquisa)        select t.nomevisitado, t.dhprevis, t.dhvisita, reagend,               ad_get.opcoescampo(t.status, 'STATUS', 'AD_TSFAVS') status,               initcap(app.nomeusu) entrevistador, t.codquest, t.codpesquisa, p.peso          from ad_tsfavs t          left join pontuacao p            on p.codpesquisa = t.codpesquisa          left join ad_appssapesquisa app            on app.codusuapp = t.codusuapp         where 1 = 1           and t.tipovisita = 'C'           And (t.dhvisita between :data.ini and :data.fin  		or upper(t.nomevisitado) like '%'||upper(:nome)||'%')		)         group by status]]></expression>
+            <metadata>
+              <field name="STATUS" label="STATUS" type="S" visible="true" useFooter="false"/>
+              <field name="QTD" label="QTD" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <series>
+              <serie type="donut">
+                <field>QTD</field>
+                <nameField>STATUS</nameField>
+                <tipoDonut>completo</tipoDonut>
+              </serie>
+            </series>
+          </chart>
+        </container>
+      </container>
+    </container>
+  </level>
+</gadget>

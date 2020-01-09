@@ -1,0 +1,98 @@
+<gadget>
+  <level id="lvl_e37uyb" description="Principal">
+    <container orientacao="H" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_e37uyc" entityName="AD_TSFAAD" multiplaSelecao="S" useNewGrid="S">
+            <title><![CDATA[Visitas este mês]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select 1 as id, codemp, empresa, matfunc, nomefunc, codlot, descrlot, descrcargo, cidade, uf, dtultvis, prox_visita from ad_vw_vismanut v where dias_prox_visita between 0 and 31  order by prox_visita, matfunc]]></expression>
+            <metadata>
+              <field name="ID" label="ID" type="I" visible="false" useFooter="false"/>
+              <field name="CODEMP" label="CódEmp." type="I" visible="true" useFooter="false"/>
+              <field name="EMPRESA" label="Empresa" type="S" visible="true" useFooter="false"/>
+              <field name="MATFUNC" label="Matr." type="I" visible="true" useFooter="false"/>
+              <field name="NOMEFUNC" label="Nome" type="S" visible="true" useFooter="false"/>
+              <field name="CODLOT" label="CODLOT" type="I" visible="false" useFooter="false"/>
+              <field name="DESCRLOT" label="Lotação" type="S" visible="true" useFooter="false"/>
+              <field name="DESCRCARGO" label="Cargo" type="S" visible="true" useFooter="false"/>
+              <field name="CIDADE" label="Cidade" type="S" visible="true" useFooter="false"/>
+              <field name="UF" label="UF" type="S" visible="true" useFooter="false"/>
+              <field name="DTULTVIS" label="Dt. Últ. Visita" type="D" visible="true" useFooter="false"/>
+              <field name="PROX_VISITA" label="Próx. Visita" type="D" visible="true" useFooter="false"/>
+            </metadata>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_e37uyp" entityName="AD_TSFAAD" multiplaSelecao="S" useNewGrid="S">
+            <title><![CDATA[Visitas Vencidas a menos de 90 dias]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select 3 as id, v.* from ad_vw_vismanut v where dias_prox_visita between -90 and -1 order by nomefunc]]></expression>
+            <metadata>
+              <field name="ID" label="ID" type="F" visible="false" useFooter="false"/>
+              <field name="CODEMP" label="CódEmp." type="I" visible="true" useFooter="false"/>
+              <field name="EMPRESA" label="Empresa" type="S" visible="true" useFooter="false"/>
+              <field name="MATFUNC" label="Matr." type="I" visible="true" useFooter="false"/>
+              <field name="NOMEFUNC" label="Nome" type="S" visible="true" useFooter="false"/>
+              <field name="CODLOT" label="CODLOT" type="I" visible="false" useFooter="false"/>
+              <field name="DESCRLOT" label="Lotação" type="S" visible="true" useFooter="false"/>
+              <field name="CODCARGO" label="CAargo" type="I" visible="false" useFooter="false"/>
+              <field name="DESCRCARGO" label="Cargo" type="S" visible="true" useFooter="false"/>
+              <field name="CODCID" label="CODCID" type="I" visible="false" useFooter="false"/>
+              <field name="CIDADE" label="Cidade" type="S" visible="true" useFooter="false"/>
+              <field name="CODUF" label="CODUF" type="I" visible="false" useFooter="false"/>
+              <field name="UF" label="UF" type="S" visible="true" useFooter="false"/>
+              <field name="DTULTVIS" label="Dt.Últ. Visita" type="D" visible="true" useFooter="false"/>
+              <field name="PROX_VISITA" label="Dt. Visita" type="D" visible="true" useFooter="false"/>
+              <field name="DIAS_PROX_VISITA" label="Dias Atrasada" type="I" visible="true" useFooter="false"/>
+            </metadata>
+          </grid>
+        </container>
+      </container>
+      <container orientacao="V" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_e37uyi" entityName="AD_TSFAAD" multiplaSelecao="S" useNewGrid="S">
+            <title><![CDATA[Próximas Visitas ]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select 2 as id, codemp, empresa, matfunc, nomefunc, codlot, descrlot, descrcargo, cidade, uf, dtultvis, prox_visitafrom ad_vw_vismanut where dias_prox_visita > 31 order by nomefunc]]></expression>
+            <metadata>
+              <field name="ID" label="ID" type="F" visible="true" useFooter="false"/>
+              <field name="CODEMP" label="CódEmp." type="I" visible="true" useFooter="null"/>
+              <field name="EMPRESA" label="Empresa" type="S" visible="true" useFooter="false"/>
+              <field name="MATFUNC" label="Matr." type="I" visible="true" useFooter="false"/>
+              <field name="NOMEFUNC" label="Nome" type="S" visible="true" useFooter="false"/>
+              <field name="CODLOT" label="CODLOT" type="I" visible="false" useFooter="false"/>
+              <field name="DESCRLOT" label="Lotação" type="S" visible="true" useFooter="false"/>
+              <field name="DESCRCARGO" label="Cargo" type="S" visible="true" useFooter="false"/>
+              <field name="CIDADE" label="Cidade" type="S" visible="true" useFooter="false"/>
+              <field name="UF" label="UF" type="S" visible="true" useFooter="false"/>
+              <field name="DTULTVIS" label="Dt. Últ. Visita" type="D" visible="true" useFooter="false"/>
+              <field name="PROX_VISITA" label="Próx. Visita" type="D" visible="true" useFooter="false"/>
+            </metadata>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_e37uyw" entityName="AD_TSFAAD" useNewGrid="S">
+            <title><![CDATA[Visitas Vencidas a mais de 90 dias]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select 4 as id, v.* from ad_vw_vismanut v where dias_prox_visita < -90 order by nomefunc]]></expression>
+            <metadata>
+              <field name="ID" label="ID" type="F" visible="false" useFooter="false"/>
+              <field name="CODEMP" label="CódEmp." type="I" visible="true" useFooter="false"/>
+              <field name="EMPRESA" label="Empresa" type="S" visible="true" useFooter="false"/>
+              <field name="MATFUNC" label="Matr." type="I" visible="true" useFooter="false"/>
+              <field name="NOMEFUNC" label="Nome" type="S" visible="true" useFooter="false"/>
+              <field name="CODLOT" label="CODLOT" type="I" visible="false" useFooter="false"/>
+              <field name="DESCRLOT" label="Lotação" type="S" visible="true" useFooter="false"/>
+              <field name="CODCARGO" label="CODCARGO" type="I" visible="false" useFooter="false"/>
+              <field name="DESCRCARGO" label="Cargo" type="S" visible="true" useFooter="false"/>
+              <field name="CODCID" label="CODCID" type="I" visible="false" useFooter="false"/>
+              <field name="CIDADE" label="Cidade" type="S" visible="true" useFooter="false"/>
+              <field name="CODUF" label="CODUF" type="I" visible="false" useFooter="false"/>
+              <field name="UF" label="UF" type="S" visible="true" useFooter="false"/>
+              <field name="DTULTVIS" label="Dt. Últ. Visita" type="D" visible="true" useFooter="false"/>
+              <field name="PROX_VISITA" label="Próx. Visita" type="D" visible="true" useFooter="false"/>
+              <field name="DIAS_PROX_VISITA" label="Dias Atraso" type="I" visible="true" useFooter="false" mask="###0"/>
+            </metadata>
+          </grid>
+        </container>
+      </container>
+    </container>
+  </level>
+</gadget>

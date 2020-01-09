@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<metadata>
+  <exportInfo>
+    <exportTime>28/11/2019 09:46:26</exportTime>
+    <systemVersion>4.0b90</systemVersion>
+    <systemCharSet>ISO-8859-1</systemCharSet>
+    <dbMetadata>
+      <dbUser>SANKHYA</dbUser>
+      <urlConnection><![CDATA[jdbc:oracle:thin:@192.168.1.65:1521/orcl]]></urlConnection>
+      <jdbcDriver><![CDATA[Oracle JDBC driver 12.1.0.1.0]]></jdbcDriver>
+      <DBMS><![CDATA[Oracle - Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
+With the Partitioning, OLAP, Advanced Analytics and Real Application Testing options]]></DBMS>
+    </dbMetadata>
+  </exportInfo>
+  <menu description="Pesquisa" name="MENU_ADICIONAL_64D33DE62E184FBC6E81617EB8B29068">
+    <menu description="Pesquisas e Enquetes do RH" name="MENU_ADICIONAL_A3E48A2094B0A09337B858FDE214BAB5">
+      <properties>
+        <tipoLancador><![CDATA[TA]]></tipoLancador>
+        <resourceID><![CDATA[br.com.sankhya.menu.adicional.AD_TSFPES]]></resourceID>
+        <entityName><![CDATA[AD_TSFPES]]></entityName>
+        <contexto><![CDATA[mge]]></contexto>
+      </properties>
+    </menu>
+    <menu description="Cadastro de Questionários de Pesquisa" name="MENU_ADICIONAL_D2578BCBF622F8EDDDB72BA701A9E961">
+      <properties>
+        <tipoLancador><![CDATA[TA]]></tipoLancador>
+        <resourceID><![CDATA[br.com.sankhya.menu.adicional.AD_TSFPESQ]]></resourceID>
+        <entityName><![CDATA[AD_TSFPESQ]]></entityName>
+        <contexto><![CDATA[mge]]></contexto>
+      </properties>
+    </menu>
+  </menu>
+  <instances>
+    <instance name="AD_APPSSAPESQUISA">
+      <instanceDescription><![CDATA[Usuários APP Pesquisa]]></instanceDescription>
+      <tableInfo name="AD_APPSSAPESQUISA" sequenceType="A" sequenceField="CODUSUAPP" presentationField="NOMEUSU">
+        <category><![CDATA[Pesquisa]]></category>
+        <tableDescription><![CDATA[Usuários APP Pesquisa]]></tableDescription>
+        <primaryKey>
+          <CODUSUAPP />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODUSUAPP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Usuário APP]]></description>
+        </field>
+        <field name="NOMEUSU" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nome Completo]]></description>
+          <expression><![CDATA[return $valorCampo == null ? $valorCampo : $valorCampo.toUpperCase();]]></expression>
+        </field>
+        <field name="LOGIN" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Login]]></description>
+          <expression><![CDATA[return $valorCampo == null ? $valorCampo : $valorCampo.toUpperCase();]]></expression>
+        </field>
+        <field name="CODPARC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Parceiro]]></description>
+        </field>
+        <field name="SENHA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Senha]]></description>
+        </field>
+        <field name="ATIVO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Ativo]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="VERSAOAPP" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Versão Aplicativo]]></description>
+          <options>
+            <option value="1.0.0" default="S"><![CDATA[Versão 1.0.0]]></option>
+          </options>
+        </field>
+        <field name="TOKEN" systemField="N" dataType="S" presentationType="T" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Token Usuário Firebase]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="TOKENAPP" systemField="N" dataType="S" presentationType="T" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Token App Firebase]]></description>
+          <expression><![CDATA[return "AAAAIMnbMEE:APA91bEmCT-TWblG-4AJLGRbe3m-ITOx7yReIGgODpCSHDOB4gChZKQFWbsLSzurjx7Bt_HvAcl2aQn4n38TIzOo8yiXogcXkGMK77Nfaolq2ScbUDX8Nw_8ICqhpEAryh5UEhG3FF12";]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODGRUPO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Grupo Usuário]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Parceiro" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPAR" />
+          <fields>
+            <field localName="CODPARC" targetName="CODPARC" />
+          </fields>
+        </relation>
+        <relation entityName="GrupoUsuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIGRU" />
+          <fields>
+            <field localName="CODGRUPO" targetName="CODGRUPO" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="AD_TSFPESL">
+      <instanceDescription><![CDATA[Lista de Opções]]></instanceDescription>
+      <tableInfo name="AD_TSFPESL" sequenceType="M">
+        <category><![CDATA[Pesquisa]]></category>
+        <telaDescription><![CDATA[sub aba das perguntas no cadastro do questionario]]></telaDescription>
+        <tableDescription><![CDATA[Lista de Opções]]></tableDescription>
+        <primaryKey>
+          <CODQUEST />
+          <CODPERG />
+          <PROPRIEDADE />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="PROPRIEDADE" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Propriedade]]></description>
+        </field>
+        <field name="CODQUEST" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Questionário]]></description>
+        </field>
+        <field name="CODPERG" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Pergunta]]></description>
+        </field>
+        <field name="VALOR" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Valor]]></description>
+        </field>
+        <field name="PESO" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Peso/Nota]]></description>
+        </field>
+        <field name="ACAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Ação]]></description>
+        </field>
+      </fields>
+    </instance>
+    <instance name="AD_TSFPES">
+      <instanceDescription><![CDATA[Pesquisas SSA]]></instanceDescription>
+      <tableInfo name="AD_TSFPES" sequenceType="A" sequenceField="CODPESQUISA">
+        <category><![CDATA[Pesquisa]]></category>
+        <telaDescription><![CDATA[Tabela de pesquisa, elo entre pergunta, respostas e o processo de origem]]></telaDescription>
+        <tableDescription><![CDATA[Pesquisas SSA]]></tableDescription>
+        <primaryKey>
+          <CODPESQUISA />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODPESQUISA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Pesquisa]]></description>
+        </field>
+        <field name="CODQUEST" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Questionário]]></description>
+        </field>
+        <field name="DESCRPESQUISA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Descr. Pesquisa]]></description>
+        </field>
+        <field name="DHINC" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Inclusão]]></description>
+          <expression><![CDATA[if($valorCampo == null){
+return $ctx_dh_atual;
+}$valorCampo;]]></expression>
+        </field>
+        <field name="DHREALIZACAO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Realização]]></description>
+        </field>
+        <field name="STATUS" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Status]]></description>
+          <options>
+            <option value="P"><![CDATA[Pendente]]></option>
+            <option value="F"><![CDATA[Finalizada]]></option>
+            <option value="R" default="S"><![CDATA[Reagendado]]></option>
+          </options>
+        </field>
+        <field name="CODUSU" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Usuário]]></description>
+        </field>
+        <field name="NOMETAB" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nome Tabela Origem]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="VALORPK" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Valor PK Tab Origem]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSUAPP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Usuário APP]]></description>
+        </field>
+        <field name="DHALTER" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[dhalter]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NOMEALVO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nome Alvo Pesquisa]]></description>
+        </field>
+        <field name="OBSERVACAO" systemField="N" dataType="S" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Observação Pesquisa]]></description>
+        </field>
+        <field name="DADOS" systemField="N" dataType="S" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dados Pesquisa]]></description>
+        </field>
+        <field name="CODEND" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód.Endereço]]></description>
+        </field>
+        <field name="CODBAI" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Código do Bairro]]></description>
+        </field>
+        <field name="CODCID" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Cidade]]></description>
+        </field>
+        <field name="CODUF" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Unidade Federativa]]></description>
+        </field>
+        <field name="COMPL" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Complemento End.]]></description>
+        </field>
+        <field name="NUMOTIVO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Motivo não Realização]]></description>
+        </field>
+        <field name="DHREAGEND" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Reagendamento]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Endereco" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIEND" />
+          <fields>
+            <field localName="CODEND" targetName="CODEND" />
+          </fields>
+        </relation>
+        <relation entityName="Bairro" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIBAI" />
+          <fields>
+            <field localName="CODBAI" targetName="CODBAI" />
+          </fields>
+        </relation>
+        <relation entityName="Cidade" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICID" />
+          <fields>
+            <field localName="CODCID" targetName="CODCID" />
+          </fields>
+        </relation>
+        <relation entityName="UnidadeFederativa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUFS" />
+          <fields>
+            <field localName="CODUF" targetName="CODUF" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSU" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="AD_APPSSAPESQUISA" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_APPSSAPESQUISA" />
+          <fields>
+            <field localName="CODUSUAPP" targetName="CODUSUAPP" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFPESM" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFPESM" />
+          <expression><![CDATA[@form-filter[this.CODQUEST = form.CODQUEST]@ref-param[force-one-to-one=true]]]></expression>
+          <fields>
+            <field localName="NUMOTIVO" targetName="NUMOTIVO" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFPESQ" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFPESQ" />
+          <fields>
+            <field localName="CODQUEST" targetName="CODQUEST" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFPESR" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFPESR" />
+          <fields>
+            <field localName="CODPESQUISA" targetName="CODPESQUISA" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="AD_TSFPESM">
+      <instanceDescription><![CDATA[Motivos não realização]]></instanceDescription>
+      <tableInfo name="AD_TSFPESM" sequenceType="A" sequenceField="NUMOTIVO" presentationField="DESCRMOT">
+        <category><![CDATA[Pesquisa]]></category>
+        <telaDescription><![CDATA[Aba Motivos de não realização da rotina de cadastro de questionários de pesquisa]]></telaDescription>
+        <tableDescription><![CDATA[Motivos não Realização]]></tableDescription>
+        <primaryKey>
+          <CODQUEST />
+          <NUMOTIVO />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="NUMOTIVO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[numotivo]]></description>
+        </field>
+        <field name="CODQUEST" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Questionário]]></description>
+        </field>
+        <field name="DESCRMOT" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Descr. Motivo]]></description>
+        </field>
+        <field name="ABREVMOT" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Resumido]]></description>
+        </field>
+      </fields>
+    </instance>
+    <instance name="AD_TSFPESP">
+      <instanceDescription><![CDATA[Perguntas]]></instanceDescription>
+      <tableInfo name="AD_TSFPESP" sequenceType="A" sequenceField="CODPERG" presentationField="PERGUNTA">
+        <category><![CDATA[Pesquisa]]></category>
+        <telaDescription><![CDATA[Aba Perguntas do cadastro de questionário de pesquisasa]]></telaDescription>
+        <tableDescription><![CDATA[Perguntas]]></tableDescription>
+        <primaryKey>
+          <CODQUEST />
+          <CODPERG />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODQUEST" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Questionário]]></description>
+        </field>
+        <field name="CODPERG" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Pergunta]]></description>
+        </field>
+        <field name="PERGUNTA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Pergunta]]></description>
+        </field>
+        <field name="INSTRUCAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Instrução da pergunta / Tópico]]></description>
+        </field>
+        <field name="TIPRESP" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Tipo Resposta]]></description>
+          <options>
+            <option value="boolean"><![CDATA[Booleana]]></option>
+            <option value="inteiro"><![CDATA[Número Inteiro]]></option>
+            <option value="decimal"><![CDATA[Número Decimal]]></option>
+            <option value="texto"><![CDATA[Texto]]></option>
+            <option value="lista" default="S"><![CDATA[Lista de Opções]]></option>
+          </options>
+        </field>
+        <field name="EXIGEOBS" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Exige Observação]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="OBRIGATORIA" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Obrigatória]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="NOTAPESO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nota/Peso]]></description>
+        </field>
+        <field name="ORDEM" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Ordem de apresentação da Pergunta]]></description>
+        </field>
+        <field name="NATENTREVISTA" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Natureza Pergunta p/ Entrevista]]></description>
+          <options>
+            <option value="R"><![CDATA[Recursos Humanos - RH]]></option>
+            <option value="C"><![CDATA[Comercial]]></option>
+            <option value="G" default="S"><![CDATA[Geral]]></option>
+          </options>
+        </field>
+        <field name="EXECACAO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Executa Ação?]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="AD_TSFPESL" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFPESL" />
+          <fields>
+            <field localName="CODPERG" targetName="CODPERG" />
+            <field localName="CODQUEST" targetName="CODQUEST" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="AD_TSFPESQ">
+      <instanceDescription><![CDATA[Questionário Pesquisa]]></instanceDescription>
+      <tableInfo name="AD_TSFPESQ" sequenceType="A" sequenceField="CODQUEST" presentationField="DESCRQUEST">
+        <category><![CDATA[Pesquisa]]></category>
+        <telaDescription><![CDATA[Cadatro de Questionários]]></telaDescription>
+        <tableDescription><![CDATA[Questionário Pesquisa]]></tableDescription>
+        <primaryKey>
+          <CODQUEST />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODQUEST" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Questionário]]></description>
+        </field>
+        <field name="DESCRQUEST" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Descrição Questionário]]></description>
+        </field>
+        <field name="CODTIPPARC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Perfil]]></description>
+        </field>
+        <field name="NUINSTANCIA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="N" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Núm. da Instância]]></description>
+        </field>
+        <field name="CODGRUPO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="N" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Grupo Usu.]]></description>
+        </field>
+        <field name="ATIVO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Ativo]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="INSERTAPP" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Permite inclusão de pesquisa pelo App?]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="ENDPESQ" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Pesquisa requer endereço?]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="PerfilParceiro" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPPA" />
+          <expression><![CDATA[@ref-param[force-one-to-one=true]]]></expression>
+          <fields>
+            <field localName="CODTIPPARC" targetName="CODTIPPARC" />
+          </fields>
+        </relation>
+        <relation entityName="Perfil" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFTPP" />
+          <fields>
+            <field localName="CODTIPPARC" targetName="CODTIPPARC" />
+          </fields>
+        </relation>
+        <relation entityName="GrupoUsuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIGRU" />
+          <fields>
+            <field localName="CODGRUPO" targetName="CODGRUPO" />
+          </fields>
+        </relation>
+        <relation entityName="Instancia" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TDDINS" />
+          <fields>
+            <field localName="NUINSTANCIA" targetName="NUINSTANCIA" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFPESM" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFPESM" />
+          <fields>
+            <field localName="CODQUEST" targetName="CODQUEST" />
+          </fields>
+        </relation>
+        <relation entityName="AD_TSFPESP" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFPESP" />
+          <fields>
+            <field localName="CODQUEST" targetName="CODQUEST" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="AD_TSFPESR">
+      <instanceDescription><![CDATA[Respostas Pesquisas]]></instanceDescription>
+      <tableInfo name="AD_TSFPESR" sequenceType="A" sequenceField="NUSEQRESP">
+        <category><![CDATA[Pesquisa]]></category>
+        <tableDescription><![CDATA[Respostas Pesquisas]]></tableDescription>
+        <primaryKey>
+          <CODPESQUISA />
+          <NUSEQRESP />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODPESQUISA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Pesquisa]]></description>
+        </field>
+        <field name="NUSEQRESP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[nuseqresp]]></description>
+        </field>
+        <field name="CODQUEST" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Questionário]]></description>
+        </field>
+        <field name="CODPERG" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Pergunta]]></description>
+        </field>
+        <field name="TIPORESP" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Tipo Resposta]]></description>
+          <options>
+            <option value="T"><![CDATA[Texto]]></option>
+            <option value="I"><![CDATA[Inteiros]]></option>
+            <option value="D"><![CDATA[Decimais]]></option>
+            <option value="L" default="S"><![CDATA[Lista]]></option>
+          </options>
+        </field>
+        <field name="RESPOSTA" systemField="N" dataType="C" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Resposta]]></description>
+        </field>
+        <field name="OBS" systemField="N" dataType="C" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Observações]]></description>
+        </field>
+        <field name="ANEXO" systemField="N" dataType="B" presentationType="I" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Anexos]]></description>
+        </field>
+        <field name="CONVERTIDO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Imagem Convertida]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="AD_TSFPESP" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFPESP" />
+          <fields>
+            <field localName="CODPERG" targetName="CODPERG" />
+            <field localName="CODQUEST" targetName="CODQUEST" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+  </instances>
+</metadata>
+

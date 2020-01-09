@@ -101,7 +101,7 @@
                     //Consulta SNK
                     var arr = "";
                     var query = `
-                        select nvl1, nvl2, nvl3, nvl4, grau, numet, codlot, ideal, ativos, efetivos, afastados, faltas, vagas, dif
+                        select nvl1, nvl2, nvl3, nvl4, grau, numet, codlot, ideal, ativos, afastados, efetivos, faltas, vagas, dif
                         from table(ad_pkg_qdf.retorna_quadro)
                     `;
                     
@@ -130,8 +130,8 @@
                                     coluna1: descrlot,
                                     coluna2: Number(dados[k]["IDEAL"]),
                                     coluna3: Number(dados[k]["ATIVOS"]),
-                                    coluna4: Number(dados[k]["EFETIVOS"]), 
-                                    coluna5: Number(dados[k]["AFASTADOS"]),
+                                    coluna4: Number(dados[k]["AFASTADOS"]),
+                                    coluna5: Number(dados[k]["EFETIVOS"]),
                                     coluna6: Number(dados[k]["FALTAS"]),
                                     coluna7: Number(dados[k]["VAGAS"]),
                                     coluna8: Number(dados[k]["DIF"])

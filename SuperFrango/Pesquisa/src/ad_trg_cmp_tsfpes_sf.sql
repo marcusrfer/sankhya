@@ -30,7 +30,7 @@ create or replace trigger ad_trg_cmp_tsfpes_sf
       end if;
     
       -- se reagendada
-      if :old.status = 'P' and :new.status = 'R' then
+      if :old.status = 'P' and (:new.status = 'R' Or :new.dhreagend is Not null ) then
       
         -- se motivo não informado
         if nvl(:new.numotivo, 0) = 0 then

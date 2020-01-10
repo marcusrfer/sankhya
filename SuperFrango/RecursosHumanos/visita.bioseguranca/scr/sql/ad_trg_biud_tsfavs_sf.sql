@@ -26,8 +26,8 @@ begin
     raise_application_error(-20105, ad_fnc_formataerro(errmsg));
    end if;
   
-   -- exige matricula
-   if :new.matfunc is null then
+   -- se visita de manutenção vai exigir matricula
+   If :new.Tipovisita = 'M' And :new.matfunc is null then
     begin
      select fu.fumatfunc
        into v_matfunc

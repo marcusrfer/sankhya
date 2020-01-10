@@ -297,6 +297,7 @@ create or replace package body ad_pkg_avs is
           v.qtdreagend = nvl(v.qtdreagend, 0) + 1,
           v.numotivo   = p_numotivo,
           v.status     = 'prog',
+          v.codpesquisa = Null,
           v.dhalter    = sysdate,
           v.codusu     = stp_get_codusulogado
     where v.nuvisita = p_nuvisita;

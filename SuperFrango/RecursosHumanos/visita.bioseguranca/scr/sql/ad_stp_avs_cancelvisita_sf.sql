@@ -83,7 +83,19 @@ begin
     update ad_tsfavs a set a.status = 'canc' where a.nuvisita = vis.nuvisita;
   
     ad_pkg_avs.insere_historico(vis.nuvisita, 'Visita Cancelada, motivo: ' || p_motivocancel);
-  
+    
+    /* Implementação da alteração do status da pesquisa - M. Rangel - 10/01/2020 */
+    Begin
+      if vis.codpesquisa Is Not Null then
+         Update ad_tsfpes p
+          Set p.status = 'C'
+         Where p.codpesquisa = vis.codpesquisa;
+      end if; 
+      exception
+    	  when others then
+    		 p_mensagem := 'Erro ao atualizar o status da pesquisa! '||Sqlerrm;
+       Return;
+    end; 
   end loop;
 
   p_mensagem := 'Lançamento cancelado com sucesso!';

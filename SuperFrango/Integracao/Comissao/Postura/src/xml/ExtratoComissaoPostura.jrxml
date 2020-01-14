@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ExtratoComissaoPostura" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.3310000000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="java.text.*"/>
+	<parameter name="PK_CODCENCUS" class="java.math.BigDecimal">
+		<property name="nomeTabela" value="AD_TSFFCIINC"/>
+	</parameter>
+	<parameter name="PK_DTREF" class="java.sql.Timestamp">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Temp\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="EXIBENOTAS" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[Exibe Notas?]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+ r.codcencus, c.descrcencus,
+ r.codparc, ad_get.nome_parceiro(r.codparc,'fantasia') nomeparc,
+ r.dtref,
+ to_number(r.vlrcomfixa) vlrcomfixa,
+ to_number(r.vlrcomclist) vlrcomclist,
+ to_number(r.totcomfixa) totcomfixa,
+ to_number(r.pontuacao) pontuacao,
+ to_number(r.recbonus) recbonus,
+ to_number(r.totcomave) totcomave,
+ to_number(r.qtdovosinc) qtdovos,
+ to_number(r.percparticipovo) percparcticp,
+ to_number(r.qtdparticipovo) particip,
+ to_number(r.vlrunitcom) vlrunit,
+ to_number(r.vlrcom) vlrcom
+ from ad_tsffcpref r
+ join tsicus c on c.codcencus = r.codcencus
+Where r.codcencus = $P{PK_CODCENCUS}
+ And r.dtref = $P{PK_DTREF}]]>
+	</queryString>
+	<field name="CODCENCUS" class="java.math.BigDecimal"/>
+	<field name="DESCRCENCUS" class="java.lang.String"/>
+	<field name="CODPARC" class="java.math.BigDecimal"/>
+	<field name="NOMEPARC" class="java.lang.String"/>
+	<field name="DTREF" class="java.sql.Timestamp"/>
+	<field name="VLRCOMFIXA" class="java.math.BigDecimal"/>
+	<field name="VLRCOMCLIST" class="java.math.BigDecimal"/>
+	<field name="TOTCOMFIXA" class="java.math.BigDecimal"/>
+	<field name="PONTUACAO" class="java.math.BigDecimal"/>
+	<field name="RECBONUS" class="java.math.BigDecimal"/>
+	<field name="TOTCOMAVE" class="java.math.BigDecimal"/>
+	<field name="QTDOVOS" class="java.math.BigDecimal"/>
+	<field name="PERCPARCTICP" class="java.math.BigDecimal"/>
+	<field name="PARTICIP" class="java.math.BigDecimal"/>
+	<field name="VLRUNIT" class="java.math.BigDecimal"/>
+	<field name="VLRCOM" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="70" splitType="Stretch">
+			<textField>
+				<reportElement x="102" y="25" width="453" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["C.R.:"+$F{CODCENCUS}.toString()+" - "+$F{NOMEPARC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="283" y="50" width="272" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Mês Referência: </b>" + new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{DTREF})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="0" width="453" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Fechamento de Comissão do Integrado - Postura"]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle" onErrorType="Blank">
+				<reportElement key="image-1" x="2" y="0" width="82" height="53"/>
+				<imageExpression class="java.lang.String"><![CDATA[new java.io.File("/home/mgeweb/logotipo/","SSA.jpg").getCanonicalPath()]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="555" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Cálculo para Remuneração"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="195" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="179" width="393" height="16" backcolor="#CCCCCC"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="2" y="131" width="391" height="16" backcolor="#CCCCCC"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="2" y="115" width="391" height="16" backcolor="#CCCCCC"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="2" y="99" width="391" height="16" backcolor="#CCCCCC"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="2" y="50" width="391" height="16" backcolor="#CCCCCC"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="18" backcolor="#00CC66"/>
+			</rectangle>
+			<textField pattern="¤ #,##0.0000">
+				<reportElement x="293" y="18" width="100" height="16"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{VLRCOMFIXA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.0000">
+				<reportElement x="293" y="34" width="100" height="16"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{VLRCOMCLIST}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.0000">
+				<reportElement x="293" y="50" width="100" height="16"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{TOTCOMFIXA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.0000">
+				<reportElement x="293" y="66" width="100" height="16"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{PONTUACAO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.0000">
+				<reportElement x="293" y="82" width="100" height="16"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{RECBONUS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.0000">
+				<reportElement x="293" y="99" width="100" height="16"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{TOTCOMAVE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="293" y="115" width="100" height="16"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{QTDOVOS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0000">
+				<reportElement x="292" y="132" width="100" height="16"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{PERCPARCTICP}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="293" y="147" width="100" height="16"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{PARTICIP}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0000">
+				<reportElement x="293" y="163" width="100" height="16"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{VLRUNIT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="291" y="179" width="100" height="16"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{VLRCOM}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="18" width="100" height="16"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["(+) Comissão Fixa"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2" y="0" width="100" height="18" forecolor="#FFFFFF"/>
+				<textElement>
+					<font size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Descrição"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="34" width="251" height="16"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["(+) CheckList Acicional (Variável) 100 pontos"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="50" width="210" height="16"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["(=) Total da Remuneração p/ Lote (Ave)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="291" y="0" width="100" height="18" forecolor="#FFFFFF"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Remuneração"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="66" width="236" height="16"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Avaliação CheckList Adcional Pontuação"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="83" width="236" height="16"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Bonificação CheckList"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="99" width="210" height="16"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Total da Remuneração"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="115" width="236" height="16"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Ovos Incubáveis"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="131" width="236" height="16"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Participação %"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="147" width="236" height="16"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Participação Ovos"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="163" width="236" height="16"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Comissão Rs/Ovo"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="179" width="236" height="16"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Comissão"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="61" splitType="Stretch">
+			<subreport>
+				<reportElement key="ExtratoComissaoPostura_notas" x="0" y="0" width="200" height="61">
+					<printWhenExpression><![CDATA[$P{EXIBENOTAS}.equals(true)]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="PK_DTREF">
+					<subreportParameterExpression><![CDATA[$P{PK_DTREF}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUB_CODCENCUS">
+					<subreportParameterExpression><![CDATA[$P{PK_CODCENCUS}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="PK_CODCENCUS">
+					<subreportParameterExpression><![CDATA[$P{PK_CODCENCUS}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUB_DTREF">
+					<subreportParameterExpression><![CDATA[$P{PK_DTREF}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "ExtratoComissaoPostura_notas.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="16" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy HH:mm:ss">
+				<reportElement x="2" y="0" width="174" height="16"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

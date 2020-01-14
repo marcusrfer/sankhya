@@ -96,7 +96,7 @@ create or replace trigger ad_trg_cmp_tsfpesr_sf
           update ad_tsfpes p
              set p.dhalter      = sysdate,
                  p.dhrealizacao = sysdate,
-                 status         = 'F'
+                 status         = Case When p.dhreagend Is Null then 'F' Else 'R' End
            where codpesquisa = pes.codpesquisa;
         
           --dbms_output.put_line('entrou no update');
@@ -112,4 +112,3 @@ create or replace trigger ad_trg_cmp_tsfpesr_sf
   end after statement;
 
 end;
-/

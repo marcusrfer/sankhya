@@ -1,48 +1,3 @@
-create or replace package ad_pkg_avs is
-
- -- Author  : MARCUS.RANGEL
- -- Created : 23/08/2019 14:15:22
- -- Purpose : Métodos auxiliares utilizados na rotina de visita sanitária
-
- procedure exclui_solcitcarro(p_nucapsol number);
-
- function get_dados_visita(p_nuvisita number) return ad_tsfavs%rowtype;
-
- procedure insere_historico(p_nuvisita number, p_msg varchar2);
-
- procedure insere_historico(p_nuvisita number, p_msg varchar2, p_errmsg out varchar2);
-
- procedure solicita_aprovacao(p_nuvisita number);
-
- -- M. Rangel - Cria nova visista
- procedure set_nova_visita_funcionario(p_codemp   number,
-                                       p_matfunc  number,
-                                       p_tipovis  varchar2,
-                                       p_dhprevis date,
-                                       p_nuvisita out number,
-                                       p_mensagem out varchar2);
-
- procedure set_aprovado(p_nuvisita number);
-
- procedure set_reprovado(p_nuvisita number);
-
- -- procedure que realiza as alterações da visita quando reagendadas
- procedure set_reagendado(p_nuvisita number, p_newdata date, p_numotivo int);
-
- procedure set_nova_pesquisa(p_nuvisita number, p_pesquisa out number);
-
- procedure set_nova_pesquisa(p_nuvisita number, p_pesquisa out number, p_errmsg out varchar2);
-
- procedure set_carro_apoio(p_nuvisita number, p_nucapsol out number, p_errmsg out varchar2);
-
- procedure set_carro_apoio(p_nuvisita  number,
-                           p_data      date,
-                           p_solmotivo varchar2,
-                           p_nucapsol  out number,
-                           p_errmsg    out varchar2);
-
-end ad_pkg_avs;
-/
 create or replace package body ad_pkg_avs is
 
  function get_dados_visita(p_nuvisita number) return ad_tsfavs%rowtype is
@@ -274,7 +229,7 @@ create or replace package body ad_pkg_avs is
 
  procedure set_reprovado(p_nuvisita number) is
  begin
-  update ad_tsfavs v set v.resultvis = 'A' where v.nuvisita = p_nuvisita;
+  update ad_tsfavs v set v.resultvis = 'R' where v.nuvisita = p_nuvisita;
  
   insere_historico(p_nuvisita, 'Reprovação do visitado pela equipe técnica');
  exception
@@ -521,4 +476,3 @@ create or replace package body ad_pkg_avs is
  end;
 
 end ad_pkg_avs;
-/

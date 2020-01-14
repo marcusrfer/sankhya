@@ -433,7 +433,11 @@ create or replace package body ad_pkg_fci is
     v_nuconf  int;
   begin
     begin
-      select datafim into v_datafim from lote_ave where numlote = p_nrolote And status = 'F';
+      select datafim
+        into v_datafim
+        from lote_ave
+       where numlote = p_nrolote
+         and status = 'F';
     exception
       when others then
         return - 1;
@@ -593,8 +597,8 @@ create or replace package body ad_pkg_fci is
       lote.peso        := round(ad_pkg_fci.get_pesoliq_balanca(lote.numlote), cd);
       lote.vlrunit     := round(get_preco_tab(dados.numlote), cd);
       lote.viabilidade := round(snk_dividir(lote.qtdabat, lote.qtdaves) * 100, cd);
-      lote.pesolote    := round(lote.peso / lote.qtdabat, 2);
-      lote.ganholote   := Round( (lote.pesolote / lote.idade) * 1000,2);
+      lote.pesolote    := round(lote.peso / lote.qtdabat, 3);
+      lote.ganholote   := round((lote.pesolote / lote.idade) * 1000, 2);
       lote.calote      := round(snk_dividir(lote.qtdracao, lote.peso), cd);
       lote.fplote      := round(snk_dividir((lote.viabilidade * lote.ganholote), (lote.calote * 10)),
                                 2);
@@ -816,7 +820,10 @@ create or replace package body ad_pkg_fci is
       -- insere os dados das semanas
       b.extend;
     
-      select max(nufcibnf) + 1 into b(m).nufcibnf from ad_tsffcibnf where numlote = l.numlote;
+      select nvl(max(nufcibnf), 0) + 1
+        into b(m).nufcibnf
+        from ad_tsffcibnf
+       where numlote = l.numlote;
     
       b(m).numlote := l.numlote;
       b(m).tipobonif := 'M';
@@ -890,7 +897,8 @@ create or replace package body ad_pkg_fci is
     end if;
   
     begin
-      select max(nufcibnf) + 1 into i from ad_tsffcibnf where numlote = l.numlote;
+      select nvl(max(nufcibnf), 0) + 1 into i from ad_tsffcibnf where numlote = l.numlote;
+    
       insert into ad_tsffcibnf
         (numlote, nufcibnf, tipobonif, percmortprev, qtdmortprev, saldoprev, percmortreal,
          qtdmortreal, saldoreal, qtdavesbnf, percavesbnf, viabilidade, percmortlote, perccom, vlrcom,
@@ -909,7 +917,27 @@ create or replace package body ad_pkg_fci is
   
     -- calcula o valor médio de comissões pagas por lote e sexo
     begin
-      select sexo into v_sexo from ad_tsftfv f where f.numlote = l.numlote;
+    
+      begin
+        select sexo into v_sexo from ad_tsftfv f where f.numlote = l.numlote;
+      exception
+        when too_many_rows then
+          begin
+            select sexo
+              into v_sexo
+              from ad_tsftfv f
+             where f.numlote = l.numlote
+               and f.codlote is not null;
+          exception
+            when no_data_found then
+              select sexo
+                into v_sexo
+                from ad_tsftfv f
+               where f.numlote = l.numlote
+                 and rownum = 1;
+          end;
+        
+      end;
     
       if v_sexo = 'F' then
         v_codprod := ad_pkg_fci.c_codprodfemea;
@@ -931,9 +959,11 @@ create or replace package body ad_pkg_fci is
                      and ite.codprod = v_codprod
                    order by cab.dtfatur desc)
       loop
-        if i < 3 then
+        if i < c.permedvlrcom then
           v_vlrcommed := v_vlrcommed + med.vlrtot;
           i           := i + 1;
+        Else
+         Exit;
         end if;
       end loop;
     
@@ -941,7 +971,8 @@ create or replace package body ad_pkg_fci is
     
     exception
       when others then
-        p_errmsg := 'Erro no calculo do vlr. médio de comissões. ' || sqlerrm;
+        p_errmsg := 'Erro no calculo do vlr. médio de comissões. Prod: ' || v_codprod || ' - ' ||
+                    sqlerrm;
         rollback;
         return;
     end;

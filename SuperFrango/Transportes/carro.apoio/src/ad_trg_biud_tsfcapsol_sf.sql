@@ -1,17 +1,21 @@
 create or replace trigger ad_trg_biud_tsfcapsol_sf
-  before delete or insert or update on sankhya.ad_tsfcapsol
+  before delete or insert or update on ad_tsfcapsol
   referencing new as new old as old
   for each row
 declare
   v_codcencus number;
-  errmsg varchar2(4000);
-  r_cus tsicus%rowtype;
+  errmsg      varchar2(4000);
+  r_cus       tsicus%rowtype;
 begin
   /*
    * Autor: Marcus Rangel
    * Processo: Carro de Apoio 
    * Objetivo: Controle de alteraÁıes / status
   */
+
+  if (stp_get_atualizando) then
+    return;
+  end if;
 
   if inserting then
   
@@ -81,7 +85,6 @@ begin
     if :new.codcencus is null or :new.codcencus = 0 then
       begin
         select nvl(codcencuspad, 0) into v_codcencus from tsiusu where codusu = :new.codusu;
-      
         :new.codcencus := v_codcencus;
       exception
         when others then
@@ -104,9 +107,10 @@ begin
     SR - Sol. Reprovada
     */
   
-    if :old.status <> 'P' and (ad_pkg_cap.v_permite_edicao = false or stp_get_atualizando = false) then
+    if :old.status <> 'P' then
     
-      /* If Updating('CODUSU') Then
+      /*
+      If Updating('CODUSU') Then
         errmsg := 'Usu√°rio n√£o pode ser alterado em lan√ßamentos j√° agendados/realizados/cancelados.';
         Raise Error;
       Elsif Updating('CODCENCUS') Then
@@ -118,9 +122,8 @@ begin
       Elsif Updating('DHALTER') Then
         errmsg := 'lan√ßamentos j√° agendados/realizados/cancelados n√£o podem ser alterados.';
         Raise Error;
-      End If;*/
-    
-      dbms_output.put_line('old stsatus' || :old.status);
+      End If;
+      */
     
       errmsg := 'LanÁamentos Enviados, Agendados, Aguardando LiberaÁ„o, Cancelados e Realizados n„o podem ser alterados.';
       raise_application_error(-20105, ad_fnc_formataerro(errmsg));
@@ -139,7 +142,7 @@ begin
 
   if deleting then
   
-    if (:old.status = 'A' or :old.status = 'R' or :old.status = 'C') and ad_pkg_cap.v_permite_edicao = false then
+    if (:old.status = 'A' or :old.status = 'R' or :old.status = 'C') then
       --:old.Nuap Is Not Null Then
       errmsg := 'LanÁamentos j· agendados/realizados/cancelados n„o podem ser excluÌdos.';
       raise_application_error(-20105, ad_fnc_formataerro(errmsg));

@@ -1,158 +1,181 @@
 create or replace trigger ad_trg_cmp_tsfcap_sf
- for update or delete on sankhya.ad_tsfcap
- compound trigger
+  for update or delete on ad_tsfcap
+  compound trigger
 
- type t_nuaporig is table of number;
- t      t_nuaporig := t_nuaporig();
- errmsg varchar2(4000);
- error exception;
+  type t_nuaporig is table of number;
+  t      t_nuaporig := t_nuaporig();
+  errmsg varchar2(4000);
+  error exception;
 
- /*
-   Dt. Criação:= 06/12/2016
-   Autor: Marcus Rangel
-   Objetivo: "Descombinar" os agendamentos de origem quando um agendamento combinado for excluído, excluir a ligação, atualizar o status das solicitações dos agendamentos originais
- 
-   Atenção: Não é necessário adicionar tratativas para a exclusão do agendamento sem combinação, pois ao excluir o agendamento, a constraint seta o nuap da solicitação pra null
-   e na solicitação tem um gatilho que realiza validações e existe uma regra para quando o status da solicitação for enviado e o nro do agendamento for setado para null, o gailho
-   altera o status para pendente.
- */
+  p_tokenusu ad_cadappssatransporte.token%type; --Token Firebase
+  p_tokenapp ad_cadappssatransporte.token%type; --Token Firebase
+  i          int;
 
- /* Status
- A - Agendado
- C - Cancelado
- P - Pendente
- R - Realizado
- M - Combinada*/
- before statement is
- begin
-  t.delete;
-  ad_pkg_cap.v_permite_edicao := true;
-  stp_set_atualizando('S');
- end before statement;
-
- before each row is
- begin
- 
-  if updating then
-   if :old.status in ('C', 'R') and :new.motivoreabre is null then
-    errmsg := 'Agendamentos Realizados, não podem ser alterados!';
-    raise error;
-   end if;
+  /*
+    Dt. Criacao:= 06/12/2016
+    Autor: Marcus Rangel
+    Objetivo: "Descombinar" os agendamentos de origem quando um agendamento combinado for excluÃ­do, 
+    excluir a ligaÃ§Ã£o, atualizar o status das solicitaÃ§Ãµes dos agendamentos originais
   
-   /* 
-     * Solicitado dia 23/06/2017, caso: Motorista saiu dia 26, dormiu por lá
-     * e retornou no dia 27/06
-   
-     If Trunc(:new.Dtagend) <> Trunc(:new.Dtagendfim) Then
-       ErrMsg := 'Agendamentos devem ser realizados dentro do mesmo dia.';
-       Raise error;
-     End If;
-   */
-  end if;
- 
-  if deleting then
-   if :old.status in ('C', 'R') then
-    errmsg := 'Lançamentos Cancelados ou Concluídos, não podem ser excluídos!';
-    raise error;
-   elsif :old.status in ('P', 'A') then
-    t.extend;
-    t(t.last) := :old.nuap;
-   end if;
-  end if;
- exception
-  when error then
-   raise_application_error(-20105, ad_fnc_formataerro(errmsg));
- end before each row;
+    AtenÃ§Ã£o: NÃ£o Ã© necessÃ¡rio adicionar tratativas para a exclusÃ£o do agendamento sem combinaÃ§Ã£o, 
+    pois ao excluir o agendamento, a constraint seta o nuap da solicitaÃ§Ã£o pra null
+    e na solicitaÃ§Ã£o tem um gatilho que realiza validaÃ§Ãµes e existe uma regra para quando o status 
+    da solicitaÃ§Ã£o for enviado e o nro do agendamento for setado para null, o gatilho
+    altera o status para pendente.
+  */
 
- after each row is
- begin
-  if deleting then
-   begin
-    insert into ad_tsfcapexc
-     (nuap, codususol, dhsolicit, ordemcarga, codusuexc, codparctransp, codveiculo, status, taxi,
-      motivotaxi, kminicial, kmfinal, totalkm, vlrcorrida, nucapsol, dtagend, rota, dtagendfim,
-      combinada, codcontato, qtdpassageiros, motorista, motivo, deptosol, codciddest, codcidorig,
-      nomecidorig, nomeciddest, dhmov, dtreabre, codusureabre, motivoreabre, nuappai, dhexclusao,
-      codusudel)
-    values
-     (:old.nuap, :old.codususol, :old.dhsolicit, :old.ordemcarga, :old.codusuexc,
-      :old.codparctransp, :old.codveiculo, :old.status, :old.taxi, :old.motivotaxi, :old.kminicial,
-      :old.kmfinal, :old.totalkm, :old.vlrcorrida, :old.nucapsol, :old.dtagend, :old.rota,
-      :old.dtagendfim, :old.combinada, :old.codcontato, :old.qtdpassageiros, :old.motorista,
-      :old.motivo, :old.deptosol, :old.codciddest, :old.codcidorig, :old.nomecidorig,
-      :old.nomeciddest, :old.dhmov, :old.dtreabre, :old.codusureabre, :old.motivoreabre,
-      :old.nuappai, sysdate, stp_get_codusulogado);
-   exception
-    when others then
-     ad_set.insere_msglog(p_mensagem => 'Erro ao gravar log de exclusão de agendamento de carro de apoio. ' ||
-                                        sqlerrm);
-   end;
-  end if;
- 
- end after each row;
+  /* Status
+  A - Agendado
+  C - Cancelado
+  P - Pendente
+  R - Realizado
+  M - Combinada*/
+  before statement is
+  begin
+    t.delete;
+    --ad_pkg_cap.v_permite_edicao := true;
+    --stp_set_atualizando('S');
+  end before statement;
 
- after statement is
- begin
- 
-  if deleting then
-   if t.count <> 0 then
-   
-    for c_idx in t.first .. t.last
-    loop
+  before each row is
+  begin
+  
+    if updating then
+      if :old.status in ('C', 'R') and :new.motivoreabre is null then
+        errmsg := 'Agendamentos Realizados, não podem ser alterados!';
+        raise error;
+      end if;
     
-     for c_lig in (select * from ad_tsfcap c where c.nuappai = t(c_idx))
-     loop
-     
-      for c_orig in (select nucapsol
-                       from ad_tsfcap
-                      where nucapsol is not null
-                        and status = 'M'
-                      start with nuap = c_lig.nuap
-                     connect by prior nuap = nuappai
-                     union
-                     select nucapsol
-                       from ad_tsfcap
-                      where status <> 'M'
-                        and nuap = c_lig.nuap
-                        and nucapsol is not null)
-      loop
-       -- volta o agendamento para pendente e desfaz o vínculo com o combinado
-       begin
-        stp_set_atualizando('S');
-        update ad_tsfcap
-           set nuappai = null,
-               status  = 'P'
-         where nuap = c_lig.nuap
-           and status = 'M';
-        stp_set_atualizando('N');
-       exception
-        when others then
-         ad_pkg_var.errmsg := 'Erro ao atualizar o status da solicitação. ' || sqlerrm;
-         raise_application_error(-20105, ad_fnc_formataerro(ad_pkg_var.errmsg));
-       end;
+      /*
+        * Solicitado dia 23/06/2017, caso: Motorista saiu dia 26, dormiu por lÃ¡
+        * e retornou no dia 27/06
       
-       -- volta o agendamento anterior ao agendamento na solicitação.
-       begin
-        stp_set_atualizando('S');
-        update ad_tsfcapsol s
-           set nuap   = c_lig.nuap,
-               status = 'P'
-         where nucapsol = c_orig.nucapsol;
-        stp_set_atualizando('N');
-       exception
-        when others then
-         ad_pkg_var.errmsg := 'Erro ao atualizar o status da solicitação. ' || sqlerrm;
-         raise_application_error(-20105, ad_fnc_formataerro(ad_pkg_var.errmsg));
-       end;
+        If Trunc(:new.Dtagend) <> Trunc(:new.Dtagendfim) Then
+          ErrMsg := 'Agendamentos devem ser realizados dentro do mesmo dia.';
+          Raise error;
+        End If;
+      */
+    
+      --Implemenação 29/08/18 --Danilo Ferreira Adorno
+      --Enviando notificação ao usuário Firebase --App Carro de Apoio
+      select count(*)
+        into i
+        from ad_cadappssatransporte
+       where token is not null
+         and codparc = :new.motorista;
+    
+      if (nvl(:new.motorista, 0) > 0) and (nvl(:new.motorista, 0) <> nvl(:old.motorista, 0)) and (i > 0) then
+        select token into p_tokenusu from ad_cadappssatransporte where codparc = :new.motorista;
+        select tokenapp into p_tokenapp from ad_cadappssatransporte where codparc = :new.motorista;
       
-      end loop;
-     end loop;
-    end loop;
-   end if;
+        if (p_tokenusu is not null) and (p_tokenapp is not null) then
+          insert into ad_cadappssanotify
+            (codmsg, tokendest, tokenapp, titulo, mensagem, dhcriacao, dhenvio, status, msgerro)
+          values
+            ((select nvl(max(codmsg), 0) + 1 from ad_cadappssanotify), p_tokenusu, p_tokenapp, 'Viagem recebida',
+             'A viagem nº: ' || :new.nuap || ' foi atribuída a você!', sysdate, null, 'P', null);
+        end if;
+      end if;
+    
+    end if;
   
-  end if;
- 
- end after statement;
+    if deleting then
+      if :old.status in ('C', 'R') and not stp_get_atualizando then
+        errmsg := 'Lançamentos Cancelados ou Concluídos, não podem ser excluídos!';
+        raise error;
+      elsif :old.status in ('P', 'A') then
+        t.extend;
+        t(t.last) := :old.nuap;
+      end if;
+    end if;
+  exception
+    when error then
+      raise_application_error(-20105, ad_fnc_formataerro(errmsg));
+  end before each row;
+
+  after each row is
+  begin
+    if deleting then
+      begin
+        insert into ad_tsfcapexc
+          (nuap, codususol, dhsolicit, ordemcarga, codusuexc, codparctransp, codveiculo, status, taxi, motivotaxi,
+           kminicial, kmfinal, totalkm, vlrcorrida, nucapsol, dtagend, rota, dtagendfim, combinada, codcontato,
+           qtdpassageiros, motorista, motivo, deptosol, codciddest, codcidorig, nomecidorig, nomeciddest, dhmov,
+           dtreabre, codusureabre, motivoreabre, nuappai, dhexclusao, codusudel)
+        values
+          (:old.nuap, :old.codususol, :old.dhsolicit, :old.ordemcarga, :old.codusuexc, :old.codparctransp,
+           :old.codveiculo, :old.status, :old.taxi, :old.motivotaxi, :old.kminicial, :old.kmfinal, :old.totalkm,
+           :old.vlrcorrida, :old.nucapsol, :old.dtagend, :old.rota, :old.dtagendfim, :old.combinada, :old.codcontato,
+           :old.qtdpassageiros, :old.motorista, :old.motivo, :old.deptosol, :old.codciddest, :old.codcidorig,
+           :old.nomecidorig, :old.nomeciddest, :old.dhmov, :old.dtreabre, :old.codusureabre, :old.motivoreabre,
+           :old.nuappai, sysdate, stp_get_codusulogado);
+      exception
+        when others then
+          ad_set.insere_msglog(p_mensagem => 'Erro ao gravar log de exclusÃ£o de agendamento de carro de apoio. ' ||
+                                             sqlerrm);
+      end;
+    end if;
+  
+  end after each row;
+
+  after statement is
+  begin
+  
+    if deleting then
+      if t.count <> 0 then
+      
+        for c_idx in t.first .. t.last
+        loop
+        
+          for c_lig in (select * from ad_tsfcap c where c.nuappai = t(c_idx))
+          loop
+          
+            for c_orig in (select nucapsol
+                             from ad_tsfcap
+                            where nucapsol is not null
+                              and status = 'M'
+                            start with nuap = c_lig.nuap
+                           connect by prior nuap = nuappai
+                           union
+                           select nucapsol
+                             from ad_tsfcap
+                            where status <> 'M'
+                              and nuap = c_lig.nuap
+                              and nucapsol is not null)
+            loop
+              -- volta o agendamento para pendente e desfaz o vÃ­nculo com o combinado
+              begin
+                update ad_tsfcap
+                   set nuappai = null,
+                       status  = 'P'
+                 where nuap = c_lig.nuap
+                   and status = 'M';
+              exception
+                when others then
+                  raise;
+              end;
+            
+              -- volta o agendamento anterior ao agendamento na solicitaÃ§Ã£o.
+              begin
+                update ad_tsfcapsol s
+                   set nuap   = c_lig.nuap,
+                       status = 'P'
+                 where nucapsol = c_orig.nucapsol;
+              exception
+                when others then
+                  raise;
+              end;
+            
+            end loop;
+          end loop;
+        end loop;
+      end if;
+    
+    end if;
+  
+    stp_set_atualizando('N');
+  
+  end after statement;
 
 end;
 /

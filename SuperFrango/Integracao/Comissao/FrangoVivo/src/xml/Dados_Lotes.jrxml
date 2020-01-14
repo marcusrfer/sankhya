@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Dados_Lotes" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.7715610000000013"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="PK_NUMLOTE" class="java.math.BigDecimal">
+		<parameterDescription><![CDATA[Nro do Lote]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Temp\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select numlote, codparc, ad_get.nome_parceiro(codparc, 'fantasia') nomeparc
+, dataini, datafim
+ from lote_ave where numlote = $P{PK_NUMLOTE}]]>
+	</queryString>
+	<field name="NUMLOTE" class="java.math.BigDecimal"/>
+	<field name="CODPARC" class="java.math.BigDecimal"/>
+	<field name="NOMEPARC" class="java.lang.String"/>
+	<field name="DATAINI" class="java.sql.Timestamp"/>
+	<field name="DATAFIM" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="65" splitType="Stretch">
+			<textField>
+				<reportElement x="82" y="0" width="362" height="36"/>
+				<textElement verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Extrato de Movimentação do Integrado"]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle" onErrorType="Blank">
+				<reportElement key="image-1" x="0" y="0" width="82" height="53"/>
+				<imageExpression class="java.lang.String"><![CDATA[new java.io.File("/home/mgeweb/logotipo/","SSA.jpg").getCanonicalPath()]]></imageExpression>
+			</image>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="444" y="11" width="110" height="25" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="445" y="0" width="109" height="11"/>
+				<textElement>
+					<font fontName="Calibri" size="7"/>
+				</textElement>
+				<text><![CDATA[Data Emissão]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="1" y="0" width="81" height="20"/>
+				<box leftPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Lote: </b>"+$F{NUMLOTE}.toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="82" y="0" width="230" height="20"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Parceiro: </b>"+$F{CODPARC}.toString()+" - "+$F{NOMEPARC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="312" y="0" width="243" height="20"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="html">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Dt. Início: </b>"+new SimpleDateFormat("dd/MM/yyyy").format($F{DATAINI})+
+" <b>Dt. Fim: </b>"+ new SimpleDateFormat("dd/MM/yyyy").format($F{DATAFIM})]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="40" splitType="Stretch">
+			<subreport>
+				<reportElement key="NotasIntegradoFV" x="1" y="0" width="543" height="40"/>
+				<subreportParameter name="codparc">
+					<subreportParameterExpression><![CDATA[$F{CODPARC}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="dataini">
+					<subreportParameterExpression><![CDATA[$F{DATAINI}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="datafim">
+					<subreportParameterExpression><![CDATA[$F{DATAFIM}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "NotasIntegradoFV.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

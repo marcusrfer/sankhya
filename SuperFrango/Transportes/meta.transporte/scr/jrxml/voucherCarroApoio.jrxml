@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="voucherCarroApoio" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.7715610000000037"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="452"/>
+	<import value="br.com.sankhya.jasperfuncs.Funcoes.*"/>
+	<import value="br.com.sankhya.jasperfuncs.*"/>
+	<import value="com.sankhya.util.*"/>
+	<parameter name="PK_NUCAPSOL" class="java.math.BigDecimal" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DIR_REPO" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/mgeweb/repositorio/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[Select c.nucapsol,
+       c.nuap nucap,
+       c.nomeusu,
+       c.codcencus,
+       c.lotacao,
+       c.descrcencus,
+       c.codparctransp,
+       c.nomeparctransp,
+       c.codveiculo,
+       c.descrvei,
+       c.codusuexc,
+       c.nomeusuexc,
+       c.dhsolicit,
+       c.dtagend,
+       c.status,
+       c.motivo
+  From ad_vw_vouchercab c
+ Where nucapsol =  $P{PK_NUCAPSOL}]]>
+	</queryString>
+	<field name="NUCAPSOL" class="java.math.BigDecimal"/>
+	<field name="NUCAP" class="java.math.BigDecimal"/>
+	<field name="NOMEUSU" class="java.lang.String"/>
+	<field name="CODCENCUS" class="java.math.BigDecimal"/>
+	<field name="LOTACAO" class="java.math.BigDecimal"/>
+	<field name="DESCRCENCUS" class="java.lang.String"/>
+	<field name="CODPARCTRANSP" class="java.math.BigDecimal"/>
+	<field name="NOMEPARCTRANSP" class="java.lang.String"/>
+	<field name="CODVEICULO" class="java.math.BigDecimal"/>
+	<field name="DESCRVEI" class="java.lang.String"/>
+	<field name="CODUSUEXC" class="java.math.BigDecimal"/>
+	<field name="NOMEUSUEXC" class="java.lang.String"/>
+	<field name="DHSOLICIT" class="java.sql.Timestamp"/>
+	<field name="DTAGEND" class="java.sql.Timestamp"/>
+	<field name="STATUS" class="java.lang.String"/>
+	<field name="MOTIVO" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="339" splitType="Prevent">
+			<rectangle>
+				<reportElement x="0" y="70" width="554" height="16"/>
+			</rectangle>
+			<subreport>
+				<reportElement key="voucherCarroApoio_rateio" positionType="Float" x="0" y="173" width="555" height="38" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="PK_NUCAPSOL">
+					<subreportParameterExpression><![CDATA[$P{PK_NUCAPSOL}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "voucherCarroApoio_rateio.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="false">
+				<reportElement key="voucherCarroApoio_end" positionType="Float" x="0" y="134" width="555" height="39" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="PK_NUCAPSOL">
+					<subreportParameterExpression><![CDATA[$P{PK_NUCAPSOL}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "voucherCarroApoio_end.jasper"]]></subreportExpression>
+			</subreport>
+			<image hAlign="Center" vAlign="Middle" onErrorType="Blank">
+				<reportElement x="0" y="0" width="169" height="70"/>
+				<box topPadding="3" bottomPadding="3">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<imageExpression class="java.lang.String"><![CDATA[$P{P_DIR_REPO}+"//IMG//sao_salvador_alimentos.png"]]></imageExpression>
+			</image>
+			<rectangle>
+				<reportElement x="169" y="0" width="193" height="70"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="362" y="0" width="192" height="70"/>
+			</rectangle>
+			<textField>
+				<reportElement x="226" y="0" width="77" height="70"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Voucher de Viagem"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="384" y="0" width="170" height="18"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" markup="html">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["<font>Voucher Nº</font>: <b>"+$F{NUCAP}+"</b>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="18" width="152" height="18"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Dt. Viagem: <b>"+ new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{DTAGEND})+"</b>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="402" y="36" width="152" height="18"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Hr. Viagem: <b>"+ new java.text.SimpleDateFormat("HH:mm").format($F{DTAGEND})+"</b>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="70" width="283" height="16"/>
+				<box leftPadding="3" rightPadding="3">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Solicitante: </b>"+$F{NOMEUSU}+" ("+$F{NUCAPSOL}+")"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="86" width="283" height="16"/>
+				<box leftPadding="3" rightPadding="3">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Dt. Solicit.: </b>"+ new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format($F{DHSOLICIT})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="102" width="283" height="16"/>
+				<box leftPadding="3" rightPadding="3">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>C.R:</b> "+$F{CODCENCUS}+" - "+$F{DESCRCENCUS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="211" width="283" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="3">
+					<leftPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Nome Motorista: __________________________________"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="283" y="211" width="153" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["KM Inicial: _____________"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="436" y="211" width="119" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box rightPadding="3">
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["KM Final: ____________"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="245" width="283" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<leftPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["         ___________________________________________"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="283" y="246" width="272" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["         ___________________________________________"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="263" width="272" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<leftPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Assinatura do Solicitante"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="283" y="263" width="272" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<leftPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Assinatura do Motorista"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="280" width="555" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["_______________________, ______ de _________________ de ____________"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="-5" y="319" width="566" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement positionType="Float" x="0" y="228" width="272" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="3" rightPadding="3">
+					<leftPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Data/Hora Saída: ______/_______/_______ ____:____"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="272" y="228" width="283" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="3" rightPadding="5">
+					<leftPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Data/Hora Retorno: ______/_______/_______ ____:____"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="52" width="152" height="18"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Qtd. Passag.: <b>"+$F{LOTACAO}+"</b>"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="118" width="554" height="16"/>
+				<box topPadding="0" leftPadding="3" bottomPadding="0" rightPadding="3">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Motivo: </b>"+$F{MOTIVO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="283" y="70" width="271" height="16"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Resp. Agend.: </b>"+$F{NOMEUSUEXC}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="283" y="86" width="271" height="16"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Motorista: </b>"+$F{NOMEPARCTRANSP}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="283" y="102" width="271" height="16"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Descr. Veículo: </b>"+$F{DESCRVEI}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="380" splitType="Prevent">
+			<rectangle>
+				<reportElement x="0" y="72" width="554" height="16"/>
+			</rectangle>
+			<subreport>
+				<reportElement key="voucherCarroApoio_rateio" positionType="Float" x="0" y="175" width="555" height="38" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="PK_NUCAPSOL">
+					<subreportParameterExpression><![CDATA[$P{PK_NUCAPSOL}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "voucherCarroApoio_rateio.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="false">
+				<reportElement key="voucherCarroApoio_end" positionType="Float" x="0" y="136" width="555" height="39" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="PK_NUCAPSOL">
+					<subreportParameterExpression><![CDATA[$P{PK_NUCAPSOL}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "voucherCarroApoio_end.jasper"]]></subreportExpression>
+			</subreport>
+			<rectangle>
+				<reportElement x="169" y="2" width="193" height="70"/>
+			</rectangle>
+			<textField>
+				<reportElement x="0" y="88" width="283" height="16"/>
+				<box leftPadding="3" rightPadding="3">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Dt. Solicit.: </b>"+ new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format($F{DHSOLICIT})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="104" width="283" height="16"/>
+				<box leftPadding="3" rightPadding="3">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>C.R:</b> "+$F{CODCENCUS}+" - "+$F{DESCRCENCUS}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="362" y="2" width="192" height="70"/>
+			</rectangle>
+			<textField>
+				<reportElement x="226" y="2" width="77" height="70"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Voucher de Viagem"]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center" vAlign="Middle" onErrorType="Blank">
+				<reportElement x="0" y="2" width="169" height="70"/>
+				<box topPadding="3" bottomPadding="3">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<imageExpression class="java.lang.String"><![CDATA[$P{P_DIR_REPO}+"//IMG//sao_salvador_alimentos.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="400" y="20" width="152" height="18"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Dt. Viagem: <b>"+ new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{DTAGEND})+"</b>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="72" width="283" height="16"/>
+				<box leftPadding="3" rightPadding="3">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Solicitante: </b>"+$F{NOMEUSU}+" ("+$F{NUCAPSOL}+")"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="402" y="38" width="152" height="18"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Hr. Viagem: <b>"+ new java.text.SimpleDateFormat("HH:mm").format($F{DTAGEND})+"</b>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="384" y="2" width="170" height="18"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" markup="html">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["<font>Voucher Nº</font>: <b>"+$F{NUCAP}+"</b>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="54" width="152" height="18"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Qtd. Passag.: <b>"+$F{LOTACAO}+"</b>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="213" width="283" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="3">
+					<leftPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Nome Motorista: __________________________________"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="283" y="213" width="153" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["KM Inicial: _____________"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="265" width="272" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<leftPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Assinatura do Solicitante"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="283" y="265" width="272" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<leftPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Assinatura do Motorista"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="282" width="555" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["_______________________, ______ de _________________ de ____________"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="247" width="283" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<leftPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["         ___________________________________________"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="436" y="213" width="119" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box rightPadding="3">
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["KM Final: ____________"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="272" y="230" width="283" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="3" rightPadding="5">
+					<leftPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Data/Hora Retorno: ______/_______/_______ ____:____"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="230" width="272" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="3" rightPadding="3">
+					<leftPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Data/Hora Saída: ______/_______/_______ ____:____"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="283" y="248" width="272" height="17" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["         ___________________________________________"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="120" width="554" height="16"/>
+				<box topPadding="0" leftPadding="3" bottomPadding="0" rightPadding="3">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Motivo: </b>"+$F{MOTIVO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="283" y="88" width="271" height="16"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Motorista: </b>"+$F{NOMEPARCTRANSP}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="283" y="72" width="271" height="16"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Resp. Agend.: </b>"+$F{NOMEUSUEXC}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="283" y="104" width="271" height="16"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Descr. Veículo: </b>"+$F{DESCRVEI}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -232,6 +232,7 @@ create or replace package body ad_pkg_ssc as
     into t
     from tsisupl s
    where s.codusu = p_codgestor
+     And s.codususupl = p_codusu
      and s.dtfim > sysdate;
  
   if t > 0 then

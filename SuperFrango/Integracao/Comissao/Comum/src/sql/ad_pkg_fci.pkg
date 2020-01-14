@@ -940,11 +940,11 @@ create or replace package body ad_pkg_fci is
       end;
     
       if v_sexo = 'F' then
-        v_codprod := ad_pkg_fci.c_codprodfemea;
+        v_codprod := ad_pkg_fci.c_prodfemeabnf;
       elsif v_sexo = 'M' then
-        v_codprod := ad_pkg_fci.c_codprodmacho;
+        v_codprod := ad_pkg_fci.c_prodmachobnf;
       else
-        v_codprod := ad_pkg_fci.c_codprodsexado;
+        v_codprod := ad_pkg_fci.c_prodsexadobnf;
       end if;
     
       i := 0;
@@ -955,15 +955,16 @@ create or replace package body ad_pkg_fci is
                       on ite.nunota = cab.nunota
                    where 1 = 1
                      and cab.codparc = l.codparc
-                     and cab.codtipoper = 329
+                     and cab.codtipoper = 401
                      and ite.codprod = v_codprod
+                     and cab.dtfatur <= l.dtsaida
                    order by cab.dtfatur desc)
       loop
         if i < c.permedvlrcom then
           v_vlrcommed := v_vlrcommed + med.vlrtot;
           i           := i + 1;
-        Else
-         Exit;
+        else
+          exit;
         end if;
       end loop;
     

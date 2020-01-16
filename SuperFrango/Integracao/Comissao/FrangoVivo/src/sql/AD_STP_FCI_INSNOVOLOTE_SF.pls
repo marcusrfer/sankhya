@@ -101,18 +101,17 @@ begin
  
   stp_set_atualizando('N');
   
-  --javascript:openApp(''br.com.sankhya.menu.adicional.AD_TSFFCI'',{''NUMLOTE'': '||p_nrolote||'})'
-  --'javascript:void(0)" onclick="openApp(''br.com.sankhya.menu.adicional.AD_TSFFCI'',{''NUMLOTE'': '||p_nrolote||'})"'
  
- p_mensagem := 'Confirmada a importação e calculo do lote nro ' || p_nrolote || '.' ||
-                '<br>Clique <a title="Posicionar registro" target="_parent" href="' ||
+ /*p_mensagem := 'Confirmada a importação e calculo do lote nro ' || p_nrolote || '.' ||
+                '<br>Clique <a title="Posicionar registro" href="' ||
                 --ad_fnc_urlskw('AD_TSFFCI', p_nrolote)
                 'javascript:workspace.openAppActivity(''br.com.sankhya.menu.adicional.AD_TSFFCI'','||
-                '{NUMLOTE : '||p_nrolote||'})'
-                ||'"><font color="#0000FF"><b> Aqui' ||
-                '</b></font></a> para posicionar o registro.';
+                '{NUMLOTE: '||p_nrolote||'})'||'"><font color="#0000FF"><b> Aqui' ||
+                '</b></font></a> para posicionar o registro.';*/
                 
-  --p_mensagem := 'Os cálculos para o lote '||p_nrolote||' foram realizados com sucesso!';
+                
+  p_mensagem := q'[<a href="javascript:workspace.reloadApp('br.com.sankhya.menu.adicional.AD_TSFFCI', {'NUMLOTE': nrolote});document.getElementsByClassName('btn-popup-ok')[0].click();"><p><b> Clique AQUI</b></p></a>]';
+  p_mensagem := replace(p_mensagem, 'nrolote', p_nrolote);
   
  exception
   when pacote_invalido then

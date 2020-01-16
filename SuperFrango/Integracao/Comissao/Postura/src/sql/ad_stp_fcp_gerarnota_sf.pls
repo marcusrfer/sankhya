@@ -1,4 +1,4 @@
-create or replace procedure ad_stp_fcp_gerarnota_sf(p_codusu    number,
+CREATE OR REPLACE procedure ad_stp_fcp_gerarnota_sf(p_codusu    number,
                                                     p_idsessao  varchar2,
                                                     p_qtdlinhas number,
                                                     p_mensagem  out varchar2) as
@@ -14,9 +14,9 @@ begin
 
   /*
     Autor: MARCUS.RANGEL 20/12/2019 14:39:21
-    Processo: Fechamento de Comissão do Integrado - Postura
-    Objetivo: Botão de ação "gerar nota" da tela de fechamento 
-              de comissão, como diz o nome, o intuito é gerar 
+    Processo: Fechamento de ComissÃ£o do Integrado - Postura
+    Objetivo: BotÃ£o de aÃ§Ã£o "gerar nota" da tela de fechamento 
+              de comissÃ£o, como diz o nome, o intuito Ã© gerar 
               os documentos da cab, nota ou pedido.
   */
 
@@ -71,7 +71,7 @@ begin
 
   -- insere documento  
   begin
-    -- insere cabeçalho
+    -- insere cabeÃ§alho
     ad_set.ins_pedidocab(p_codemp      => ref.codemp,
                          p_codparc     => ref.codparc,
                          p_codvend     => mgn.codvend,
@@ -82,8 +82,7 @@ begin
                          p_codnat      => mgn.codnat,
                          p_codcencus   => ref.codcencus,
                          p_codproj     => 0,
-                         p_obs         => 'Produção mês ' || to_char(ref.dtref, 'MM/RRRR') ||
-                                          ' - lote ' || ref.numlote,
+                         p_obs         => 'Produção mês ' || To_Char(ref.dtref,'MM/RRRR') || ' - lote ' || ref.numlote,
                          p_nunota      => ref.nunota);
   
     update tgfcab set serienota = mgn.serienota where nunota = ref.nunota;
@@ -172,11 +171,11 @@ begin
       -- experimental
       /**
       * remover caso necessite diminuir o runtime
-      * a ideia é esperar antes de buscar o status da nfe, na esperança
-      * de trazer um status com alguma informação retornada da sefaz
+      * a ideia Ã© esperar antes de buscar o status da nfe, na esperanÃ§a
+      * de trazer um status com alguma informaÃ§Ã£o retornada da sefaz
       **/
     
-      --dbms_lock.sleep(5); tá sem grant na DEV
+      --dbms_lock.sleep(5); tÃ¡ sem grant na DEV
       declare
         dtinicio date := sysdate;
         dtatual  date;
@@ -198,7 +197,7 @@ begin
           return;
       end;
     
-      -- atualiza informações na origem
+      -- atualiza informaÃ§Ãµes na origem
       begin
         update ad_tsffcpref r set r.statusnfe = ref.statusnfe where r.nunota = ref.nunota;
       exception
@@ -220,9 +219,8 @@ begin
       return;
   end;
 
-  p_mensagem := 'Nota nº único ' || '<a title="Clique aqui" target="_parent" href="' ||
+  p_mensagem := 'Nota nº Único ' || '<a title="Clique aqui" target="_parent" href="' ||
                 ad_fnc_urlskw('TGFCAB', ref.nunota) || '">' || ref.nunota || '</a>' ||
                 ' gerada com sucesso!';
 
 end;
-/

@@ -102,13 +102,6 @@ begin
   
     stp_set_atualizando('N');
   
-    /*p_mensagem := 'Confirmada a importação e calculo do lote nro ' || p_nrolote || '.' ||
-    '<br>Clique <a title="Posicionar registro" href="' ||
-    --ad_fnc_urlskw('AD_TSFFCI', p_nrolote)
-    'javascript:workspace.openAppActivity(''br.com.sankhya.menu.adicional.AD_TSFFCI'','||
-    '{NUMLOTE: '||p_nrolote||'})'||'"><font color="#0000FF"><b> Aqui' ||
-    '</b></font></a> para posicionar o registro.';*/
-  
     p_mensagem := q'[Lote calculado com Sucesso!<a href="javascript:workspace.reloadApp('br.com.sankhya.menu.adicional.AD_TSFFCI', {'NUMLOTE': nrolote});document.getElementsByClassName('btn-popup-ok')[0].click();"><b> Clique AQUI </b></a>para acessar o registro]';
     p_mensagem := replace(p_mensagem, 'nrolote', p_nrolote);
   

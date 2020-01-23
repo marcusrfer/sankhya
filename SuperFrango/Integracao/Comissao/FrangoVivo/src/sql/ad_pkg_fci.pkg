@@ -391,35 +391,58 @@ create or replace package body ad_pkg_fci is
   begin
     lote := get_dados_lote(p_nrolote);
   
-    select trunc(l.dhpega)
-      into lote.datafim
-      from ad_tsflfv l
-     where numlote = lote.numlote;
+    begin
+      select trunc(l.dhpega)
+        into lote.datafim
+        from ad_tsflfv l
+       where numlote = lote.numlote;
+    exception
+      when too_many_rows then
+        declare
+          v_lista varchar2(4000) := 'O lote possui mais de 1 parceiro: ' ||
+                                    chr(13);
+        begin
+          for err in (select l.codparc,
+                             ad_get.nome_parceiro(l.codparc, 'fantasia') nomeparc,
+                             l.codprod, ad_get.descrproduto(l.codprod) descrprod
+                        from ad_tsflfv l
+                       where numlote = lote.numlote)
+          loop
+            v_lista := v_lista || err.nomeparc || '  - ' || err.descrprod ||
+                       chr(13);
+          end loop;
+          raise_application_error(-20105, v_lista);
+        end;
+      when others then
+        raise;
+    end;
   
-    select tci.codtab, tci.percom, tci.preco
-      into ad_pkg_var.resulti, ad_pkg_var.resultn, ad_pkg_var.resultf
-      from ad_tsftci tci
-     where tci.codemp = get_codemp_lote(p_nrolote)
-       and tci.dtvigor = (select max(dtvigor)
-                            from ad_tsftci i
-                           where 1 = 1
-                                --i.codtab = tci.codtab
-                             and i.codemp = tci.codemp
-                             and dtvigor <= lote.datafim);
+    begin
+      select tci.codtab, tci.percom, tci.preco
+        into ad_pkg_var.resulti, ad_pkg_var.resultn, ad_pkg_var.resultf
+        from ad_tsftci tci
+       where tci.codemp = get_codemp_lote(p_nrolote)
+         and tci.dtvigor = (select max(dtvigor)
+                              from ad_tsftci i
+                             where 1 = 1
+                                  --i.codtab = tci.codtab
+                               and i.codemp = tci.codemp
+                               and dtvigor <= lote.datafim);
+    
+      if lower(p_tipo) = 'codtab' then
+        return ad_pkg_var.resulti;
+      elsif lower(p_tipo) = 'percom' then
+        return ad_pkg_var.resultn;
+      elsif lower(p_tipo) = 'preco' then
+        return ad_pkg_var.resultf;
+      else
+        return 0;
+      end if;
+    exception
+      when others then
+        raise;
+    end;
   
-    if lower(p_tipo) = 'codtab' then
-      return ad_pkg_var.resulti;
-    elsif lower(p_tipo) = 'percom' then
-      return ad_pkg_var.resultn;
-    elsif lower(p_tipo) = 'preco' then
-      return ad_pkg_var.resultf;
-    else
-      return 0;
-    end if;
-  
-  exception
-    when others then
-      return 0;
   end get_dados_tabela;
 
   procedure get_dados_tabela(p_nrolote number,
@@ -429,10 +452,31 @@ create or replace package body ad_pkg_fci is
   begin
     lote := get_dados_lote(p_nrolote);
   
-    select trunc(l.dhpega)
-      into lote.datafim
-      from ad_tsflfv l
-     where numlote = lote.numlote;
+    begin
+      select trunc(l.dhpega)
+        into lote.datafim
+        from ad_tsflfv l
+       where numlote = lote.numlote;
+    exception
+      when too_many_rows then
+        declare
+          v_lista varchar2(4000) := 'O lote possui mais de 1 parceiro: ' ||
+                                    chr(13);
+        begin
+          for err in (select l.codparc,
+                             ad_get.nome_parceiro(l.codparc, 'fantasia') nomeparc,
+                             l.codprod, ad_get.descrproduto(l.codprod) descrprod
+                        from ad_tsflfv l
+                       where numlote = lote.numlote)
+          loop
+            v_lista := v_lista || err.nomeparc || '  - ' || err.descrprod ||
+                       chr(13);
+          end loop;
+          raise_application_error(-20105, v_lista);
+        end;
+      when others then
+        raise;
+    end;
   
     select *
       into p_tabela
@@ -570,7 +614,7 @@ create or replace package body ad_pkg_fci is
                   
                   )
     loop
-       
+    
       lote.tipocom     := 'FV';
       lote.numlote     := dados.numlote;
       lote.codlote     := dados.codlote;

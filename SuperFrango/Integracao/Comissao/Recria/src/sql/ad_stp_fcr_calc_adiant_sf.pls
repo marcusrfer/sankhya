@@ -23,7 +23,7 @@ begin
 
   p_dtvencini := act_dta_param(p_idsessao, 'DTVENCINI');
 
-  --- popula record
+  --- get dados do registro
   begin
     select *
       into fcr
@@ -33,15 +33,16 @@ begin
        and numlote = act_int_field(p_idsessao, 1, 'NUMLOTE');
   exception
     when others then
-      p_mensagem := 'Erro ao buscar os dados do registro selecionado. ' || sqlerrm;
+      p_mensagem := 'Erro ao buscar os dados do registro selecionado. ' ||
+                    sqlerrm;
       return;
   end;
 
   -- valida preenchimento de campos importantes
   if nvl(fcr.codemp, 0) = 0 or fcr.dtaloj is null or nvl(fcr.qtdmeses, 0) = 0 or
-     nvl(fcr.qtdaves, 0) = 0 then
+     nvl(fcr.qtdaves, 0) = 0 or nvl(fcr.sexo, 'N') = 'N' then
     p_mensagem := 'As informações complementares sobre o lote, como <b>Empresa</b>, ' ||
-                  '<b>Data de Alojamento</b> e <b>Quantidade de meses</b> ' ||
+                  '<b>Data de Alojamento, Sexo</b> e <b>Quantidade de meses</b> ' ||
                   'são necessárias para a geração das parcelas.';
     return;
   end if;
@@ -70,7 +71,11 @@ begin
     end if;
   
     --** método de calculo/recalculo
-    ad_stp_fcr_recalcfechamento_sf(fcr.codcencus, fcr.codparc, fcr.numlote, trunc(sysdate), fcr);
+    ad_stp_fcr_recalcfechamento_sf(fcr.codcencus,
+                                   fcr.codparc,
+                                   fcr.numlote,
+                                   trunc(sysdate),
+                                   fcr);
   
     -- atualizar os valores previstos
     stp_set_atualizando('S');
@@ -88,6 +93,8 @@ begin
              r.status      = 'A',
              r.statuslote  = 'A',
              r.qtdmortperm = fcr.qtdmortperm
+      /*r.codusualt   = p_codusu, sendo atualizado pela proc do recalculo
+      r.dhalter     = sysdate*/
        where codcencus = fcr.codcencus
          and codparc = fcr.codparc
          and numlote = fcr.numlote;
@@ -105,7 +112,8 @@ begin
          and numlote = fcr.numlote;
     exception
       when others then
-        p_mensagem := 'Erro ao excluir previsões de adiantamentos existentes' || sqlerrm;
+        p_mensagem := 'Erro ao excluir previsões de adiantamentos existentes' ||
+                      sqlerrm;
         return;
     end;
   
@@ -115,12 +123,12 @@ begin
     
       begin
         insert into ad_tsffcradt
-          (codcencus, codparc, numlote, nuadt, desdobramento, dtref, vlrprev, vlradiant, nuacerto,
-           dtvenc)
+          (codcencus, codparc, numlote, nuadt, desdobramento, dtref, vlrprev,
+           vlradiant, nuacerto, dtvenc, dtvencini)
         values
           (fcr.codcencus, fcr.codparc, fcr.numlote, m, m,
            trunc(add_months(fcr.dtaloj, m - 1), 'fmmm'), fcr.vlrmesprev, 0, null,
-           add_months(p_dtvencini, m - 1));
+           add_months(p_dtvencini, m - 1), add_months(p_dtvencini, m - 1));
       exception
         when others then
           p_mensagem := 'Erro ao inserir previsão de adiantamento. ' || sqlerrm;
@@ -132,17 +140,21 @@ begin
     --Sim, possui adiantamentos gerados
   else
     -- recalcula os valores reais
-    ad_stp_fcr_recalcfechamento_sf(fcr.codcencus, fcr.codparc, fcr.numlote, trunc(sysdate), fcr);
+    ad_stp_fcr_recalcfechamento_sf(fcr.codcencus,
+                                   fcr.codparc,
+                                   fcr.numlote,
+                                   trunc(sysdate),
+                                   fcr);
   
     -- tratativa para quando há reajuste de valor
   
     /* caso de uso
-    Inicialmente foram calculadas 6 parcelas de R$ 10.000,00 cada, 
-    sendo que já foi feito adiantamento de 2 parcelas, ou seja, foram adiantados R$ 20.000,00. 
-    Ao conceder o terceiro adiantamento, em função de nova tabela o valor de cada parcela 
-    passou de R$ 10.000,00 para R$ 12.000,00, como o reajuste é retroativo, 
-    o integrado passa a ter direito a receber R$ 12.000,00 da terceira parcela, 
-    e a diferença do reajuste das duas parcelas anteriores, ou seja, R$ 2.000,00 da parcela 1 
+    Inicialmente foram calculadas 6 parcelas de R$ 10.000,00 cada,
+    sendo que já foi feito adiantamento de 2 parcelas, ou seja, foram adiantados R$ 20.000,00.
+    Ao conceder o terceiro adiantamento, em função de nova tabela o valor de cada parcela
+    passou de R$ 10.000,00 para R$ 12.000,00, como o reajuste é retroativo,
+    o integrado passa a ter direito a receber R$ 12.000,00 da terceira parcela,
+    e a diferença do reajuste das duas parcelas anteriores, ou seja, R$ 2.000,00 da parcela 1
     e R$ 2.000,00 da parcela 2, logo a terceira parcela será gerada no valor total de R$ 16.000,00.*/
     declare
       v_vlrdif float := 0;
@@ -179,7 +191,9 @@ begin
           d := d + 1;
           --- se não, altera só o valor
         else
-          update ad_tsffcradt a set a.vlradiant = fcr.vlrmesprev where a.rowid = m.rowid;
+          update ad_tsffcradt a
+             set a.vlradiant = fcr.vlrmesprev
+           where a.rowid = m.rowid;
         end if;
       
         -- corrige o valor com as diferenças retroativas
@@ -196,8 +210,8 @@ begin
   
   end if;
 
-  /*@Nesse momento o fechamento estatrá "Em andamento", as previsões de adiantamento estarão 
-  geradas, de acordo com a quantidade de meses, não será possível alterar manualmente os 
+  /*@Nesse momento o fechamento estatrá "Em andamento", as previsões de adiantamento estarão
+  geradas, de acordo com a quantidade de meses, não será possível alterar manualmente os
   valores no mainform, será possível recalcular*/
   stp_set_atualizando('N');
 

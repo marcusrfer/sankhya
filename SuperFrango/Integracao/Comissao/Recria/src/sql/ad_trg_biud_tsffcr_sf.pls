@@ -2,7 +2,7 @@ create or replace trigger ad_trg_biud_tsffcr_sf
   before insert or update or delete on ad_tsffcr
   for each row
 declare
-  v_errmsg varchar2(4000);
+  e varchar2(4000);
 
 begin
 
@@ -19,12 +19,19 @@ begin
   /*if inserting then
    null;
   end if;*/
-
-  if not updating('STATUS') and :old.status != 'P' then
-    v_errmsg := 'Somente fechamentos com status "Pendente" pode ser alterado!' || :new.status;
-    raise_application_error(-20105, v_errmsg);
+  if updating then
+  
+    if not updating('STATUS') and :old.status != 'P' then
+      e := ad_fnc_formataerro('Somente fechamentos com status ' ||
+                              '"Pendente" pode ser alterado!');
+      raise_application_error(-20105, e);
+    end if;
+  
+    if :old.nunota is not null and :new.nunota is null then
+      :new.status := 'A';
+    end if;
+  
   end if;
-
   /*if deleting then
    null;
   end if;*/

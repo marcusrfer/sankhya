@@ -8,7 +8,7 @@ create or replace procedure ad_stp_fcp_getreftabela_sf(p_codcencus in number,
                                                        p_recbonus  out float,
                                                        p_rectotal  out float,
                                                        p_custo     out float) is
-Begin
+begin
 
   /*
   ** autor: m. rangel
@@ -16,7 +16,6 @@ Begin
   ** objetivo: retornar os valores da tabela de comissões de acordo 
                com sexo e referência
   */
-                                                                   
 
   -- busca tabela
   begin

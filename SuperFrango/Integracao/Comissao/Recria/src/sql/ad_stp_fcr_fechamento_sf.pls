@@ -70,6 +70,7 @@ begin
   --get valores da tabela
   ad_stp_fcp_getreftabela_sf(p_codcencus => fcr.codcencus,
                              p_dtref     => adt.dtref,
+                             p_sexo      => fcr.sexo,
                              p_codtab    => fcr.codtabreal,
                              p_dtreftab  => fcr.dreftabreal,
                              p_recoper   => fcr.vlrcomfixa,
@@ -82,7 +83,8 @@ begin
   begin
     fcr.totremave     := fcr.vlrcomfixa + fcr.vlrcomatrat + fcr.vlrcomclist;
     fcr.qtdavesliq    := (fcr.qtdaves - fcr.qtdmortransp - fcr.qtdenvlab);
-    fcr.totavestransf := fcr.qtdavesliq - (fcr.qtdmortgranja + fcr.qtdavesvda + fcr.qtdaveselim);
+    fcr.totavestransf := fcr.qtdavesliq -
+                         (fcr.qtdmortgranja + fcr.qtdavesvda + fcr.qtdaveselim);
     fcr.vlrtotreal    := fcr.totremave * fcr.qtdavesliq;
   
     stp_set_atualizando('S');
@@ -100,6 +102,8 @@ begin
            r.qtdmortgranja = fcr.qtdmortgranja,
            r.qtdavesvda    = fcr.qtdavesvda,
            r.qtdaveselim   = fcr.qtdaveselim,
+           r.qtdenvlab     = fcr.qtdenvlab,
+           r.qtdmortransp  = fcr.qtdmortransp,
            r.totavestransf = fcr.totavestransf,
            r.vlrtotreal    = fcr.vlrtotreal,
            r.vlrmedreal    = fcr.vlrtotreal / fcr.qtdmeses,

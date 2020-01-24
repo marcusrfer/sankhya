@@ -23,7 +23,13 @@ begin
               da aba adiantamentos da tela de fechamento recria.
   */
 
+  /*
+   a rotina gera sequencialmente o adiantamento, ordenado pela pk, logo, não é
+   necessário que o usuário selecione alguma linha, sempre seguirá a ordem da pk
+  */
+
   -- popula com as informações do fechamento
+
   select *
     into fcr
     from ad_tsffcr f
@@ -44,7 +50,8 @@ begin
    where a.codcencus = fcr.codcencus
      and a.codparc = fcr.codparc
      and a.numlote = fcr.numlote
-   order by dtvenc;
+   order by a.nuadt --dtvenc
+  ;
 
   -- percorre os adiantamentos
   for l in adt.first .. adt.last
@@ -219,7 +226,10 @@ begin
           (fre.nuacerto, null, fin.nufin, null, p_codusu, sysdate, 'A',
            fre.sequencia, null);
       
-        update tgffin f set f.nucompens = fre.nuacerto where nufin = fin.nufin;
+        update tgffin f
+           set f.nucompens = fre.nuacerto,
+               f.numdupl   = fre.nuacerto
+         where nufin = fin.nufin;
       
         -- se exige aprovação e é a despesa do adiantmento
         if cfg.exigaprdesp = 'S' and rec_desp = -1 then
@@ -261,8 +271,8 @@ begin
                f.vlrtotadiant = fcr.vlrtotadiant + adt(l).vlradiant,
                f.saldo = case
                            when nvl(f.vlrtotreal, 0) > 0 then
-                            fcr.vlrtotreal -
-                            (fcr.vlrtotadiant + adt(l).vlradiant)
+                            fcr.vlrtotreal - fcr.vlrtotadiant
+                         --(fcr.vlrtotadiant + adt(l).vlradiant)
                            else
                             0
                          end

@@ -1,4 +1,4 @@
-CREATE OR REPLACE procedure ad_stp_fcp_gerarnota_sf(p_codusu    number,
+create or replace procedure ad_stp_fcp_gerarnota_sf(p_codusu    number,
                                                     p_idsessao  varchar2,
                                                     p_qtdlinhas number,
                                                     p_mensagem  out varchar2) as
@@ -82,7 +82,9 @@ begin
                          p_codnat      => mgn.codnat,
                          p_codcencus   => ref.codcencus,
                          p_codproj     => 0,
-                         p_obs         => 'Produção mês ' || To_Char(ref.dtref,'MM/RRRR') || ' - lote ' || ref.numlote,
+                         p_obs         => 'Produção mês ' ||
+                                          to_char(ref.dtref, 'MM/RRRR') ||
+                                          ' - lote ' || ref.numlote,
                          p_nunota      => ref.nunota);
   
     update tgfcab set serienota = mgn.serienota where nunota = ref.nunota;
@@ -148,7 +150,9 @@ begin
   -- cria vinculo externo (usnado hash para contornar o problema da PK)
   begin
   
-    select ora_hash(concat(ref.codcencus, ref.dtref), 1000000000, 2) into v_numnota from dual;
+    select ora_hash(concat(ref.codcencus, ref.dtref), 1000000000, 2)
+      into v_numnota
+      from dual;
   
     insert into ad_tblcmf
       (nometaborig, nuchaveorig, nometabdest, nuchavedest)
@@ -164,8 +168,11 @@ begin
   -- confirma pedido de compra
   if nvl(mgn.confauto, 'N') = 'S' then
   
-    if act_confirmar('Confirmação de Nota', 'Deseja confirmar a nota Gerada?', p_idsessao, 1) then
-    
+    if act_confirmar('Confirmação de Nota',
+                     'Deseja confirmar a nota Gerada?',
+                     p_idsessao,
+                     1) then
+      commit;
       stp_confirmanota_java_sf(ref.nunota);
     
       -- experimental
@@ -190,7 +197,10 @@ begin
     
       -- busca status da nfe
       begin
-        select c.statusnfe into ref.statusnfe from tgfcab c where c.nunota = ref.nunota;
+        select c.statusnfe
+          into ref.statusnfe
+          from tgfcab c
+         where c.nunota = ref.nunota;
       exception
         when others then
           p_mensagem := 'Erro ao buscar o status da NFE da nota ' || ref.nunota;
@@ -199,10 +209,14 @@ begin
     
       -- atualiza informaÃ§Ãµes na origem
       begin
-        update ad_tsffcpref r set r.statusnfe = ref.statusnfe where r.nunota = ref.nunota;
+        update ad_tsffcpref r
+           set r.statusnfe  = ref.statusnfe,
+               r.statuslote = 'F'
+         where r.nunota = ref.nunota;
       exception
         when others then
-          p_mensagem := 'Erro ao atualizar as informações na origem. ' || sqlerrm;
+          p_mensagem := 'Erro ao atualizar as informações na origem. ' ||
+                        sqlerrm;
           return;
       end;
     
@@ -212,15 +226,19 @@ begin
 
   -- atualiza data ultimo fechamento            
   begin
-    update ad_tsffcp p set p.dtultfat = sysdate where p.codcencus = ref.codcencus;
+    update ad_tsffcp p
+       set p.dtultfat = sysdate
+     where p.codcencus = ref.codcencus;
   exception
     when others then
       p_mensagem := 'Erro ao atualizar a data "Último Fechamento". ' || sqlerrm;
       return;
   end;
 
-  p_mensagem := 'Nota nº Único ' || '<a title="Clique aqui" target="_parent" href="' ||
-                ad_fnc_urlskw('TGFCAB', ref.nunota) || '">' || ref.nunota || '</a>' ||
-                ' gerada com sucesso!';
+  p_mensagem := 'Nota nº Único ' ||
+                '<a title="Clique aqui" target="_parent" href="' ||
+                ad_fnc_urlskw('TGFCAB', ref.nunota) || '">' || ref.nunota ||
+                '</a>' || ' gerada com sucesso!';
 
 end;
+/

@@ -27,11 +27,11 @@ begin
   /*
    Autor: M. Rangel
    Processo: Fechamento de comissao do Integrado - Frango Vivo
-   Objetivo: Calcular as diversas possibilidades de bonificaï¿½ï¿½es
+   Objetivo: Calcular as diversas possibilidades de bonifica¿¿es
   */
 
-  /* Log de alteraï¿½ï¿½es 
-   15/01/2020 - mrangel - remoï¿½ï¿½o do parï¿½metro vlrbnfpinto
+  /* Log de altera¿¿es 
+   15/01/2020 - mrangel - remo¿¿o do par¿metro vlrbnfpinto
   
   */
 
@@ -61,22 +61,22 @@ begin
   
     -- valida status do lote antes de iniciar o procedimento
     if l.statuslote = 'P' then
-      p_mensagem := 'Lote ainda nï¿½o foi Auditado. Por favor realize a conferï¿½ncia do lote ' ||
-                    'para que seja possï¿½vel realizar o cï¿½lculo das bonificaï¿½ï¿½es.';
+      p_mensagem := 'Lote ainda não foi Auditado. Por favor realize a conferência do lote ' ||
+                    'para que seja possível realizar o cálculo das bonificações.';
       return;
       rollback;
     elsif l.statuslote = 'L' then
-      p_mensagem := 'Lote jï¿½ finalizado, o que impossibilita alteraï¿½ï¿½es no lote.';
+      p_mensagem := 'Lote já finalizado, o que impossibilita alterações no lote.';
       return;
       rollback;
     elsif l.statuslote = 'A' then
       null;
     end if;
   
-    -- valida status da bonificaï¿½ï¿½o
+    -- valida status da bonificação
     if l.statusbonif in ('F', 'L') then
-      p_mensagem := 'Bonificaï¿½ï¿½o jï¿½ foi calculada e possui nota gerada, ' ||
-                    'o que impossibilita alteraï¿½ï¿½es no cï¿½lculo jï¿½ realizado.';
+      p_mensagem := 'Bonificaçõo já foi calculada e possui nota gerada, ' ||
+                    'o que impossibilita alterações no cálculo já realizado.';
       return;
       rollback;
     end if;
@@ -86,12 +86,12 @@ begin
       delete from ad_tsffcibnf where numlote = l.numlote;
     exception
       when others then
-        p_mensagem := 'Erro ao limpar bonificaï¿½ï¿½es existentes. ' || sqlerrm;
+        p_mensagem := 'Erro ao limpar bonificações existentes. ' || sqlerrm;
         return;
         rollback;
     end;
   
-    -- insere a linha do cï¿½lculo do lote real
+    -- insere a linha do cálculo do lote real
     begin
       ad_pkg_fci.set_bnf_lotereal(l.numlote, p_mensagem);
       if p_mensagem is not null then
@@ -114,38 +114,46 @@ begin
         p_tipobonif := 'NVZ';
       end if;
     
-      -- calcula bonificaï¿½ï¿½es
+      -- calcula bonifica¿¿es
       begin
         -- mortalidade
         if p_tipobonif = 'M' then
         
           -- valida input
-          if p_sem1 is null or p_sem2 is null or p_sem3 is null or p_sem4 is null then
+          if p_sem1 is null or p_sem2 is null or p_sem3 is null or
+             p_sem4 is null then
             stp_set_atualizando('N');
             p_mensagem := 'Preencha a quantidade de mortes para todas as semanas!';
             return;
             rollback;
           end if;
         
-          --efetua operaï¿½ï¿½o
-          ad_pkg_fci.set_bnf_mortalidade(l.numlote, p_sem1, p_sem2, p_sem3, p_sem4, p_mensagem);
+          --efetua opera¿¿o
+          ad_pkg_fci.set_bnf_mortalidade(l.numlote,
+                                         p_sem1,
+                                         p_sem2,
+                                         p_sem3,
+                                         p_sem4,
+                                         p_mensagem);
         
-          --valida resultado operaï¿½ï¿½o
+          --valida resultado opera¿¿o
           if p_mensagem is not null then
             stp_set_atualizando('N');
-            p_mensagem := 'Erro ao calcular a bonificaï¿½ï¿½o da mortalidade. ' || p_mensagem;
+            p_mensagem := 'Erro ao calcular a bonificação da mortalidade. ' ||
+                          p_mensagem;
             return;
             rollback;
           end if;
         
-          -- carcaï¿½a GPA
+          -- carca¿a GPA
         elsif p_tipobonif = 'C' then
         
           ad_pkg_fci.set_bnf_carcaca(l.numlote, p_vlrmedcom, p_mensagem);
         
           if p_mensagem is not null then
             stp_set_atualizando('N');
-            p_mensagem := 'Erro ao calcular a bonificaï¿½ï¿½o pela carcaï¿½a. ' || p_mensagem;
+            p_mensagem := 'Erro ao calcular a bonificação pela carcaça. ' ||
+                          p_mensagem;
             return;
             rollback;
           end if;
@@ -156,22 +164,6 @@ begin
             if nvl(p_vlrcusto, 0) = 0 then
               ad_pkg_fci.get_dados_tabela(l.numlote, l.codemp, t);
               p_vlrcusto := t.vlrcustoave;
-            
-              /*
-              v_confirma := act_confirmar(
-                         p_titulo    => 'Confirmaï¿½ï¿½o de valores',
-                         p_texto     => 'O custo da ave nï¿½o foi informada no parï¿½metro, o valor ' ||                                                  
-                                     ' do custo serï¿½ o informado nas configuraï¿½ï¿½es da rotina (' ||
-                         fmt.valor_moeda(p_vlrcusto) || '). <br>' ||'Confirma a utilizaï¿½ï¿½o desse valor?',
-                         p_chave     => p_idsessao,
-                         p_sequencia => 0);
-              
-              if not v_confirma then
-                return;
-                rollback;
-              end if;
-              */
-            
             end if;
           
             --p_vlrbnfpinto := nvl(p_vlrbnfpinto, 0);
@@ -179,26 +171,34 @@ begin
             b.vlrbonific := greatest((l.qtdabat * p_vlrcusto) - b.vlrcom, 0);
             b.vlrunitbnf := snk_dividir(b.vlrbonific, l.qtdabat);
           
-            b.obs := 'Utilizando tabela ' || t.codtab || '/' || t.codemp || ', custo da ave de 0' ||
-                     fmt.numero(p_vlrcusto);
+            b.obs := 'Utilizando tabela ' || t.codtab || '/' || t.codemp ||
+                     ', custo da ave de 0' || fmt.numero(p_vlrcusto);
             --||' e com ajuda extra de ' || fmt.numero(p_vlrbnfpinto);
           
-            select max(nufcibnf) + 1 into i from ad_tsffcibnf where numlote = l.numlote;
+            select max(nufcibnf) + 1
+              into i
+              from ad_tsffcibnf
+             where numlote = l.numlote;
           
             insert into ad_tsffcibnf
-              (numlote, nufcibnf, tipobonif, percmortprev, qtdmortprev, saldoprev, percmortreal,
-               qtdmortreal, saldoreal, qtdavesbnf, percavesbnf, viabilidade, percmortlote, perccom,
-               vlrcom, vlrunitcom, vlrbonific, vlrunitbnf, aprovado, obs)
+              (numlote, nufcibnf, tipobonif, percmortprev, qtdmortprev,
+               saldoprev, percmortreal, qtdmortreal, saldoreal, qtdavesbnf,
+               percavesbnf, viabilidade, percmortlote, perccom, vlrcom,
+               vlrunitcom, vlrbonific, vlrunitbnf, aprovado, obs)
             values
-              (l.numlote, i, 'ITA', c.percmortprev, l.qtdaves * (c.percmortprev / 100),
-               l.qtdaves - (l.qtdaves * (c.percmortprev / 100)), (l.qtdmortes / l.qtdaves) * 100,
-               l.qtdmortes, l.qtdaves - l.qtdmortes, 0, 0, l.viabilidade, 100 - l.viabilidade,
-               l.percom, b.vlrcom, b.vlrcom / l.qtdabat, b.vlrbonific, b.vlrunitbnf, 'N', b.obs);
+              (l.numlote, i, 'ITA', c.percmortprev,
+               l.qtdaves * (c.percmortprev / 100),
+               l.qtdaves - (l.qtdaves * (c.percmortprev / 100)),
+               (l.qtdmortes / l.qtdaves) * 100, l.qtdmortes,
+               l.qtdaves - l.qtdmortes, 0, 0, l.viabilidade, 100 - l.viabilidade,
+               l.percom, b.vlrcom, b.vlrcom / l.qtdabat, b.vlrbonific,
+               b.vlrunitbnf, 'N', b.obs);
           
           exception
             when others then
               rollback;
-              p_mensagem := 'Erro ao inserir o cï¿½lculo da bonificaï¿½ï¿½o Itaberaï¿½. ' || sqlerrm;
+              p_mensagem := 'Erro ao inserir o cálculo da bonificação Itaberaí. ' ||
+                            sqlerrm;
               return;
           end;
         elsif p_tipobonif = 'NVZ' then
@@ -215,7 +215,9 @@ begin
                               t.ipsusexado
                            end;
           
-            l.percom     := trunc(ad_pkg_fci.get_perc_com(l.ipsulote, l.ipsumedio), 2);
+            l.percom     := trunc(ad_pkg_fci.get_perc_com(l.ipsulote,
+                                                          l.ipsumedio),
+                                  2);
             l.pesocom    := l.peso * (l.percom / 100);
             b.vlrcom     := (l.pesocom * l.vlrunit);
             b.vlrbonific := greatest(b.vlrcom - l.vlrcom, 0);
@@ -225,17 +227,24 @@ begin
             --||' e com ajuda de ' || fmt.numero(p_vlrbnfpinto)
              ;
           
-            select max(nufcibnf) + 1 into i from ad_tsffcibnf where numlote = l.numlote;
+            select max(nufcibnf) + 1
+              into i
+              from ad_tsffcibnf
+             where numlote = l.numlote;
           
             insert into ad_tsffcibnf
-              (numlote, nufcibnf, tipobonif, percmortprev, qtdmortprev, saldoprev, percmortreal,
-               qtdmortreal, saldoreal, qtdavesbnf, percavesbnf, viabilidade, percmortlote, perccom,
-               vlrcom, vlrunitcom, vlrbonific, vlrunitbnf, aprovado)
+              (numlote, nufcibnf, tipobonif, percmortprev, qtdmortprev,
+               saldoprev, percmortreal, qtdmortreal, saldoreal, qtdavesbnf,
+               percavesbnf, viabilidade, percmortlote, perccom, vlrcom,
+               vlrunitcom, vlrbonific, vlrunitbnf, aprovado)
             values
-              (l.numlote, i, 'NVZ', c.percmortprev, l.qtdaves * (c.percmortprev / 100),
-               l.qtdaves - (l.qtdaves * (c.percmortprev / 100)), (l.qtdmortes / l.qtdaves) * 100,
-               l.qtdmortes, l.qtdaves - l.qtdmortes, 0, 0, l.viabilidade, 100 - l.viabilidade,
-               l.percom, b.vlrcom, b.vlrcom / l.qtdabat, b.vlrbonific, b.vlrunitbnf, 'N');
+              (l.numlote, i, 'NVZ', c.percmortprev,
+               l.qtdaves * (c.percmortprev / 100),
+               l.qtdaves - (l.qtdaves * (c.percmortprev / 100)),
+               (l.qtdmortes / l.qtdaves) * 100, l.qtdmortes,
+               l.qtdaves - l.qtdmortes, 0, 0, l.viabilidade, 100 - l.viabilidade,
+               l.percom, b.vlrcom, b.vlrcom / l.qtdabat, b.vlrbonific,
+               b.vlrunitbnf, 'N');
           end;
         end if;
       
@@ -252,12 +261,13 @@ begin
        where f.numlote = l.numlote;
     exception
       when others then
-        p_mensagem := 'Erro ao atualizar os dados na tela do fechamento. ' || sqlerrm;
+        p_mensagem := 'Erro ao atualizar os dados na tela do fechamento. ' ||
+                      sqlerrm;
         return;
         rollback;
     end;
   
-    -- atualiza dados no formulario das bonificaï¿½ï¿½es
+    -- atualiza dados no formulario das bonifica¿¿es
     begin
       update ad_tsffcibnf b
          set b.codusu  = p_codusu,
@@ -267,7 +277,8 @@ begin
       ;
     exception
       when others then
-        p_mensagem := 'Erro ao atualizar os dados na tela do cï¿½lculo da bonificaï¿½ï¿½o. ' || sqlerrm;
+        p_mensagem := 'Erro ao atualizar os dados na tela do cálculo da bonificação. ' ||
+                      sqlerrm;
         return;
         rollback;
     end;
@@ -286,24 +297,27 @@ begin
           on cus.codusuresp = usu.codusu
          and cus.codcencus = m.codcencus;
     
-      enviamail := act_confirmar(p_titulo    => 'Cï¿½lculo de Bonificaï¿½ï¿½o',
+      enviamail := act_confirmar(p_titulo    => 'cálculo de bonificação',
                                  p_texto     => 'Deseja enviar um e-mail para ' ||
-                                                ad_get.nomeusu(mail.codusu, 'completo') ||
-                                                ' solicitando a aprovaï¿½ï¿½o das simulaï¿½ï¿½es?',
+                                                ad_get.nomeusu(mail.codusu,
+                                                               'completo') ||
+                                                ' solicitando a aprovação das simulações?',
                                  p_chave     => p_idsessao,
                                  p_sequencia => 0);
     
       if enviamail then
       
-        mail.assunto := 'Nova aprovaï¿½ï¿½o de bonficaï¿½ï¿½o de comissï¿½o do integrado.';
+        mail.assunto := 'Nova aprovação de bonficação de comissão do integrado.';
       
-        mail.mensagem := 'Uma nova solicitaï¿½ï¿½o de aprovaï¿½ï¿½o de bonificaï¿½ï¿½o foi gerada ' ||
+        mail.mensagem := 'Uma nova solicitação de aprovação de bonificação foi gerada ' ||
                          'para o lote ' || l.numlote || ' (' ||
-                         ad_get.nome_parceiro(l.codparc, 'fantasia') || '; ' || l.tipopreco || '; ' ||
-                         fmt.numero(l.qtdaves) || ')' || ', por ' ||
-                         ad_get.nomeusu(825, 'completo') || '.<br>' || chr(13) ||
-                         'Acesse o link abaixo para maiores detalhes.<br>' || chr(13) ||
-                         '<a href="' || ad_fnc_urlskw('AD_TSFFCI', l.numlote) ||
+                         ad_get.nome_parceiro(l.codparc, 'fantasia') || '; ' ||
+                         l.tipopreco || '; ' || fmt.numero(l.qtdaves) || ')' ||
+                         ', por ' || ad_get.nomeusu(825, 'completo') || '.<br>' ||
+                         chr(13) ||
+                         'Acesse o link abaixo para maiores detalhes.<br>' ||
+                         chr(13) || '<a href="' ||
+                         ad_fnc_urlskw('AD_TSFFCI', l.numlote) ||
                          '">Qlique Aqui</a>';
       
         ad_set.insere_mail_fila_fmg(p_assunto  => mail.assunto,
@@ -316,7 +330,7 @@ begin
     
     end;
   
-    p_mensagem := 'Cï¿½lculo da bonificaï¿½ï¿½o concluï¿½da com sucesso!';
+    p_mensagem := 'cálculo da bonificação concluída com sucesso!';
   exception
     when pacote_invalido then
       goto inicio;

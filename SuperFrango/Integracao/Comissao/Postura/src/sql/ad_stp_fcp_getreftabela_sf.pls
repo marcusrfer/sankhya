@@ -8,6 +8,7 @@ create or replace procedure ad_stp_fcp_getreftabela_sf(p_codcencus in number,
                                                        p_recbonus  out float,
                                                        p_rectotal  out float,
                                                        p_custo     out float) is
+  e varchar2(4000);
 begin
 
   /*
@@ -28,7 +29,9 @@ begin
        and nvl(p.sexo, 'N') = nvl(p_sexo, 'N');
   exception
     when others then
-      raise;
+      e := ad_fnc_formataerro('Erro! Tabela de preços não encontrada para o CR ' ||
+                              p_codcencus);
+      raise_application_error(-20105, e);
   end;
 
   -- busca valores da referencia da tabela
@@ -42,6 +45,9 @@ begin
                        where r2.codtabpos = p_codtab
                          and r2.dtref <= p_dtref);
   exception
+    when no_data_found then
+      e := ad_fnc_formataerro('Erro! Valores não encontrado nessa referência');
+      raise_application_error(-20105, e);
     when others then
       raise;
   end;

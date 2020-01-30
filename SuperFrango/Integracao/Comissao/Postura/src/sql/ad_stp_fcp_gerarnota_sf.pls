@@ -147,8 +147,8 @@ begin
       return;
   end;
 
-  -- cria vinculo externo (usnado hash para contornar o problema da PK)
-  begin
+  -- cria vinculo externo (usando hash para contornar o problema da PK)
+  /*begin
   
     select ora_hash(concat(ref.codcencus, ref.dtref), 1000000000, 2)
       into v_numnota
@@ -163,7 +163,7 @@ begin
     when others then
       p_mensagem := sqlerrm;
       return;
-  end;
+  end;*/
 
   -- confirma pedido de compra
   if nvl(mgn.confauto, 'N') = 'S' then

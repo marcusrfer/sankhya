@@ -1,6 +1,3 @@
-deploy renovar
-
-
 ALTER TABLE AD_ADTSSALGTT disable CONSTRAINT PK_AD_ADTSSALGTT;
 /
 
@@ -20,7 +17,7 @@ begin
  using (select 991900000 as cr from dual) d
  on (d.cr = c.codcencus)
  when not matched then
-  insert values (991900000, 'NÃƒO', 0);
+  insert values (991900000, 'NÃO', 0);
 
  if sql%rowcount > 0 then
   insert into ad_itesolcpalibcr
@@ -44,11 +41,11 @@ begin
                    p_ultcod  => v_nubtn);
 
  insert into tsibta (IDBTNACAO, NOMEINSTANCIA, RESOURCEID, DESCRICAO, TIPO, CONFIG, CODMODULO, ORDEM, CONTROLAACESSO)
-values (v_nubtn, 'ADTSSACAB', '!br.com.sankhya.menu.adicional.ADTSSACAB__1545395619194.1', 'Reabre SolicitaÃ§Ã£o', 'SP', '<actionConfig>
+values (v_nubtn, 'ADTSSACAB', '!br.com.sankhya.menu.adicional.ADTSSACAB__1545395619194.1', 'Reabre Solicitação', 'SP', '<actionConfig>
             <dbCall name="STP_ADTSSACAB_CAN_SF" refreshType="SEL" txManual="false" rootEntity="ADTSSACAB" />
           </actionConfig>', null, 3, 'N');
 
-delete from tsibta where IDBTNACAO = 815;
+--delete from tsibta where IDBTNACAO = 815;
 
 end;
 /
@@ -64,12 +61,12 @@ begin
                    p_ultcod  => v_nubtn);
 
 insert into tsibta (IDBTNACAO, NOMEINSTANCIA, RESOURCEID, DESCRICAO, TIPO, CONFIG, CODMODULO, ORDEM, CONTROLAACESSO)
-values (1223, 'ADTSSACAB', '!br.com.sankhya.menu.adicional.ADTSSACAB__1545395619194.1', 'Confirma / Sol. AprovaÃ§Ã£o', 'SP', '<actionConfig>
+values (v_nubtn, 'ADTSSACAB', '!br.com.sankhya.menu.adicional.ADTSSACAB__1545395619194.1', 'Confirma / Sol. Aprovação', 'SP', '<actionConfig>
   <dbCall name="AD_STP_ADTSSA_SOLAPROV_SF" refreshType="SEL" txManual="false" rootEntity="ADTSSACAB"/>
 </actionConfig>', null, 2, 'N');
 
 
-delete from tsibta where IDBTNACAO = 1223;
+--delete from tsibta where IDBTNACAO = 1223;'
 
 end;
 
@@ -90,7 +87,7 @@ values (v_nubtn, 'ADTSSACAB', null, 'Gerar Parcelas', 'SP', '<actionConfig>
   <dbCall name="AD_STP_ADTSSA_GERAPARCELA_SF" refreshType="NONE" txManual="false" rootEntity="ADTSSACAB"/>
 </actionConfig>', null, 1, 'N');
 
-delete from tsibta where IDBTNACAO = 1220;
+--delete from tsibta where IDBTNACAO = 1220;
 
 end;
 /

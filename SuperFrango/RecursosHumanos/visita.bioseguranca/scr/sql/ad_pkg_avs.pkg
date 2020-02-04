@@ -1,45 +1,51 @@
 create or replace package ad_pkg_avs is
 
- -- Author  : MARCUS.RANGEL
- -- Created : 23/08/2019 14:15:22
- -- Purpose : Métodos auxiliares utilizados na rotina de visita sanitária
+  -- Author  : MARCUS.RANGEL
+  -- Created : 23/08/2019 14:15:22
+  -- Purpose : Métodos auxiliares utilizados na rotina de visita sanitária
 
- procedure exclui_solcitcarro(p_nucapsol number);
+  procedure exclui_solcitcarro(p_nucapsol number);
 
- function get_dados_visita(p_nuvisita number) return ad_tsfavs%rowtype;
+  function get_dados_visita(p_nuvisita number) return ad_tsfavs%rowtype;
 
- procedure insere_historico(p_nuvisita number, p_msg varchar2);
+  procedure insere_historico(p_nuvisita number, p_msg varchar2);
 
- procedure insere_historico(p_nuvisita number, p_msg varchar2, p_errmsg out varchar2);
+  procedure insere_historico(p_nuvisita number,
+                             p_msg      varchar2,
+                             p_errmsg   out varchar2);
 
- procedure solicita_aprovacao(p_nuvisita number);
+  procedure solicita_aprovacao(p_nuvisita number);
 
- -- M. Rangel - Cria nova visista
- procedure set_nova_visita_funcionario(p_codemp   number,
-                                       p_matfunc  number,
-                                       p_tipovis  varchar2,
-                                       p_dhprevis date,
-                                       p_nuvisita out number,
-                                       p_mensagem out varchar2);
+  -- M. Rangel - Cria nova visista
+  procedure set_nova_visita_funcionario(p_codemp   number,
+                                        p_matfunc  number,
+                                        p_tipovis  varchar2,
+                                        p_dhprevis date,
+                                        p_nuvisita out number,
+                                        p_mensagem out varchar2);
 
- procedure set_aprovado(p_nuvisita number);
+  procedure set_aprovado(p_nuvisita number);
 
- procedure set_reprovado(p_nuvisita number);
+  procedure set_reprovado(p_nuvisita number);
 
- -- procedure que realiza as alterações da visita quando reagendadas
- procedure set_reagendado(p_nuvisita number, p_newdata date, p_numotivo int);
+  -- procedure que realiza as alterações da visita quando reagendadas
+  procedure set_reagendado(p_nuvisita number, p_newdata date, p_numotivo int);
 
- procedure set_nova_pesquisa(p_nuvisita number, p_pesquisa out number);
+  procedure set_nova_pesquisa(p_nuvisita number, p_pesquisa out number);
 
- procedure set_nova_pesquisa(p_nuvisita number, p_pesquisa out number, p_errmsg out varchar2);
+  procedure set_nova_pesquisa(p_nuvisita number,
+                              p_pesquisa out number,
+                              p_errmsg   out varchar2);
 
- procedure set_carro_apoio(p_nuvisita number, p_nucapsol out number, p_errmsg out varchar2);
+  procedure set_carro_apoio(p_nuvisita number,
+                            p_nucapsol out number,
+                            p_errmsg   out varchar2);
 
- procedure set_carro_apoio(p_nuvisita  number,
-                           p_data      date,
-                           p_solmotivo varchar2,
-                           p_nucapsol  out number,
-                           p_errmsg    out varchar2);
+  procedure set_carro_apoio(p_nuvisita  number,
+                            p_data      date,
+                            p_solmotivo varchar2,
+                            p_nucapsol  out number,
+                            p_errmsg    out varchar2);
 
 end ad_pkg_avs;
 /
@@ -109,14 +115,13 @@ create or replace package body ad_pkg_avs is
     Objetivos: cria solicitação de aprovação.
   */
   procedure solicita_aprovacao(p_nuvisita number) is
-    vis       ad_tsfavs %rowtype;
-    evento    int;
-    liberador int;
+    vis ad_tsfavs %rowtype;
+    lib tsilib %rowtype;
   begin
-    --vis := get_dados_visita(p_nuvisita);
+    vis := get_dados_visita(p_nuvisita);
   
     select p.nuevevisita, p.codusulibvis
-      into evento, liberador
+      into lib.evento, lib.codusulib
       from ad_tsfprh p
      where p.ativo = 'S'
        and p.dtvigor = (select max(dtvigor)
@@ -127,28 +132,45 @@ create or replace package body ad_pkg_avs is
     -- insere o pedido de liberação na lib
     ad_set.ins_liberacao(p_tabela    => 'AD_TSFAVS',
                          p_nuchave   => p_nuvisita,
-                         p_evento    => evento,
+                         p_evento    => lib.evento,
                          p_valor     => 1,
-                         p_codusulib => liberador,
+                         p_codusulib => lib.codusulib,
                          p_obslib    => 'Referente visita para contratação',
                          p_errmsg    => ad_pkg_var.errmsg);
   
     -- monta e atualiza a observacao complementar com dados da visita
-    for v in (select vis.nomevisitado || ' - ' || car.descrcargo || '  - ' ||
+    for v in (select avs.nomevisitado || ' - ' || car.descrcargo || '  - ' ||
                       lot.descrlot || chr(13) as complemento
-                from ad_tsfavs vis
+                from ad_tsfavs avs
                 left join ad_fpwcrg car
-                  on car.codcargo = vis.codcargo
+                  on car.codcargo = avs.codcargo
                  and car.codemp = 1
                 left join ad_fpwlot lot
-                  on lot.codlot = vis.codlot
-               where vis.nuvisita = p_nuvisita)
+                  on lot.codlot = avs.codlot
+               where avs.nuvisita = p_nuvisita)
     loop
+      lib.obscompl := v.complemento;
+    end loop;
+  
+    for pes in (select to_char(obs) obs
+                  from ad_tsfpesr
+                 where codpesquisa = vis.codpesquisa
+                   and to_char(resposta) = 'Necessita Aprov.')
+    loop
+      lib.obscompl := lib.obscompl || chr(13) || pes.obs;
+    end loop;
+  
+    begin
       update tsilib
-         set obscompl = v.complemento
+         set obscompl = lib.obscompl
        where tabela = 'AD_TSFAVS'
          and nuchave = p_nuvisita;
-    end loop;
+    exception
+      when others then
+        ad_pkg_var.errmsg := 'Erro ao atualizar o complemento da liberação. ' ||
+                             sqlerrm;
+        raise_application_error(-20105, ad_fnc_formataerro(ad_pkg_var.errmsg));
+    end;
   
     if ad_pkg_var.errmsg is not null then
       raise_application_error(-20105, ad_fnc_formataerro(ad_pkg_var.errmsg));

@@ -1,0 +1,325 @@
+create or replace package ad_pkg_apiskw is
+
+  -- Author  : MARCUS.RANGEL
+  -- Created : 06/02/2020 22:51:36
+  -- Purpose : api de integração com o Sankhya-W
+
+  p_user varchar2(100);
+  p_pass varchar2(100);
+
+  /*procedure do_login(p_usuario   in varchar2,
+                     p_senha     in varchar2,
+                     p_sessionid out varchar2);
+  
+  procedure do_logout(p_sessionid in varchar2, p_response out varchar2);*/
+
+  procedure realizar_acao(p_modulo   in varchar2,
+                          p_servico  in varchar2,
+                          p_request  in varchar2,
+                          p_response out varchar2);
+
+  procedure acao_confirmar_nota(p_nunota int);
+
+  procedure acao_confirmar_nota(p_nunota int, p_errmsg out varchar2);
+
+  procedure acao_inserir_nota(p_cab    varchar2,
+                              p_itens  varchar2,
+                              p_nunota out varchar2,
+                              p_errmsg out varchar2);
+
+  procedure acao_inserir_financeiro(p_fin    varchar2,
+                                    p_nufin  out number,
+                                    p_errmsg out varchar2);
+
+end ad_pkg_apiskw;
+/
+create or replace package body ad_pkg_apiskw is
+
+  function get_url return varchar2 deterministic is
+    url varchar2(1000);
+  begin
+    select texto into url from tsipar where chave = 'URLSANKHYAW';
+    return url;
+  exception
+    when no_data_found then
+      return 'LOCALHOST:8080;';
+  end get_url;
+
+  procedure build_request(p_body     in varchar2,
+                          p_servico  in varchar2,
+                          p_response out varchar2) as
+  begin
+    p_response := '';
+    p_response := p_response || '<?xml version="1.0" encoding="ISO-8859-1"?>';
+    p_response := p_response || '<serviceRequest serviceName="' || p_servico || '">';
+    p_response := p_response || '<requestBody>';
+    p_response := p_response || p_body;
+    p_response := p_response || '</requestBody>';
+    p_response := p_response || '</serviceRequest>';
+  end;
+
+  procedure open_connection(p_servico   in varchar2,
+                            p_modulo    in varchar2,
+                            p_sessionid in varchar2,
+                            p_request   in varchar2,
+                            p_response  out clob) as
+    buff  varchar2(32767);
+    v_url varchar2(1000) := get_url;
+    req   utl_http.req;
+    resp  utl_http.resp;
+  
+    endloop boolean default false;
+  
+  begin
+  
+    /*Montagem da URL*/
+  
+    if substr(v_url, -1) <> '/' then
+      v_url := v_url || '/';
+    end if;
+  
+    v_url := v_url || p_modulo || '/service.sbr';
+  
+    if p_sessionid is not null then
+      v_url := v_url || ';JSESSIONID=' || p_sessionid;
+    end if;
+  
+    v_url := v_url || '?serviceName=' || p_servico;
+  
+    if p_sessionid is not null then
+      v_url := v_url || chr(38) || 'mgeSession=' || p_sessionid;
+    end if;
+  
+    v_url := v_url || chr(38) || 'application=IntegracaoOracle';
+  
+    /*Definição dos cabeçalhos*/
+  
+    utl_http.set_response_error_check(true);
+    utl_http.set_detailed_excp_support(true);
+    utl_http.set_cookie_support(true);
+    utl_http.set_persistent_conn_support(true);
+    utl_http.set_transfer_timeout(99000);
+  
+    /*Definição da conexão*/
+  
+    req := utl_http.begin_request(v_url, 'POST');
+  
+    utl_http.set_header(req, 'Content-Type', 'text/xml');
+  
+    if p_sessionid is not null then
+      utl_http.set_header(req, 'Cookie', 'JSESSIONID=' || p_sessionid);
+    end if;
+  
+    utl_http.set_header(req, 'User-Agent', 'Swserviceinvoker');
+    utl_http.set_header(req, 'Content-Length', length(p_request));
+    utl_http.write_text(req, p_request);
+    resp := utl_http.get_response(req);
+    utl_http.read_text(resp, p_response);
+  
+    loop
+      exit when endloop;
+      begin
+      
+        utl_http.read_line(resp, buff, true);
+      
+        if (buff is not null) and length(buff) > 0 then
+          dbms_output.put_line(buff);
+        end if;
+      
+      exception
+        when utl_http.end_of_body then
+          endloop := true;
+        when utl_http.too_many_requests then
+          utl_http.end_response(resp);
+      end;
+    end loop;
+  
+    utl_http.end_response(resp);
+  
+  end open_connection;
+
+  procedure do_login(p_usuario   in varchar2,
+                     p_senha     in varchar2,
+                     p_sessionid out varchar2) as
+    url        varchar2(1000) := get_url;
+    v_request  varchar2(32000);
+    v_response clob;
+    v_ini      int;
+    v_fin      int;
+  begin
+  
+    build_request('<NOMUSU>' || trim(p_usuario) || '</NOMUSU><INTERNO>' ||
+                  trim(p_senha) || '</INTERNO>',
+                  'MobileLoginSP.login',
+                  v_request);
+  
+    open_connection('MobileLoginSP.login', 'mge', null, v_request, v_response);
+  
+    v_ini       := instr(v_response, '<jsessionid>', 1, 1) + 12;
+    v_fin       := instr(v_response, '</jsessionid>', 1, 1);
+    p_sessionid := substr(v_response, v_ini, v_fin - v_ini);
+  
+  end do_login;
+
+  procedure do_logout(p_sessionid in varchar2, p_response out varchar2) as
+    v_request varchar2(32000);
+    url       varchar2(1000) := get_url;
+  begin
+    build_request(null, 'MobileLoginSP.logout', v_request);
+  
+    open_connection('MobileLoginSP.logout',
+                    'mge',
+                    p_sessionid,
+                    v_request,
+                    p_response);
+  
+  end do_logout;
+
+  procedure realizar_acao(p_modulo   in varchar2,
+                          p_servico  in varchar2,
+                          p_request  in varchar2,
+                          p_response out varchar2) as
+    v_sessionid   varchar2(1000);
+    v_request     varchar2(32000);
+    p_resultado   varchar2(32000);
+    url           varchar2(200) := get_url;
+    v_resp_logout varchar(1000);
+  
+  begin
+  
+    build_request(p_request, p_servico, v_request);
+  
+    do_login('integra_nf', '123456', v_sessionid);
+  
+    open_connection(p_servico, p_modulo, v_sessionid, v_request, p_response);
+  
+    do_logout(v_sessionid, v_resp_logout);
+  
+  end realizar_acao;
+
+  function traduz_retorno(p_response varchar2) return varchar2 is
+    v_retorno varchar2(4000);
+  begin
+    declare
+      v_status varchar2(1);
+      v_base64 varchar2(2000);
+    
+    begin
+    
+      v_status := substr(p_response, instr(p_response, 'status=', 1) + 8, 1);
+    
+      if v_status = 0 then
+        v_base64 := replace(replace(substr(p_response,
+                                           instr(p_response, '![CDATA[', 1) + 8,
+                                           instr(p_response, ']]', 1) -
+                                           instr(p_response, '![CDATA[', 1) - 8),
+                                    chr(13),
+                                    ''),
+                            chr(10),
+                            '');
+      
+        v_retorno := utl_raw.cast_to_varchar2(utl_encode.base64_decode(utl_raw.cast_to_raw(v_base64)));
+      
+        return v_retorno;
+      
+      end if;
+    
+      v_retorno := 'SEM ERRO';
+    
+      return v_retorno;
+    end;
+  
+  end traduz_retorno;
+
+  procedure acao_confirmar_nota(p_nunota int) is
+    v_msg varchar2(4000);
+  begin
+    acao_confirmar_nota(p_nunota, v_msg);
+    if v_msg is not null then
+      raise_application_error(-20105, 'Erro! ' || v_msg);
+    end if;
+  end;
+
+  procedure acao_confirmar_nota(p_nunota int, p_errmsg out varchar2) is
+    v_req      varchar2(32000);
+    v_response varchar2(32000);
+    v_retorno  varchar2(4000);
+  begin
+  
+    v_req := '<nota confirmacaoCentralNota="true" ';
+    v_req := v_req || 'ehPedidoWeb="false" ><txProperties>';
+    v_req := v_req || '<prop name="br.com.utiliza.dtneg.servidor" ';
+    v_req := v_req || 'value="false"/></txProperties><NUNOTA>';
+    v_req := v_req || p_nunota || '</NUNOTA></nota>';
+  
+    dbms_output.put_line(v_req);
+  
+    realizar_acao('mgecom', 'CACSP.confirmarNota', v_req, v_response);
+  
+    if traduz_retorno(v_response) not in ('SEM ERRO') then
+      p_errmsg := traduz_retorno(v_response);
+    end if;
+  
+  end acao_confirmar_nota;
+
+  procedure acao_inserir_nota(p_cab    varchar2,
+                              p_itens  varchar2,
+                              p_nunota out varchar2,
+                              p_errmsg out varchar2) as
+    v_req    varchar2(32000);
+    response clob;
+    x        xmltype;
+  begin
+    -- informar o xml do cabeçalho p_cab
+    -- informar o xml dos itens p_itens
+    v_req := '<nota><cabecalho><NUNOTA/>';
+    v_req := v_req || p_cab;
+    v_req := v_req || '</cabecalho><itens ';
+    v_req := v_req || 'INFORMARPRECO="True"><item><NUNOTA/><SEQUENCIA/>';
+    v_req := v_req || p_itens;
+    v_req := v_req || '</item></itens></nota>';
+  
+    realizar_acao(p_modulo   => 'mgecom',
+                  p_servico  => 'CACSP.incluirNota',
+                  p_request  => v_req,
+                  p_response => response);
+  
+    if traduz_retorno(response) not in ('SEM ERRO') then
+      p_errmsg := traduz_retorno(response);
+      return;
+    end if;
+  
+    x        := xmltype(response);
+    p_nunota := x.extract('/serviceResponse/responseBody/pk/NUNOTA/text()').getstringval;
+  
+  end acao_inserir_nota;
+
+  procedure acao_inserir_financeiro(p_fin    varchar2,
+                                    p_nufin  out number,
+                                    p_errmsg out varchar2) as
+    request  varchar2(32000);
+    response varchar2(32000);
+    x        xmltype;
+  begin
+    request := '<dataSet rootEntity="Financeiro" includePresentationFields="S"><entity path="">';
+    request := request || '<fieldset list="*"/></entity><dataRow><localFields>' ||
+               p_fin;
+    request := request || '</localFields></dataRow></dataSet>';
+  
+    realizar_acao(p_modulo   => 'mge',
+                  p_servico  => 'CRUDServiceProvider.saveRecord',
+                  p_request  => request,
+                  p_response => response);
+  
+    if traduz_retorno(response) not in ('SEM ERRO') then
+      p_errmsg := traduz_retorno(response);
+      return;
+    end if;
+  
+    x       := xmltype(response);
+    p_nufin := x.extract('serviceResponse/responseBody/entities/entity/NUFIN/text()').getstringval;
+  
+  end acao_inserir_financeiro;
+
+end ad_pkg_apiskw;
+/

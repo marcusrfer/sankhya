@@ -6,9 +6,10 @@ create or replace procedure ad_stp_fcp_gerarnota_sf(p_codusu    number,
   cfg ad_tsffciconf%rowtype;
   mgn ad_tsfmgn%rowtype;
 
-  v_numnota number;
-  v_nufin   number;
-  v_modelo  int;
+  p_tiponota varchar2(1);
+  v_numnota  number;
+  v_nufin    number;
+  v_modelo   int;
 
 begin
 
@@ -27,6 +28,7 @@ begin
 
   ref.codcencus := act_int_field(p_idsessao, 1, 'CODCENCUS');
   ref.dtref     := act_dta_field(p_idsessao, 1, 'DTREF');
+  p_tiponota    := act_txt_param(p_idsessao, 'TIPONOTA');
 
   select *
     into ref
@@ -35,10 +37,15 @@ begin
      and dtref = ref.dtref;
 
   -- valida nunota
-  if ref.nunota is not null then
+  if p_tiponota = 'C' and ref.nunotaent is not null or
+     p_tiponota = 'R' and ref.nunotasai is not null then
     p_mensagem := 'ReferÍncia j· possui nota gerada!';
     return;
   end if;
+  /*if ref.nunota is not null then
+    p_mensagem := 'ReferÍncia j· possui nota gerada!';
+    return;
+  end if;*/
 
   -- valida quantidade de ovos 
   if ref.qtdovosinc != ref.qtdovosgrj then
@@ -54,11 +61,19 @@ begin
   -- busca set de parametros
   ad_pkg_fci.get_config(sysdate, cfg);
 
-  -- se uf GO
-  if ad_get.ufparcemp(ref.codparc, 'P') = ad_get.ufparcemp(ref.codemp, 'E') then
-    v_modelo := cfg.numodcpapost; -- recebe o modelo da nota de compra
-  else
-    v_modelo := cfg.numodpcapost; -- recebe o modelo do pedido de compra
+  if p_tiponota = 'R' then
+  
+    v_modelo := cfg.numodrempost;
+  
+  elsif p_tiponota = 'C' then
+  
+    -- se uf GO
+    if ad_get.ufparcemp(ref.codparc, 'P') = ad_get.ufparcemp(ref.codemp, 'E') then
+      v_modelo := cfg.numodcpapost; -- recebe o modelo da nota de compra
+    else
+      v_modelo := cfg.numodpcapost; -- recebe o modelo do pedido de compra
+    end if;
+  
   end if;
 
   -- busca valores do modelo
@@ -137,8 +152,19 @@ begin
   -- atualiza dados na origem
   begin
     update ad_tsffcpref r
-       set r.nunota     = ref.nunota,
-           r.statuslote = 'F'
+       set /*r.nunota     = ref.nunota,*/ r.statuslote = 'F',
+           r.nunotasai = case
+                           when p_tiponota = 'R' then
+                            ref.nunota
+                           else
+                            nunotasai
+                         end,
+           r.nunotaent = case
+                           when p_tiponota = 'C' then
+                            ref.nunota
+                           else
+                            nunotaent
+                         end
      where r.codcencus = ref.codcencus
        and r.dtref = ref.dtref;
   exception
@@ -148,7 +174,7 @@ begin
   end;
 
   -- cria vinculo externo (usando hash para contornar o problema da PK)
-  /*begin
+  begin
   
     select ora_hash(concat(ref.codcencus, ref.dtref), 1000000000, 2)
       into v_numnota
@@ -163,7 +189,7 @@ begin
     when others then
       p_mensagem := sqlerrm;
       return;
-  end;*/
+  end;
 
   -- confirma pedido de compra
   if nvl(mgn.confauto, 'N') = 'S' then
@@ -178,11 +204,11 @@ begin
       -- experimental
       /**
       * remover caso necessite diminuir o runtime
-      * a ideia √© esperar antes de buscar o status da nfe, na esperan√ßa
+      * a ideia È esperar antes de buscar o status da nfe, na esperan√ßa
       * de trazer um status com alguma informa√ß√£o retornada da sefaz
       **/
     
-      --dbms_lock.sleep(5); t√° sem grant na DEV
+      dbms_lock.sleep(5);
       declare
         dtinicio date := sysdate;
         dtatual  date;

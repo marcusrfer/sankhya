@@ -2,7 +2,7 @@ create or replace procedure ad_stp_fci_fatura_sf(p_codusu    number,
                                                  p_idsessao  varchar2,
                                                  p_qtdlinhas number,
                                                  p_mensagem  out varchar2) as
-  p_tiponota varchar2(4000);
+  p_tiponota varchar2(3);
   v_modelo   number;
   v_origem   varchar2(5);
   v_nufin    number;
@@ -41,9 +41,9 @@ begin
       return;
     end if;
   
-    p_tiponota   := act_txt_param(p_idsessao, 'TIPONOTA');
-    lote.numlote := act_int_field(p_idsessao, 1, 'NUMLOTE');
-    cab.dtentsai := act_dta_param(p_idsessao, 'DTENTSAI');
+    p_tiponota   := nvl(act_txt_param(p_idsessao, 'TIPONOTA'), 'C');
+    lote.numlote := nvl(act_int_field(p_idsessao, 1, 'NUMLOTE'), 59238);
+    cab.dtentsai := nvl(act_dta_param(p_idsessao, 'DTENTSAI'), sysdate);
   
     -- get dados lote e configurações
     ad_pkg_fci.get_dados_fechamento(lote.numlote, lote, conf);
@@ -237,7 +237,58 @@ begin
       cab.vlrnota    := ite.qtdneg * ite.vlrunit;
     end if;
     -- insere cabeçalho do pedido/nota
+  
+    declare
+      r_cab varchar2(4000);
+      r_ite varchar2(4000);
     begin
+      r_cab := '<NUNOTA/><TIPMOV>' || top.tipmov || '</TIPMOV>';
+      r_cab := r_cab || '<CODEMP>' || lote.codemp || '</CODEMP>';
+      r_cab := r_cab || '<CODPARC>' || lote.codparc || '</CODPARC>';
+      r_cab := r_cab || '<CODVEND>' || cab.codvend || '</CODVEND>';
+      r_cab := r_cab || '<CODTIPOPER>' || cab.codtipoper || '</CODTIPOPER>';
+      r_cab := r_cab || '<CODTIPVENDA>' || cab.codtipvenda || '</CODTIPVENDA>';
+      r_cab := r_cab || '<SERIENOTA>' || cab.serienota || '</SERIENOTA>';
+      r_cab := r_cab || '<DTNEG>' || to_char(sysdate, 'DD/MM/YYYY') ||
+               '</DTNEG>';
+      r_cab := r_cab || '<VLRNOTA>' || replace(cab.vlrnota, ',', '.') ||
+               '</VLRNOTA>';
+      r_cab := r_cab || '<CODNAT>' || cab.codnat || '</CODNAT>';
+      r_cab := r_cab || '<CODCENCUS>' || cab.codcencus ||
+               '</CODCENCUS><CODPROJ>0</CODPROJ>';
+      r_cab := r_cab || '<OBSERVACAO>' || cab.observacao || '</OBSERVACAO>';
+      r_cab := r_cab || '<CODUSUINC>' || p_codusu || '</CODUSUINC>';
+    
+      r_ite := '<NUNOTA/><SEQUENCIA/>';
+      r_ite := r_ite || '<CODPROD>' || ite.codprod || '</CODPROD>';
+      r_ite := r_ite || '<QTDNEG>' || replace(ite.qtdneg, ',', '.') ||
+               '</QTDNEG>';
+      r_ite := r_ite || '<CODVOL>' || ite.codvol || '</CODVOL>';
+      r_ite := r_ite || '<CODLOCALORIG>' || ite.codlocalorig ||
+               '</CODLOCALORIG>';
+      r_ite := r_ite || '<CONTROLE>' || ite.controle || '</CONTROLE>';
+      r_ite := r_ite || '<VLRUNIT>' || replace(ite.vlrunit, ',', '.') ||
+               '</VLRUNIT><PERCDESC>0</PERCDESC>';
+    
+      ad_pkg_apiskw.acao_inserir_nota(p_cab    => r_cab,
+                                      p_itens  => r_ite,
+                                      p_nunota => cab.nunota,
+                                      p_errmsg => p_mensagem);
+    
+      if p_mensagem is not null then
+        return;
+      end if;
+    
+      begin
+        delete from tgffin where nunota = cab.nunota;
+        commit;
+      exception
+        when others then
+          raise;
+      end;
+    
+    end;
+    /*begin
       ad_set.ins_pedidocab(p_codemp      => lote.codemp,
                            p_codparc     => lote.codparc,
                            p_codvend     => cab.codvend,
@@ -258,10 +309,10 @@ begin
              confirmnotafat = cab.confirmnotafat
        where nunota = cab.nunota;
     
-    end;
+    end;*/
   
     -- insere itens
-    begin
+    /*begin
       ad_set.ins_pedidoitens(p_nunota   => cab.nunota,
                              p_codprod  => ite.codprod,
                              p_qtdneg   => ite.qtdneg,
@@ -288,7 +339,7 @@ begin
           return;
       end;
     
-    end;
+    end;*/
   
     -- insere financeiro
     if top.atualfin <> 0 then
@@ -305,8 +356,48 @@ begin
             from tsicta c
            where codctabcoint = fin.codctabcoint;
         
-          stp_keygen_nufin(fin.nufin);
+          declare
+            r_fin varchar2(4000);
+          begin
+          
+            r_fin := '<NUNOTA>' || cab.nunota ||
+                     '</NUNOTA><ORIGEM>E</ORIGEM><NUMNOTA>0</NUMNOTA>';
+            r_fin := r_fin || '<SERIENOTA>' || cab.serienota || '</SERIENOTA>';
+            r_fin := r_fin || '<PROVISAO>S</PROVISAO><RECDESP>' || top.atualfin ||
+                     '</RECDESP>';
+            r_fin := r_fin || '<CODEMP>' || lote.codemp || '</CODEMP><CODPARC>' ||
+                     lote.codparc || '</CODPARC>';
+            r_fin := r_fin || '<CODTIPOPER>' || cab.codtipoper ||
+                     '</CODTIPOPER>';
+            r_fin := r_fin || '<CODBCO>' || fin.codbco ||
+                     '</CODBCO><CODCTABCOINT>' || fin.codctabcoint ||
+                     '</CODCTABCOINT>';
+            r_fin := r_fin || '<CODNAT>' || cab.codnat ||
+                     '</CODNAT><CODCENCUS>' || cab.codcencus || '</CODCENCUS>';
+            r_fin := r_fin || '<CODPROJ>0</CODPROJ><CODTIPTIT>' ||
+                     cfin.codtiptit || '</CODTIPTIT>';
+            r_fin := r_fin || '<CODVEND>' || cab.codvend || '</CODVEND>';
+            r_fin := r_fin || '<DESDOBRAMENTO>' || cfin.desdobramento ||
+                     '</DESDOBRAMENTO>';
+            r_fin := r_fin || '<DTNEG>' || to_char(sysdate, 'dd/mm/yyyy') ||
+                     '</DTNEG>';
+            r_fin := r_fin || '<DTVENC>' || to_char(cfin.dtvenc, 'dd/mm/yyyy') ||
+                     '</DTVENC>';
+            r_fin := r_fin || '<VLRDESDOB>' ||
+                     replace(cfin.vlrdesdob, ',', '.') || '</VLRDESDOB>';
+          
+            ad_pkg_apiskw.acao_inserir_financeiro(p_fin    => r_fin,
+                                                  p_nufin  => fin.nufin,
+                                                  p_errmsg => p_mensagem);
+          
+            if p_mensagem is not null then
+              return;
+            end if;
+          
+          end;
         
+          /*stp_keygen_nufin(fin.nufin);
+          
           insert into tgffin
             (autorizado, bloqvar, codbco, codctabcoint, codcencus, codemp,
              codnat, codparc, codproj, codtipoper, codtipoperbaixa, codtiptit,
@@ -322,14 +413,14 @@ begin
              ad_get.maxdhtipoper(0), sysdate, cab.dtentsai, trunc(cab.dtentsai),
              cfin.dtvenc, cfin.dtvenc, 'N', 'N', fin.nufin, 0, 0, cab.nunota, 0,
              'E', 'S', 'N', top.atualfin, 1, 'I', 1, 0, 0, cfin.vlrdesdob,
-             cab.observacao);
+             cab.observacao);*/
         
           n.extend;
           n(cfin.nufcifin) := fin.nufin;
         
         end loop;
       
-        stp_set_atualizando('N');
+        --stp_set_atualizando('N');
       
       exception
         when others then

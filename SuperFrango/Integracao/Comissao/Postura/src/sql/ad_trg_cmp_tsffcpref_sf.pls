@@ -3,7 +3,8 @@ create or replace trigger ad_trg_cmp_tsffcpref_sf
   compound trigger
 
   before each row is
-    e varchar2(4000);
+    e  varchar2(4000);
+    cd int := 5;
   begin
   
     if inserting then
@@ -18,36 +19,56 @@ create or replace trigger ad_trg_cmp_tsffcpref_sf
     
     elsif updating then
     
-      if :old.nunota is not null and :new.nunota is null then
+      if (:old.nunotaent is not null or :old.nunotasai is not null) and
+         (:new.nunotaent is null or :new.nunotaent is null) then
         :new.statuslote := 'A';
+      end if;
+    
+      if (:old.nunotaent is null or :old.nunotasai is null) and
+         (:new.nunotaent is not null or :new.nunotaent is not null) then
+        :new.statuslote := 'F';
+      end if;
+    
+      if :new.nunotaent is not null and :new.nunotasai is not null then
+        :new.statuslote := 'L';
       end if;
     
       /* recalcula valores */
     
       --- receita bonus checklist
       if :new.vlrcomclist > 0 and :new.pontuacao > 0 then
-        :new.recbonus := :new.vlrcomclist * (:new.pontuacao / 100);
+        :new.recbonus := round(:new.vlrcomclist * (:new.pontuacao / 100), cd);
       end if;
     
       -- total comissão por ave
-      :new.totcomave := :new.recbonus + :new.vlrcomfixa + :new.vlrcomatrat;
+      :new.totcomave := round(:new.recbonus + :new.vlrcomfixa +
+                              :new.vlrcomatrat,
+                              cd);
+    
       -- percentual de participacao
-      :new.percparticipovo := ((:new.qtdovosinc * :new.totcomave) /
-                              (:new.qtdovosinc * :new.vlrunitcom)) * 100;
-    
-      -- participacao
-      :new.qtdparticipovo := ((:new.qtdovosinc * :new.percparticipovo) / 100);
-      -- comissão    
-      :new.vlrcom := (:new.qtdparticipovo * :new.vlrunitcom);
-    
-      -- o lote será finalizado pela confirmação do nunota
-      if :new.statusnfe in ('A', 'D') then
-        :new.statuslote := 'L';
+      if nvl(:new.qtdovosinc, 0) > 0 then
+        :new.percparticipovo := round(:new.qtdovosinc * :new.totcomave, cd) /
+                                round(:new.qtdovosinc * :new.vlrunitcom, cd) * 100;
+      
+        :new.qtdparticipovo := round((:new.qtdovosinc * :new.percparticipovo) / 100,
+                                     cd);
+      else
+        :new.percparticipovo := 0;
+        :new.qtdparticipovo  := 0;
       end if;
     
+      -- comissão    
+      :new.vlrcom := round(:new.qtdparticipovo * :new.vlrunitcom, 2);
+    
+      -- o lote será finalizado pela confirmação do nunota
+      /* if :new.statusnfe in ('A', 'D') then
+        :new.statuslote := 'L';
+      end if;*/
+    
       -- se está alterando mas não o nunota
-      if :old.nunota is not null and :new.nunota is not null then
-        e := ad_fnc_formataerro('Erro! Lote já possui nota gerada,' ||
+      if not updating('STATUSLOTE') and not updating('NUNOTAENT') and
+         not updating('NUNOTASAI') and :old.statuslote = 'L' then
+        e := ad_fnc_formataerro('Erro! Lote já possui notas geradas,' ||
                                 ' alterações não são permitidas!');
         raise_application_error(-20105, e);
       end if;

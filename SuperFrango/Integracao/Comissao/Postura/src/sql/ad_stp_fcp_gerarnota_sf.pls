@@ -5,21 +5,33 @@ create or replace procedure ad_stp_fcp_gerarnota_sf(p_codusu    number,
   ref ad_tsffcpref%rowtype;
   cfg ad_tsffciconf%rowtype;
   mgn ad_tsfmgn%rowtype;
+  top tgftop%rowtype;
 
   p_tiponota varchar2(1);
   v_numnota  number;
   v_nufin    number;
   v_modelo   int;
+  v_confirma boolean default false;
+
+  procedure exclui_movimentacao(p_nunota number) as
+  begin
+    delete from tgfcab where nunota = p_nunota;
+    delete from tgfite where nunota = p_nunota;
+    delete from tgfimn where nunota = p_nunota;
+    delete from tgfdin where nunota = p_nunota;
+    delete from tgffin where nunota = p_nunota;
+  end;
 
 begin
-
   /*
     Autor: MARCUS.RANGEL 20/12/2019 14:39:21
-    Processo: Fechamento de ComissÃ£o do Integrado - Postura
-    Objetivo: BotÃ£o de aÃ§Ã£o "gerar nota" da tela de fechamento 
-              de comissÃ£o, como diz o nome, o intuito Ã© gerar 
+    Processo: Fechamento de Comissão do Integrado - Postura
+    Objetivo: Botão de ação "gerar nota" da tela de fechamento 
+              de comissão, como diz o nome, o intuito de gerar 
               os documentos da cab, nota ou pedido.
   */
+
+  stp_set_atualizando('N');
 
   if p_qtdlinhas > 1 then
     p_mensagem := 'Selecione apenas 1 referência.';
@@ -30,11 +42,17 @@ begin
   ref.dtref     := act_dta_field(p_idsessao, 1, 'DTREF');
   p_tiponota    := act_txt_param(p_idsessao, 'TIPONOTA');
 
-  select *
-    into ref
-    from ad_tsffcpref
-   where codcencus = ref.codcencus
-     and dtref = ref.dtref;
+  begin
+    select *
+      into ref
+      from ad_tsffcpref
+     where codcencus = ref.codcencus
+       and dtref = ref.dtref;
+  exception
+    when others then
+      p_mensagem := 'Erro ao buscar parâmetro da tela! ' || sqlerrm;
+      return;
+  end;
 
   -- valida nunota
   if p_tiponota = 'C' and ref.nunotaent is not null or
@@ -42,10 +60,6 @@ begin
     p_mensagem := 'Referência já possui nota gerada!';
     return;
   end if;
-  /*if ref.nunota is not null then
-    p_mensagem := 'Referência já possui nota gerada!';
-    return;
-  end if;*/
 
   -- valida quantidade de ovos 
   if ref.qtdovosinc != ref.qtdovosgrj then
@@ -58,19 +72,30 @@ begin
     end if;
   end if;
 
+  v_confirma := act_confirmar('Confirmação de Nota',
+                              'Deseja confirmar a nota Gerada?',
+                              p_idsessao,
+                              1);
+
   -- busca set de parametros
   ad_pkg_fci.get_config(sysdate, cfg);
 
-  if p_tiponota = 'R' then
+  -- define modelo de nota
+
+  -- se uf GO
+  if ad_get.ufparcemp(ref.codparc, 'P') = ad_get.ufparcemp(1, 'E') then
   
-    v_modelo := cfg.numodrempost;
+    if p_tiponota = 'R' then
+      v_modelo := cfg.numodrempostgo;
+    elsif p_tiponota = 'C' then
+      v_modelo := cfg.numodcpapost; -- recebe o modelo da nota de compra  
+    end if;
   
-  elsif p_tiponota = 'C' then
-  
-    -- se uf GO
-    if ad_get.ufparcemp(ref.codparc, 'P') = ad_get.ufparcemp(ref.codemp, 'E') then
-      v_modelo := cfg.numodcpapost; -- recebe o modelo da nota de compra
-    else
+  else
+    -- PR
+    if p_tiponota = 'R' then
+      v_modelo := cfg.numodrempost;
+    elsif p_tiponota = 'C' then
       v_modelo := cfg.numodpcapost; -- recebe o modelo do pedido de compra
     end if;
   
@@ -79,73 +104,115 @@ begin
   -- busca valores do modelo
   begin
     select * into mgn from ad_tsfmgn m where m.numodelo = v_modelo;
+  
+    select *
+      into top
+      from tgftop
+     where codtipoper = mgn.codtipoper
+       and dhalter = ad_get.maxdhtipoper(mgn.codtipoper);
   exception
     when others then
-      raise;
+      p_mensagem := sqlerrm;
+      return;
   end;
 
   -- insere documento  
+  declare
+    c   varchar2(4000);
+    i   varchar2(4000);
+    f   varchar2(4000);
+    obs varchar2(4000);
   begin
-    -- insere cabeÃ§alho
-    ad_set.ins_pedidocab(p_codemp      => ref.codemp,
-                         p_codparc     => ref.codparc,
-                         p_codvend     => mgn.codvend,
-                         p_codtipoper  => mgn.codtipoper,
-                         p_codtipvenda => mgn.codtipvenda,
-                         p_dtneg       => sysdate,
-                         p_vlrnota     => ref.vlrcom,
-                         p_codnat      => mgn.codnat,
-                         p_codcencus   => ref.codcencus,
-                         p_codproj     => 0,
-                         p_obs         => 'Produção mês ' ||
-                                          to_char(ref.dtref, 'MM/RRRR') ||
-                                          ' - lote ' || ref.numlote,
-                         p_nunota      => ref.nunota);
+    -- insere cabeçalho
+    obs := 'Produção mês ' || to_char(ref.dtref, 'MM/RRRR') || ' - lote ' || ref.numlote;
+    c   := '';
+    c   := c || '<CODEMP>' || mgn.codemp || '</CODEMP>';
+    c   := c || '<CODPARC>' || ref.codparc || '</CODPARC>';
+    c   := c || '<CODVEND>' || trim(to_char(mgn.codvend)) || '</CODVEND>';
+    c   := c || '<CODTIPOPER>' || mgn.codtipoper || '</CODTIPOPER>';
+    c   := c || '<TIPMOV>' || top.tipmov || '</TIPMOV>';
+    c   := c || '<CODTIPVENDA>' || mgn.codtipvenda || '</CODTIPVENDA>';
+    c   := c || '<SERIENOTA>' || mgn.serienota || '</SERIENOTA>';
+    c   := c || '<DTNEG>' || to_char(sysdate, 'dd/mm/yyyy') || '</DTNEG>';
+    c   := c || '<VLRNOTA>' || replace(ref.vlrcom, ',', '.') || '</VLRNOTA>';
+    c   := c || '<CODNAT>' || mgn.codnat || '</CODNAT>';
+    c   := c || '<CODCENCUS>' || ref.codcencus || '</CODCENCUS>';
+    c   := c || '<CODPROJ>0</CODPROJ>';
+    --c   := c || '<OBSERVACAO><![CDATA[' || obs || ']]></OBSERVACAO>';
+    c := c || '<CODUSUINC>' || p_codusu || '</CODUSUINC>';
   
-    update tgfcab set serienota = mgn.serienota where nunota = ref.nunota;
-    -- insere item
-    ad_set.ins_pedidoitens(p_nunota   => ref.nunota,
-                           p_codprod  => mgn.codprod,
-                           p_qtdneg   => ref.qtdparticipovo,
-                           p_codvol   => mgn.codvol,
-                           p_codlocal => mgn.codlocal,
-                           p_controle => null,
-                           p_vlrunit  => ref.vlrunitcom,
-                           p_vlrtotal => ref.vlrcom,
-                           p_mensagem => p_mensagem);
+    i := '';
+    i := i || '<NUNOTA/>';
+    i := i || '<CODPROD>' || mgn.codprod || '</CODPROD>';
+    i := i || '<QTDNEG>' || replace(ref.qtdparticipovo, ',', '.') || '</QTDNEG>';
+    i := i || '<CODVOL>' || mgn.codvol || '</CODVOL>';
+    i := i || '<CODLOCALORIG>' || trim(mgn.codlocal) || '</CODLOCALORIG>';
+    i := i || '<VLRUNIT>' || replace(ref.vlrunitcom, ',', '.') || '</VLRUNIT>';
+    i := i || '<VLRTOT>' || replace(ref.vlrcom, ',', '.') || '</VLRTOT>';
+    i := i || '<CODBENEFNAUF>PR809998</CODBENEFNAUF>';
+    i := i || '<USOPROD>P</USOPROD>';
+    i := i || '<PERCDESC>0</PERCDESC>';
+  
+    ad_pkg_apiskw.acao_inserir_nota(p_cab    => c,
+                                    p_itens  => i,
+                                    p_nunota => ref.nunota,
+                                    p_errmsg => p_mensagem);
   
     if p_mensagem is not null then
+      exclui_movimentacao(ref.nunota);
       return;
+    else
+      update tgfcab set observacao = obs where nunota = ref.nunota;
     end if;
   
-    -- insere financeiro
-    begin
-      ad_set.ins_financeiro(p_codemp     => ref.codemp,
-                            p_numnota    => 0,
-                            p_dtneg      => trunc(sysdate),
-                            p_dtvenc     => ref.dtvenc,
-                            p_codparc    => ref.codparc,
-                            p_top        => mgn.codtipoper,
-                            p_contabanco => mgn.codctabcoint,
-                            p_codnat     => mgn.codnat,
-                            p_codcencus  => ref.codcencus,
-                            p_codproj    => 0,
-                            p_codtiptit  => mgn.codtiptit,
-                            p_origem     => 'E',
-                            p_nunota     => ref.nunota,
-                            p_valor      => ref.vlrcom,
-                            p_nufin      => v_nufin,
-                            p_errmsg     => p_mensagem);
+    -- insere financeiro  
+  
+    if top.atualfin <> 0 then
     
-      if p_mensagem is not null then
-        return;
-      end if;
+      begin
+        f := '';
+        f := f || '<NUNOTA>' || ref.nunota || '</NUNOTA>';
+        f := f || '<CODEMP>' || mgn.codemp || '</CODEMP>';
+        f := f || '<CODVEND>' || mgn.codvend || '</CODVEND>';
+        f := f || '<NUMNOTA>0</NUMNOTA><ORIGEM>E</ORIGEM><PROVISAO>S</PROVISAO>';
+        f := f || '<DTNEG>' || to_char(sysdate, 'dd/mm/yyyy') || '</DTNEG>';
+        f := f || '<DTVENC>' || to_char(ref.dtvenc, 'dd/mm/yyyy') || '</DTVENC>';
+        f := f || '<CODTIPOPER>' || mgn.codtipoper || '</CODTIPOPER>';
+        f := f || '<SERIENOTA>' || mgn.serienota || '</SERIENOTA>';
+        f := f || '<CODPARC>' || ref.codparc || '</CODPARC>';
+        f := f || '<CODBCO>1</CODBCO>';
+        f := f || '<CODCTABCOINT>' || mgn.codctabcoint || '</CODCTABCOINT>';
+        f := f || '<CODNAT>' || mgn.codnat || '</CODNAT>';
+        f := f || '<CODCENCUS>' || ref.codcencus || '</CODCENCUS>';
+        f := f || '<CODTIPTIT>' || mgn.codtiptit || '</CODTIPTIT>';
+        f := f || '<VLRDESDOB>' || replace(ref.vlrcom, ',', '.') || '</VLRDESDOB>';
+        f := f || '<DESDOBRAMENTO>1</DESDOBRAMENTO>';
+        f := f || '<RECDESP>-1</RECDESP>';
+      
+        -- exclui financeiro padrão
+        begin
+          delete from tgffin where nunota = ref.nunota;
+        exception
+          when others then
+            p_mensagem := 'Erro na geração do Financeiro. ' || sqlerrm;
+            exclui_movimentacao(ref.nunota);
+            return;
+        end;
+      
+        ad_pkg_apiskw.acao_inserir_financeiro(p_fin    => f,
+                                              p_nufin  => v_nufin,
+                                              p_errmsg => p_mensagem);
+      
+        if p_mensagem is not null then
+          exclui_movimentacao(ref.nunota);
+          return;
+        else
+          update tgffin f set historico = obs, f.codusu = p_codusu where nunota = ref.nunota;
+        end if;
+      
+      end;
     
-    exception
-      when others then
-        p_mensagem := sqlerrm;
-        return;
-    end;
+    end if;
   
   end;
 
@@ -170,15 +237,14 @@ begin
   exception
     when others then
       p_mensagem := sqlerrm;
+      exclui_movimentacao(ref.nunota);
       return;
   end;
 
   -- cria vinculo externo (usando hash para contornar o problema da PK)
   begin
   
-    select ora_hash(concat(ref.codcencus, ref.dtref), 1000000000, 2)
-      into v_numnota
-      from dual;
+    select ora_hash(concat(ref.codcencus, ref.dtref), 1000000000, 2) into v_numnota from dual;
   
     insert into ad_tblcmf
       (nometaborig, nuchaveorig, nometabdest, nuchavedest)
@@ -187,28 +253,18 @@ begin
   
   exception
     when others then
-      p_mensagem := sqlerrm;
-      return;
+      null;
   end;
 
   -- confirma pedido de compra
   if nvl(mgn.confauto, 'N') = 'S' then
   
-    if act_confirmar('Confirmação de Nota',
-                     'Deseja confirmar a nota Gerada?',
-                     p_idsessao,
-                     1) then
-      commit;
-      stp_confirmanota_java_sf(ref.nunota);
+    if v_confirma then
     
-      -- experimental
-      /**
-      * remover caso necessite diminuir o runtime
-      * a ideia é esperar antes de buscar o status da nfe, na esperanÃ§a
-      * de trazer um status com alguma informaÃ§Ã£o retornada da sefaz
-      **/
+      commit; -- não remover
     
-      dbms_lock.sleep(5);
+      ad_pkg_apiskw.acao_confirmar_nota(ref.nunota);
+    
       declare
         dtinicio date := sysdate;
         dtatual  date;
@@ -223,28 +279,25 @@ begin
     
       -- busca status da nfe
       begin
-        select c.statusnfe
-          into ref.statusnfe
-          from tgfcab c
-         where c.nunota = ref.nunota;
+        select c.statusnfe into ref.statusnfe from tgfcab c where c.nunota = ref.nunota;
       exception
         when others then
           p_mensagem := 'Erro ao buscar o status da NFE da nota ' || ref.nunota;
-          return;
       end;
     
-      -- atualiza informaÃ§Ãµes na origem
+      -- atualizar informações na origem
       begin
         update ad_tsffcpref r
-           set r.statusnfe  = ref.statusnfe,
-               r.statuslote = 'F'
+           set r.statusnfe = ref.statusnfe, r.statuslote = 'F'
          where r.nunota = ref.nunota;
       exception
         when others then
-          p_mensagem := 'Erro ao atualizar as informações na origem. ' ||
-                        sqlerrm;
-          return;
+          p_mensagem := 'Erro ao atualizar as informações na origem. ' || sqlerrm;
       end;
+    
+    else
+    
+      null;
     
     end if;
   
@@ -252,19 +305,22 @@ begin
 
   -- atualiza data ultimo fechamento            
   begin
-    update ad_tsffcp p
-       set p.dtultfat = sysdate
-     where p.codcencus = ref.codcencus;
+    update ad_tsffcp p set p.dtultfat = sysdate where p.codcencus = ref.codcencus;
   exception
     when others then
       p_mensagem := 'Erro ao atualizar a data "Último Fechamento". ' || sqlerrm;
-      return;
   end;
 
-  p_mensagem := 'Nota nº Único ' ||
-                '<a title="Clique aqui" target="_parent" href="' ||
-                ad_fnc_urlskw('TGFCAB', ref.nunota) || '">' || ref.nunota ||
-                '</a>' || ' gerada com sucesso!';
+  if p_mensagem is not null then
+    p_mensagem := 'Concluído com ressalvas! ' || p_mensagem;
+    return;
+  end if;
 
-end;
+  commit;
+
+  p_mensagem := 'Nota nº Único ' || '<a title="Clique aqui" target="_parent" href="' ||
+                ad_fnc_urlskw('TGFCAB', ref.nunota) || '">' || ref.nunota || '</a>' ||
+                ' gerada com sucesso!';
+
+end ad_stp_fcp_gerarnota_sf;
 /

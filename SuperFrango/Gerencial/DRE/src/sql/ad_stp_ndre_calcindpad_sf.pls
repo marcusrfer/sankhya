@@ -21,7 +21,7 @@ begin
   * processo: new dre
   * objetivo: calcular os valores dos indicadores padrões. ação "Recalcular Indicadores" da tela de cadatro de ind. padrões
   
-  22/10/18 - alterado para calcular tudo ao mandar recalcular
+  22/10/18 - m.rangel - alterado para calcular tudo ao mandar recalcular
   */
 
   -- get referencia
@@ -29,11 +29,7 @@ begin
     p_referencia := act_dta_param(p_idsessao, 'DTREF');
   
     if p_referencia is null then
-      p_referencia := to_date(substr(replace(act_dec_param(p_idsessao, 'DTREF'),
-                                             '.',
-                                             ''),
-                                     1,
-                                     8),
+      p_referencia := to_date(substr(replace(act_dec_param(p_idsessao, 'DTREF'), '.', ''), 1, 8),
                               'yyyymmdd');
     end if;
   end;
@@ -75,8 +71,7 @@ begin
     commit;
   exception
     when others then
-      p_mensagem := 'Erro ao limpar tabela de log antes da execução.' ||
-                    sqlerrm;
+      p_mensagem := 'Erro ao limpar tabela de log antes da execução.' || sqlerrm;
       return;
   end;
 
@@ -129,20 +124,17 @@ begin
       -- monta a mensagem de saída com os indicadores relacionados ao selecionado.
       if nvl(v_todos, 'N') = 'N' then
       
-        select descrindpad
-          into v_descrind
-          from dre_cadindpad
-         where codindpad = rel(z);
+        select descrindpad into v_descrind from dre_cadindpad where codindpad = rel(z);
       
         if v_mensagem is null then
           v_mensagem := rel(z) || ' - ' || v_descrind;
         else
-          v_mensagem := v_mensagem || chr(13) || '<br> ' || rel(z) || ' - ' ||
-                        v_descrind;
+          v_mensagem := v_mensagem || chr(13) || '<br> ' || rel(z) || ' - ' || v_descrind;
         end if;
       end if;
     
-      -- calcula os indicadores, seja o individual ou no caso de "todos", calcula os que não são totalizadores
+      -- calcula os indicadores, seja o individual ou no caso de "todos", 
+      -- calcula os que não são totalizadores
       ad_pkg_newdre.set_rentabcom(p_referencia, rel(z));
       ad_pkg_newdre.set_resindpad(p_referencia, rel(z));
     

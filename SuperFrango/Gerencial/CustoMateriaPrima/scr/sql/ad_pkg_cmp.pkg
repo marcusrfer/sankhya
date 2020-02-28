@@ -1,27 +1,38 @@
 create or replace package ad_pkg_cmp as
   -- custo da matéria prima
 
+  type base_dados is record(
+    dtinicio    date,
+    numcontrato number,
+    codparc     number,
+    nomeparc    tgfpar.nomeparc%type,
+    codprod     number,
+    codvend     number,
+    qtdneg      float,
+    vlrunit     float,
+    vlrfrete    float,
+    qtdentregue float,
+    umidade     float,
+    vlrsecagem  float);
+
+  type dados is table of base_dados;
+
+  function get_dados(p_dtref date, p_codprod number) return dados
+    pipelined;
+
   -- retorna o número único da nota de romaneio para preenchimento do campo
   -- na tela de controle de carregamento de mp
-  function get_nunota(p_numnota number, p_codparc number, p_codprod number)
-    return number;
+  function get_nunota(p_numnota number, p_codparc number, p_codprod number) return number;
 
   -- função que retorna o número do contrato de compra atravez do número do romaneio 
   -- informado na tela de controle de carregametno de materia prima
-  function get_nrocontratocpa(p_numnota number,
-                              p_codparc number,
-                              p_codprod number) return number deterministic;
+  function get_nrocontratocpa(p_numnota number, p_codparc number, p_codprod number) return number deterministic;
 
-  function get_nrocontratocpa(p_seq     number,
-                              p_ord     int,
-                              p_numnota number,
-                              p_codparc number,
-                              p_codprod number) return number deterministic;
+  function get_nrocontratocpa(p_seq number, p_ord int, p_numnota number, p_codparc number, p_codprod number)
+    return number deterministic;
 
-  function get_ult_vlrfreteton(p_codparc number,
-                               p_codprod number,
-                               p_codemp  number,
-                               p_data    date) return float deterministic;
+  function get_ult_vlrfreteton(p_codparc number, p_codprod number, p_codemp number, p_data date) return float
+    deterministic;
 
   function get_cred_piscofins(p_nunota number, p_sequencia int) return float;
 
@@ -29,24 +40,21 @@ create or replace package ad_pkg_cmp as
 
   function get_qtdcontrato(p_numcontrato number, p_codprod number) return float;
 
-  function get_totalcarregamento(p_numcontrato number, p_codprod number)
-    return float;
+  function get_nrocontratoarmz(p_numcontrato number, p_codprod number) return number deterministic;
+
+  function get_totalcarregamento(p_numcontrato number, p_codprod number) return float;
 
   function get_totalfrete(p_numcontrato number, p_codprod number) return float;
 
   function get_mediaumidade(p_numcontrato number, p_codprod number) return float;
 
-  function get_tabdescumidade(p_numcontrato number, p_codprod number)
-    return float;
+  function get_tabdescumidade(p_numcontrato number, p_codprod number) return float;
 
-  function get_vlrdescumidade(p_numcontrato number, p_codprod number)
-    return float;
+  function get_vlrdescumidade(p_numcontrato number, p_codprod number) return float;
 
   function get_vlrsecagem(p_nrocontratoarmz number, p_umidade float) return float;
 
-  function get_vlrsecagem(p_numcontrato number,
-                          p_codprod     number,
-                          p_umidade     float) return float deterministic;
+  function get_vlrsecagem(p_numcontrato number, p_codprod number, p_umidade float) return float deterministic;
 
 end ad_pkg_cmp;
 /
@@ -54,8 +62,7 @@ create or replace package body ad_pkg_cmp as
 
   -- retorna o número único da nota de romaneio para preenchimento do campo
   -- na tela de controle de carregamento de mp
-  function get_nunota(p_numnota number, p_codparc number, p_codprod number)
-    return number is
+  function get_nunota(p_numnota number, p_codparc number, p_codprod number) return number is
     v_nunota number;
   begin
   
@@ -116,32 +123,22 @@ create or replace package body ad_pkg_cmp as
     return v_nunota;*/
   
     when others then
-      dbms_output.put_line('Erro ao buscar o nro único da remessa do carregamento. ' ||
-                           sqlerrm);
+      dbms_output.put_line('Erro ao buscar o nro único da remessa do carregamento. ' || sqlerrm);
       return null;
   end get_nunota;
 
   -- função que retorna o número do contrato de compra atravez do número do romaneio 
   -- informado na tela de controle de carregametno de materia prima
 
-  function get_nrocontratocpa(p_numnota number,
-                              p_codparc number,
-                              p_codprod number) return number deterministic is
+  function get_nrocontratocpa(p_numnota number, p_codparc number, p_codprod number) return number deterministic is
     v_nrocontrato number;
   begin
-    v_nrocontrato := get_nrocontratocpa(null,
-                                        null,
-                                        p_numnota,
-                                        p_codparc,
-                                        p_codprod);
+    v_nrocontrato := get_nrocontratocpa(null, null, p_numnota, p_codparc, p_codprod);
     return v_nrocontrato;
   end;
 
-  function get_nrocontratocpa(p_seq     number,
-                              p_ord     int,
-                              p_numnota number,
-                              p_codparc number,
-                              p_codprod number) return number deterministic is
+  function get_nrocontratocpa(p_seq number, p_ord int, p_numnota number, p_codparc number, p_codprod number)
+    return number deterministic is
     v_nunota      number;
     v_nrocontrato number;
     v_dtcarrgto   date;
@@ -160,23 +157,14 @@ create or replace package body ad_pkg_cmp as
          and i.codprod = p_codprod
          and c.codtipoper in (622);
     
-      select nunota
-        into v_nunota
-        from tcscon
-       where numcontrato = v_nrocontrato;
+      select nunota into v_nunota from tcscon where numcontrato = v_nrocontrato;
     
-      select numcontrato
-        into v_nrocontrato
-        from tgfcab
-       where nunota = v_nunota;
+      select numcontrato into v_nrocontrato from tgfcab where nunota = v_nunota;
     
     exception
       when no_data_found then
       
-        select ct.datasaidatrans
-          into v_dtcarrgto
-          from ad_contcargto ct
-         where ct.sequencia = p_seq;
+        select ct.datasaidatrans into v_dtcarrgto from ad_contcargto ct where ct.sequencia = p_seq;
       
         begin
           select c.numcontrato
@@ -185,11 +173,10 @@ create or replace package body ad_pkg_cmp as
             join tcspsc p
               on p.numcontrato = c.numcontrato
            where c.codparc = p_codparc
-             and c.dtcontrato =
-                 (select max(dtcontrato)
-                    from tcscon con
-                   where con.codparc = c.codparc
-                     and con.dtcontrato <= v_dtcarrgto);
+             and c.dtcontrato = (select max(dtcontrato)
+                                   from tcscon con
+                                  where con.codparc = c.codparc
+                                    and con.dtcontrato <= v_dtcarrgto);
         exception
           when no_data_found then
           
@@ -206,11 +193,10 @@ create or replace package body ad_pkg_cmp as
                 join tcspsc p
                   on p.numcontrato = c.numcontrato
                where c.codparc = v_codparc
-                 and c.dtcontrato =
-                     (select max(dtcontrato)
-                        from tcscon con
-                       where con.codparc = c.codparc
-                         and con.dtcontrato <= v_dtcarrgto);
+                 and c.dtcontrato = (select max(dtcontrato)
+                                       from tcscon con
+                                      where con.codparc = c.codparc
+                                        and con.dtcontrato <= v_dtcarrgto);
             exception
               when others then
                 dbms_output.put_line('Não encontrou o contrato - ' || sqlerrm);
@@ -229,8 +215,7 @@ create or replace package body ad_pkg_cmp as
       return null;
   end get_nrocontratocpa;
 
-  function get_nrocontratoarmz(p_numcontrato number, p_codprod number)
-    return number deterministic as
+  function get_nrocontratoarmz(p_numcontrato number, p_codprod number) return number deterministic as
     v_result number;
   begin
     select distinct c.numcontrato
@@ -243,13 +228,11 @@ create or replace package body ad_pkg_cmp as
        and i.cancelado = 'NÃO'
        and rownum = 1;
   
-    return v_result;
+    return nvl(v_result, 0);
   
   end get_nrocontratoarmz;
 
-  function get_dadoscontrato(p_numcontrato number,
-                             p_codprod     number,
-                             p_tipo        char) return float is
+  function get_dadoscontrato(p_numcontrato number, p_codprod number, p_tipo char) return float is
     functionresult float;
   begin
     /**
@@ -268,11 +251,10 @@ create or replace package body ad_pkg_cmp as
                         and psc.codprod = pre.codprod
                       where c.numcontrato = p_numcontrato
                         and psc.codprod = p_codprod
-                        and pre.referencia =
-                            (select max(p.referencia)
-                               from tcspre p
-                              where p.numcontrato = pre.numcontrato
-                                and p.codprod = pre.codprod))
+                        and pre.referencia = (select max(p.referencia)
+                                                from tcspre p
+                                               where p.numcontrato = pre.numcontrato
+                                                 and p.codprod = pre.codprod))
     loop
       if p_tipo = 'Q' then
         functionresult := contrato.qtdeprevista;
@@ -281,7 +263,7 @@ create or replace package body ad_pkg_cmp as
       end if;
     end loop;
   
-    return(functionresult);
+    return nvl(functionresult, 0);
   end get_dadoscontrato;
 
   function get_qtdcontrato(p_numcontrato number, p_codprod number) return float is
@@ -298,9 +280,7 @@ create or replace package body ad_pkg_cmp as
     return(functionresult);
   end get_vlrcontrato;
 
-  function get_dadoscarregamentos(p_numcontrato number,
-                                  p_codprod     number,
-                                  p_tipo        varchar2) return float is
+  function get_dadoscarregamentos(p_numcontrato number, p_codprod number, p_tipo varchar2) return float is
     functionresult float := 0;
     totalcarregado float := 0;
     totalfrete     float := 0;
@@ -338,19 +318,18 @@ create or replace package body ad_pkg_cmp as
       functionresult := codtabdesconto;
     end if;
   
-    return(functionresult);
+    return nvl(functionresult, 0);
   
   end get_dadoscarregamentos;
 
   /* funçoes auxiliares poliformicas */
 
   -- retorna a quantidade total carregada
-  function get_totalcarregamento(p_numcontrato number, p_codprod number)
-    return float is
+  function get_totalcarregamento(p_numcontrato number, p_codprod number) return float is
     fresult float;
   begin
     fresult := get_dadoscarregamentos(p_numcontrato, p_codprod, 'TC');
-    return(fresult);
+    return nvl(fresult, 0);
   end get_totalcarregamento;
 
   -- retorna o valor total do frete
@@ -358,7 +337,7 @@ create or replace package body ad_pkg_cmp as
     fresult float;
   begin
     fresult := get_dadoscarregamentos(p_numcontrato, p_codprod, 'TF');
-    return(fresult);
+    return nvl(fresult, 0);
   end get_totalfrete;
 
   -- retorna a media da umidade
@@ -366,21 +345,19 @@ create or replace package body ad_pkg_cmp as
     fresult float;
   begin
     fresult := get_dadoscarregamentos(p_numcontrato, p_codprod, 'MU');
-    return(fresult);
+    return nvl(fresult, 0);
   end get_mediaumidade;
 
   -- retorna a tabela da umidade
-  function get_tabdescumidade(p_numcontrato number, p_codprod number)
-    return float is
+  function get_tabdescumidade(p_numcontrato number, p_codprod number) return float is
     fresult float;
   begin
     fresult := get_dadoscarregamentos(p_numcontrato, p_codprod, 'TD');
-    return(fresult);
+    return nvl(fresult, 0);
   end get_tabdescumidade;
 
   -- retorna o desconto pela umidade do grão
-  function get_vlrdescumidade(p_numcontrato number, p_codprod number)
-    return float is
+  function get_vlrdescumidade(p_numcontrato number, p_codprod number) return float is
     v_desconto float;
     totcarreg  float;
     vlrsaca    float;
@@ -402,18 +379,16 @@ create or replace package body ad_pkg_cmp as
                   0
                end + (v_desconto / 100)) / totcarreg / 60);
   
-    return(nvl(fresult, 0));
+    return nvl(fresult, 0);
   end get_vlrdescumidade;
 
-  function get_vlrsecagem(p_numcontrato number,
-                          p_codprod     number,
-                          p_umidade     float) return float deterministic is
+  function get_vlrsecagem(p_numcontrato number, p_codprod number, p_umidade float) return float deterministic is
     v_result       float;
     v_contratoarmz number;
   begin
     v_contratoarmz := get_nrocontratoarmz(p_numcontrato, p_codprod);
     v_result       := get_vlrsecagem(v_contratoarmz, p_umidade);
-    return v_result;
+    return nvl(v_result, 0);
   end;
 
   -- retorna o valor da secagem praticado pelo armazém
@@ -422,10 +397,7 @@ create or replace package body ad_pkg_cmp as
     v_preco  float;
   begin
     begin
-      select codtdc
-        into v_codtab
-        from tcscon c
-       where c.numcontrato = p_nrocontratoarmz;
+      select codtdc into v_codtab from tcscon c where c.numcontrato = p_nrocontratoarmz;
     
       select preco
         into v_preco
@@ -437,15 +409,13 @@ create or replace package body ad_pkg_cmp as
       when no_data_found then
         v_preco := 0;
     end;
-    return v_preco;
+    return nvl(v_preco, 0);
   
   end get_vlrsecagem;
 
   -- retorna o valor do ultimo vlr de frete por tonelada
-  function get_ult_vlrfreteton(p_codparc number,
-                               p_codprod number,
-                               p_codemp  number,
-                               p_data    date) return float deterministic as
+  function get_ult_vlrfreteton(p_codparc number, p_codprod number, p_codemp number, p_data date) return float
+    deterministic as
     v_vlrfreteton float;
   begin
     select vlrfreteton
@@ -510,9 +480,7 @@ create or replace package body ad_pkg_cmp as
         return 0;
     end;
   
-    select round(v_vlrnota * round(percexport / 100, 4) * (30 / 100) *
-                  (9.25 / 100),
-                  4)
+    select round(v_vlrnota * round(percexport / 100, 4) * (30 / 100) * (9.25 / 100), 4)
       into v_vlrpiscofins
       from ad_apurapc pc
      where pc.referencia = v_dtref
@@ -521,6 +489,83 @@ create or replace package body ad_pkg_cmp as
     return v_vlrpiscofins;
   
   end get_cred_piscofins;
+
+  function get_dados(p_dtref date, p_codprod number) return dados
+    pipelined as
+    d base_dados;
+  begin
+    -- Test statements here
+  
+    for contr in (select con.ad_dtinicio dtinicio,
+                         cab.numcontrato,
+                         cab.codparc,
+                         par.nomeparc,
+                         ite.codprod,
+                         con.ad_codvend codvend,
+                         round(ad_pkg_cmp.get_qtdcontrato(cab.numcontrato, ite.codprod) / 60) qtdneg,
+                         round(ad_pkg_cmp.get_vlrcontrato(cab.numcontrato, ite.codprod) * 60, 2) vlrunit
+                    from tgfcab cab
+                    join tgfpar par
+                      on par.codparc = cab.codparc
+                    join tgfite ite
+                      on ite.nunota = cab.nunota
+                    join tcscon con
+                      on cab.numcontrato = con.numcontrato
+                   where 1 = 1
+                     and cab.numcontrato > 0
+                     and cab.dtentsai between trunc(p_dtref, 'fmmm') and last_day(p_dtref)
+                     and tipmov = 'C'
+                     and ite.codprod = p_codprod
+                   group by con.ad_dtinicio,
+                            cab.numcontrato,
+                            cab.codparc,
+                            par.nomeparc,
+                            ite.codprod,
+                            con.ad_codvend
+                   order by numcontrato)
+    loop
+      d.dtinicio    := contr.dtinicio;
+      d.numcontrato := contr.numcontrato;
+      d.codparc     := contr.codparc;
+      d.nomeparc    := contr.nomeparc;
+      d.codprod     := contr.codprod;
+      d.codvend     := contr.codvend;
+      d.qtdneg      := contr.qtdneg;
+      d.vlrunit     := contr.vlrunit;
+      d.vlrfrete    := 0;
+      d.qtdentregue := 0;
+      d.umidade     := 0;
+      d.vlrsecagem  := 0;
+    
+      for vlr in (select i.numcontrato,
+                         avg(i.umidade) umidade,
+                         sum(i.vlrfrete) vlrfrete,
+                         round(sum(i.qtde) / 60) qtd_entregue
+                    from ad_itecargto i
+                    join tgfcab c
+                      on c.nunota = i.nunota
+                   where 1 = 1
+                     and i.cancelado = 'NÃO'
+                     and nvl(c.nunota, 0) > 0
+                     and i.numcontrato = contr.numcontrato
+                   group by i.numcontrato)
+      
+      loop
+      
+        dbms_output.put_line('    ' || vlr.vlrfrete);
+      
+        d.vlrfrete    := vlr.vlrfrete;
+        d.qtdentregue := vlr.qtd_entregue;
+        d.umidade     := round(vlr.umidade, 0);
+        d.vlrsecagem  := round(ad_pkg_cmp.get_vlrsecagem(vlr.numcontrato, vlr.umidade), 2);
+      
+      end loop;
+    
+      pipe row(d);
+    
+    end loop;
+  
+  end get_dados;
 
 end ad_pkg_cmp;
 /

@@ -18,22 +18,17 @@ create or replace package ad_pkg_newdre authid current_user is
   --> métodos auxiliares <--
 
   -- calcula o frete e peso do cross dock
-  procedure aux_set_fretepesocross(p_referencia date,
-                                   p_errmsg     out nocopy varchar2);
+  procedure aux_set_fretepesocross(p_referencia date, p_errmsg out nocopy varchar2);
 
   -- valida formulas de exceções
   procedure aux_valida_excformulas(p_msg out nocopy varchar2);
 
   --> métodos de retornos <--
 
-  function get_qtdtotal(p_referencia date, p_codemp number) return float
-    deterministic;
+  function get_qtdtotal(p_referencia date, p_codemp number) return float deterministic;
 
-  function get_qtdtotal(p_referencia date,
-                        p_codemp     int,
-                        p_codune     int,
-                        p_coduf      int,
-                        p_codprod    number) return float deterministic;
+  function get_qtdtotal(p_referencia date, p_codemp int, p_codune int, p_coduf int, p_codprod number)
+    return float deterministic;
 
   function get_resindpad(p_referencia date,
                          p_codindpad  number,
@@ -42,11 +37,8 @@ create or replace package ad_pkg_newdre authid current_user is
                          p_codune     number,
                          p_coduf      int) return float;
 
-  function get_resindger(p_referencia date,
-                         p_codind     int,
-                         p_codemp     number,
-                         p_codune     number,
-                         p_coduf      number) return float deterministic;
+  function get_resindger(p_referencia date, p_codind int, p_codemp number, p_codune number, p_coduf number)
+    return float deterministic;
 
   function get_vlrdescfin(p_referencia date,
                           p_codemp     number,
@@ -54,13 +46,9 @@ create or replace package ad_pkg_newdre authid current_user is
                           p_coduf      number,
                           p_codprod    number) return float deterministic;
 
-  function get_vlrcusto_dre(p_referencia date,
-                            p_codprod    number,
-                            p_codemp     number,
-                            p_tipo       char) return float;
+  function get_vlrcusto_dre(p_referencia date, p_codprod number, p_codemp number, p_tipo char) return float;
 
-  function get_vlrcusto_dre(p_referencia date, p_codprod number, p_codemp int)
-    return float deterministic;
+  function get_vlrcusto_dre(p_referencia date, p_codprod number, p_codemp int) return float deterministic;
 
   -- cria as tabelas
   procedure cria_tabelabase(p_tipo pls_integer, p_mensagem out nocopy varchar2);
@@ -76,17 +64,13 @@ create or replace package ad_pkg_newdre authid current_user is
 
   /* calculos dos indicadores */
 
-  procedure set_resindger(p_referencia date,
-                          p_codindger  number,
-                          p_mensagem   out nocopy varchar2);
+  procedure set_resindger(p_referencia date, p_codindger number, p_mensagem out nocopy varchar2);
 
   procedure set_rentabcom(p_referencia date, p_codindpad int default null);
 
-  procedure set_resindpad(p_referencia date,
-                          p_codindpad  pls_integer default null);
+  procedure set_resindpad(p_referencia date, p_codindpad pls_integer default null);
 
-  procedure get_relacionamento_indpad(p_codind number,
-                                      p_array  out nocopy ad_type_of_number);
+  procedure get_relacionamento_indpad(p_codind number, p_array out nocopy ad_type_of_number);
 
   procedure executeagendamento;
 
@@ -95,10 +79,7 @@ end ad_pkg_newdre;
 create or replace package body ad_pkg_newdre is
 
   /* rotina que grava log de operação */
-  procedure insereeventolog(p_referencia date,
-                            p_evento     varchar2,
-                            p_status     char,
-                            p_errmsg     clob) is
+  procedure insereeventolog(p_referencia date, p_evento varchar2, p_status char, p_errmsg clob) is
   begin
     -- status, 1 para sucesso, -1 para falha
     insert into dre_logeventos
@@ -108,8 +89,7 @@ create or replace package body ad_pkg_newdre is
   end insereeventolog;
 
   /* envia o valor do frete calculado e o peso total por cidade da vgfcross */
-  procedure aux_set_fretepesocross(p_referencia date,
-                                   p_errmsg     out nocopy varchar2) is
+  procedure aux_set_fretepesocross(p_referencia date, p_errmsg out nocopy varchar2) is
   
     type type_rec_cidcross is record(
       id     rowid,
@@ -127,11 +107,9 @@ create or replace package body ad_pkg_newdre is
     v_sufixo := to_char(p_referencia, 'YYYYMM');
   
     stmt := 'Select Rowid,  ' || 'Case When cidcross > 0 Then cidcross Else ' ||
-            'Case When codemp <> 1 And vlrtrx > 0 Then ' ||
-            'ad_get.Codcidparcemp(codemp,''E'') End ' ||
+            'Case When codemp <> 1 And vlrtrx > 0 Then ' || 'ad_get.Codcidparcemp(codemp,''E'') End ' ||
             'End From dre_baseindpad ' || 'Where dtref = :dtref ' ||
-            ' and Case When cidcross > 0 Then cidcross ' ||
-            'Else Case When codemp <> 1 And vlrtrx > 0 Then ' ||
+            ' and Case When cidcross > 0 Then cidcross ' || 'Else Case When codemp <> 1 And vlrtrx > 0 Then ' ||
             ' ad_get.Codcidparcemp(codemp,''E'') End ' || 'End = :codcid';
   
     for c in (select * from vgfcross where referencia = p_referencia)
@@ -139,8 +117,11 @@ create or replace package body ad_pkg_newdre is
     
       open c_cid for stmt
         using p_referencia, c.codcid;
-      fetch c_cid bulk collect
-        into t;
+      loop
+        fetch c_cid bulk collect
+          into t limit 1000;
+        exit when c_cid%notfound;
+      end loop;
       close c_cid;
     
       begin
@@ -181,8 +162,7 @@ create or replace package body ad_pkg_newdre is
   
   end aux_set_fretepesocross;
 
-  procedure get_relacionamento_indpad(p_codind number,
-                                      p_array  out nocopy ad_type_of_number) is
+  procedure get_relacionamento_indpad(p_codind number, p_array out nocopy ad_type_of_number) is
     v_newind  number;
     v_oldind  number;
     v_formula varchar2(4000);
@@ -241,8 +221,7 @@ create or replace package body ad_pkg_newdre is
                        where c.ativo = 'S'
                          and c.totalizador = 'S'
                             --and nvl(f.ignorar, 'N') = 'N'
-                         and upper(formindpad) like
-                             '%' || upper(v_newabv) || '%'
+                         and upper(formindpad) like '%' || upper(v_newabv) || '%'
                          and f.dhvigor = (select max(f2.dhvigor)
                                             from dre_forindpad f2
                                            where f2.codindpad = f.codindpad
@@ -295,8 +274,7 @@ create or replace package body ad_pkg_newdre is
   end get_relacionamento_indpad;
 
   /* função que retorna quantidade total negociada */
-  function get_qtdtotal(p_referencia date, p_codemp number) return float
-    deterministic is
+  function get_qtdtotal(p_referencia date, p_codemp number) return float deterministic is
     v_qtdtotal float;
   begin
     execute immediate 'Select sum(Qtdneg)-sum(qtddev) from dre_baseindpad where codemp = :codemp and dtref = :dtref'
@@ -310,11 +288,8 @@ create or replace package body ad_pkg_newdre is
       return 0;
   end get_qtdtotal;
 
-  function get_qtdtotal(p_referencia date,
-                        p_codemp     int,
-                        p_codune     int,
-                        p_coduf      int,
-                        p_codprod    number) return float deterministic is
+  function get_qtdtotal(p_referencia date, p_codemp int, p_codune int, p_coduf int, p_codprod number)
+    return float deterministic is
     v_result float;
     stmt     varchar2(4000);
   begin
@@ -363,10 +338,7 @@ create or replace package body ad_pkg_newdre is
   end get_vlrdescfin;
 
   /* função que retorna valor da base de custo */
-  function get_vlrcusto_dre(p_referencia date,
-                            p_codprod    number,
-                            p_codemp     number,
-                            p_tipo       char) return float is
+  function get_vlrcusto_dre(p_referencia date, p_codprod number, p_codemp number, p_tipo char) return float is
     p_dataini      date;
     p_datafin      date;
     vlr_custo_oper float := 0;
@@ -408,11 +380,7 @@ create or replace package body ad_pkg_newdre is
     if vlr_custo_oper <> 0 then
       vlr_custo := vlr_custo_oper;
     else
-      vlr_custo := ad_get.custo_produto(p_codprod,
-                                        1,
-                                        1100,
-                                        p_datafin,
-                                        v_tipocusto);
+      vlr_custo := ad_get.custo_produto(p_codprod, 1, 1100, p_datafin, v_tipocusto);
     end if;
   
     return nvl(vlr_custo, 0);
@@ -422,8 +390,7 @@ create or replace package body ad_pkg_newdre is
       return 0;
   end get_vlrcusto_dre;
 
-  function get_vlrcusto_dre(p_referencia date, p_codprod number, p_codemp int)
-    return float deterministic is
+  function get_vlrcusto_dre(p_referencia date, p_codprod number, p_codemp int) return float deterministic is
     vlr_custo_oper float := 0;
     vlr_custo      float := 0;
     stmt           varchar2(4000);
@@ -451,11 +418,8 @@ create or replace package body ad_pkg_newdre is
   end get_vlrcusto_dre;
 
   /* função que retorna os valores de indicadores gerenciais */
-  function get_resindger(p_referencia date,
-                         p_codind     int,
-                         p_codemp     number,
-                         p_codune     number,
-                         p_coduf      number) return float deterministic is
+  function get_resindger(p_referencia date, p_codind int, p_codemp number, p_codune number, p_coduf number)
+    return float deterministic is
     v_valorind float;
   begin
   
@@ -539,8 +503,7 @@ create or replace package body ad_pkg_newdre is
     end if;
   
     stmt := replace(upper(stmt), ':REFERENCIA', '''01/01/1900''');
-    stmt := 'create table  ' || v_nometab || ' as ' || chr(13) || stmt ||
-            ' and 1 = 0';
+    stmt := 'create table  ' || v_nometab || ' as ' || chr(13) || stmt || ' and 1 = 0';
   
     begin
       execute immediate stmt;
@@ -558,6 +521,8 @@ create or replace package body ad_pkg_newdre is
   
   end cria_tabelabase;
 
+  -- cria a base de calculo para os indicadores padrões e a rentabilidade
+  -- usando a query da formula do tipo padrão para a criação da base
   procedure set_baseindpad(p_referencia date, p_mensagem out nocopy varchar2) is
     v_cur sys_refcursor;
   begin
@@ -586,10 +551,7 @@ create or replace package body ad_pkg_newdre is
      where f.tipoind = 'P'
        and base = 'S';
   
-    for del in (select dtref
-                  from dre_baseindpad
-                 where dtref = p_referencia
-                 group by dtref)
+    for del in (select dtref from dre_baseindpad where dtref = p_referencia group by dtref)
     loop
       delete from dre_baseindpad where dtref = p_referencia;
     end loop;
@@ -613,10 +575,7 @@ create or replace package body ad_pkg_newdre is
   procedure set_basedesccom(p_referencia date) is
   begin
   
-    select count(*)
-      into v_count
-      from dre_basevlrdesc d
-     where d.dtref = p_referencia;
+    select count(*) into v_count from dre_basevlrdesc d where d.dtref = p_referencia;
     if (v_count > 0) then
       delete from dre_basevlrdesc d where dtref = p_referencia;
       commit;
@@ -624,8 +583,8 @@ create or replace package body ad_pkg_newdre is
   
     select f.query into stmt from dre_formulas f where f.codform = 18;
   
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          --noformat start
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            stmt := q'[insert /*+ APPEND */ into DRE_BASEVLRDESC
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          --noformat start
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            stmt := q'[insert /*+ APPEND */ into DRE_BASEVLRDESC
 Select 
   trunc(dhbaixa,'mm') dtref, 
   codemp, 
@@ -646,7 +605,7 @@ group by trunc(dhbaixa,'mm'),
   codcencus, 
   coduf, 
   codprod]';
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          --noformat end
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          --noformat end
   
     execute immediate stmt
       using p_referencia;
@@ -714,8 +673,11 @@ group by trunc(dhbaixa,'mm'),
      Group By dtref,codemp,codprod,codlocal,vlrcusto]'
       using p_referencia;
   
-    fetch c bulk collect
-      into tv;
+    loop
+      fetch c bulk collect
+        into tv limit 1000;
+      exit when c%notfound;
+    end loop;
     close c;
   
     begin
@@ -746,10 +708,7 @@ group by trunc(dhbaixa,'mm'),
   procedure set_baseindger(p_referencia date, p_mensagem out nocopy varchar2) is
   begin
   
-    for l in (select dtref
-                from dre_baseindger
-               where dtref = p_referencia
-               group by dtref)
+    for l in (select dtref from dre_baseindger where dtref = p_referencia group by dtref)
     loop
       delete from dre_baseindger where dtref = l.dtref;
       commit;
@@ -764,8 +723,7 @@ group by trunc(dhbaixa,'mm'),
     
       v_nometab := 'DRE_BASEINDGER';
     
-      stmt := 'insert /*+ APPEND */ into ' || v_nometab || chr(13) ||
-              c_form.query;
+      stmt := 'insert /*+ APPEND */ into ' || v_nometab || chr(13) || c_form.query;
     
       dbms_output.put_line(stmt);
     
@@ -781,9 +739,7 @@ group by trunc(dhbaixa,'mm'),
   end set_baseindger;
 
   /* calcula e popula a tabela de valores dos indicadores gerenciais */
-  procedure set_resindger(p_referencia date,
-                          p_codindger  number,
-                          p_mensagem   out nocopy varchar2) is
+  procedure set_resindger(p_referencia date, p_codindger number, p_mensagem out nocopy varchar2) is
     rig dre_resindger%rowtype;
   
     type cursor_ind is ref cursor;
@@ -794,10 +750,7 @@ group by trunc(dhbaixa,'mm'),
     v_nometab := 'DRE_BASEINDGER';
   
     -- verifica existência de dados
-    select count(*)
-      into v_count
-      from dre_baseindger
-     where dtref = p_referencia;
+    select count(*) into v_count from dre_baseindger where dtref = p_referencia;
   
     if v_count = 0 then
       p_mensagem := 'Não possui base calculada para este período.';
@@ -805,10 +758,18 @@ group by trunc(dhbaixa,'mm'),
     end if;
   
     -- percorre cadastro de indicadores gerenciais
-    for c_ind in (select g.codindger, g.descrindger, f.formindger,
-                         nvl(f.coduf, 0) coduf, nvl(f.codune, 0) codune,
-                         nvl(f.codemp, 0) codemp, f.sigla, f.clacus, f.clacuscont,
-                         f.codform, f.dhvigor, f.codforger
+    for c_ind in (select g.codindger,
+                         g.descrindger,
+                         f.formindger,
+                         nvl(f.coduf, 0) coduf,
+                         nvl(f.codune, 0) codune,
+                         nvl(f.codemp, 0) codemp,
+                         f.sigla,
+                         f.clacus,
+                         f.clacuscont,
+                         f.codform,
+                         f.dhvigor,
+                         f.codforger
                     from dre_cadindger g
                     join dre_forindger f
                       on g.codindger = f.codindger
@@ -816,24 +777,20 @@ group by trunc(dhbaixa,'mm'),
                      and nvl(g.ativo, 'N') = 'S'
                      and nvl(f.codform, 0) > 0
                      and (g.codindger = p_codindger or nvl(p_codindger, 0) = 0)
-                     and f.dhvigor =
-                         (select max(dhvigor)
-                            from dre_forindger ff
-                           where ff.codindger = f.codindger
-                             and ff.codforger = f.codforger
-                             and nvl(ff.codform, 0) > 0
-                             and (trunc(ff.dhvigor, 'mm') = p_referencia or
-                                 trunc(ff.dhvigor, 'mm') <= p_referencia)
-                             and ff.dhvigor <= sysdate)
+                     and f.dhvigor = (select max(dhvigor)
+                                        from dre_forindger ff
+                                       where ff.codindger = f.codindger
+                                         and ff.codforger = f.codforger
+                                         and nvl(ff.codform, 0) > 0
+                                         and (trunc(ff.dhvigor, 'mm') = p_referencia or
+                                             trunc(ff.dhvigor, 'mm') <= p_referencia)
+                                         and ff.dhvigor <= sysdate)
                    order by g.codindger)
     loop
     
       -- busca query base com fórmula
       begin
-        select f.query
-          into stmt
-          from dre_formulas f
-         where f.codform = c_ind.codform;
+        select f.query into stmt from dre_formulas f where f.codform = c_ind.codform;
       exception
         when others then
           p_mensagem := 'Erro: Consulta base não encontrada no cadastro de fórmulas. Indicador: ' ||
@@ -882,8 +839,12 @@ group by trunc(dhbaixa,'mm'),
           into dre_resindger
             (dtref, codindger, codemp, codune, coduf, vlrindger, codforger)
           values
-            (p_referencia, c_ind.codindger, nvl(rig.codemp, 1),
-             nvl(rig.codune, 1), nvl(rig.coduf, 9), nvl(rig.vlrindger, 0),
+            (p_referencia,
+             c_ind.codindger,
+             nvl(rig.codemp, 1),
+             nvl(rig.codune, 1),
+             nvl(rig.coduf, 9),
+             nvl(rig.vlrindger, 0),
              c_ind.codforger);
         exception
           when others then
@@ -932,16 +893,17 @@ group by trunc(dhbaixa,'mm'),
     if i = 0 then
       insert into dre_rentabcom
         (dtref, nunota, sequencia)
-        select dtref, nunota, sequencia
-          from dre_baseindpad
-         where dtref = p_referencia;
+        select dtref, nunota, sequencia from dre_baseindpad where dtref = p_referencia;
     else
       null;
     end if;
   
     -- percorre os indicadores padrões
-    for l in (select dc.codindpad, fp.formindpad, dc.temexc,
-                     nvl(dc.totalizador, 'N') totalizador, dc.abrev,
+    for l in (select dc.codindpad,
+                     fp.formindpad,
+                     dc.temexc,
+                     nvl(dc.totalizador, 'N') totalizador,
+                     dc.abrev,
                      nvl(fp.ignorar, 'N') ignorar
                 from dre_cadindpad dc
                 join dre_forindpad fp
@@ -964,8 +926,8 @@ group by trunc(dhbaixa,'mm'),
       -- se totalizador 
       if l.totalizador = 'S' then
       
-        stmt := 'update dre_rentabcom' || ' set ' || l.abrev || ' = ' ||
-                l.formindpad || ' Where dtref = :dtref';
+        stmt := 'update dre_rentabcom' || ' set ' || l.abrev || ' = ' || l.formindpad ||
+                ' Where dtref = :dtref';
       
         -- atualiza valor na dre_rentabcom
         execute immediate stmt
@@ -993,17 +955,21 @@ group by trunc(dhbaixa,'mm'),
       
         -- se tem exceção
         if (l.temexc = 'S') then
-          for txt in (select e.codindpad, p.abrev, e.dhvigor, codemp, codune,
-                             codgrupoprod, codprod, coduf, e.codexc,
-                             ' when (codemp = ' || e.codemp || ' or ' ||
-                             e.codemp || ' = 0)' || chr(13) || ' and (codune = ' ||
-                             e.codune || ' or ' || e.codune || ' = 0)' ||
-                             chr(13) || ' and (codgrupoprod = ' ||
-                             e.codgrupoprod || ' or ' || e.codgrupoprod ||
-                             ' = 0 )' || chr(13) || ' and (codprod = ' ||
-                             e.codprod || ' or ' || e.codprod || ' = 0)' ||
-                             chr(13) || ' and (coduf = ' || e.coduf || ' or ' ||
-                             e.coduf || ' = 0) then ' || chr(13) || case
+          for txt in (select e.codindpad,
+                             p.abrev,
+                             e.dhvigor,
+                             codemp,
+                             codune,
+                             codgrupoprod,
+                             codprod,
+                             coduf,
+                             e.codexc,
+                             ' when (codemp = ' || e.codemp || ' or ' || e.codemp || ' = 0)' || chr(13) ||
+                             ' and (codune = ' || e.codune || ' or ' || e.codune || ' = 0)' || chr(13) ||
+                             ' and (codgrupoprod = ' || e.codgrupoprod || ' or ' || e.codgrupoprod || ' = 0 )' ||
+                             chr(13) || ' and (codprod = ' || e.codprod || ' or ' || e.codprod || ' = 0)' ||
+                             chr(13) || ' and (coduf = ' || e.coduf || ' or ' || e.coduf || ' = 0) then ' ||
+                             chr(13) || case
                                when e.tipovlr = 'F' then
                                 replace(e.formexc, 'SUM', '')
                                else
@@ -1014,28 +980,25 @@ group by trunc(dhbaixa,'mm'),
                           on p.codindpad = e.codindpad
                        where nvl(e.ativo, 'N') = 'S'
                          and e.codindpad = l.codindpad
-                         and e.dhvigor =
-                             (select max(dhvigor)
-                                from dre_excecoes ei
-                               where ei.codindpad = e.codindpad
-                                 and nvl(ativo, 'N') = 'S'
-                                 and ei.codemp = e.codemp
-                                 and ei.codune = e.codune
-                                 and ei.coduf = e.coduf
-                                 and ei.codgrupoprod = e.codgrupoprod
-                                 and ei.codprod = e.codprod)
+                         and e.dhvigor = (select max(dhvigor)
+                                            from dre_excecoes ei
+                                           where ei.codindpad = e.codindpad
+                                             and nvl(ativo, 'N') = 'S'
+                                             and ei.codemp = e.codemp
+                                             and ei.codune = e.codune
+                                             and ei.coduf = e.coduf
+                                             and ei.codgrupoprod = e.codgrupoprod
+                                             and ei.codprod = e.codprod)
                        order by e.codindpad)
           loop
           
-            v_formula_ind := v_formula_ind || chr(13) ||
-                             nvl(txt.formula, l.formindpad);
+            v_formula_ind := v_formula_ind || chr(13) || nvl(txt.formula, l.formindpad);
           
           end loop txt;
         
           if v_formula_ind is not null then
           
-            v_formula_ind := ' case ' || v_formula_ind || ' else ' ||
-                             l.formindpad || ' end as ' || l.abrev;
+            v_formula_ind := ' case ' || v_formula_ind || ' else ' || l.formindpad || ' end as ' || l.abrev;
           
           else
             v_formula_ind := l.formindpad || ' as ' || l.abrev;
@@ -1043,8 +1006,7 @@ group by trunc(dhbaixa,'mm'),
           dbms_output.put_line(v_formula_ind);
         
         else
-          v_formula_ind := replace(upper(l.formindpad), 'SUM(', '(') || ' as ' ||
-                           l.abrev;
+          v_formula_ind := replace(upper(l.formindpad), 'SUM(', '(') || ' as ' || l.abrev;
         end if;
         -- fim exceção
       
@@ -1058,8 +1020,7 @@ group by trunc(dhbaixa,'mm'),
       
         v_formula_ind := replace(upper(v_formula_ind), 'SUM(', '(');
       
-        v_query := 'Select ''' || p_referencia ||
-                   ''' as dtref, nunota, sequencia,' || v_formula_ind ||
+        v_query := 'Select ''' || p_referencia || ''' as dtref, nunota, sequencia,' || v_formula_ind ||
                    chr(13) || ' from DRE_BASEINDPAD where dtref = :dtref'
         --' and codprod = 63368 and codemp = 5 ' ||
         --' and coduf = 7 and codune = 11'
@@ -1072,9 +1033,11 @@ group by trunc(dhbaixa,'mm'),
         begin
           open c for v_query
             using p_referencia;
-        
-          fetch c bulk collect
-            into t;
+          loop
+            fetch c bulk collect
+              into t limit 1000;
+            exit when c%notfound;
+          end loop;
         
           begin
             forall x in t.first .. t.last
@@ -1095,8 +1058,7 @@ group by trunc(dhbaixa,'mm'),
           stmt := 'MERGE /*+ first_rows parallel(dre_rentabcom) parallel(tmp_rentabcom) */ INTO dre_rentabcom rtc
                     USING tmp_rentabcom tmp
                       ON (rtc.dtref = tmp.dtref and rtc.nunota = tmp.nunota and rtc.sequencia = tmp.sequencia)
-                    WHEN MATCHED THEN UPDATE SET ' || l.abrev ||
-                  ' = tmp.valor';
+                    WHEN MATCHED THEN UPDATE SET ' || l.abrev || ' = tmp.valor';
         
           execute immediate stmt;
         end;
@@ -1118,8 +1080,7 @@ group by trunc(dhbaixa,'mm'),
   
   end set_rentabcom;
 
-  procedure set_resindpad(p_referencia date,
-                          p_codindpad  pls_integer default null) is
+  procedure set_resindpad(p_referencia date, p_codindpad pls_integer default null) is
     stmt varchar2(32762);
     type tab_resindpad is table of dre_resindpad%rowtype;
     t tab_resindpad := tab_resindpad();
@@ -1148,23 +1109,14 @@ group by trunc(dhbaixa,'mm'),
     loop
     
       if ind.codindpad = 45 then
-        stmt := 'select ' || ind.codindpad ||
-                ' as codindpad,DTREF,CODEMP,CODUNE,CODGRUPOPROD,CODPROD,CODUF,' ||
+        stmt := 'select ' || ind.codindpad || ' as codindpad,DTREF,CODEMP,CODUNE,CODGRUPOPROD,CODPROD,CODUF,' ||
                 ' sum( snk_dividir(r.resliqgeral , r.recliq)) * 100 ,0,0,0,sysdate' ||
                 ' from ad_vw_rentabcom r ' || 'where r.dtref = :referencia ' ||
                 'group by dtref, codemp, codune, codgrupoprod, codprod, coduf';
       else
-        stmt := 'select ' || ind.codindpad ||
-                ' as codindpad,DTREF,CODEMP,CODUNE,CODGRUPOPROD,CODPROD,CODUF,' ||
-                ind.abrev || ',0,0,0,sysdate' || ' from ad_vw_rentabcom r ' ||
-                'where r.dtref = :referencia';
+        stmt := 'select ' || ind.codindpad || ' as codindpad,DTREF,CODEMP,CODUNE,CODGRUPOPROD,CODPROD,CODUF,' ||
+                ind.abrev || ',0,0,0,sysdate' || ' from ad_vw_rentabcom r ' || 'where r.dtref = :referencia';
       end if;
-    
-      open c for stmt
-        using p_referencia;
-      fetch c bulk collect
-        into t;
-      close c;
     
       begin
         delete from dre_resindpad r
@@ -1176,31 +1128,22 @@ group by trunc(dhbaixa,'mm'),
           raise;
       end;
     
-      begin
-        forall x in t.first .. t.last
-          insert into dre_resindpad values t (x);
-        /*merge into dre_resindpad r
-        using (select t(x).codindpad codindpad,t(x).dtref dtref,t(x).codemp codemp,
-                      t(x).codune codune,t(x).codgrupoprod codgrupoprod,t(x).codprod codprod,
-                      t(x).coduf coduf,t(x).vlrindpad vlrindpad,t(x).codforpad codforpad,
-                      t(x).codexc codexc,t(x).dhinclusao dhinclusao
-                 from dual) d
-        on (r.codindpad = d.codindpad and r.dtref = d.dtref and r.codemp = d.codemp and r.codune = d.codune and r.codgrupoprod = d.codgrupoprod and d.codprod = r.codprod and r.coduf = d.coduf)
-        when matched then
-          update
-             set vlrindpad  = d.vlrindpad,
-                 codforpad  = d.codforpad,
-                 codexc     = d.codexc,
-                 dhinclusao = d.dhinclusao
-        when not matched then
-          insert values t (x);*/
-      
-      end;
+      open c for stmt
+        using p_referencia;
+      loop
+        fetch c bulk collect
+          into t limit 1000;
+        exit when t.count = 0;
+        begin
+          forall x in t.first .. t.last
+            insert into dre_resindpad values t (x);
+        end;
+      end loop;
+      close c;
     
       begin
         update dre_cadindpad p
-           set p.dhultexec  = sysdate,
-               p.statusexec = 'S'
+           set p.dhultexec = sysdate, p.statusexec = 'S'
          where p.codindpad = ind.codindpad;
       exception
         when others then
@@ -1209,10 +1152,7 @@ group by trunc(dhbaixa,'mm'),
     
       commit;
     
-      insereeventolog(p_referencia,
-                      ' *** Gravando Resultado do indicador ' || ind.codindpad,
-                      1,
-                      null);
+      insereeventolog(p_referencia, ' *** Gravando Resultado do indicador ' || ind.codindpad, 1, null);
     
       t.delete;
     
@@ -1274,8 +1214,7 @@ group by trunc(dhbaixa,'mm'),
         close c;
       exception
         when others then
-          p_msg := ltrim(rtrim(p_msg) || chr(13) || f.codexc || '  - ' ||
-                         sqlerrm);
+          p_msg := ltrim(rtrim(p_msg) || chr(13) || f.codexc || '  - ' || sqlerrm);
           --dbms_output.put_line(f.codexc || '  - ' || sqlerrm);
           continue;
       end;

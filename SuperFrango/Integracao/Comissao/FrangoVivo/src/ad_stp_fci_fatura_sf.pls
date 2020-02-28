@@ -27,8 +27,6 @@ begin
 
   begin
   
-    stp_set_atualizando('S');
-  
     -- selecionou mais de 1 registro
     if p_qtdlinhas > 1 then
       p_mensagem := 'Selecione apenas um lote para geração de notas.';
@@ -68,12 +66,11 @@ begin
     end if;
   
     -- get dados modelo
-    select m.serienota, m.codvend, m.codtipvenda, m.codcencus, m.codnat,
-           m.obspadrao, nvl(m.confauto, 'N'), m.codprod, m.codvol, m.codlocal,
-           m.codtipoper, m.codctabcoint
-      into cab.serienota, cab.codvend, cab.codtipvenda, cab.codcencus,
-           cab.codnat, cab.observacao, cab.confirmnotafat, ite.codprod,
-           ite.codvol, ite.codlocalorig, cab.codtipoper, fin.codctabcoint
+    select m.serienota, m.codvend, m.codtipvenda, m.codcencus, m.codnat, m.obspadrao,
+           nvl(m.confauto, 'N'), m.codprod, m.codvol, m.codlocal, m.codtipoper, m.codctabcoint
+      into cab.serienota, cab.codvend, cab.codtipvenda, cab.codcencus, cab.codnat, cab.observacao,
+           cab.confirmnotafat, ite.codprod, ite.codvol, ite.codlocalorig, cab.codtipoper,
+           fin.codctabcoint
       from ad_tsfmgn m
      where m.numodelo = v_modelo;
   
@@ -141,8 +138,7 @@ begin
         return;
       end if;
     
-      cab.observacao := 'Complemento de comissão / ajuda de custo. Lote nº: ' ||
-                        lote.numlote;
+      cab.observacao := 'Complemento de comissão / ajuda de custo. Lote nº: ' || lote.numlote;
     
       -- obtem o valor da bonificação
       begin
@@ -231,8 +227,7 @@ begin
         join maxdate md
           on md.dtfatur = d.dtfatur;
     
-      cab.observacao := 'Ref. Nota Transf. Interna nº único: ' ||
-                        cab.observacao;
+      cab.observacao := 'Ref. Nota Transf. Interna nº único: ' || cab.observacao;
       ite.qtdneg     := lote.qtdmortes;
       cab.vlrnota    := ite.qtdneg * ite.vlrunit;
     end if;
@@ -249,23 +244,18 @@ begin
       r_cab := r_cab || '<CODTIPOPER>' || cab.codtipoper || '</CODTIPOPER>';
       r_cab := r_cab || '<CODTIPVENDA>' || cab.codtipvenda || '</CODTIPVENDA>';
       r_cab := r_cab || '<SERIENOTA>' || cab.serienota || '</SERIENOTA>';
-      r_cab := r_cab || '<DTNEG>' || to_char(sysdate, 'DD/MM/YYYY') ||
-               '</DTNEG>';
-      r_cab := r_cab || '<VLRNOTA>' || replace(cab.vlrnota, ',', '.') ||
-               '</VLRNOTA>';
+      r_cab := r_cab || '<DTNEG>' || to_char(sysdate, 'DD/MM/YYYY') || '</DTNEG>';
+      r_cab := r_cab || '<VLRNOTA>' || replace(cab.vlrnota, ',', '.') || '</VLRNOTA>';
       r_cab := r_cab || '<CODNAT>' || cab.codnat || '</CODNAT>';
-      r_cab := r_cab || '<CODCENCUS>' || cab.codcencus ||
-               '</CODCENCUS><CODPROJ>0</CODPROJ>';
+      r_cab := r_cab || '<CODCENCUS>' || cab.codcencus || '</CODCENCUS><CODPROJ>0</CODPROJ>';
       r_cab := r_cab || '<OBSERVACAO>' || cab.observacao || '</OBSERVACAO>';
       r_cab := r_cab || '<CODUSUINC>' || p_codusu || '</CODUSUINC>';
     
       r_ite := '<NUNOTA/><SEQUENCIA/>';
       r_ite := r_ite || '<CODPROD>' || ite.codprod || '</CODPROD>';
-      r_ite := r_ite || '<QTDNEG>' || replace(ite.qtdneg, ',', '.') ||
-               '</QTDNEG>';
+      r_ite := r_ite || '<QTDNEG>' || replace(ite.qtdneg, ',', '.') || '</QTDNEG>';
       r_ite := r_ite || '<CODVOL>' || ite.codvol || '</CODVOL>';
-      r_ite := r_ite || '<CODLOCALORIG>' || ite.codlocalorig ||
-               '</CODLOCALORIG>';
+      r_ite := r_ite || '<CODLOCALORIG>' || ite.codlocalorig || '</CODLOCALORIG>';
       r_ite := r_ite || '<CONTROLE>' || ite.controle || '</CONTROLE>';
       r_ite := r_ite || '<VLRUNIT>' || replace(ite.vlrunit, ',', '.') ||
                '</VLRUNIT><PERCDESC>0</PERCDESC>';
@@ -344,47 +334,35 @@ begin
     -- insere financeiro
     if top.atualfin <> 0 then
       begin
-        stp_set_atualizando('S');
+      
         for cfin in (select *
                        from ad_tsffcifin
                       where numlote = lote.numlote
                         and origem = v_origem)
         loop
         
-          select c.codbco
-            into fin.codbco
-            from tsicta c
-           where codctabcoint = fin.codctabcoint;
+          select c.codbco into fin.codbco from tsicta c where codctabcoint = fin.codctabcoint;
         
           declare
             r_fin varchar2(4000);
           begin
           
-            r_fin := '<NUNOTA>' || cab.nunota ||
-                     '</NUNOTA><ORIGEM>E</ORIGEM><NUMNOTA>0</NUMNOTA>';
+            r_fin := '<NUNOTA>' || cab.nunota || '</NUNOTA><ORIGEM>E</ORIGEM><NUMNOTA>0</NUMNOTA>';
             r_fin := r_fin || '<SERIENOTA>' || cab.serienota || '</SERIENOTA>';
-            r_fin := r_fin || '<PROVISAO>S</PROVISAO><RECDESP>' || top.atualfin ||
-                     '</RECDESP>';
-            r_fin := r_fin || '<CODEMP>' || lote.codemp || '</CODEMP><CODPARC>' ||
-                     lote.codparc || '</CODPARC>';
-            r_fin := r_fin || '<CODTIPOPER>' || cab.codtipoper ||
-                     '</CODTIPOPER>';
-            r_fin := r_fin || '<CODBCO>' || fin.codbco ||
-                     '</CODBCO><CODCTABCOINT>' || fin.codctabcoint ||
-                     '</CODCTABCOINT>';
-            r_fin := r_fin || '<CODNAT>' || cab.codnat ||
-                     '</CODNAT><CODCENCUS>' || cab.codcencus || '</CODCENCUS>';
-            r_fin := r_fin || '<CODPROJ>0</CODPROJ><CODTIPTIT>' ||
-                     cfin.codtiptit || '</CODTIPTIT>';
+            r_fin := r_fin || '<PROVISAO>S</PROVISAO><RECDESP>' || top.atualfin || '</RECDESP>';
+            r_fin := r_fin || '<CODEMP>' || lote.codemp || '</CODEMP><CODPARC>' || lote.codparc ||
+                     '</CODPARC>';
+            r_fin := r_fin || '<CODTIPOPER>' || cab.codtipoper || '</CODTIPOPER>';
+            r_fin := r_fin || '<CODBCO>' || fin.codbco || '</CODBCO><CODCTABCOINT>' ||
+                     fin.codctabcoint || '</CODCTABCOINT>';
+            r_fin := r_fin || '<CODNAT>' || cab.codnat || '</CODNAT><CODCENCUS>' || cab.codcencus ||
+                     '</CODCENCUS>';
+            r_fin := r_fin || '<CODPROJ>0</CODPROJ><CODTIPTIT>' || cfin.codtiptit || '</CODTIPTIT>';
             r_fin := r_fin || '<CODVEND>' || cab.codvend || '</CODVEND>';
-            r_fin := r_fin || '<DESDOBRAMENTO>' || cfin.desdobramento ||
-                     '</DESDOBRAMENTO>';
-            r_fin := r_fin || '<DTNEG>' || to_char(sysdate, 'dd/mm/yyyy') ||
-                     '</DTNEG>';
-            r_fin := r_fin || '<DTVENC>' || to_char(cfin.dtvenc, 'dd/mm/yyyy') ||
-                     '</DTVENC>';
-            r_fin := r_fin || '<VLRDESDOB>' ||
-                     replace(cfin.vlrdesdob, ',', '.') || '</VLRDESDOB>';
+            r_fin := r_fin || '<DESDOBRAMENTO>' || cfin.desdobramento || '</DESDOBRAMENTO>';
+            r_fin := r_fin || '<DTNEG>' || to_char(sysdate, 'dd/mm/yyyy') || '</DTNEG>';
+            r_fin := r_fin || '<DTVENC>' || to_char(cfin.dtvenc, 'dd/mm/yyyy') || '</DTVENC>';
+            r_fin := r_fin || '<VLRDESDOB>' || replace(cfin.vlrdesdob, ',', '.') || '</VLRDESDOB>';
           
             ad_pkg_apiskw.acao_inserir_financeiro(p_fin    => r_fin,
                                                   p_nufin  => fin.nufin,
@@ -447,8 +425,7 @@ begin
         stp_set_atualizando('N');
       exception
         when others then
-          p_mensagem := 'Erro ao atualizar as informações na bonificação aprovada. ' ||
-                        sqlerrm;
+          p_mensagem := 'Erro ao atualizar as informações na bonificação aprovada. ' || sqlerrm;
           rollback;
           return;
       end;
@@ -476,27 +453,24 @@ begin
     -- insere as notas no lote sendo fechado
     begin
       stp_set_atualizando('S');
+    
       delete from ad_tsffcinf where nunota = cab.nunota;
     
       select * into cab from tgfcab where nunota = cab.nunota;
     
-      select max(nufcinf) + 1
-        into i
-        from ad_tsffcinf
-       where numlote = lote.numlote;
+      select max(nufcinf) + 1 into i from ad_tsffcinf where numlote = lote.numlote;
     
       insert into ad_tsffcinf
-        (numlote, nufcinf, codemp, nunota, nufin, numnota, serienota, dtneg,
-         dtfatur, vlrnota, codtipoper, tipmov, statusnota, statusnfe, qtdneg)
+        (numlote, nufcinf, codemp, nunota, nufin, numnota, serienota, dtneg, dtfatur, vlrnota,
+         codtipoper, tipmov, statusnota, statusnfe, qtdneg)
       values
-        (lote.numlote, i, lote.codemp, cab.nunota, v_nufin, cab.numnota,
-         cab.serienota, cab.dtneg, cab.dtneg, cab.vlrnota, cab.codtipoper,
-         top.tipmov, 'A', cab.statusnfe, ite.qtdneg);
+        (lote.numlote, i, lote.codemp, cab.nunota, v_nufin, cab.numnota, cab.serienota, cab.dtneg,
+         cab.dtneg, cab.vlrnota, cab.codtipoper, top.tipmov, 'A', cab.statusnfe, ite.qtdneg);
+    
       stp_set_atualizando('N');
     exception
       when others then
-        p_mensagem := 'Erro ao inserir a nota gerada na aba "Notas" do lote. ' ||
-                      sqlerrm;
+        p_mensagem := 'Erro ao inserir a nota gerada na aba "Notas" do lote. ' || sqlerrm;
         rollback;
         return;
     end;
@@ -519,10 +493,7 @@ begin
       qtd_emit int := 0;
       qtd_conf int := 0;
     begin
-      select count(*)
-        into qtd_emit
-        from ad_tsffcinf nf
-       where nf.numlote = lote.numlote;
+      select count(*) into qtd_emit from ad_tsffcinf nf where nf.numlote = lote.numlote;
     
       select count(*)
         into qtd_conf
@@ -544,10 +515,9 @@ begin
     
     end;
   
-    p_mensagem := 'Nota nº único ' ||
-                  '<a title="Clique aqui" target="_parent" href="' ||
-                  ad_fnc_urlskw('TGFCAB', cab.nunota) || '">' || cab.nunota ||
-                  '</a>' || ' gerada com sucesso!';
+    p_mensagem := 'Nota nº único ' || '<a title="Clique aqui" target="_parent" href="' ||
+                  ad_fnc_urlskw('TGFCAB', cab.nunota) || '">' || cab.nunota || '</a>' ||
+                  ' gerada com sucesso!';
   
     for x in n.first .. n.last
     loop
@@ -560,10 +530,8 @@ begin
     if p_tiponota in ('V', 'M') then
     
       if nvl(cab.confirmnotafat, 'N') = 'S' then
-        if not act_confirmar('Confirmação de Nota',
-                             'Deseja confirmar a nota Gerada?',
-                             p_idsessao,
-                             1) then
+        if not
+            act_confirmar('Confirmação de Nota', 'Deseja confirmar a nota Gerada?', p_idsessao, 1) then
           return;
         else
           commit;

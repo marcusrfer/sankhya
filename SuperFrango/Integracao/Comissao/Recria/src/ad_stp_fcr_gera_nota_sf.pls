@@ -24,6 +24,8 @@ begin
               modelos para geração de notas (TSFMGN).
   */
 
+  stp_set_atualizando('N');
+
   if p_qtdlinhas > 1 then
     p_mensagem := 'Selecione apenas 1 registro.';
     return;
@@ -99,8 +101,7 @@ begin
                          p_codnat      => mgn.codnat,
                          p_codcencus   => fcr.codcencus,
                          p_codproj     => 0,
-                         p_obs         => 'Fech. Com. Recria - nº lote: ' ||
-                                          fcr.numlote,
+                         p_obs         => 'Fech. Com. Recria - nº lote: ' || fcr.numlote,
                          p_nunota      => fcr.nunota);
     -- insere item
     ad_set.ins_pedidoitens(p_nunota   => fcr.nunota,
@@ -177,10 +178,7 @@ begin
     -- confirma pedido de compra
     if nvl(mgn.confauto, 'N') = 'S' then
     
-      if act_confirmar('Confirmação de Nota',
-                       'Deseja confirmar a nota Gerada?',
-                       p_idsessao,
-                       1) then
+      if act_confirmar('Confirmação de Nota', 'Deseja confirmar a nota Gerada?', p_idsessao, 1) then
       
         stp_confirmanota_java_sf(fcr.nunota);
       
@@ -201,10 +199,9 @@ begin
   
   end;
 
-  p_mensagem := 'Nota nº único ' ||
-                '<a title="Clique aqui" target="_parent" href="' ||
-                ad_fnc_urlskw('TGFCAB', fcr.nunota) || '">' || fcr.nunota ||
-                '</a>' || ' gerada com sucesso!';
+  p_mensagem := 'Nota nº único ' || '<a title="Clique aqui" target="_parent" href="' ||
+                ad_fnc_urlskw('TGFCAB', fcr.nunota) || '">' || fcr.nunota || '</a>' ||
+                ' gerada com sucesso!';
 
 end;
 /

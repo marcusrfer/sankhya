@@ -1,0 +1,793 @@
+Create Or Replace Package AD_PKG_FOB Is
+	/****************************************************************************
+  Autor: Marcus Rangel
+  Processo: Contratação de frete fob
+  Objetivo: Conter e organizar os objetos principais utilizados no processo de
+            contratação de frete fob
+  *****************************************************************************/
+
+	Type ty_frete Is Record(
+		nunota        Number,
+		dtneg         Date,
+		CodParcNota   Number,
+		codcidOrig    Int,
+		codCidDest    Int,
+		codParcTransp Int,
+		pesobruto     Float,
+		valorPeso     Float,
+		valorPerc     Float,
+		valorFrete    Float,
+		descrTaxa     Varchar2(100),
+		valorTaxa     Float,
+		subTotal      Float,
+		valorTotFrete Float,
+		bestValue     Float,
+		bestParc      Number);
+
+	Type tab_frete Is Table Of ty_frete;
+
+	/****************************************************************************
+  Autor: 
+  Objetivo: 
+  *****************************************************************************/
+	Function valorTotal(p_Nunota Number, p_Nutab Number, p_Peso Float, p_vlrNota Float, p_aliqIcm Number, p_vlrFrete Float)
+		Return Float;
+
+	Type type_rec_fretefob Is Record(
+		nunota        Int,
+		codcidOrig    Int,
+		codCidDest    Int,
+		aliqIcms      Int,
+		codparcTransp Int,
+		valorPeso     Float,
+		valorPerc     Float,
+		valorFrete    Float,
+		codTaxa       Int,
+		valorTaxa     Float,
+		subTotal      Float,
+		valorTotFrete Float,
+		bestValue     Float,
+		bestParc      Number);
+
+	Type type_tab_fretefob Is Table Of type_rec_fretefob;
+
+	Function get_FreteFob(p_Nunota Number) Return type_tab_fretefob
+		Pipelined;
+
+	/****************************************************************************
+  Autor: 
+  Objetivo: 
+  *****************************************************************************/
+	Function valorPeso(p_Nutab Number, p_Nureg Number, p_Peso Number) Return Float;
+	/****************************************************************************
+  Autor: 
+  Objetivo: 
+  *****************************************************************************/
+
+	Function melhorValor(p_Nunota Number, p_Codparc Number Default Null) Return Varchar2;
+
+	Function show_memo_calculo(p_Nunota Number, p_Codparc Number Default Null) Return Varchar2;
+
+End;
+/
+Create Or Replace Package Body ad_pkg_fob Is
+
+	Function get_FreteFob(p_Nunota Number) Return type_tab_fretefob
+		Pipelined Is
+		v_Row           type_rec_fretefob;
+		r_cab           tgfcab%Rowtype;
+		r_Pff           ad_tsfpff%Rowtype;
+		v_CidParc       Number;
+		v_CidEmp        Number;
+		v_Ufparc        Number;
+		v_UfEmp         Number;
+		v_AlliqIcm      Number;
+		v_tmpPeso       Number;
+		v_tmpValor      Float;
+		v_valorPeso     Float;
+		v_faixaPeso     Int;
+		v_Nutab         Int;
+		v_Nureg         Int;
+		v_PesoMin       Float;
+		v_FreteMin      Float;
+		v_TaxMin        Float;
+		v_PercFrete     Float := 0;
+		v_valorFrete    Float := 0;
+		v_valorPerc     Float := 0;
+		v_temRestr      Int := 0;
+		v_cidRestr      Int := 0;
+		v_valorTaxa     Float := 0;
+		v_valorDespesa  Float := 0;
+		v_subTotalTx    Float := 0;
+		v_vlrTotalTx    Float := 0;
+		v_subTotal      Float := 0;
+		v_valorTotFrete Float := 0;
+		v_bestvalue     Float := 0;
+		v_bestparc      Float;
+	Begin
+	
+		-- coleta os dados da nota
+		Select *
+			Into r_cab
+			From tgfcab
+		 Where nunota = p_Nunota;
+	
+		--Identifica cidades e uf de origem e destino
+		v_CidParc := ad_get.CodCidParcEmp(r_cab.codparc, 'P');
+		v_Ufparc  := ad_get.ufParcEmp(r_cab.codparc, 'P');
+		v_CidEmp  := ad_get.CodCidParcEmp(r_cab.codemp, 'E');
+		v_UfEmp   := ad_get.ufParcEmp(r_cab.codemp, 'E');
+	
+		-- busca a aliquota de icms da uf de origem
+		Begin
+			Select i.aliquota
+				Into v_AlliqIcm
+				From tgficm i
+			 Where i.ufdest = v_UfEmp
+				 And i.uforig = v_Ufparc
+				 And i.codrestricao = -1;
+		Exception
+			When no_data_found Then
+				v_AlliqIcm := 0;
+		End;
+	
+		v_row.nunota     := r_cab.nunota;
+		v_row.codcidOrig := v_CidParc;
+		v_row.codCidDest := v_CidEmp;
+		v_row.aliqIcms   := v_AlliqIcm;
+	
+		-- verifica os parceiros coletores disponiveis
+		For Col In (Select Distinct p.codparcmatriz
+									From tgfpar p
+								 Where ad_podecoletar = 'S')
+		Loop
+			Begin
+				v_row.codparcTransp := col.codparcmatriz;
+			
+				-- Busca os dados das tabelas participantes
+				Begin
+					Select Distinct tab.nutab, reg.nurff, reg.pesomin, reg.vlrfretemin, reg.vlrtaxmin, reg.percfrete
+						Into v_Nutab, v_Nureg, v_PesoMin, v_FreteMin, v_TaxMin, v_PercFrete
+						From ad_tsftff tab
+					 Inner Join ad_tsfrff reg
+							On tab.nutab = reg.nutab
+					 Inner Join ad_tsftrf par
+							On par.nutab = tab.nutab
+						 And par.codparc In (Select codparc
+																	 From tgfpar
+																	Where codparcmatriz = Col.codparcmatriz)
+					 Inner Join ad_tsfcrff cid
+							On cid.nurff = reg.nurff
+						 And cid.nutab = tab.nutab
+						 And cid.codcid = v_CidParc
+						 And reg.codciddest = v_CidEmp
+					 Where tab.ativo = 'S';
+				Exception
+					When no_data_found Then
+						Continue;
+				End;
+			
+				-- Valor do frete peso de acordo com as faixas
+				Begin
+					For Fx In (Select *
+											 From ad_tsfpff prc
+											Where prc.nutab = v_Nutab
+												And prc.nurff = v_Nureg
+											Order By prc.faixaini)
+					Loop
+						-- verifica as faixas de peso
+						If r_cab.pesobruto Between fx.faixaini And fx.faixafim Then
+							v_valorPeso := fx.valor;
+							v_faixaPeso := fx.nupff;
+						End If;
+					
+					End Loop; -- end fx
+				
+					-- tratativa para peso excedente
+					If v_faixaPeso = 0 Then
+						-- busca a ultima faixa de preço por peso
+						Select *
+							Into r_Pff
+							From ad_tsfpff prc
+						 Where prc.nutab = v_Nutab
+							 And prc.nurff = v_Nureg
+							 And prc.faixafim = (Select Max(faixafim)
+																		 From ad_tsfpff
+																		Where nutab = v_Nutab
+																			And nurff = v_Nureg);
+					
+						v_tmpPeso    := r_cab.pesobruto - r_Pff.faixafim; -- deduz o peso da ultima faixa do peso peso total
+						v_tmpValor   := r_Pff.valor;
+						v_valorPeso  := v_tmpValor + (v_tmpPeso * r_Pff.vlrexc);
+						v_valorPerc  := r_Cab.Vlrnota * (v_PercFrete / 100);
+						v_valorFrete := v_valorPeso + v_valorPerc;
+					End If;
+				
+				End;
+			
+				--calculo do valor das taxas do frete
+				Begin
+					For tx1 In (Select *
+												From ad_tsfdff d
+											 Where d.nutab = v_Nutab
+												 And d.aplicacao <> 'F'
+											 Order By d.codcdf)
+					Loop
+					
+						v_row.codTaxa := tx1.codcdf;
+					
+						-- verifica se a tx1esa será aplicada baseada na cidade do parceiro
+						Select Count(*)
+							Into v_temRestr
+							From AD_TSFCDFC c
+						 Where c.codcdf = tx1.codcdf;
+					
+						If v_temRestr <> 0 Then
+							-- se tem restrição por cidade, verifica se a cidade do parceiro está relacionada
+							Select Count(*)
+								Into v_cidRestr
+								From ad_tsfcdfc c
+							 Where c.codcdf = tx1.codcdf
+								 And c.codcid = v_cidParc;
+						
+							If v_cidRestr = 0 Then
+								Continue;
+							End If;
+						
+						End If;
+					
+						/* Tipo      P - percentual      V - valor      */
+						If tx1.tipo = 'P' Then
+							v_valorTaxa := (tx1.valor / 100);
+						Else
+							v_valorTaxa := tx1.valor;
+						End If;
+					
+						/* Aplicação      P - sobre o peso      V - valor da nota      X - fixo       */
+						If tx1.aplicacao = 'P' And tx1.pesofrac <> 0 Then
+							v_valorDespesa := v_valorTaxa * Round((r_cab.pesobruto / tx1.pesofrac), 0);
+						Elsif tx1.aplicacao = 'V' And tx1.tipo = 'P' Then
+							v_valorDespesa := r_cab.vlrNota * v_valorTaxa;
+						Elsif tx1.aplicacao = 'X' Then
+							v_valorDespesa := v_valorTaxa;
+						End If;
+					
+						-- verifica se o valor da despesa é menor que o valor mínimo da tabela de preço
+						If v_valorDespesa < tx1.vlrmin Then
+							v_valorDespesa := tx1.vlrmin;
+						End If;
+					
+						-- acumula o valor das taxas/despesas
+						v_subTotalTx := v_subTotalTx + v_valorDespesa;
+					
+						v_row.valorTaxa := v_valorDespesa;
+					
+						Pipe Row(v_row);
+					
+					End Loop; --tx1
+				
+					v_vlrTotalTx := v_subTotalTx;
+				
+					/* tratativa para as taxas que são calculadas baseadas no valor total  como o TRT */
+					For tx2 In (Select *
+												From ad_tsfdff d
+											 Where d.nutab = v_Nutab
+												 And d.aplicacao = 'F'
+											 Order By d.codcdf)
+					Loop
+						Select Count(*)
+							Into v_temRestr
+							From AD_TSFCDFC c
+						 Where c.codcdf = tx2.codcdf;
+					
+						v_row.codTaxa := tx2.codcdf;
+					
+						If v_TemRestr <> 0 Then
+						
+							Select Count(*)
+								Into v_cidRestr
+								From ad_tsfcdfc c
+							 Where c.codcdf = tx2.codcdf
+								 And c.codcid = v_cidParc;
+						
+							If v_cidRestr = 0 Then
+								Continue;
+							End If;
+						End If;
+					
+						If tx2.tipo = 'P' Then
+							v_valorTaxa := (tx2.valor / 100);
+						Else
+							v_valorTaxa := tx2.valor;
+						End If;
+					
+						v_valorDespesa := (r_cab.vlrfrete + v_subTotalTx) * v_valorTaxa;
+					
+						If v_valorDespesa < tx2.vlrmin Then
+							v_valorDespesa := tx2.vlrmin;
+						End If;
+					
+						v_row.valorTaxa := v_valorDespesa;
+					
+						v_vlrTotalTx := v_subTotalTx + v_valorDespesa;
+					
+						Pipe Row(v_row);
+					
+					End Loop; -- tx2
+				
+				End; -- fim calculo do valor das taxas do frete
+			
+				v_subTotal          := v_valorFrete + v_valorTaxa;
+				v_row.subTotal      := v_subtotal;
+				v_valorTotFrete     := v_subTotal / (1 - (v_AlliqIcm / 100));
+				v_row.valorTotFrete := v_valorTotFrete;
+			
+				If v_bestvalue = 0 Then
+					v_bestvalue := v_valorTotFrete;
+					v_bestparc  := Col.Codparcmatriz;
+				End If;
+			
+				If v_valorTotFrete < v_bestvalue Then
+					v_bestvalue := v_valorTotFrete;
+					v_bestparc  := Col.Codparcmatriz;
+				End If;
+			
+				v_row.valorPeso  := v_valorPeso;
+				v_row.valorPerc  := v_valorPerc;
+				v_row.valorFrete := v_valorFrete;
+				v_row.bestValue  := v_bestvalue;
+				v_row.bestParc   := v_bestparc;
+			
+				Pipe Row(v_Row);
+			
+			End;
+		End Loop; -- Col
+	
+	End get_FreteFob;
+
+	Procedure valorTotal(p_Nunota Number, p_Nutab Number, p_Peso Float, p_vlrNota Float, p_aliqIcm Number, p_vlrFrete Float,
+											 p_Vlrdesp Out Float, p_MemoCalc Out Varchar2) Is
+		v_DescrDesp    Varchar2(100);
+		v_Valor        Float := 0;
+		v_vlrDesp      Float := 0;
+		v_subTotal     Float := 0;
+		v_vlrTotal     Float := 0;
+		v_temRestricao Int := 0;
+		v_cidParc      Int;
+		v_cidRestr     Number;
+	Begin
+	
+		Select p.codcid
+			Into v_cidParc
+			From tgfcab c
+		 Inner Join tgfpar p
+				On c.codparc = p.codparc
+			 And c.nunota = p_Nunota;
+	
+		For Desp In (Select *
+									 From ad_tsfdff d
+									Where d.nutab = p_Nutab
+										And d.aplicacao <> 'F'
+									Order By d.codcdf)
+		Loop
+		
+			Select c.descricao
+				Into v_DescrDesp
+				From ad_tsfcdf c
+			 Where c.codcdf = desp.codcdf;
+		
+			-- verifica se a despesa será aplicada baseada na cidade do parceiro
+			Select Count(*)
+				Into v_temRestricao
+				From AD_TSFCDFC c
+			 Where c.codcdf = desp.codcdf;
+		
+			If v_TemRestricao <> 0 Then
+			
+				Select Count(*)
+					Into v_cidRestr
+					From ad_tsfcdfc c
+				 Where c.codcdf = desp.codcdf
+					 And c.codcid = v_cidParc;
+			
+				If v_cidRestr = 0 Then
+					Continue;
+				End If;
+			
+			End If;
+		
+			/* Tipo
+      P - percentual
+      V - valor
+      */
+		
+			If desp.tipo = 'P' Then
+				v_Valor := (desp.valor / 100);
+			Else
+				v_Valor := desp.valor;
+			End If;
+		
+			/* Aplicação
+      P - sobre o peso
+      V - valor da nota
+      X - fixo
+       */
+		
+			If desp.aplicacao = 'P' And desp.pesofrac <> 0 Then
+				v_vlrDesp := v_Valor * Ceil(p_Peso / desp.pesofrac);
+			Elsif desp.aplicacao = 'V' And desp.tipo = 'P' Then
+				v_vlrDesp := p_vlrNota * v_Valor;
+			Elsif desp.aplicacao = 'X' Then
+				v_vlrDesp := v_Valor;
+			End If;
+		
+			If v_vlrDesp < desp.vlrmin Then
+				v_vlrDesp := desp.vlrmin;
+			End If;
+		
+			If desp.somaicms = 'S' Then
+				--v_vlrDesp := v_vlrDesp * (1 + (p_aliqIcm / 100));
+				v_vlrDesp := v_vlrDesp / (100 - p_aliqIcm) * 100;
+			End If;
+		
+			v_subTotal := v_subTotal + v_vlrDesp;
+		
+			If p_MemoCalc Is Null Then
+				p_MemoCalc := '  * ' || v_descrdesp || ': ' || Round(v_vlrDesp, 2) || Chr(13);
+			Else
+				p_MemoCalc := p_MemoCalc || '<br>  * ' || v_descrdesp || ': ' || Round(v_vlrDesp, 2) || Chr(13);
+			End If;
+		
+		End Loop; --desp
+	
+		v_vlrTotal := v_subTotal;
+	
+		/* tratativa para as despesas que são calculadas baseadas no valor total  como o TRT */
+		For Dfre In (Select *
+									 From ad_tsfdff d
+									Where d.nutab = p_Nutab
+										And d.aplicacao = 'F'
+									Order By d.codcdf)
+		Loop
+			Select c.descricao
+				Into v_DescrDesp
+				From ad_tsfcdf c
+			 Where c.codcdf = dfre.codcdf;
+		
+			Select Count(*)
+				Into v_temRestricao
+				From AD_TSFCDFC c
+			 Where c.codcdf = dfre.codcdf;
+		
+			If v_TemRestricao <> 0 Then
+			
+				Select Count(*)
+					Into v_cidRestr
+					From ad_tsfcdfc c
+				 Where c.codcdf = dfre.codcdf
+					 And c.codcid = v_cidParc;
+			
+				If v_cidRestr = 0 Then
+					Continue;
+				End If;
+			End If;
+		
+			If dfre.tipo = 'P' Then
+				v_Valor := (dfre.valor / 100);
+			Else
+				v_Valor := dfre.valor;
+			End If;
+		
+			v_vlrDesp := (p_vlrFrete + v_subTotal) * v_Valor;
+		
+			If v_vlrDesp < dfre.vlrmin Then
+				v_vlrDesp := dfre.vlrmin;
+			End If;
+		
+			--Dbms_Output.put_line('   ' || v_descrdesp || ': ' || Round(v_vlrDesp, 2));
+		
+			If p_MemoCalc Is Null Then
+				p_MemoCalc := '  * ' || v_descrdesp || ': ' || Round(v_vlrDesp, 2) || Chr(13);
+			Else
+				p_MemoCalc := p_MemoCalc || '<br>  * ' || v_descrdesp || ': ' || Round(v_vlrDesp, 2) || Chr(13);
+			End If;
+		
+			v_vlrTotal := v_subTotal + v_vlrDesp;
+		
+		End Loop; -- dfre
+	
+		p_Vlrdesp := Round(v_vlrTotal, 2);
+	
+		p_memocalc := p_memocalc || '<br>   Total Desp: ' || Round(v_vlrTotal, 2) || Chr(13);
+	
+	End valorTotal;
+
+	Procedure melhorValor(p_Nunota Number, p_Codparc Number Default Null, p_MemoCalc Out Varchar2) Is
+		nota          tgfcab%Rowtype;
+		par_coduf     Number;
+		emp_coduf     Number;
+		v_Aliqicms    Number;
+		v_Peso        Float;
+		v_VlrPeso     Float;
+		v_VlrFrete    Float;
+		v_Subtotal    Float;
+		v_VlrDesp     Float;
+		v_VlrTotFre   Float;
+		v_DetalheDesp Varchar2(400);
+		melhor_valor  Float := 0;
+		melhor_parc   Number;
+	
+		Error Exception;
+		Errmsg Varchar2(4000);
+	Begin
+		/*Busca o parceiro, o parceiro transportador e a cidade do parceiro */
+		Begin
+			Select c.dtneg, c.nunota, c.codparc, c.codparctransp, c.peso, c.vlrnota, Decode(c.codcidorigem, 0, p.codcid, c.codcidorigem),
+						 Decode(c.codciddestino, 0, e.codcid, c.codciddestino), Decode(c.codcidentrega, 0, e.codcid, c.codcidentrega),
+						 up.coduf, ue.coduf
+				Into nota.dtneg, nota.nunota, nota.codparc, nota.codparctransp, nota.peso, nota.vlrnota, nota.codcidorigem,
+						 nota.codciddestino, nota.codcidentrega, par_coduf, emp_coduf
+				From tgfcab c
+				Join tgfpar p
+					On c.codparc = p.codparc
+				Left Join tsicid cp
+					On cp.codcid = Decode(c.codcidorigem, 0, p.codcid, c.codcidorigem)
+				Left Join tsiufs up
+					On cp.uf = up.coduf
+				Join tsiemp e
+					On c.codemp = e.codemp
+				Left Join tsicid ce
+					On ce.codcid = Decode(c.codcidentrega, 0, e.codcid, c.codcidentrega)
+				Left Join tsiufs ue
+					On ce.uf = ue.coduf
+			 Where nunota = p_nunota;
+		Exception
+			When Others Then
+				Errmsg := 'Não encontrou a nota - ' || p_nunota;
+				Raise error;
+		End;
+	
+		p_MemoCalc := 'Nunota: ' || nota.nunota || Chr(13);
+		p_MemoCalc := p_MemoCalc || '<br>' || 'Cid Orig: ' || nota.codcidorigem || Chr(13);
+		p_MemoCalc := p_MemoCalc || '<br>' || 'Cid. Entrega: ' || Nvl(nota.codcidentrega, nota.codciddestino) || Chr(13);
+		p_MemoCalc := p_MemoCalc || '<br>' || 'Vlr. nota: ' || nota.vlrnota || Chr(13);
+	
+		/* Busca informações do CTE */
+		Begin
+		
+			Select f.chavecte
+				Into nota.chavecte
+				From tgffin f
+			 Where nunota = p_nunota
+				 And f.chavecte Is Not Null;
+		
+			Select To_Number(Substr(cte.peso, 1, Instr(cte.peso, '.') - 1)) +
+							(To_Number(Substr(Substr(cte.peso, Instr(cte.peso, '.') + 1, Length(cte.peso)), 1, 2)) / 100)
+				Into v_peso
+				From ad_vw_cteoobj cte
+			 Where cte.chave_acesso = nota.chavecte;
+		
+		Exception
+			When no_data_found Then
+				v_peso := nota.peso;
+			When Others Then
+				Errmsg := 'Erro no peso - ' || Sqlerrm;
+				Raise error;
+		End;
+	
+		p_MemoCalc := p_MemoCalc || '<br>' || 'Peso Nota: ' || v_Peso || Chr(13);
+	
+		/*Aliquota de ICMS*/
+		Begin
+			Select i.aliquota
+				Into v_Aliqicms
+				From tgficm i
+			 Where i.ufdest = emp_coduf
+				 And i.uforig = par_coduf
+				 And i.codrestricao = -1;
+		Exception
+			When no_data_found Then
+				v_Aliqicms := 0;
+			When Others Then
+				Errmsg := 'Erro no ICMS - ' || Sqlerrm;
+				Raise error;
+		End;
+	
+		p_MemoCalc := p_MemoCalc || '<br>' || 'Icms: ' || v_AliqIcms || Chr(13);
+	
+		/*Busca todas as tabelas que atendem a cidade do parceiro da compra*/
+		For c_tab In (Select Distinct cid.nutab nutab, cid.nurff nureg, reg.pesomin, reg.vlrfretemin, reg.vlrtaxmin, reg.percfrete,
+																	tab.incideicms
+										From ad_tsfcrff cid
+										Join ad_tsftff tab
+											On cid.nutab = tab.nutab
+										Join ad_tsfrff reg
+											On reg.nutab = tab.nutab
+										 And reg.nurff = cid.nurff
+										Join ad_tsftrf trp
+											On tab.nutab = trp.nutab
+									 Where Nvl(tab.ativo, 'N') = 'S'
+										 And Not Exists (Select 1
+														From ad_tsftff f2
+													 Where tab.nutab = f2.nutaborig)
+										 And cid.codcid = nota.codcidorigem
+										 And (reg.codciddest = nota.codcidentrega Or reg.codciddest = 3)
+										 And Trunc(tab.dtvigor) = (Select Max(Trunc(t.dtvigor))
+																								 From ad_tsftff t
+																								Where t.nutab = tab.nutab)
+										 And (trp.codparc = p_codparc Or Nvl(p_Codparc, 0) = 0)
+									 Order By cid.nutab)
+		
+		Loop
+			p_MemoCalc := p_MemoCalc || '<br>' || 'Tabela: ' || c_tab.nutab || Chr(13);
+			/*Busca o parceiro pela menor distância - método mais simples*/
+			Begin
+				Select t.codparc
+					Into nota.codparctransp
+					From ad_tsftrf t
+					Join tgfpar p
+						On p.codparc = t.codparc
+					Join tsicid c
+						On p.codcid = c.codcid
+					Join tsiufs u
+						On c.uf = u.coduf
+				 Where nutab = c_tab.nutab
+					 And (u.coduf = par_coduf Or 0 = 0)
+					 And (t.codparc = p_Codparc Or Nvl(p_codparc, 0) = 0)
+					 And Rownum = 1
+				 Group By t.codparc, p.codcid
+				 Order By Min(ad_get.distanciacidade(nota.codcidorigem, nota.codcidentrega));
+			Exception
+				When no_data_found Then
+					nota.codparctransp := p_codparc;
+				When Others Then
+					Errmsg := 'Erro no melhor parceiro - ' || Sqlerrm;
+					Raise error;
+			End;
+		
+			p_MemoCalc := p_MemoCalc || '<br>' || 'Parceiro: ' || nota.codparctransp || Chr(13);
+		
+			v_VlrPeso := valorpeso(c_tab.nutab, c_tab.nureg, v_Peso);
+		
+			v_VlrFrete := nota.vlrnota * (c_tab.percfrete / 100);
+		
+			If Nvl(c_tab.incideicms, 'N') = 'S' Then
+				v_VlrPeso  := Round(v_VlrPeso / (100 - v_Aliqicms) * 100, 2);
+				v_VlrFrete := Round(v_VlrFrete / (100 - v_Aliqicms) * 100, 2);
+			End If;
+		
+			v_Subtotal := v_VlrPeso + v_VlrFrete;
+		
+			valorTotal(nota.nunota, c_tab.nutab, v_Peso, nota.vlrnota, v_AliqIcms, v_Subtotal, v_VlrDesp, v_DetalheDesp);
+		
+			v_VlrTotFre := v_Subtotal + v_VlrDesp; -- incidência ou não do icms depende da configuração da tabela e das despesas   
+		
+			p_memocalc := p_memocalc || '<br>' || v_DetalheDesp || Chr(13);
+			p_MemoCalc := p_MemoCalc || '<br>' || 'Valor Peso: ' || v_VlrPeso || Chr(13);
+			p_MemoCalc := p_MemoCalc || '<br>' || 'Valor Frete: ' || v_VlrFrete || Chr(13);
+			p_MemoCalc := p_MemoCalc || '<br>' || 'Sub-Total: ' || v_Subtotal || Chr(13);
+			p_MemoCalc := p_MemoCalc || '<br>' || 'Total (SubTotal + Despesas): ' || v_VlrTotFre || Chr(13);
+			p_MemoCalc := p_MemoCalc || '<br>' || Chr(13);
+		
+			If melhor_valor = 0 Then
+				melhor_valor := v_VlrTotFre;
+				melhor_parc  := nota.codparctransp;
+			Elsif v_VlrTotFre < melhor_valor Then
+				melhor_valor := v_VlrTotFre;
+				melhor_parc  := nota.codparctransp;
+			End If;
+		
+		End Loop;
+	
+		p_MemoCalc := p_MemoCalc || '<br>' || 'Melhor Valor: ' || melhor_valor || ' / Melhor Parceiro: ' || melhor_parc || Chr(13);
+		--p_MemoCalc := p_MemoCalc || '<br>' || chr(13);
+	
+	Exception
+		When error Then
+			Raise_Application_Error(-20105, Errmsg);
+		When Others Then
+			Raise_Application_Error(-20105, p_nunota || ' - ' || Sqlerrm);
+	End melhorValor;
+
+	Function valorPeso(p_Nutab Number, p_Nureg Number, p_Peso Number) Return Float Is
+		v_faixaPeso  Int := 0;
+		v_vlrFrePeso Float;
+		v_pTemp      Float;
+		v_vTemp      Float;
+		r_Pff        ad_tsfpff%Rowtype;
+	Begin
+		--calcular o valor do frete pelo peso
+		For fx In (Select *
+								 From ad_tsfpff prc
+								Where prc.nutab = p_Nutab
+									And prc.nurff = p_Nureg
+								Order By prc.faixaini)
+		Loop
+		
+			-- verifica as faixas de peso
+			If p_Peso Between fx.faixaini And fx.faixafim Then
+				v_vlrFrePeso := fx.valor;
+				v_faixaPeso  := fx.nupff;
+			End If;
+		
+		End Loop; -- end fx
+	
+		-- tratativa para peso excedente
+		If v_faixaPeso = 0 Then
+		
+			Select *
+				Into r_Pff
+				From ad_tsfpff prc
+			 Where prc.nutab = p_Nutab
+				 And prc.nurff = p_Nureg
+				 And prc.faixafim = (Select Max(faixafim)
+															 From ad_tsfpff
+															Where nutab = p_nutab
+																And nurff = p_Nureg);
+		
+			/* Modo de cobrança, Tradicional ou Alternativa
+       * tradicional, cobra-se o valor da faixa de peso e o excedente é multiplicado pelo vlr excedente
+       * alternativa, cobra-se todo o peso multiplicado pelo valor do excedente, ignorando o valor do intervalo
+      */
+			If r_pff.tipocob = 'T' Then
+				v_pTemp      := p_Peso - r_Pff.faixafim;
+				v_vTemp      := r_Pff.valor;
+				v_vlrFrePeso := v_vTemp + (v_pTemp * r_Pff.vlrexc);
+			Elsif r_pff.tipocob = 'A' Then
+				v_vlrFrePeso := p_peso * r_pff.vlrexc;
+			End If;
+		
+		End If;
+	
+		Return Nvl(v_vlrFrePeso, 0);
+	
+	End valorPeso;
+
+	Function valorTotal(p_Nunota Number, p_Nutab Number, p_Peso Float, p_vlrNota Float, p_aliqIcm Number, p_vlrFrete Float)
+		Return Float Is
+		p_vlrDesp  Float := 0;
+		p_memocalc Varchar2(4000);
+	Begin
+	
+		valorTotal(p_Nunota, p_Nutab, p_Peso, p_Vlrnota, p_Aliqicm, p_Vlrfrete, p_Vlrdesp, p_Memocalc);
+	
+		Return p_vlrDesp;
+	
+	End valorTotal;
+
+	Function melhorValor(p_Nunota Number, p_Codparc Number Default Null) Return Varchar2 Is
+		v_MemoCalc    Varchar2(4000);
+		v_melhorValor Varchar2(100);
+		v_melhorParc  Varchar2(100);
+		i             Int;
+	Begin
+	
+		melhorValor(p_nunota, p_Codparc, v_MemoCalc);
+	
+		v_memocalc := Rtrim(Ltrim(v_memocalc));
+	
+		i := Instr(v_memocalc, 'Melhor', 1);
+	
+		v_memocalc := Substr(v_memocalc, i, Length(v_memocalc) - i);
+	
+		i := Instr(v_memocalc, ':', 1, 1) + 1;
+	
+		v_melhorValor := Rtrim(Ltrim(Substr(v_memocalc, i, (Instr(v_memocalc, '/', 1, 1) - 1) - i)));
+	
+		i := Instr(v_memocalc, ':', 1, 2);
+	
+		v_melhorParc := Rtrim(Ltrim(Substr(v_memocalc, i + 1, Length(v_memocalc) - i)));
+	
+		Return v_melhorParc || '-' || v_melhorValor;
+	
+	End melhorvalor;
+
+	Function show_memo_calculo(p_Nunota Number, p_Codparc Number Default Null) Return Varchar2 Is
+		v_MemoCalc Varchar2(4000);
+	Begin
+		melhorValor(p_Nunota, p_Codparc, v_memocalc);
+		Return v_memocalc;
+	End;
+
+End;
+/

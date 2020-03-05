@@ -1,0 +1,271 @@
+create or replace package ad_pkg_pfv as
+
+  v_qtdmacho      constant number := 4800;
+  v_qtdfemea      constant number := 5400;
+  v_divmacho      constant number := 8;
+  v_divfemea      constant number := 9;
+  v_codprodmacho  constant number := 2896;
+  v_codprodfemea  constant number := 2897;
+  v_codprodsexado constant number := 2639;
+
+  v_gerapedido boolean default false;
+
+  type type_rec_pfv is record(
+    codprod   number,
+    nupfv     number,
+    codune    number,
+    nucleo    number,
+    sexo      varchar2(1),
+    codcid    number,
+    distancia float,
+    dtmarek   date,
+    dtbouba   date,
+    dtgumboro date,
+    origpinto varchar2(4000),
+    dtagend   date,
+    qtdneg    float,
+    status    varchar2(1),
+    codparc   number);
+
+  --Procedure insere_agendamento(p_Nupfv  In Number,p_Errmsg Out Varchar2);
+
+  function get_codparc_integrado(p_unidade varchar, p_nucleo varchar2, p_aviario varchar2) return number;
+
+  procedure atualiza_statusvei;
+
+end ad_pkg_pfv;
+/
+create or replace package body ad_pkg_pfv as
+
+  /*Procedure insere_agendamento(p_Nupfv  In Number,
+                               p_Errmsg Out Varchar2) Is
+  
+    \*
+    * Autor: Marcus Rangel
+    * Dt. Criação: 25/10/2017
+    * Objetivo: Realizar o agendamento da coleta do frango vivo, quebrando pela quantidade de acordo com o produto
+    *\
+  
+    r_Pfv         ad_tsfpfv2%Rowtype;
+    v_Divisor     Number;
+    v_Qtdneg      Number;
+    v_QtdResidual Float := 0;
+    v_Nuafv       Int := 0;
+    Error Exception;
+    Errmsg Varchar2(4000);
+  Begin
+  
+    \*Preenche a record com os dados do registro*\
+    Select *
+      Into r_Pfv
+      From ad_tsfpfv2
+     Where nupfv = p_Nupfv;
+  
+    If r_pfv.codparc Is Null Then
+      Begin
+        Select codparc
+          Into r_Pfv.Codparc
+          From tgfpar
+         Where (Upper(nomeparc) Like
+               '%UNIDADE%' || r_pfv.codune || '%NUCLEO%' || r_pfv.nucleo || '%' Or
+               Upper(nomeparc) Like
+               '%UNIDADE%' || r_pfv.codune || '%AVIARIO%' || r_pfv.nucleo || '%');
+      Exception
+        When Others Then
+          Null;
+      End;
+    
+    End If;
+  
+    v_QtdResidual := r_pfv.qtdneg;
+  
+    If r_pfv.Sexo = 'F' Then
+      v_Qtdneg  := v_QtdFemea;
+      v_Divisor := v_DivFemea;
+    Elsif r_pfv.sexo In ('M', 'X') Then
+      v_Qtdneg  := v_QtdMacho;
+      v_Divisor := v_DivMacho;
+    End If;
+  
+    \*Begin
+      Select Nvl(Max(a.nuafv), 0)
+        Into v_nuafv
+        From ad_tsfafv a
+       Where a.nupfv = p_Nupfv;
+    Exception
+      When Others Then
+        errmsg := Sqlerrm;
+        Raise error;
+    End;*\
+  
+    \*Begin
+      Delete From ad_tsfafv a
+       Where a.nupfv = r_pfv.nupfv;
+    Exception
+      When Others Then
+        Raise;
+    End;*\
+  
+    <<insere_agend>>
+    Loop
+      Exit When v_QtdResidual = 0;
+    
+      v_QtdResidual := v_QtdResidual - v_Qtdneg;
+    
+      v_Nuafv := v_nuafv + 1;
+    
+      Begin
+        Insert Into ad_tsfafv
+          (nupfv, nuafv, unidade, nucleo, codparc, codprod, dtagend, codparctransp, codveiculo,
+           codmotorista, codcid, qtdneg, qtdnegalt, qtdvolalt, statusvei)
+        Values
+          (p_Nupfv, v_Nuafv, r_pfv.codune, r_pfv.nucleo, r_pfv.codparc, r_pfv.codprod,
+           r_pfv.dtdescarte, Null, Null, Null, r_pfv.codcid, v_qtdneg, v_qtdneg / v_Divisor,
+           v_Divisor, Null);
+      Exception
+        When Others Then
+          Errmsg := 'Erro na inserção do agendamento. <br>' || Sqlerrm;
+          Raise error;
+      End;
+    
+      If v_QtdResidual < v_Qtdneg Then
+        v_qtdneg := v_QtdResidual;
+      End If;
+    
+    End Loop;
+  
+    \*Begin
+      Update ad_tsfpfv
+         Set status = 'A'
+       Where nupfv = p_NuPfv;
+    Exception
+      When Others Then
+        errmsg := 'Erro na atualização do status. <br>' || Sqlerrm;
+        Raise error;
+    End;*\
+  
+  Exception
+    When error Then
+      Rollback;
+      p_Errmsg := errmsg;
+    When Others Then
+      Rollback;
+      p_Errmsg := Sqlerrm;
+  End insere_agendamento;*/
+
+  function get_codparc_integrado(p_unidade varchar, p_nucleo varchar2, p_aviario varchar2) return number is
+    v_codparc number;
+  begin
+  
+    begin
+    
+      begin
+        select codparc
+          into v_codparc
+          from tgfpar
+         where codtipparc = 11110200
+           and (upper(nomeparc) like
+               '%UNIDADE%' || to_char(p_unidade) || '%AVIARIO%' || to_char(p_aviario) || '%' or
+               upper(nomeparc) like
+               '%UNIDADE%' || to_char(p_unidade) || '%NUCLEO%' || to_char(p_nucleo) || '%')
+           and rownum = 1;
+      exception
+        when no_data_found then
+          select codparc
+            into v_codparc
+            from tgfpar
+           where (upper(nomeparc) like '%UNIDADE%' || p_unidade || '%AVIARIO%' || p_aviario || '%' or
+                 upper(nomeparc) like '%UNIDADE%' || p_unidade || '%NUCLEO%' || p_nucleo || '%')
+             and rownum = 1;
+      end;
+    
+    exception
+      when others then
+        raise;
+    end;
+  
+    return v_codparc;
+  
+  end get_codparc_integrado;
+
+  procedure atualiza_statusvei is
+    i integer;
+  begin
+    for f in (select p.*
+                from ad_tsfpfv2 p
+               where p.statusvei in ('P', 'I')
+                 and p.nunota is not null
+              --And a.nupfv = 81
+               order by p.nunota)
+    loop
+      -- verifica se nota gerada foi confirmada, nesse momento o motorista já pode ir buscar o frango
+      select count(*)
+        into i
+        from tgfcab cab
+       where cab.nunota = f.nunota
+         and cab.statusnota = 'L';
+    
+      -- altera o status para "Estrada Ida"
+      if i > 0 and f.statusvei = 'P' then
+        begin
+          update ad_tsfpfv2 v set statusvei = 'I' where nupfv = f.nupfv;
+        exception
+          when others then
+            raise;
+        end;
+      
+      end if;
+    
+      -- verificam os que estão em descanso, já foram pesados mas ainda estão no pátio
+      select count(*)
+        into i
+        from tgfpeg peg
+        join tgfcab cab
+          on peg.numnota = cab.numnota
+         and cab.codtipoper = 27
+       where peg.dhiniciopega = f.dtagend
+         and cab.nunota = f.nunota
+         and peg.produto = 'FRANGO VIVO'
+         and peg.dh1 is not null
+         and peg.dh2 is null;
+    
+      begin
+        if i > 0 and f.statusvei in ('C', 'I', 'V') then
+          update ad_tsfpfv2 a set a.statusvei = 'D' where a.nupfv = f.nupfv;
+          i := 0;
+        end if;
+      exception
+        when others then
+          raise;
+      end;
+    
+      -- identifica os abatidos
+      -- já foram pesados
+      select count(*)
+        into i
+        from tgfpeg peg
+        join tgfcab cab
+          on peg.numnota = cab.numnota
+         and cab.codtipoper = 27
+       where peg.dhiniciopega = f.dtagend
+         and cab.nunota = f.nunota
+         and peg.produto = 'FRANGO VIVO'
+         and peg.dh1 is not null
+         and peg.dh2 is not null
+         and peg.dhabate is not null;
+    
+      begin
+        if i > 0 and f.statusvei in ('D', 'I') then
+          update ad_tsfpfv2 a set a.statusvei = 'A' where a.nupfv = f.nupfv;
+        end if;
+      exception
+        when others then
+          raise;
+      end;
+    
+    end loop;
+  
+  end atualiza_statusvei;
+
+end ad_pkg_pfv;
+/

@@ -1,0 +1,23 @@
+Create Or Replace Package ad_pkg_var Is
+
+	-- Author  : M.RANGEL
+	-- Created : 09/05/2018 17:36:53
+	-- Purpose : biblioteca de variáveis constantemente utilizadas
+
+	Count     Int := 0;
+	Sufixo    Varchar2(6);
+	NomeTab   Varchar2(100);
+	init_time Number;
+	end_time  Number;
+	RunTime   Number;
+	stmt      Varchar2(4000);
+	stmt1     Varchar2(4000);
+	stmt2     Varchar2(4000);
+	ErrMsg    Varchar2(4000);
+
+	atualizando_tgford Boolean Default False;
+	atualizando_tgfroc Boolean Default False;
+	permite_update     Boolean Default False;
+
+End ad_pkg_var;
+/

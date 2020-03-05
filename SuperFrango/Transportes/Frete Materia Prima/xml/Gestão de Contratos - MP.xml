@@ -1,0 +1,213 @@
+<gadget refresh-time="1800000">
+  <prompt-parameters>
+    <parameter id="codparc" description="Cód. Parceiro" metadata="entity:ParceiroFornecedorCotacao@CODPARC" required="false" keep-last="false" keep-date="false"/>
+  </prompt-parameters>
+  <level id="lvl_aauqwrv" description="Principal">
+    <args>
+      <arg id="nunotaorig" type="integer"/>
+      <arg id="codparc" type="integer"/>
+      <arg id="codprod" type="integer"/>
+      <arg id="statusvei" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_aauqwrx">
+            <title><![CDATA[Contratos em Aberto]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select 
+	nunota, 
+	'<a href="'||ad_fnc_urlskw('TGFCAB',nunota)||'" title="Abrir Tela" target="_parent">'||nunota||'</a>' lnunota,
+	dtentsai, 
+	codparc, 
+ 	nomeparc, 
+	codprod, 
+	descrprod, 
+	qtdneg , 
+ 	qtdatendida qtd_atendida,
+	qtdsaldo qtd_residual
+From ad_tsfcgn
+ where (codparc = :codparc or nvl(:codparc,0) = 0)
+  and tipo = 1
+Order By dtentsai, codparc
+
+]]></expression>
+            <metadata>
+              <field name="NUNOTA" label="Nro Un NF Ent Fut" type="I" visible="false" useFooter="false"/>
+              <field name="LNUNOTA" label="Nro Único" type="S" visible="true" useFooter="false"/>
+              <field name="DTENTSAI" label="Dt. Ent/Sai" type="D" visible="true" useFooter="false"/>
+              <field name="CODPARC" label="Cód. Parceiro" type="I" visible="true" useFooter="false"/>
+              <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+              <field name="CODPROD" label="Cód. Produto" type="I" visible="true" useFooter="false"/>
+              <field name="DESCRPROD" label="Descrição do Produto" type="S" visible="true" useFooter="false"/>
+              <field name="QTDNEG" label="Qtd. Nf" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+              <field name="QTD_ATENDIDA" label="Qtd. Remessas" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+              <field name="QTD_RESIDUAL" label="Qtd. Residual" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+            </metadata>
+            <refresh-details ui-list="cht_aauqwtl,grd_aauqwul">
+              <param id="nunotaorig">$NUNOTA</param>
+              <param id="codprod">$CODPROD</param>
+              <param id="codparc">$CODPARC</param>
+            </refresh-details>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_aauqwtl" type="pizza">
+            <args>
+              <arg id="nunotaorig" type="integer"/>
+              <arg id="codprod" type="integer"/>
+              <arg id="codparc" type="integer"/>
+            </args>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select cc.statusvei, 
+:nunotaorig as nunotaorig,
+:codparc as codparc,
+:codprod as codprod,
+ad_get.opcoescampo(cc.statusvei,'STATUSVEI','AD_CONTCARGTO') STATUS,  
+ Case When nvl(sum(ic.qtde),0) = 0  Then Sum(v.pesomax) Else Sum(ic.qtde) End  QTDNEG
+ From ad_contcargto cc
+ Join ad_itecargto ic On cc.sequencia = ic.sequencia
+ left join tgfvei v on cc.codveiculo = v.codveiculo
+Where cc.status <> 'CANCELADO'
+ and cc.nunota  = :nunotaorig
+ And ic.codprod = :codprod
+ And (ic.codparc = :codparc or 0 = 0)
+Group By cc.statusvei
+union
+Select 'F',
+:nunotaorig as nunotaorig,
+:codparc as codparc,
+:codprod as codprod,
+'Saldo Residual', 
+ad_pkg_fmp.get_qtdcontrato(:nunotaorig,:codparc,:codprod) -  
+ad_pkg_fmp.get_qtdatendida(:nunotaorig,:codparc,:codprod) 
+from dual
+]]></expression>
+            <metadata>
+              <field name="STATUSVEI" label="STATUSVEI" type="S" visible="false" useFooter="false"/>
+              <field name="NUNOTAORIG" label="NUNOTAORIG" type="S" visible="false" useFooter="false"/>
+              <field name="CODPARC" label="CODPARC" type="S" visible="false" useFooter="false"/>
+              <field name="CODPROD" label="CODPROD" type="S" visible="false" useFooter="false"/>
+              <field name="STATUS" label="STATUS" type="S" visible="true" useFooter="false"/>
+              <field name="QTDNEG" label="QTDNEG" type="F" visible="true" useFooter="false"/>
+            </metadata>
+            <series>
+              <serie type="pizza">
+                <field>QTDNEG</field>
+                <nameField>STATUS</nameField>
+                <refresh-details ui-list="grd_aauqwul,grd_aauqwtw">
+                  <param id="nunotaorig">$NUNOTAORIG</param>
+                  <param id="codprod">$CODPROD</param>
+                  <param id="codparc">$CODPARC</param>
+                  <param id="statusvei">$STATUSVEI</param>
+                </refresh-details>
+              </serie>
+            </series>
+            <legend position="top" direction="v"/>
+          </chart>
+        </container>
+      </container>
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_aauqwul">
+            <args>
+              <arg id="nunotaorig" type="integer"/>
+              <arg id="codprod" type="integer"/>
+              <arg id="codparc" type="integer"/>
+              <arg id="statusvei" type="text"/>
+            </args>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select 
+qtd_total, 
+qtd_programada, 
+qtd_recebida, 
+qtd_recebidacab,
+(qtd_recebida - qtd_recebidacab) dif_recebida,
+(qtd_total - qtd_programada - qtd_recebidacab) saldo_previsto ,
+(qtd_total - qtd_recebidacab) saldo_real 
+ from (
+		Select 
+		ad_pkg_fmp.get_qtdcontrato(:nunotaorig, :codparc,:codprod) qtd_total ,
+		ad_pkg_fmp.get_qtdcarreg(:nunotaorig, :codparc,:codprod,'P') qtd_programada, 
+		ad_pkg_fmp.get_qtdcarreg(:nunotaorig, :codparc,:codprod,'R') qtd_recebida,
+	      ad_pkg_fmp.get_qtdatendida(:nunotaorig,:codparc,:codprod) qtd_recebidacab
+		from dual
+	)]]></expression>
+            <metadata>
+              <field name="QTD_TOTAL" label="Qtd. Total" type="F" visible="true" useFooter="false"/>
+              <field name="QTD_PROGRAMADA" label="Qtd. Programada" type="F" visible="true" useFooter="false"/>
+              <field name="QTD_RECEBIDA" label="Qtd. Receb Carreg" type="F" visible="true" useFooter="false"/>
+              <field name="QTD_RECEBIDACAB" label="Qtd. Notas Rem CAB" type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+              <field name="DIF_RECEBIDA" label="Dif. Recebidas" type="F" visible="true" useFooter="false" mask="#.##0,00">
+                <formatter notEqualThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+              </field>
+              <field name="SALDO_PREVISTO" label="Saldo Previsto" type="F" visible="true" useFooter="false"/>
+              <field name="SALDO_REAL" label="Saldo Real" type="F" visible="true" useFooter="false"/>
+            </metadata>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_aauqwtw">
+            <args>
+              <arg id="nunotaorig" type="integer"/>
+              <arg id="codprod" type="integer"/>
+              <arg id="codparc" type="integer"/>
+              <arg id="statusvei" type="text"/>
+            </args>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select  cc.nunota,
+ ic.numnota,
+ cc.sequencia,
+ cc.codemp,
+ cc.codveiculo,
+ ad_get.formataplaca(vei.placa) placa,
+ mot.nomeparc,
+ cp.nomecid,
+ ad_get.distanciacidade(ce.codcid,cp.codcid) distancia,
+ loc.descrlocal,
+ Nvl(ic.qtde, 0) QTDNEG,
+ nvl(ic.vlrfrete, ic.vlrcte) vlrfete,
+	cc.statusvei,
+ cc.datasaidatrans,
+ cc.datachegadapatio,
+ cc.dataentradadesc,
+ cc.datafimdescarga
+  From ad_contcargto cc
+  Left Join ad_itecargto ic On ic.sequencia = cc.sequencia
+  Left Join tgfvei vei On cc.codveiculo = vei.codveiculo
+  Left Join tgfpar par On ic.codparc = par.codparc
+  Left Join tsicid cp On par.codcid = cp.codcid
+  Left Join tsiemp emp On cc.codemp = emp.codemp
+  Left Join tsicid ce On emp.codcid = ce.codcid
+  Left Join tgfpar mot On vei.codmotorista = mot.codparc
+  Left Join tgfloc loc On cc.codlocal = loc.codlocal
+ Where cc.status <> 'CANCELADO'
+   And cc.nunota = :nunotaorig
+   And ic.codprod = :codprod
+   And ic.codparc = :codparc
+   And cc.statusvei = :statusvei
+Order By cc.datasaidatrans]]></expression>
+            <metadata>
+              <field name="NUNOTA" label="Nro Único" type="I" visible="true" useFooter="false"/>
+              <field name="NUMNOTA" label="Nro Nota" type="I" visible="true" useFooter="false"/>
+              <field name="SEQUENCIA" label="Seq. Carregto" type="I" visible="true" useFooter="false"/>
+              <field name="CODEMP" label="Cód. Empresa" type="I" visible="true" useFooter="false"/>
+              <field name="CODVEICULO" label="Cód. Veículo" type="I" visible="true" useFooter="false"/>
+              <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+              <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+              <field name="NOMECID" label="Cidade" type="S" visible="true" useFooter="false"/>
+              <field name="DISTANCIA" label="Distânia" type="I" visible="true" useFooter="false"/>
+              <field name="DESCRLOCAL" label="Local" type="S" visible="true" useFooter="false"/>
+              <field name="QTDNEG" label="Qtd." type="F" visible="true" useFooter="true"/>
+              <field name="VLRFETE" label="Vlr. Frete" type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+              <field name="STATUSVEI" label="STATUSVEI" type="S" visible="true" useFooter="false"/>
+              <field name="DATASAIDATRANS" label="Dh. Saída Transp." type="T" visible="true" useFooter="false"/>
+              <field name="DATACHEGADAPATIO" label="Dh. Ent. Pátio" type="T" visible="true" useFooter="false"/>
+              <field name="DATAENTRADADESC" label="Dh. Ent. Descarga" type="T" visible="true" useFooter="false"/>
+              <field name="DATAFIMDESCARGA" label="Dh. Fin. Descarga" type="T" visible="true" useFooter="false"/>
+            </metadata>
+            <on-click-launcher resource-id="br.com.sankhya.menu.adicional.CONTCARGTO">
+              <SEQUENCIA>$SEQUENCIA</SEQUENCIA>
+            </on-click-launcher>
+          </grid>
+        </container>
+      </container>
+    </container>
+  </level>
+</gadget>

@@ -1,0 +1,1578 @@
+CREATE OR REPLACE Package Ad_Set As
+
+  /****************************************************************************
+  Autor: Ricardo Soares
+  Objetivo: Excluir Ad_Tblcmf, Tsilib, Tgffre e Tgffin nos processos personalizados
+            - Adiantamento / empréstimo SSA (AD_ADTSSACAB)
+            - Despesa Integrado (AD_ADTOCAB)
+            - Rateio de Valores por Parceiro (AD_ADTOCAB)
+            Centralizando tudo em um unico pacote, caso seja necessário efetuar alterações tem-se uma noção de tudo que precisa ser ajustado.
+  *****************************************************************************/
+  Procedure Del_Adiantamento(p_Nuacerto    Number,
+                             p_Tabela      Varchar2,
+                             p_Chavetabela Number,
+                             p_Mensagem    Out Varchar2);
+
+  /****************************************************************************
+  Autor: Marcus Rangel
+  Objetivo: Criar biblioteca de métodos para facilitar as inserções e
+  operações de DDL que ocorrem com muita frequencia para evitar repetição de
+  código e centralizar as manutenções.
+  *****************************************************************************/
+
+  p_Mensagem Varchar2(4000);
+
+  /****************************************************************************
+  Autor: Marcus Rangel
+  Objetivo: exclui as solicitaões de liberação
+  *****************************************************************************/
+  Procedure Del_Liberacao(p_Nuchave Number, p_Tabela Varchar2, p_Evento Number);
+
+  /****************************************************************************
+  Autor: Marcus Rangel
+  Objetivo: Insere cabeçalho de pedido com dados básicos
+   ******************************************************************************/
+  Procedure Confirma_Pedido_Compra(p_Nunota Number);
+
+  Procedure Ins_Financeiro_Tipovenda(p_Codemp      Number,
+                                     p_Codparc     Number,
+                                     p_Codtipoper  Int,
+                                     p_Codtipvenda Number,
+                                     p_Codnat      Number Default Null,
+                                     p_Codcencus   Number Default Null,
+                                     p_Codproj     Number Default Null,
+                                     p_Nunota      Number,
+                                     p_Vlrnota     Float);
+
+  Procedure Ins_Pedidocab(p_Codemp      Number,
+                          p_Codparc     Int,
+                          p_Codvend     Int,
+                          p_Codtipoper  Int,
+                          p_Codtipvenda Int,
+                          p_Dtneg       Date,
+                          p_Vlrnota     Float,
+                          p_Codnat      Number,
+                          p_Codcencus   Number,
+                          p_Codproj     Number,
+                          p_Obs         Varchar2,
+                          p_Nunota      Out Number);
+  /****************************************************************************
+  Autor: Marcus Rangel
+  Objetivo: Insere os pedidos com dados básicos
+  *****************************************************************************/
+  Procedure Ins_Pedidoitens(p_Nunota   Int,
+                            p_Codprod  Int,
+                            p_Qtdneg   Float,
+                            p_Codvol   Varchar2,
+                            p_Codlocal Number,
+                            p_Controle Varchar2,
+                            p_Vlrunit  Float,
+                            p_Vlrtotal Float,
+                            p_Mensagem Out Varchar2);
+
+  Procedure Ins_Pedidoitens(p_Nunota   Int,
+                            p_Codprod  Int,
+                            p_Qtdneg   Float,
+                            p_Vlrunit  Float,
+                            p_Vlrtotal Float,
+                            p_Mensagem Out Varchar2);
+
+  Procedure Ins_Pedidoitens(p_Nunota   Int,
+                            p_Codprod  Int,
+                            p_Qtdneg   Float,
+                            p_Codvol   Varchar2,
+                            p_Vlrunit  Float,
+                            p_Vlrtotal Float,
+                            p_Mensagem Out Varchar2);
+
+  /****************************************************************************
+  Autor:    Ricardo Soares
+  Data:     28/08/2018
+  Objetivo: Insere Tsiobclog que é um insert muito utilizado nas procedures de retorno.
+            Aquilo que não foi declarado como parametro é porque não houve necessidade quando da criação da procedure, que foi baseado no insert da procedure Stp_Retorno_Cobsafra422_Sf
+  *****************************************************************************/
+  Procedure Ins_Tsiobclog(p_Nufinc         Number,
+                          p_Codocorrencia2 Varchar2,
+                          p_Descricao      Varchar2,
+                          p_Nomearq        Varchar2,
+                          p_Observacao     Varchar2);
+  /****************************************************************************
+  Autor: Marcus Rangel
+  Objetivo: Insere o financeiro considerando as parcelas do tipo de negociação
+  *****************************************************************************/
+
+  Procedure Ins_Financeiro(p_Codemp     Number,
+                           p_Numnota    Int,
+                           p_Dtneg      Date,
+                           p_Dtvenc     Date,
+                           p_Codparc    Number,
+                           p_Top        Int,
+                           p_Contabanco Number Default Null,
+                           p_Codnat     Number,
+                           p_Codcencus  Number,
+                           p_Codproj    Number Default Null,
+                           p_Codtiptit  Number,
+                           p_Origem     Char,
+                           p_Nunota     Number,
+                           p_Valor      Float,
+                           p_Nufin      Out Number,
+                           p_Errmsg     Out Varchar2);
+
+  Procedure Ins_Financeiro(p_Codemp     Number,
+                           p_Numnota    Int,
+                           p_Dtneg      Date,
+                           p_Dtvenc     Date,
+                           p_Codparc    Number,
+                           p_Top        Int,
+                           p_Contabanco Number Default Null,
+                           p_Codnat     Number,
+                           p_Codcencus  Number,
+                           p_Codproj    Number Default Null,
+                           p_Codtiptit  Number,
+                           p_Origem     Char,
+                           p_Nunota     Number,
+                           p_Valor      Float,
+                           p_Nufin      Out Number);
+
+  Procedure Ins_Financeiro(p_Codemp     Number,
+                           p_Numnota    Int,
+                           p_Dtneg      Date,
+                           p_Dtvenc     Date,
+                           p_Codparc    Number,
+                           p_Top        Int,
+                           p_Contabanco Number Default Null,
+                           p_Codnat     Number,
+                           p_Codcencus  Number,
+                           p_Codproj    Number Default Null,
+                           p_Codtiptit  Number,
+                           p_Origem     Char,
+                           p_Nunota     Number,
+                           p_Valor      Float,
+                           p_Errmsg     Out Number);
+
+  /****************************************************************************
+  Autor: Marcus Rangel
+  Objetivo: Insere solicitação de liberação
+  *****************************************************************************/
+  Procedure Ins_Liberacao(p_Tabela    Varchar2,
+                          p_Nuchave   Number,
+                          p_Evento    Number,
+                          p_Valor     Float,
+                          p_Codusulib Number,
+                          p_Obslib    Varchar2,
+                          p_Errmsg    Out Varchar2);
+
+  /****************************************************************************
+  Autor: Ricardo Soares
+  Objetivo: Insere solicitação de liberação em cascata
+  *****************************************************************************/
+  Procedure Ins_Liberacao1035(p_Tabela     Varchar2,
+                              p_Nuchave    Number,
+                              p_Evento     Number,
+                              p_Valor      Float,
+                              p_Codusulib  Number,
+                              p_Obslib     Varchar2,
+                              p_Seqcascata Number,
+                              p_Codtipoper Number,
+                              p_Errmsg     Out Varchar2);
+
+  Procedure Ins_Liberacaocascata(p_Tabela     Varchar2,
+                                 p_Nuchave    Number,
+                                 p_Evento     Number,
+                                 p_Valor      Float,
+                                 p_Codusulib  Number,
+                                 p_Obslib     Varchar2,
+                                 p_Seqcascata Number,
+                                 p_Errmsg     Out Varchar2);
+
+  /****************************************************************************
+  Autor: Ricardo Soares
+  Objetivo: Insere solicitação de liberação já liberada
+  *****************************************************************************/
+  Procedure Ins_Liberado(p_Tabela  Varchar2,
+                         p_Nuchave Number,
+                         p_Evento  Number,
+                         p_Codusu  Number,
+                         p_Obslib  Varchar2,
+                         p_Errmsg  Out Varchar2);
+  /****************************************************************************
+  Autor: Ricardo Soares
+  Objetivo: Insere Ad_Tsiliblog
+  *****************************************************************************/
+  Procedure Ins_Ad_Tsiliblog(p_Nuchave     Number,
+                             p_Tabela      Varchar2,
+                             p_Dhsolicit   Date,
+                             p_Dhlib       Date,
+                             p_Codususol   Number,
+                             p_Codusulib   Number,
+                             p_Vlratual    Float,
+                             p_Vlrliberado Float,
+                             p_Evento      Number,
+                             p_Observacao  Varchar2,
+                             p_Obslib      Varchar2,
+                             p_Operacao    Varchar2,
+                             p_Nuadto      Number);
+
+  /****************************************************************************
+  Autor: Marcus Rangel
+  Objetivo: Insere mensagem de aviso do sistema
+  *****************************************************************************/
+  Procedure Ins_Avisosistema(p_Titulo     Varchar2,
+                             p_Descricao  Varchar2,
+                             p_Solucao    Varchar2,
+                             p_Usurem     Int,
+                             p_Usudest    Int,
+                             p_Prioridade Int,
+                             p_Tabela     Varchar2,
+                             p_Nrounico   Number,
+                             p_Erro       Out Varchar2);
+
+  /****************************************************************************
+  Autor: Marcus Rangel
+  Objetivo: Insere dados na EXECPARAMS para simular a chamada de procedimentos
+  usando a chamada padrão do sistema. Usado na Depuração de procedimentos.
+  *****************************************************************************/
+  Procedure Inseresessao(p_Nome      Varchar2,
+                         p_Sequencia Int,
+                         p_Tipo      Char,
+                         p_Valor     Varchar2,
+                         p_Idsessao  In Out Varchar2);
+
+  /****************************************************************************
+  Autor: Marcus Rangel
+  Objetivo: Criar eventos personalizados (Regra de Negócios).
+  *****************************************************************************/
+  Procedure Insereevento(p_Nomeevento Varchar2, p_Nuevento Out Number);
+
+  /****************************************************************************
+  Autor: Marcus Rangel
+  Objetivo: Insere mensagens na tabela de log do sistema.
+  *****************************************************************************/
+  Procedure Insere_Msglog(p_Mensagem Varchar2);
+
+  /****************************************************************************
+  Autor: Marcus Rangel
+  Objetivo: insere na fila da TMDFMG para sendmail com nunota e evento
+  *****************************************************************************/
+  Procedure Insere_Mail_Fila_Fmg(p_Assunto  In Tmdfmg.Assunto%Type,
+                                 p_Mensagem In Tmdfmg.Mensagem%Type,
+                                 p_Email    In Tmdfmg.Email%Type,
+                                 p_Nunota   Number,
+                                 p_Evento   Number);
+
+  /****************************************************************************
+  Autor: Marcus Rangel
+  Objetivo: exclui sessao manual
+  *****************************************************************************/
+  Procedure Remove_Sessao(p_Idsessao Varchar2);
+
+  Procedure Debug_Support;
+
+  Function Divide_Valores(p_Valor1 Number, p_Valor2 Number) Return Float;
+
+  Procedure Tsiusu_Interno_Null(p_Codusu Number);
+
+  -- M. Rangel - retorna vencimento considerando teto e fds
+  Procedure Get_Dtvenc_Teto_Feriado(p_Dtvenc In Out Date, p_Diasvencto Number);
+
+  -- M. Rangel - Alterar o vencimento considerando teto e fds
+  Procedure Set_Dtvenc_Teto_Feriado(p_Nufin Number, p_Dtvenc In Out Date, p_Diasvencto Number);
+
+  -- M. Rangel - Estorna financeiro pelo número unico
+  Procedure estorna_financeiro(p_Nufin Number);
+End;
+/
+CREATE OR REPLACE Package Body Ad_Set Is
+
+  /* 
+  * Autor: M.Rangel
+  * Processo: Diversos
+  * Objetivo: Agrupar e organizar ddiversos métodos que são recorrentes à diversos processos
+  */
+
+  Procedure Del_Adiantamento(p_Nuacerto    Number,
+                             p_Tabela      Varchar2,
+                             p_Chavetabela Number,
+                             p_Mensagem    Out Varchar2) Is
+    Error Exception;
+    v_Count Number;
+  
+  Begin
+    /****************************************************************************
+    Autor: Ricardo Soares
+    Objetivo: Excluir Ad_Tblcmf, Tsilib, Tgffre e Tgffin nos processos personalizados
+              - Adiantamento / empréstimo SSA (AD_ADTSSACAB)
+              - Despesa Integrado (AD_ADTOCAB)
+              - Rateio de Valores por Parceiro (AD_ADTOCAB)
+              Centralizando tudo em um unico pacote, caso seja necessário efetuar alterações tem-se uma noção de tudo que precisa ser ajustado.
+    *****************************************************************************/
+    Begin
+      Delete From Ad_Tblcmf t
+       Where t.Nometaborig = p_Tabela
+         And t.Nuchaveorig = p_Chavetabela;
+    
+    Exception
+      When Others Then
+        p_Mensagem := 'Erro ao excluir ' || p_Tabela || ' chave ' || p_Chavetabela || Sqlerrm;
+        Return;
+    End;
+  
+    Begin
+      Delete From Tsilib l
+       Where l.Nuchave = p_Chavetabela
+         And l.Tabela = p_Tabela;
+    
+    Exception
+      When Others Then
+        p_Mensagem := 'Erro ao excluir liberação de limites, tabela ' || p_Tabela || ' NuChave ' ||
+                      p_Chavetabela || Sqlerrm;
+        Return;
+    End;
+  
+    Begin
+      Delete From Tgffre Where Nuacerto = p_Nuacerto;
+    
+    Exception
+      When Others Then
+        p_Mensagem := 'Erro ao excluir adiantamento ' || p_Nuacerto || '. ' || Sqlerrm;
+        Return;
+    End;
+  
+    If p_Tabela = 'AD_ADTSSACAB' Then
+      For r In (Select Nufin From Ad_Adtssapar l Where l.Nunico = p_Chavetabela)
+      Loop
+        Select Count(*)
+          Into v_Count
+          From Tgffin f
+         Where f.Nufin = r.Nufin
+           And (f.Dhbaixa Is Not Null Or f.Numremessa Is Not Null);
+      
+        If v_Count > 0 Then
+          p_Mensagem := 'Registro baixado ou enviado para banco, entre em contato com departamento financeiro' ||
+                        Sqlerrm;
+          Return;
+        Else
+        
+          Delete From Tgffin f Where f.Nufin = r.Nufin;
+        
+        End If;
+      End Loop;
+      
+     ---- BY RODRIGO DIA 04/07/2019 PROJETO RENOVAR O.S  49204 
+     For r In (Select NufinREC,NUFINDESP From AD_ADTSSAPARRENOVAR l Where l.Nunico = p_Chavetabela)
+      Loop
+        Select Count(*)
+          Into v_Count
+          From Tgffin f
+         Where (f.Nufin = r.NufinREC OR F.NUFIN = r.NufinDESP)
+           And (f.Dhbaixa Is Not Null Or f.Numremessa Is Not Null);
+      
+        If v_Count > 0 Then
+          p_Mensagem := 'Registro baixado ou enviado para banco, entre em contato com departamento financeiro' ||
+                        Sqlerrm;
+          Return;
+        Else
+        
+          Delete From Tgffin f Where (f.Nufin = r.NufinREC OR F.NUFIN = r.NufinDESP);
+        
+        End If;
+      End Loop;
+    
+    Else
+    
+      For r In (Select Nufin
+                  From Tgffin f
+                 Where f.Numdupl = p_Nuacerto
+                   And f.Nucompens = p_Nuacerto
+                   And f.Desdobdupl = 'ZZ')
+      Loop
+        Select Count(*)
+          Into v_Count
+          From Tgffin f
+         Where f.Nufin = r.Nufin
+           And (f.Dhbaixa Is Not Null Or f.Numremessa Is Not Null);
+      
+        If v_Count > 0 Then
+          p_Mensagem := 'Registro baixado ou enviado para banco, entre em contato com departamento financeiro' ||
+                        Sqlerrm;
+          Return;
+        Else
+        
+          Delete From Tgffin f Where f.Nufin = r.Nufin;
+        
+        End If;
+      End Loop;
+            
+      
+    End If;
+  
+  Exception
+    When Error Then
+      --Rollback;
+      Raise;
+    When Others Then
+      --Rollback;
+      Raise;
+    
+  End Del_Adiantamento;
+
+  Procedure Del_Liberacao(p_Nuchave Number, p_Tabela Varchar2, p_Evento Number) Is
+  
+  Begin
+    Delete From Tsilib
+     Where Nuchave = p_Nuchave
+       And Tabela = p_Tabela
+       And Evento = p_Evento;
+  
+  End Del_Liberacao;
+
+  Procedure Ins_Pedidocab(p_Nunota      Int,
+                          p_Codemp      Number,
+                          p_Codparc     Int,
+                          p_Codvend     Int,
+                          p_Codtipoper  Int,
+                          p_Codtipvenda Int,
+                          p_Dtneg       Date,
+                          p_Vlrnota     Float,
+                          p_Codnat      Number,
+                          p_Codcencus   Number,
+                          p_Codproj     Number,
+                          p_Obs         Varchar2,
+                          p_Mensagem    Out Varchar2) Is
+  
+    r_Top Tgftop%Rowtype;
+    v_Dataneg Date;
+    v_Codusulog Int := Stp_Get_Codusulogado;
+    v_Eventlib Int;
+    Error Exception;
+  Begin
+  
+    -- insere o cabeçalho do lançamento
+    Begin
+    
+      Select *
+        Into r_Top
+        From Tgftop
+       Where Codtipoper = p_Codtipoper
+         And Dhalter = Ad_Get.Maxdhtipoper(p_Codtipoper);
+    
+      Select Max(Dhalter) Into v_Dataneg From Tgftpv v Where v.Codtipvenda = p_Codtipvenda;
+    
+      Insert Into Tgfcab
+        (Nunota, Numnota, Codemp, Codempnegoc, Codparc, Codvend, Codtipoper, Dhtipoper, Codtipvenda,
+         Dhtipvenda, Dtneg, Dtalter, Dtentsai, Dtmov, Vlrnota, Codnat, Codcencus, Codproj, Statusnota, Codusu,
+         Tipmov, Observacao, Issretido, Ad_Tela)
+      Values
+        (p_Nunota, 0, p_Codemp, p_Codemp, p_Codparc, Nvl(p_Codvend, 0), p_Codtipoper, r_Top.Dhalter,
+         p_Codtipvenda, v_Dataneg, p_Dtneg, Sysdate, Sysdate, Sysdate, Nvl(p_Vlrnota, 0), p_Codnat,
+         p_Codcencus, p_Codproj, 'A', v_Codusulog, r_Top.Tipmov, p_Obs, 'N', 'Ad_Set.Ins_pedidocab');
+    
+    Exception
+      When Others Then
+        p_Mensagem := 'Erro ao inserir o cabeçalho do pedido - ' || Sqlerrm;
+        Return;
+        --Raise_Application_Error(-20105, ad_fnc_formataerro('Erro ao inserir o cabeçalho do pedido - ' || Sqlerrm;));
+    End;
+  
+    -- verifica se a top exige liberação
+  
+    If r_Top.Ad_Exigelib = 'S' Then
+    
+      Begin
+        Select t.Evelibconfped Into v_Eventlib From Ad_Tsfelt t Where t.Nuelt = 1;
+      
+        Ins_Liberacao(p_Tabela => 'TGFCAB', p_Nuchave => p_Nunota, p_Evento => v_Eventlib, p_Valor => 1,
+                      p_Codusulib => v_Codusulog, p_Obslib => Null, p_Errmsg => p_Mensagem);
+      
+      Exception
+        When Others Then
+          p_Mensagem := 'Erro ao inserir a solicitação de liberação do pedido. - ' || Sqlerrm;
+          Return;
+          --Raise_Application_Error(-20105, ad_fnc_formataerro(p_mens
+      End;
+    
+    End If;
+  
+  Exception
+    When Error Then
+      -- Rollback;
+      Raise;
+    When Others Then
+      --Rollback;
+      Raise;
+  End Ins_Pedidocab;
+
+  Procedure Ins_Pedidocab(p_Codemp      Number,
+                          p_Codparc     Int,
+                          p_Codvend     Int,
+                          p_Codtipoper  Int,
+                          p_Codtipvenda Int,
+                          p_Dtneg       Date,
+                          p_Vlrnota     Float,
+                          p_Codnat      Number,
+                          p_Codcencus   Number,
+                          p_Codproj     Number,
+                          p_Obs         Varchar2,
+                          p_Nunota      Out Number) Is
+  
+    r_Top Tgftop%Rowtype;
+    v_Dataneg Date;
+    v_Codusulog Int := Stp_Get_Codusulogado;
+    v_Eventlib Int;
+    Errmsg Varchar2(4000);
+    Error Exception;
+  Begin
+    -- alterado para buscar o proximo numero da cab por aqui
+    -- alterado o nunota para parametro de saída
+  
+    -- insere o cabeçalho do lançamento
+    Begin
+      Select *
+        Into r_Top
+        From Tgftop
+       Where Codtipoper = p_Codtipoper
+         And Dhalter = Ad_Get.Maxdhtipoper(p_Codtipoper);
+    
+      Select Max(Dhalter) Into v_Dataneg From Tgftpv v Where v.Codtipvenda = p_Codtipvenda;
+    
+      Begin
+        Stp_Keygen_Tgfnum(p_Arquivo => 'TGFCAB', p_Codemp => 1, p_Tabela => 'TGFCAB', p_Campo => 'NUNOTA',
+                          p_Dsync => 0, p_Ultcod => p_Nunota);
+      
+      End;
+    
+      Insert Into Tgfcab
+        (Nunota, Numnota, Codemp, Codempnegoc, Codparc, Codvend, Codtipoper, Dhtipoper, Codtipvenda,
+         Dhtipvenda, Dtneg, Dtalter, Dtentsai, Dtmov, Vlrnota, Codnat, Codcencus, Codproj, Statusnota, Codusu,
+         Tipmov, Observacao, Issretido, Ad_Tela)
+      Values
+        (p_Nunota, 0, p_Codemp, p_Codemp, p_Codparc, Nvl(p_Codvend, 0), p_Codtipoper, r_Top.Dhalter,
+         p_Codtipvenda, v_Dataneg, p_Dtneg, Sysdate, Sysdate, Sysdate, Nvl(p_Vlrnota, 0), p_Codnat,
+         p_Codcencus, p_Codproj, 'A', v_Codusulog, r_Top.Tipmov, p_Obs, 'N', 'Ad_Set.Ins_pedidocab');
+    
+    Exception
+      When Others Then
+        --p_Mensagem := 'Erro ao inserir o cabeçalho do pedido - ' || Sqlerrm;
+        -- Rollback;
+        Raise;
+    End;
+  
+    -- verifica se a top exige liberação
+  
+    If r_Top.Ad_Exigelib = 'S' Then
+    
+      Begin
+        Select t.Evelibconfped Into v_Eventlib From Ad_Tsfelt t Where t.Nuelt = 1;
+      
+        Ins_Liberacao(p_Tabela => 'TGFCAB', p_Nuchave => p_Nunota, p_Evento => v_Eventlib, p_Valor => 1,
+                      p_Codusulib => v_Codusulog, p_Obslib => Null, p_Errmsg => Errmsg);
+      
+      Exception
+        When Others Then
+          --p_Mensagem := 'Erro ao inserir a solicitação de liberação do pedido. - ' || Sqlerrm;
+          Raise;
+      End;
+    
+    End If;
+  
+  Exception
+    When Error Then
+      -- Rollback;
+      Raise;
+    When Others Then
+      -- Rollback;
+      Raise;
+  End Ins_Pedidocab;
+
+  Procedure Ins_Pedidoitens(p_Nunota   Int,
+                            p_Codprod  Int,
+                            p_Qtdneg   Float,
+                            p_Vlrunit  Float,
+                            p_Vlrtotal Float,
+                            p_Mensagem Out Varchar2) Is
+  Begin
+    Ins_Pedidoitens(p_Nunota, p_Codprod, p_Qtdneg, Null, p_Vlrunit, p_Vlrtotal, p_Mensagem);
+  End;
+
+  Procedure Ins_Pedidoitens(p_Nunota   Int,
+                            p_Codprod  Int,
+                            p_Qtdneg   Float,
+                            p_Codvol   Varchar2,
+                            p_Vlrunit  Float,
+                            p_Vlrtotal Float,
+                            p_Mensagem Out Varchar2) Is
+  Begin
+    Ins_Pedidoitens(p_Nunota, p_Codprod, p_Qtdneg, p_Codvol, Null, Null, p_Vlrunit, p_Vlrtotal, p_Mensagem);
+  End;
+
+  Procedure Ins_Pedidoitens(p_Nunota   Int,
+                            p_Codprod  Int,
+                            p_Qtdneg   Float,
+                            p_Codvol   Varchar2,
+                            p_Codlocal Number,
+                            p_Controle Varchar2,
+                            p_Vlrunit  Float,
+                            p_Vlrtotal Float,
+                            p_Mensagem Out Varchar2) Is
+    r_Prod Tgfpro%Rowtype;
+    r_Cab Tgfcab%Rowtype;
+    r_Top Tgftop%Rowtype;
+    v_Vlrunit Float;
+    v_Atualest Int;
+    v_Sequencia Int;
+    v_Codusulog Int := Stp_Get_Codusulogado;
+    v_Count Int := 0;
+    Error Exception;
+  Begin
+  
+    Select * Into r_Prod From Tgfpro Where Codprod = p_Codprod;
+  
+    Select * Into r_Cab From Tgfcab Where Nunota = p_Nunota;
+  
+    Select *
+      Into r_Top
+      From Tgftop
+     Where Codtipoper = r_Cab.Codtipoper
+       And Dhalter = r_Cab.Dhtipoper;
+  
+    If r_Top.Atualest = 'N' Then
+      v_Atualest := 0;
+    Elsif r_Top.Atualest = 'E' /*And r_Top.Tipmov = 'C' */
+     Then
+      v_Atualest := 1;
+    Elsif r_Top.Atualest = 'B' /*And r_Top.Tipmov = 'V' */
+     Then
+      v_Atualest := -1;
+    End If;
+  
+    Begin
+    
+      Select Count(*)
+        Into v_Count
+        From Tgfite
+       Where Nunota = p_Nunota
+         And Codprod = p_Codprod
+         And Codvol = Nvl(p_Codvol, '0')
+         And Codlocalorig = Nvl(p_Codlocal, 0)
+         And Controle = Nvl(p_Controle, ' ');
+    
+      If p_Vlrunit = p_Vlrtotal Then
+        v_Vlrunit := p_Vlrtotal / p_Qtdneg;
+      Else
+        v_Vlrunit := p_Vlrunit;
+      End If;
+    
+      If v_Count = 0 Then
+      
+        Select Nvl(Max(Sequencia), 0) + 1 Into v_Sequencia From Tgfite Where Nunota = p_Nunota;
+        If Sql%Notfound Then
+          v_Sequencia := 1;
+        End If;
+      
+        Insert Into Tgfite
+          (Nunota, Sequencia, Codemp, Codprod, Usoprod, Qtdneg, Vlrunit, Vlrtot, Atualestoque, Statusnota,
+           Codusu, Dtalter, Codvol, Codlocalorig, Controle)
+        Values
+          (p_Nunota, v_Sequencia, r_Cab.Codemp, p_Codprod, r_Prod.Usoprod, p_Qtdneg, v_Vlrunit, p_Vlrtotal,
+           v_Atualest, 'A', v_Codusulog, Sysdate, Nvl(p_Codvol, r_Prod.Codvol), Nvl(p_Codlocal, 0),
+           Nvl(p_Controle, ' '));
+      Else
+        Update Tgfite
+           Set Qtdneg  = Qtdneg + p_Qtdneg,
+               Vlrtot  = Vlrtot + p_Vlrtotal,
+               Vlrunit = Round(Vlrtot / Qtdneg, r_Prod.Decvlr)
+         Where Nunota = p_Nunota
+           And Codprod = p_Codprod;
+      End If;
+    Exception
+      When Others Then
+        p_Mensagem := 'Erro ao inserir o serviço. ' || Sqlerrm;
+        Raise Error;
+    End;
+  
+    Update Tgfcab
+       Set Vlrnota =
+           (Select Sum(Vlrtot) From Tgfite Where Nunota = p_Nunota)
+     Where Nunota = p_Nunota;
+  
+  Exception
+    When Error Then
+      Rollback;
+    When Others Then
+      Rollback;
+  End Ins_Pedidoitens;
+
+  Procedure Ins_Financeiro(p_Codemp     Number,
+                           p_Numnota    Int,
+                           p_Dtneg      Date,
+                           p_Dtvenc     Date,
+                           p_Codparc    Number,
+                           p_Top        Int,
+                           p_Contabanco Number Default Null,
+                           p_Codnat     Number,
+                           p_Codcencus  Number,
+                           p_Codproj    Number Default Null,
+                           p_Codtiptit  Number,
+                           p_Origem     Char,
+                           p_Nunota     Number,
+                           p_Valor      Float,
+                           p_Nufin      Out Number) Is
+    p_Errmsg Varchar2(4000);
+  Begin
+  
+    Ins_Financeiro(p_Codemp, p_Numnota, p_Dtneg, p_Dtvenc, p_Codparc, p_Top, p_Contabanco, p_Codnat,
+                   p_Codcencus, p_Codproj, p_Codtiptit, p_Origem, p_Nunota, p_Valor, p_Nufin, p_Errmsg);
+  
+  End Ins_Financeiro;
+
+  Procedure Ins_Financeiro(p_Codemp     Number,
+                           p_Numnota    Int,
+                           p_Dtneg      Date,
+                           p_Dtvenc     Date,
+                           p_Codparc    Number,
+                           p_Top        Int,
+                           p_Contabanco Number Default Null,
+                           p_Codnat     Number,
+                           p_Codcencus  Number,
+                           p_Codproj    Number Default Null,
+                           p_Codtiptit  Number,
+                           p_Origem     Char,
+                           p_Nunota     Number,
+                           p_Valor      Float,
+                           p_Errmsg     Out Number) Is
+    p_Nufin Number;
+  Begin
+  
+    Ins_Financeiro(p_Codemp, p_Numnota, p_Dtneg, p_Dtvenc, p_Codparc, p_Top, p_Contabanco, p_Codnat,
+                   p_Codcencus, p_Codproj, p_Codtiptit, p_Origem, p_Nunota, p_Valor, p_Nufin, p_Errmsg);
+  
+  End Ins_Financeiro;
+
+  Procedure Ins_Financeiro(p_Codemp     Number,
+                           p_Numnota    Int,
+                           p_Dtneg      Date,
+                           p_Dtvenc     Date,
+                           p_Codparc    Number,
+                           p_Top        Int,
+                           p_Contabanco Number Default Null,
+                           p_Codnat     Number,
+                           p_Codcencus  Number,
+                           p_Codproj    Number Default Null,
+                           p_Codtiptit  Number,
+                           p_Origem     Char,
+                           p_Nunota     Number,
+                           p_Valor      Float,
+                           p_Nufin      Out Number,
+                           p_Errmsg     Out Varchar2) Is
+    v_Atualfin Number;
+    v_Contabanco Number;
+    v_Codproj Number;
+    v_Tipatualfin Char;
+  Begin
+  
+    Stp_Keygen_Nufin(p_Nufin);
+  
+    Select t.Atualfin, t.Tipatualfin
+      Into v_Atualfin, v_Tipatualfin
+      From Tgftop t
+     Where Codtipoper = p_Top
+       And Dhalter = Ad_Get.Maxdhtipoper(p_Top);
+  
+    v_Contabanco := Nvl(p_Contabanco, 0);
+    v_Codproj := Nvl(p_Codproj, 0);
+    v_Tipatualfin := Case
+                       When v_Tipatualfin = 'P' Then
+                        'S'
+                       Else
+                        'N'
+                     End;
+  
+    Begin
+      Insert Into Tgffin
+        (Nufin, Codemp, Numnota, Dtneg, Desdobramento, Dhmov, Dtvenc, Codparc, Codtipoper, Dhtipoper,
+         Codctabcoint, Codnat, Codcencus, Codproj, Codtiptit, Vlrdesdob, Recdesp, Provisao, Origem, Nunota,
+         Codusu, Dtalter)
+      Values
+        (p_Nufin, p_Codemp, p_Numnota, p_Dtneg, 1, Sysdate, p_Dtvenc, p_Codparc, p_Top,
+         Ad_Get.Maxdhtipoper(p_Top), v_Contabanco, p_Codnat, p_Codcencus, v_Codproj, p_Codtiptit, p_Valor,
+         v_Atualfin, v_Tipatualfin, p_Origem, p_Nunota, Stp_Get_Codusulogado, Sysdate);
+    Exception
+      When Others Then
+        --Rollback;
+        --p_Errmsg := 'Erro ao inserir no financeiro. ' || Sqlerrm;
+        p_Errmsg := Sqlerrm;
+        Return;
+    End;
+  
+  End Ins_Financeiro;
+
+  Procedure Ins_Financeiro_Tipovenda(p_Codemp      Number,
+                                     p_Codparc     Number,
+                                     p_Codtipoper  Int,
+                                     p_Codtipvenda Number,
+                                     p_Codnat      Number Default Null,
+                                     p_Codcencus   Number Default Null,
+                                     p_Codproj     Number Default Null,
+                                     p_Nunota      Number,
+                                     p_Vlrnota     Float) Is
+    v_Nufin Number;
+    --v_Atualfin Number;
+    v_Provisao Varchar2(1);
+    Top Tgftop%Rowtype;
+    v_Dtvenc Date;
+  Begin
+  
+    Select *
+      Into Top
+      From Tgftop t
+     Where Codtipoper = p_Codtipoper
+       And Dhalter = (Select Max(Dhalter) From Tgftop Where Codtipoper = p_Codtipoper);
+  
+    v_Provisao := Case
+                    When Top.Tipatualfin = 'P' Then
+                     'S'
+                    Else
+                     'N'
+                  End;
+  
+    If Top.Atualfin <> 0 Then
+    
+      /* Conta as parcelas do tipneg */
+      For c_Tpv In (Select * From Tgfppg Ppg Where Codtipvenda = p_Codtipvenda Order By Codtipvenda, Sequencia)
+      Loop
+      
+        Stp_Keygen_Nufin(p_Ultcod => v_Nufin);
+      
+        v_Dtvenc := Ad_Get.Dia_Util_Ultimo(Dt_Base => Trunc(Sysdate + c_Tpv.Prazo), Ptipo => 'P');
+      
+        Insert Into Tgffin
+          (Nufin, Codemp, Numnota, Dtneg, Desdobramento, Dhmov, Dtvenc, Codparc, Codtipoper, Dhtipoper,
+           Codctabcoint, Codnat, Codcencus, Codproj, Codtiptit, Vlrdesdob, Recdesp, Provisao, Origem, Nunota,
+           Codusu, Dtalter)
+        Values
+          (v_Nufin, p_Codemp, 0, Trunc(Sysdate), c_Tpv.Sequencia, Sysdate, v_Dtvenc, p_Codparc, p_Codtipoper,
+           Top.Dhalter, c_Tpv.Codctabcoint,
+           Case When Nvl(c_Tpv.Codnatpad, 0) > 0 Then c_Tpv.Codnatpad Else p_Codnat End,
+           Case When Nvl(c_Tpv.Codcencuspad, 0) > 0 Then c_Tpv.Codcencuspad Else p_Codcencus End,
+           Case When Nvl(c_Tpv.Codprojpad, 0) > 0 Then c_Tpv.Codprojpad Else p_Codproj End, c_Tpv.Codtiptitpad,
+           (p_Vlrnota * (c_Tpv.Percentual / 100)), Top.Atualfin, v_Provisao, 'E', p_Nunota,
+           Stp_Get_Codusulogado, Sysdate);
+      
+      End Loop c_Tpv;
+    Else
+      Null;
+    End If;
+  
+  Exception
+    When Others Then
+      Rollback;
+      Raise;
+  End Ins_Financeiro_Tipovenda;
+
+  Procedure Confirma_Pedido_Compra(p_Nunota Number) Is
+    v_Numnota Number;
+    v_Codemp Number;
+    r_Top Tgftop%Rowtype;
+    v_Provisao Varchar2(1);
+  Begin
+  
+    Begin
+      Select Codemp, Codtipoper, Dhtipoper
+        Into v_Codemp, r_Top.Codtipoper, r_Top.Dhalter
+        From Tgfcab
+       Where Nunota = p_Nunota;
+    Exception
+      When Others Then
+        Raise;
+    End;
+  
+    Begin
+      Select *
+        Into r_Top
+        From Tgftop
+       Where Codtipoper = r_Top.Codtipoper
+         And Dhalter = r_Top.Dhalter;
+    Exception
+      When Others Then
+        Raise;
+    End;
+  
+    v_Provisao := Case
+                    When r_Top.Tipatualfin = 'P' Then
+                     'S'
+                    Else
+                     'N'
+                  End;
+  
+    Begin
+      Select Ultcod + 1
+        Into v_Numnota
+        From Tgfnum
+       Where Arquivo = 'PEDCOM'
+         And Codemp = v_Codemp
+         For Update;
+    Exception
+      When Others Then
+        Raise;
+    End;
+  
+    Begin
+      Update Tgfnum
+         Set Ultcod = v_Numnota
+       Where Arquivo = 'PEDCOM'
+         And Codemp = 2;
+    Exception
+      When Others Then
+        Raise;
+    End;
+  
+    Commit;
+  
+    Begin
+      Update Tgfcab Set Numnota = v_Numnota Where Nunota = p_Nunota;
+    Exception
+      When Others Then
+        Raise;
+    End;
+  
+    Begin
+      Update Tgffin Set Numnota = v_Numnota Where Nunota = p_Nunota;
+    Exception
+      When Others Then
+        Raise;
+    End;
+  
+    For i In (Select Nunota, Sequencia From Tgfite Where Nunota = p_Nunota)
+    Loop
+      Begin
+        Calculaicmsipi(i.Nunota, i.Sequencia);
+      End;
+    End Loop;
+  
+    Begin
+      Stp_Confirmanota2(p_Nunota, v_Provisao, r_Top.Atualfin);
+    End;
+  
+  Exception
+    When Others Then
+      Rollback;
+      Raise;
+  End Confirma_Pedido_Compra;
+
+  Procedure Ins_Liberacao(p_Tabela    Varchar2,
+                          p_Nuchave   Number,
+                          p_Evento    Number,
+                          p_Valor     Float,
+                          p_Codusulib Number,
+                          p_Obslib    Varchar2,
+                          p_Errmsg    Out Varchar2) Is
+    v_Count Int := 0;
+    v_Sequencia Int := 0;
+  Begin
+  
+    Select Count(*)
+      Into v_Count
+      From Tsilib l
+     Where Tabela = p_Tabela
+       And Nuchave = p_Nuchave
+       And Evento = p_Evento
+       And Codususolicit = Stp_Get_Codusulogado()
+       And Vlratual = p_Valor
+       And Codusulib = p_Codusulib
+       And Reprovado <> 'S';
+  
+    If v_Count <> 0 Then
+      Return;
+    End If;
+  
+    Select Nvl(Max(Sequencia), 0) + 1
+      Into v_Sequencia
+      From Tsilib l
+     Where Tabela = p_Tabela
+       And Nuchave = p_Nuchave
+       And Evento = p_Evento;
+  
+    Insert Into Tsilib
+      (Tabela, Nuchave, Sequencia, Evento, Codususolicit, Dhsolicit, Vlratual, Vlrlimite, Codusulib,
+       Observacao)
+    Values
+      (p_Tabela, p_Nuchave, v_Sequencia, p_Evento, Stp_Get_Codusulogado, Sysdate, Round(p_Valor, 2), 99999999,
+       p_Codusulib, p_Obslib);
+  Exception
+    When Others Then
+      p_Errmsg := 'Erro na criação prévia do evento de liberação do pedido - ' || Sqlerrm;
+  End Ins_Liberacao;
+
+  Procedure Ins_Liberacao1035(p_Tabela     Varchar2,
+                              p_Nuchave    Number,
+                              p_Evento     Number,
+                              p_Valor      Float,
+                              p_Codusulib  Number,
+                              p_Obslib     Varchar2,
+                              p_Seqcascata Number,
+                              p_Codtipoper Number,
+                              p_Errmsg     Out Varchar2) Is
+    v_Count Int := 0;
+    v_Sequencia Int := 0;
+    v_Codusu Int;
+    v_Codusulogado Int := Nvl(Stp_Get_Codusulogado, 0);
+  Begin
+  
+    Select Count(*)
+      Into v_Count
+      From Tsilib l
+     Where Tabela = p_Tabela
+       And Nuchave = p_Nuchave
+       And Evento = p_Evento
+       And Codususolicit = v_Codusulogado
+       And Vlratual = p_Valor
+       And Codusulib = p_Codusulib;
+  
+    If v_Count <> 0 Then
+      Return;
+    End If;
+  
+    Select Nvl(Max(Sequencia), 0) + 1
+      Into v_Sequencia
+      From Tsilib l
+     Where Tabela = p_Tabela
+       And Nuchave = p_Nuchave
+       And Evento = p_Evento;
+  
+    If p_Tabela = 'TGFCAB' And v_Codusulogado = 0 Then
+      Select Codusu Into v_Codusu From Tgfcab c Where c.Nunota = p_Nuchave;
+      /*Elsif p_Tabela = 'TGFFIN' And v_Codusulogado = 0 Then
+      Select nvl(Nvl(f.Ad_Codusuinc, f.Codusu),0)
+          Into v_Codusu
+          From Tgffin f
+        Where f.Nufin = p_Nuchave;*/
+    Else
+      v_Codusu := v_Codusulogado;
+    End If;
+  
+    Insert Into Tsilib
+      (Tabela, Nuchave, Sequencia, Evento, Codususolicit, Dhsolicit, Vlratual, Vlrlimite, Codusulib,
+       Observacao, Seqcascata, Codtipoper)
+    Values
+      (p_Tabela, p_Nuchave, v_Sequencia, p_Evento, v_Codusu, Sysdate, p_Valor, 99999999, p_Codusulib,
+       p_Obslib, p_Seqcascata, p_Codtipoper);
+  Exception
+    When Others Then
+      p_Errmsg := 'Erro na criação prévia do evento de liberação do pedido - ' || Sqlerrm;
+  End Ins_Liberacao1035;
+
+  Procedure Ins_Liberacaocascata(p_Tabela     Varchar2,
+                                 p_Nuchave    Number,
+                                 p_Evento     Number,
+                                 p_Valor      Float,
+                                 p_Codusulib  Number,
+                                 p_Obslib     Varchar2,
+                                 p_Seqcascata Number,
+                                 p_Errmsg     Out Varchar2) Is
+    v_Count Int := 0;
+    v_Sequencia Int := 0;
+  Begin
+    Select Count(*)
+      Into v_Count
+      From Tsilib l
+     Where Tabela = p_Tabela
+       And Nuchave = p_Nuchave
+       And Evento = p_Evento
+       And Codususolicit = Stp_Get_Codusulogado()
+       And Vlratual = p_Valor
+       And Codusulib = p_Codusulib;
+  
+    If v_Count <> 0 Then
+      Return;
+    End If;
+  
+    Select Nvl(Max(Sequencia), 0) + 1
+      Into v_Sequencia
+      From Tsilib l
+     Where Tabela = p_Tabela
+       And Nuchave = p_Nuchave
+       And Evento = p_Evento;
+  
+    Insert Into Tsilib
+      (Tabela, Nuchave, Sequencia, Evento, Codususolicit, Dhsolicit, Vlratual, Vlrlimite, Codusulib,
+       Observacao, Seqcascata)
+    Values
+      (p_Tabela, p_Nuchave, v_Sequencia, p_Evento, Stp_Get_Codusulogado, Sysdate, p_Valor, 99999999,
+       p_Codusulib, p_Obslib, p_Seqcascata);
+  Exception
+    When Others Then
+      p_Errmsg := 'Erro na criação prévia do evento de liberação do pedido - ' || Sqlerrm;
+  End Ins_Liberacaocascata;
+
+  Procedure Ins_Liberado(p_Tabela  Varchar2,
+                         p_Nuchave Number,
+                         p_Evento  Number,
+                         p_Codusu  Number,
+                         p_Obslib  Varchar2,
+                         p_Errmsg  Out Varchar2) Is
+    v_Codusulib Number;
+    v_Count Number;
+    v_Dhlib Date;
+  
+  Begin
+  
+    If p_Evento In (1026, 1029) Then
+      v_Codusulib := p_Codusu;
+    Elsif p_Evento = 1043 Then
+      v_Codusulib := 113; -- Quando liberação automática então pego como liberador o Sérgio
+    Else
+      v_Codusulib := Stp_Get_Codusulogado;
+    End If;
+  
+    -- Autor:     Ricardo Soares de Oliveira 
+    -- Data:      12/12/2018
+    -- Motivo:    Devoluções tem um prazo de carência de 24 hrs antes de disparar aprovações, isso porque o seu fluxo segue um caminho distinto. O problema é que o
+    --            Jaison não estava conferindo se a devolução já havia sido liberada pelo comercial e estava fazendo a conferência para pagamento, o objetivo desta
+    --            trava é justamente pegar esse momento e não permitir que ele continue com a conferência.
+    If p_Evento = 1026 And p_Tabela = 'TGFCAB' Then
+      Select Count(*)
+        Into v_Count
+        From Tgfcab c
+       Where c.Nunota = p_Nuchave
+         And c.Tipmov = 'D';
+    
+      If v_Count > 0 Then
+        Begin
+          Select l.Dhlib
+            Into v_Dhlib
+            From Tsilib l
+           Where l.Nuchave = p_Nuchave
+             And l.Evento = 1043;
+        
+        Exception
+          When No_Data_Found Then
+            p_Errmsg := 'Verifique a aprovação comercial deste lançamento antes de dar continuidade a conferência, ele provavelmente esta no prazo de análise da devolução.' ||
+                        Sqlerrm;
+        End;
+      
+        If v_Dhlib Is Null Then
+          p_Errmsg := 'Devolução ainda não liberada pelo comercial.' || Sqlerrm;
+        
+        End If;
+      End If;
+    End If;
+  
+    Insert Into Tsilib
+      (Tabela, Nuchave, Evento, Codususolicit, Dhsolicit, Vlratual, Vlrlimite, Codusulib, Obslib, Dhlib,
+       Vlrliberado)
+    Values
+      (p_Tabela, p_Nuchave, p_Evento, p_Codusu, Sysdate, 1, 99999999, v_Codusulib, p_Obslib, Sysdate, 1);
+  Exception
+    When Others Then
+      p_Errmsg := 'Erro na criação prévia do evento de liberação do movimento financeiro - ' || Sqlerrm;
+  End Ins_Liberado;
+
+  /****************************************************************************
+  Autor: Ricardo Soares
+  Objetivo: Insere Ad_Tsiliblog
+  *****************************************************************************/
+  Procedure Ins_Ad_Tsiliblog(p_Nuchave     Number,
+                             p_Tabela      Varchar2,
+                             p_Dhsolicit   Date,
+                             p_Dhlib       Date,
+                             p_Codususol   Number,
+                             p_Codusulib   Number,
+                             p_Vlratual    Float,
+                             p_Vlrliberado Float,
+                             p_Evento      Number,
+                             p_Observacao  Varchar2,
+                             p_Obslib      Varchar2,
+                             p_Operacao    Varchar2,
+                             p_Nuadto      Number) Is
+  
+  Begin
+    Insert Into Ad_Tsiliblog
+      (Nuchave, Tabela, Dhsolicit, Dhlib, Codususol, Codusulib, Vlratual, Vlrliberado, Evento, Observacao,
+       Obslib, Operacao, Nuadto, Dhoper, Codusuexc, Seqlog)
+    Values
+      (p_Nuchave, p_Tabela, p_Dhsolicit, p_Dhlib, p_Codususol, p_Codusulib, p_Vlratual, p_Vlrliberado,
+       p_Evento, p_Observacao, p_Obslib, p_Operacao, p_Nuadto, Sysdate, Stp_Get_Codusulogado,
+       Ad_Seq_Tsilib_Log.Nextval);
+  
+  End Ins_Ad_Tsiliblog;
+
+  /****************************************************************************
+  Autor:    Ricardo Soares
+  Data:     28/08/2018
+  Objetivo: Insere Tsiobclog que é um insert muito utilizado nas procedures de retorno.
+            Aquilo que não foi declarado como parametro é porque não houve necessidade quando da criação da procedure, 
+            que foi baseado no insert da procedure Stp_Retorno_Cobsafra422_Sf
+  *****************************************************************************/
+  Procedure Ins_Tsiobclog(p_Nufinc         Number,
+                          p_Codocorrencia2 Varchar2,
+                          p_Descricao      Varchar2,
+                          p_Nomearq        Varchar2,
+                          p_Observacao     Varchar2) Is
+  
+  Begin
+    Insert Into Tsiobclog
+      (Nufin, Codocorrencia, Datocorrencia, Descricao, Nomearq, Nrolinha, Codusu, Reportado, Interrompido,
+       Baixado, Conciliado, Registradonossonum, Observacao, Alterado, Tratarocorrencia)
+    Values
+      (p_Nufinc, p_Codocorrencia2, Sysdate, p_Descricao, p_Nomearq, 1, 0, 'N', 'N', 'N', 'N', 'N',
+       p_Observacao, '', 'N');
+  
+  End Ins_Tsiobclog;
+
+  Procedure Ins_Avisosistema(p_Titulo     Varchar2,
+                             p_Descricao  Varchar2,
+                             p_Solucao    Varchar2,
+                             p_Usurem     Int,
+                             p_Usudest    Int,
+                             p_Prioridade Int,
+                             p_Tabela     Varchar2,
+                             p_Nrounico   Number,
+                             p_Erro       Out Varchar2) Is
+    v_Nuaviso Int;
+    v_Link Varchar2(400);
+    v_Solucao Varchar2(2000);
+    Errmsg Varchar2(4000);
+    Error Exception;
+  Begin
+  
+    <<inicio>>
+    Begin
+      Select Max(Nuaviso) + 1 Into v_Nuaviso From Tsiavi;
+    Exception
+      When Others Then
+        Errmsg := 'Erro ao buscar o número interno do aviso.';
+    End;
+  
+    v_Link := Ad_Fnc_Urlskw(p_Tabela, p_Nrounico);
+    v_Solucao := p_Solucao || '<br>Consulte o registro: ' || '<a href="' || v_Link ||
+                 '" target="_parent" title="Abrir Tela">' || p_Nrounico || '</a> para maiores informações.';
+  
+    Begin
+      Insert Into Tsiavi
+        (Nuaviso, Titulo, Descricao, Solucao, Identificador, Importancia, Codusu, Codgrupo, Tipo, Dhcriacao,
+         Codusuremetente, Nuavisopai, Dtexpiracao, Dtnotificacao, Ordem)
+      Values
+        (v_Nuaviso, p_Titulo, p_Descricao, v_Solucao,  Upper(p_tabela), p_Prioridade, p_Usudest, Null, 'P',
+         Sysdate, Nvl(p_Usurem, -1), Null, Null, Null, Null);
+    Exception
+      When Dup_Val_On_Index Then
+        Goto Inicio;
+      When Others Then
+        Errmsg := 'Erro ao inserir o aviso. ' || Sqlerrm;
+        Raise Error;
+    End;
+  
+    /*  Begin
+      Update Tgfnum Set Ultcod = v_Nuaviso Where Arquivo = 'TSIAVI';
+    End;*/
+  
+  Exception
+    When Others Then
+      p_Erro := Errmsg;
+  End Ins_Avisosistema;
+
+  Procedure Inseresessao(p_Nome      Varchar2,
+                         p_Sequencia Int,
+                         p_Tipo      Char,
+                         p_Valor     Varchar2,
+                         p_Idsessao  In Out Varchar2) Is
+  
+    v_Data Date;
+    v_Int Int;
+    v_Float Float;
+    v_Str Varchar2(100);
+    Pragma Autonomous_Transaction;
+  Begin
+  
+    If p_Idsessao Is Null Then
+      Select Dbms_Random.String('A', 20) Into p_Idsessao From Dual;
+    End If;
+  
+    If p_Tipo <> 'D' Then
+      v_Data := '01/01/1900';
+    Else
+      v_Data := p_Valor;
+    End If;
+  
+    If p_Tipo = 'I' Then
+      v_Int := To_Number(p_Valor);
+    Else
+      v_Int := Null;
+    End If;
+  
+    If p_Tipo = 'F' Then
+      v_Float := Cast(p_Valor As Float);
+    Else
+      v_Float := Null;
+    End If;
+  
+    If p_Tipo = 'S' Then
+      v_Str := To_Char(p_Valor);
+    Else
+      v_Str := Null;
+    End If;
+  
+    Insert Into Execparams
+      (Idsessao, Sequencia, Nome, Tipo, Numint, Numdec, Texto, Dta)
+    Values
+      (p_Idsessao, p_Sequencia, p_Nome, p_Tipo, v_Int, v_Float, v_Str, v_Data);
+  
+    Commit;
+  
+  End Inseresessao;
+
+  Procedure Remove_Sessao(p_Idsessao Varchar2) Is
+    Pragma Autonomous_Transaction;
+  Begin
+  
+    Delete From Execparams Where Idsessao = p_Idsessao;
+  
+    Commit;
+  
+  End Remove_Sessao;
+
+  Procedure Insereevento(p_Nomeevento Varchar2, p_Nuevento Out Number) Is
+    r_Eve Tgflibeve%Rowtype;
+  Begin
+  
+    Select Max(e.Nuevento) + 1 Into r_Eve.Nuevento From Tgflibeve e;
+    p_Nuevento := r_Eve.Nuevento;
+    r_Eve.Descricao := p_Nomeevento;
+  
+    Insert Into Tgflibeve (Nuevento, Descricao) Values (r_Eve.Nuevento, r_Eve.Descricao);
+  
+  End Insereevento;
+
+  Procedure Insere_Msglog(p_Mensagem Varchar2) Is
+  Begin
+  
+    Insert Into Tsilog
+      (Codusu, Dhevento, Descricao, Computador, Sequencia)
+    Values
+      (Stp_Get_Codusulogado, Sysdate, Substr(p_Mensagem, 1, 255), Ad_Get.Nomemaquina, Seq_Tsilog_Seq.Nextval);
+  
+  End Insere_Msglog;
+
+  Procedure Debug_Support Is
+  Begin
+    Null;
+  End Debug_Support;
+
+  Function Divide_Valores(p_Valor1 Number, p_Valor2 Number) Return Float Is
+    v_Vlrresult Float;
+  Begin
+    v_Vlrresult := Case
+                     When Nvl(p_Valor1, 0) = 0 Or p_Valor1 = 0 Then
+                      1
+                     Else
+                      p_Valor1
+                   End / Case
+                     When Nvl(p_Valor2, 0) = 0 Or p_Valor2 = 0 Then
+                      1
+                     Else
+                      p_Valor2
+                   End;
+    Return v_Vlrresult;
+  
+  End;
+
+  Procedure Insere_Mail_Fila_Fmg(p_Assunto  In Tmdfmg.Assunto%Type,
+                                 p_Mensagem In Tmdfmg.Mensagem%Type,
+                                 p_Email    In Tmdfmg.Email%Type,
+                                 p_Nunota   Number,
+                                 p_Evento   Number) As
+    p_Codfila Int;
+    p_Count Int;
+  Begin
+  
+    If p_Assunto Is Null Then
+      Return;
+    Else
+    
+      Loop
+        Select Max(Ultcod) + 1 Into p_Codfila From Tgfnum Where Arquivo = 'TMDFMG';
+        Update Tgfnum Set Ultcod = p_Codfila Where Arquivo = 'TMDFMG';
+      
+        Select Count(1) Into p_Count From Tmdfmg Where Codfila = p_Codfila;
+        Exit When p_Count = 0;
+      End Loop;
+    
+      Insert Into Tmdfmg
+        (Codfila, Assunto, Codmsg, Dtentrada, Status, Codcon, Tentenvio, Mensagem, Tipoenvio, Maxtentenvio,
+         Email, Codusu, Ad_Nunota, Ad_Evento)
+      Values
+        (p_Codfila, p_Assunto, Null, Sysdate, 'Pendente', 12, 3, p_Mensagem, 'E', 3, p_Email, 0, p_Nunota,
+         p_Evento);
+    End If;
+  End Insere_Mail_Fila_Fmg;
+
+  Procedure Tsiusu_Interno_Null(p_Codusu Number) Is
+    p_Old_Interno Varchar2(100);
+  Begin
+    Select Interno Into p_Old_Interno From Tsiusu Where Codusu = p_Codusu;
+  
+    Dbms_Output.Put_Line(p_Old_Interno);
+  
+    Update Tsiusu Set Interno = '----------' Where Codusu = p_Codusu;
+  
+  End Tsiusu_Interno_Null;
+
+  Procedure Get_Dtvenc_Teto_Feriado(p_Dtvenc In Out Date, p_Diasvencto Number) As
+  Begin
+  
+    /*
+    * Autor: M. Rangel
+    * Objetivo: Retornar uma data de vencimento considerando se feriado e o teto disponível na data
+    */
+  
+    -- determina data de vencimento inicial
+    If p_Dtvenc Is Null Then
+      p_Dtvenc := Trunc(Sysdate) + p_Diasvencto;
+    End If;
+  
+    While To_Char(p_Dtvenc, 'd') In (1, 7)
+    Loop
+      p_Dtvenc := p_Dtvenc + 1;
+    End Loop;
+  
+    --verificação do vencimento e do teto
+    Savepoint Before_Simula_Fin;
+  
+    <<update_Fin>>
+    Begin
+      /* esse update é para simular a alteração real como provisão = N, nesse momento, a nota ainda não foi confirmada e o financeiro 
+      é uma provisão ainda e alterar o vencimento não irá provocar a validação da trigger, por isso tem que o provisão = N, mas na 
+      atualização real, a mudança do vencimento em si, não irei alterar o status da provisão*/
+      Update Tgffin f
+         Set Dtvenc = p_Dtvenc, Provisao = 'N', Dhbaixa = Null
+       Where Provisao = 'S'
+         And Dhbaixa = Null
+         And Recdesp != 0
+         And Exists (Select 1 From Tgffin F2 Where F2.Nufin = f.Nufin And Rownum = 1);
+    
+      Rollback To Before_Simula_Fin;
+    
+    Exception
+      When Others Then
+        Rollback To Before_Simula_Fin;
+      
+        Ad_Pkg_Var.Errmsg := Sqlerrm;
+      
+        If Lower(Ad_Pkg_Var.Errmsg) Like '%teto%' Or Lower(Ad_Pkg_Var.Errmsg) Like '%vencimento%' Then
+        
+          p_Dtvenc := p_Dtvenc + 1;
+        
+          While To_Char(p_Dtvenc, 'd') In (1, 7)
+          Loop
+            p_Dtvenc := p_Dtvenc + 1;
+          End Loop;
+        
+          Ad_Pkg_Var.Errmsg := Null;
+        
+          Goto Update_Fin;
+        Else
+          Dbms_Output.Put_Line(Ad_Pkg_Var.Errmsg);
+          Return;
+        End If;
+      
+    End Update_Fin;
+  
+  End Get_Dtvenc_Teto_Feriado;
+
+  Procedure Set_Dtvenc_Teto_Feriado(p_Nufin Number, p_Dtvenc In Out Date, p_Diasvencto Number) As
+  Begin
+  
+    /*
+    * Autor: M. Rangel
+    * Objetivo: Alterar uma data de vencimento considerando se feriado e o teto disponível na data
+    */
+  
+    -- determina data de vencimento inicial
+    If p_Dtvenc Is Null Then
+      p_Dtvenc := Trunc(Sysdate) + p_Diasvencto;
+    End If;
+  
+    While To_Char(p_Dtvenc, 'd') In (1, 7)
+    Loop
+      p_Dtvenc := p_Dtvenc + 1;
+    End Loop;
+  
+    --verificação do vencimento e do teto
+    Savepoint Before_Simula_Fin;
+  
+    <<update_Fin>>
+    Begin
+      /* esse update é para simular a alteração real como provisão = N, nesse momento, a nota ainda não foi confirmada e o financeiro 
+      é uma provisão ainda e alterar o vencimento não irá provocar a validação da trigger, por isso tem que o provisão = N, mas na 
+      atualização real, a mudança do vencimento em si, não irei alterar o status da provisão*/
+      Update Tgffin Set Dtvenc = p_Dtvenc, Provisao = 'N' Where Nufin = p_Nufin;
+    
+      Rollback To Before_Simula_Fin;
+    
+    Exception
+      When Others Then
+        Rollback To Before_Simula_Fin;
+      
+        Ad_Pkg_Var.Errmsg := Sqlerrm;
+      
+        If Lower(Ad_Pkg_Var.Errmsg) Like '%teto%' Or Lower(Ad_Pkg_Var.Errmsg) Like '%vencimento%' Then
+        
+          p_Dtvenc := p_Dtvenc + 1;
+        
+          While To_Char(p_Dtvenc, 'd') In (1, 7)
+          Loop
+            p_Dtvenc := p_Dtvenc + 1;
+          End Loop;
+        
+          Ad_Pkg_Var.Errmsg := Null;
+        
+          Goto Update_Fin;
+        Else
+          Dbms_Output.Put_Line(Ad_Pkg_Var.Errmsg);
+          Return;
+        End If;
+      
+    End Update_Fin;
+  
+    -- update do financeiro
+    Begin
+      Update Tgffin Set Dtvenc = p_Dtvenc Where Nufin = p_Nufin;
+    Exception
+      When Others Then
+        Raise;
+    End;
+  
+  End Set_Dtvenc_Teto_Feriado;
+
+  Procedure estorna_financeiro(p_Nufin Number) Is
+  
+  Begin
+  
+    For f In (Select * From tgffin Where nufin = p_nufin)
+    Loop
+    
+      If f.nubco Is Not Null Then
+      
+        Update TGFFIN
+           Set CODTIPOPERBAIXA = 0,
+               DHBAIXA         = Null,
+               DHTIPOPERBAIXA  = '01/01/1998',
+               DTALTER         = Sysdate,
+               NUBCO           = Null,
+               VLRBAIXA        = 0,
+               VLRVARCAMBIAL   = 0
+         Where NUFIN = f.Nufin;
+      
+        Delete From TGFMBC Where NUBCO = f.nubco;
+      
+      End If;
+    
+    End Loop;
+  Exception
+    When Others Then
+      Raise_Application_Error(-20105,
+                              'Não foi possível estornar o financeiro ' || p_nufin || ' devido: ' || Sqlerrm);
+  End estorna_financeiro;
+
+End Ad_Set;
+/

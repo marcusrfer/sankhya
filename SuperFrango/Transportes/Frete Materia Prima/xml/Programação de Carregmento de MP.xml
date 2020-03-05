@@ -1,0 +1,140 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="codparc" description="Cód. Parceiro" metadata="entity:Parceiro@CODPARC" required="false" keep-last="false" keep-date="false" order="0"/>
+    <parameter id="periodo" description="Período" metadata="datePeriod" required="true" keep-last="true" keep-date="true" order="1"/>
+    <parameter id="codprod" description="Produto" metadata="entity:ProdutoMateriaPrima@CODPROD" required="true" keep-last="true" keep-date="false" order="2"/>
+  </prompt-parameters>
+  <level id="lvl_aa2tebi" description="Principal">
+    <args>
+      <arg id="produto" type="integer"/>
+      <arg id="parceiro" type="integer"/>
+      <arg id="numcontrato" type="integer"/>
+      <arg id="saldo" type="decimal"/>
+    </args>
+    <container orientacao="H" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="50">
+        <container orientacao="H" tamanhoRelativo="50">
+          <container orientacao="V" tamanhoRelativo="50">
+            <grid id="grd_ydxr5u" entityName="AD_TSFAAD" multiplaSelecao="S">
+              <title><![CDATA[Contratos Disponíveis]]></title>
+              <expression type="sql" data-source="MGEDS"><![CDATA[Select contratocpa, dtcontrato,       Decode(ativo, 'S', 'Sim', 'N', 'Não')ativo,       codparc,       nomeparc,       nomecid,       codprod,       ad_get.descrproduto(codprod) descrprod,       qtdcontrato,       qtdentregue,       ad_pkg_cmp.get_mediaumidade(contratocpa, codprod)umidade,       ad_pkg_cmp.get_ult_vlrfreteton(codparc, codprod, codemp, Sysdate)vlrfrete,       ad_pkg_fmp.get_qtdcarreg(contratocpa, codparc, codprod, 'P') qtdprogramada,       ad_pkg_fmp.get_qtdcarreg(contratocpa, codparc, codprod, 'D') qtddescarga,       qtdcontrato - (	   qtdentregue +        ad_pkg_fmp.get_qtdcarreg(contratocpa, codparc, codprod, 'P') +	   ad_pkg_fmp.get_qtdcarreg(contratocpa, codparc, codprod, 'C'))As saldo,	case         When qtdcontrato - qtdentregue <= 0             Or nvl(ativo, 'N')= 'N' Then           '#F78181'         When qtdcontrato - qtdentregue = qtdcontrato Then           '#81DAF5'         When qtdentregue / qtdcontrato * 100 < 60  Then           '#81F7BE'         When qtdentregue / qtdcontrato * 100 >= 60 Then           '#F2F5A9'       End As bkcolor  From(Select con.codemp,              con.numcontrato As contratocpa,		    nvl(con.dtcontrato, con.ad_dtinicio) dtcontrato,              con.ativo,              con.codparc,              cid.nomecid,              nvl(nomeparc,par.razaosocial) As nomeparc,              psc.codprod,              psc.qtdeprevista as qtdcontrato,              nvl(ad_pkg_cmp.get_totalcarregamento(con.numcontrato, psc.codprod),0) as qtdentregue       From tcscon con       Join tcspsc psc On psc.numcontrato = con.numcontrato       Join tgfpar par On par.codparc = con.codparc       Join tsicid cid On par.codcid = cid.codcid       Left Join ad_vw_cmp c On c.contratocpa = con.numcontrato        and c.codprod = psc.codprod      Where(con.codparc = :codparc         Or nvl(:codparc, 0)= 0)        And psc.codprod = :codprod        And con.ativo = 'S'	   and psc.qtdeprevista > 1	   and con.ad_objcontrato = 'Insumo'      Group By con.codemp,              con.numcontrato,		   nvl(con.dtcontrato, con.ad_dtinicio) ,              con.ativo,              con.codparc,              cid.nomecid,              nvl(nomeparc,par.razaosocial),              psc.codprod,              psc.qtdeprevista,              nvl(ad_pkg_cmp.get_totalcarregamento(con.numcontrato, psc.codprod),0)      ) where dtcontrato between :periodo.ini and :periodo.fin Order By nomeparc, dtcontrato, contratocpa]]></expression>
+              <metadata>
+                <field name="CONTRATOCPA" label="Nº Contrato" type="I" visible="true" useFooter="false"/>
+                <field name="DTCONTRATO" label="Dt. Contrato" type="D" visible="true" useFooter="false"/>
+                <field name="ATIVO" label="Ativo" type="S" visible="false" useFooter="false"/>
+                <field name="CODPARC" label="Cód. Parceiro" type="I" visible="true" useFooter="false"/>
+                <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+                <field name="NOMECID" label="Cidade" type="S" visible="true" useFooter="false"/>
+                <field name="CODPROD" label="Cód. Prod." type="I" visible="true" useFooter="false"/>
+                <field name="DESCRPROD" label="Produto" type="S" visible="true" useFooter="false"/>
+                <field name="QTDCONTRATO" label="Qtd. Contrato" type="F" visible="true" useFooter="false"/>
+                <field name="QTDENTREGUE" label="Qtd. Entregue" type="F" visible="true" useFooter="false"/>
+                <field name="UMIDADE" label="Umidade" type="F" visible="true" useFooter="false"/>
+                <field name="VLRFRETE" label="Vlr. Frete Tab" type="F" visible="true" useFooter="false"/>
+                <field name="QTDPROGRAMADA" label="Qtd. Progamada" type="F" visible="true" useFooter="false"/>
+                <field name="QTDDESCARGA" label="Qtd. Descarga" type="F" visible="true" useFooter="false"/>
+                <field name="SALDO" label="Saldo" type="F" visible="true" useFooter="false"/>
+                <field name="BKCOLOR" label="BKCOLOR" type="S" visible="true" useFooter="false"/>
+                <field name="vlrtotfrete" label="Vlr. Total Frete" type="F" visible="true" useFooter="false" mask="#.##0,00">
+                  <calculated>
+                    <formula><![CDATA[($CONTRATOCPA /1000)* $VLRFRETE]]></formula>
+                  </calculated>
+                </field>
+              </metadata>
+              <on-click navigate-to="lvl_2cin8c">
+                <param id="l_contrato">$CONTRATOCPA</param>
+                <param id="parceiro">$CODPARC</param>
+              </on-click>
+              <refresh-details ui-list="grd_ydxr5y">
+                <param id="numcontrato">$CONTRATOCPA</param>
+                <param id="parceiro">$CODPARC</param>
+                <param id="produto">$CODPROD</param>
+                <param id="saldo">$SALDO</param>
+              </refresh-details>
+            </grid>
+          </container>
+        </container>
+        <container orientacao="H" tamanhoRelativo="50">
+          <grid id="grd_ydxr5y" entityName="AD_TSFAAD" multiplaSelecao="S">
+            <args>
+              <arg id="numcontrato" type="integer"/>
+              <arg id="parceiro" type="integer"/>
+              <arg id="produto" type="integer"/>
+              <arg id="saldo" type="decimal"/>
+            </args>
+            <title><![CDATA[Veículos Disponíveis para Programação]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select * from (Select 	case 		when nvl(f.statusvei,'AP') = 'AP' then 0		when f.statusvei = 'A' then 1		when f.statusvei = 'T' then 2		when f.statusvei = 'P' then 3		when f.statusvei = 'D' then 4		when f.statusvei = 'C' then 5	end as "ordem",	c.categoria,   v.marcamodelo,   nvl(c.pesomax, v.pesomax) pesomax,	nvl(:numcontrato,0) contratocpa,	nvl(:parceiro,0) parceiro,	nvl(:produto,0) produto,	nvl(:saldo,0) saldo,	f.CODEMP,  f.SEQUENCIA,  f.CODUSU,  f.CODVEICULO,  f.PLACA,  f.CODPARC,  f.NOMEPARC,  f.ORDEMDESC,  f.DATA,  f.CODPROD,  f.DESCRPROD,  f.QTDE,  f.STATUSVEI,  f.DESCRSTATUSVEI,  f.CODMOTORISTA,  f.NOMEMOTORISTA,  f.UMIDADE,  f.ORDEMCARGA,  f.NUMNOTA,  '' BKCOLOR from ad_vw_filatranspmp f join tgfvei v on f.codveiculo = v.codveiculo left join ad_tsfcat c on v.ad_codcat = c.codcatwhere (:codemp = :codemp or nvl(:codemp,0) = 0)  and (f.placa = :placa or nvl(:placa,0) = 0) and (f.codprod = :codprod or nvl(:codprod,0) = 0)  Union All  select 6 as "ordem",	a.categoria,   v.marcamodelo,   nvl(a.pesomax, v.pesomax) pesomax,	nvl(:numcontrato,0) contratocpa,	nvl(:parceiro,0) parceiro,	nvl(:produto,0) produto,	nvl(:saldo,0) saldo,	c.codemp CODEMP,  0 SEQUENCIA,  0 CODUSU,  v.CODVEICULO,  v.PLACA,  0 CODPARC,  'Sem Parceiro' NOMEPARC,  0 ORDEMDESC,  sysdate as data,  i.codprod,  ad_get.descrproduto( i.codprod ) DESCRPROD,  0 QTDE,  'S' STATUSVEI,  'Sem Programação' DESCRSTATUSVEI,  v.CODMOTORISTA,  ad_get.nome_parceiro( v.codmotorista, 'fantasia') NOMEMOTORISTA,  0 UMIDADE,  0 ORDEMCARGA,  0 NUMNOTA, '#ffcccc'from ad_itecargto i   join ad_contcargto c on c.sequencia = i.sequencia  join tgfvei v on v.codveiculo = c.codveiculo  left join ad_tsfcat a on v.ad_codcat = a.codcatwhere i.cancelado = 'NÃO' and trunc(c.datahoralanc) between add_months(sysdate, -1) and sysdate-1  and (i.codprod = :codprod or nvl(:codprod,0) = 0)  and c.codemp in (2,3)group by v.codveiculo, a.categoria, v.marcamodelo, v.codmotorista, nvl(a.pesomax, v.pesomax), v.placa,   i.codprod, c.codemp )order by 1, codveiculo]]></expression>
+            <metadata>
+              <field name="ordem" label="ordem" type="I" visible="false" useFooter="false"/>
+              <field name="CATEGORIA" label="Categoria" type="S" visible="true" useFooter="false"/>
+              <field name="MARCAMODELO" label="Modelo" type="S" visible="true" useFooter="false"/>
+              <field name="PESOMAX" label="Peso Cat" type="F" visible="true" useFooter="false"/>
+              <field name="CONTRATOCPA" label="Contrato" type="I" visible="true" useFooter="false"/>
+              <field name="PARCEIRO" label="Parceiro" type="S" visible="true" useFooter="false"/>
+              <field name="PRODUTO" label="Produto" type="S" visible="true" useFooter="false"/>
+              <field name="SALDO" label="Saldo" type="F" visible="true" useFooter="false"/>
+              <field name="CODEMP" label="Cód. Empresa" type="I" visible="true" useFooter="false"/>
+              <field name="SEQUENCIA" label="Carregamento" type="I" visible="true" useFooter="false"/>
+              <field name="CODUSU" label="Usuário" type="I" visible="true" useFooter="false"/>
+              <field name="CODVEICULO" label="Veículo" type="I" visible="true" useFooter="false"/>
+              <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+              <field name="CODPARC" label="Cód. Parceiro" type="I" visible="true" useFooter="false"/>
+              <field name="NOMEPARC" label="Parceiro" type="S" visible="true" useFooter="false"/>
+              <field name="ORDEMDESC" label="Ordem Descarga" type="I" visible="true" useFooter="false"/>
+              <field name="DATA" label="Data" type="D" visible="true" useFooter="false"/>
+              <field name="CODPROD" label="Cód. Produto" type="I" visible="true" useFooter="false"/>
+              <field name="DESCRPROD" label="Produto" type="S" visible="true" useFooter="false"/>
+              <field name="QTDE" label="Quantidade" type="F" visible="true" useFooter="false"/>
+              <field name="STATUSVEI" label="Staus Veículo" type="S" visible="false" useFooter="false"/>
+              <field name="DESCRSTATUSVEI" label="Status" type="S" visible="true" useFooter="false"/>
+              <field name="CODMOTORISTA" label="Cód. Motorista" type="I" visible="true" useFooter="false"/>
+              <field name="NOMEMOTORISTA" label="Nome Motorista" type="S" visible="true" useFooter="false"/>
+              <field name="UMIDADE" label="Umidade" type="F" visible="true" useFooter="false"/>
+              <field name="ORDEMCARGA" label="Ordem Carga" type="I" visible="true" useFooter="false"/>
+              <field name="NUMNOTA" label="Nro Nota" type="I" visible="true" useFooter="false"/>
+              <field name="BKCOLOR" label="BKCOLOR" type="S" visible="false" useFooter="false"/>
+            </metadata>
+            <on-click-launcher resource-id="br.com.sankhya.menu.adicional.CONTCARGTO">
+              <SEQUENCIA>$SEQUENCIA</SEQUENCIA>
+            </on-click-launcher>
+          </grid>
+        </container>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_2cin8c" description="det_Carreg">
+    <args>
+      <arg id="l_contrato" type="integer"/>
+      <arg id="parceiro" type="integer"/>
+      <arg id="contrarmz" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_2cin8d">
+        <expression type="sql" data-source="MGEDS"><![CDATA[select C.*, case when sequencia is null then '#F78181' end as BKCOLOR from ad_vw_cmp Cwhere contratocpa = :l_contrato]]></expression>
+        <metadata>
+          <field name="NUNOTA" label="Nro Único" type="I" visible="true" useFooter="false"/>
+          <field name="NUMNOTA" label="Nro Nota" type="I" visible="true" useFooter="false"/>
+          <field name="DTFATUR" label="Dt. Fatur." type="D" visible="true" useFooter="false"/>
+          <field name="CODPARC" label="Cód. Parceiro" type="I" visible="true" useFooter="false"/>
+          <field name="NUMCONTRATOARMZ" label="Nro. Contrato Armz" type="I" visible="true" useFooter="false"/>
+          <field name="ORDEMCARGA" label="Ordem Carga" type="I" visible="true" useFooter="false"/>
+          <field name="CODPROD" label="Cód. Prod" type="I" visible="true" useFooter="false"/>
+          <field name="QTDNEG" label="Qtd." type="F" visible="true" useFooter="SUM"/>
+          <field name="QTDSACAS" label="Qtd. SC" type="F" visible="true" useFooter="SUM"/>
+          <field name="VLRUNIT" label="Vlr. Unit" type="F" visible="true" useFooter="false"/>
+          <field name="VLRSACA" label="Vlr. Saca" type="F" visible="true" useFooter="false"/>
+          <field name="VLRSACACONTRATO" label="Vlr. SC Contrato" type="F" visible="true" useFooter="false"/>
+          <field name="VLRNOTA" label="Vlr. Nota" type="F" visible="true" useFooter="false"/>
+          <field name="VLRFRETE" label="Vlr. Frete" type="F" visible="true" useFooter="false"/>
+          <field name="VLRFRETESACA" label="Vlr. Frete SC" type="F" visible="true" useFooter="false"/>
+          <field name="SEQUENCIA" label="Ord. Carregamento" type="I" visible="true" useFooter="false"/>
+          <field name="UMIDADE" label="%Umidade" type="F" visible="true" useFooter="false"/>
+          <field name="CONTRATOCPA" label="Contrato CPA" type="I" visible="true" useFooter="false"/>
+          <field name="VLRDESCUMID" label="Vlr. Desc. Umid" type="F" visible="true" useFooter="false"/>
+          <field name="VLRSECAGEM" label="Vlr. Secagem" type="F" visible="true" useFooter="false"/>
+          <field name="BKCOLOR" label="BKCOLOR" type="S" visible="false" useFooter="false"/>
+        </metadata>
+      </grid>
+    </container>
+  </level>
+</gadget>

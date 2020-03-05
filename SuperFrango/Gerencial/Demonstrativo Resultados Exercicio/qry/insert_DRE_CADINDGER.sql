@@ -1,0 +1,205 @@
+prompt Importing table dre_cadindger...
+set feedback off
+set define off
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (1, 'Frete Matriz - BA', 'FRMTZBA', 1, 1, 5, 'FC_DIVIDE(SUM(VLRFRETE),SUM(PESO))', null, null, 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (2, 'Frete Matriz - GO', 'FRMTZGO', 1, 1, 9, 'FC_DIVIDE(SUM(VLRFRETE),SUM(PESO))', null, null, 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (3, 'Frete Matriz - MG', 'FRMTZMG', 1, 1, 13, 'FC_DIVIDE(SUM(VLRFRETE),SUM(PESO))', null, null, 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (4, 'Frete Matriz - MT', 'FRMTZMT', 1, 1, 12, 'FC_DIVIDE(SUM(VLRFRETE),SUM(PESO))', null, null, 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (5, 'Frete Matriz - PA', 'FRMTZPA', 1, 1, 14, 'FC_DIVIDE(SUM(VLRFRETE),SUM(PESO))', null, null, 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (6, 'Frete Matriz - TO', 'FRMTZTO', 1, 1, 27, 'FC_DIVIDE(SUM(VLRFRETE),SUM(PESO))', null, null, 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (7, 'Frete Matriz - SP', 'FRMTZSP', 1, 1, 25, 'FC_DIVIDE(SUM(VLRFRETE),SUM(PESO))', null, null, 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (8, 'Frete Transferência BSB', 'FRTRX05', 1, 3, 7, 'fc_divide(SUM(VLRFRETE),SUM(PESO))', null, null, 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (9, 'Frete Transferência PA', 'FRTRX07', 1, 6, 14, 'fc_divide(SUM(VLRFRETE),SUM(PESO))', null, null, 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (10, 'Frete Transferência UDI', 'FRTRX14', 1, 5, 13, 'fc_divide(SUM(VLRFRETE),SUM(PESO))', null, null, 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (11, 'Peso Empresa BSB', 'QT5', 5, 3, 7, 'SUM(PESO)', null, null, 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (12, 'Peso Empresa Neg PA', 'QT7', 7, null, 14, 'SUM(PESO)', null, null, 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (13, 'Peso Empresa Neg. UDI', 'QT14', 14, null, 13, 'SUM(PESO)', null, null, 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (14, 'Frete sobre Venda MTZ', 'FR_MTZ', 1, 1, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'FRETE S/ VENDA', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (15, 'Frete sobre Venda BSB', 'FR_BSB', 1, 3, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'FRETE S/ VENDA', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (16, 'Frete sobre Venda GYN', 'FR_GYN', 1, 2, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'FRETE S/ VENDA', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (17, 'Frete sobre Venda UDI', 'FR_UDI', 1, 5, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', 'COMERCIAL UDI', 'FRETE S/ VENDA', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (18, 'Frete sobre Venda ENT', 'FR_ENT', 1, 9, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'FRETE S/ VENDA', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (19, 'Frete sobre Venda ANP', 'FR_ANP', 1, 4, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'FRETE S/ VENDA', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (20, 'Frete sobre Venda PA', 'FR_PA', 1, 6, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'FRETE S/ VENDA', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (21, 'Frete sobre Venda GRE', 'FR_GRE', 1, 7, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'FRETE S/ VENDA', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (22, 'Comissão sobre Venda MTZ', 'CO_MTZ', 1, 1, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'COMISSOES S/ VENDA', 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (23, 'Comissão sobre Venda BSB', 'CO_BSB', 1, 3, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'COMISSOES S/ VENDA', 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (24, 'Comissão sobre Venda GYN', 'CO_GYN', 1, 2, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'COMISSOES S/ VENDA', 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (25, 'Comissão sobre Venda UDI', 'CO_UDI', 1, 5, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'COMISSOES S/ VENDA', 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (26, 'Comissão sobre Venda ENT', 'CO_ENT', 1, 9, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'COMISSOES S/ VENDA', 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (27, 'Comissão sobre Venda ANP', 'CO_ANP', 1, 4, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'COMISSOES S/ VENDA', 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (28, 'Comissão sobre Venda PA', 'CO_PA', null, 6, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'COMISSOES S/ VENDA', 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (29, 'Comissão sobre Venda GRE', 'CO_GRE', null, 7, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'COMISSOES S/ VENDA', 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (30, 'Despesas Financeiras MTZ', 'DE_MTZ', null, null, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'DESPESAS FINANCEIRAS', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (31, 'Receitas Financeiras MTZ', 'RE_MTZ', null, null, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'RECEITAS FINANCEIRAS', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (32, 'Receitas Financeiras GYN', 'RE_GYN', 1, 2, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'RECEITAS FINANCEIRAS', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (33, 'Despesas Diretoria', 'DI_MTZ', 1, null, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', 'DIRETORIA', 'DIRETORIA', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (34, 'Comercial MTZ', 'O1', 1, 1, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'COMERCIAL MTZ', 'OVERHEAD ADM_MTZ', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (35, 'Comercial GYN', 'O2', null, 2, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'COMERCIAL GYN', 'OVERHEAD ADM_GYN', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (36, 'Comercial BSB', 'O3', 1, 3, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'COMERCIAL BSB', 'OVERHEAD ADM_BSB', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (37, 'Comercial ANP', 'O4', 1, 4, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'COMERCIAL ANP', 'OVERHEAD ADM_ANP', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (38, 'Comercial UDI', 'O5', 1, 5, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'COMERCIAL UDI', 'OVERHEAD ADM_UDI', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (39, 'Comercial PA', 'O6', 1, 6, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'COMERCIAL PA', 'OVERHEAD ADM_ PA', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (40, 'Comercial GRE', 'O7', 1, 7, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'COMERCIAL GRE', 'OVERHEAD ADM_GRE', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (41, 'Comercial EXT', 'O8', 1, 8, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'COMERCIAL EXT', 'OVERHEAD ADM_EXT', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (42, 'Comercial ENT', 'O9', 1, 9, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'COMERCIAL ENT', 'OVERHEAD ADM_ENTORNO DF', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (43, 'Apoio - ADM', 'OA', 1, 1, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'APOIO - ADM', 'OVERHEAD ADM', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (44, 'Recria - Matriz SSA', 'OAR', 1, 1, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'MATRIZ SSA - RECRIA', 'OVERHEAD ADM_RECRIA', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (45, 'Apoio - PROD', 'OP', 1, 1, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'APOIO - PROD', 'OVERHEAD ADM', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (46, 'Postura - Matriz SSA', 'POSTSSA', 1, 1, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'MATRIZ SSA - POSTURA', 'OVERHEAD ADM_POSTURA', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (47, 'Postura - Matrizes', 'POSTMTZ', 1, 1, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'MATRIZES - POSTURA', 'OVERHEAD ADM_POSTURA', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (48, 'Postura - Goiatuba', 'POSTGOI', 1, 1, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'POSTURA GOIATUBA', 'OVERHEAD ADM_POSTURA', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (49, 'OverHead Adm Caldeira', 'AOC', 1, 1, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'CALDEIRA', 'OVERHEAD ADM_CALDEIRA', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (50, 'Matriz Paraná', 'MTZPR', 1, 1, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'MATRIZ PARANA', 'OVERHEAD ADM', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (51, 'Armazém', 'ARM', 1, 1, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'ARMAZEM', 'OVERHEAD ADM', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (54, 'Prod. Abat', 'PABAT', 1, 1, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'PROD ABAT', 'OVERHEAD ADM', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (55, 'Recria - Matrizes', 'OAR', 1, 1, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4) ', 'MATRIZES - RECRIA', 'OVERHEAD ADM_RECRIA', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (56, 'Qtd. Vendida MTZ', 'VD_MTZ', 1, 1, null, 'SUM(QTDNEG-QTDDEV)', 'COMERCIAL MTZ', null, 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (57, 'Qtd. Vendida GYN', 'VD_GYN', 1, 2, null, 'SUM(QTDNEG-QTDDEV)', 'COMERCIAL GYN', null, 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (58, 'Qtd. Vendida BSB', 'VD_BSB', 1, 3, null, 'SUM(QTDNEG-QTDDEV)', 'COMERCIAL BSB', null, 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (59, 'Qtd. Vendida ANP', 'VD_ANP', 1, 4, null, 'SUM(QTDNEG-QTDDEV)', 'COMERCIAL ANP', null, 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (60, 'Qtd. Vendida UDI', 'VD_UDI', 1, 5, null, 'SUM(QTDNEG-QTDDEV)', 'COMERCIAL UDI', null, 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (61, 'Qtd. Vendida PA', 'VD_PA', 1, 6, null, 'SUM(QTDNEG-QTDDEV)', 'COMERCIAL PA', null, 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (62, 'Qtd. Vendida GRE', 'VD_GRE', 1, 7, null, 'SUM(QTDNEG-QTDDEV)', 'COMERCIAL GRE', null, 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (63, 'Qtd. Vendida EXT', 'VD_EXT', 1, 8, null, 'nvl(SUM(QTDNEG)-SUM(QTDDEV),0)', 'COMERCIAL EXT', null, 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (64, 'Qtd. Vendida ENT', 'VD_ENT', 1, 9, null, 'nvl(SUM(QTDNEG-QTDDEV),0)', 'COMERCIAL ENT', null, 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (65, 'Qtd. Vendida GDE CO', 'VD_GDECO', 1, 11, null, 'nvl(SUM(QTDNEG-QTDDEV),0)', 'GDE CO', null, 'N', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (67, 'Comissão sobre Venda', 'CO', null, null, null, 'ROUND(SUM(VLRDESDOB - VLRDESC + VLRJURO + VLRMULTA),4)', null, 'COMISSOES S/ VENDA', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (53, 'Quantidade Total Vendida', 'ESP', 1, 0, 0, 'SUM(QTDNEG)-SUM(QTDDEV)', null, null, 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (52, 'Frete Marítmo', 'FRMRM', 1, null, 33, 'Nvl(Sum(Vlrdesdob - Vlrdesc + Vlrjuro + Vlrmulta), 0) * -1', 'Comercial EXT', 'FRETE EXPORTACAO', 'S', null);
+
+insert into dre_cadindger (CODINDGER, DESCRINDGER, SIGLA, CODEMP, CODUNE, CODUF, FORMINDGER, CLACUS, CLACUSCONT, ATIVO, OBS)
+values (66, 'Qtd. Vendida', 'VD', null, null, null, 'SUM(QTDNEG-QTDDEV)', 'CO', null, 'S', null);
+
+prompt Done.

@@ -1,0 +1,44 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="referencia" description="Dt. Referência" metadata="date" required="true" keep-last="false" keep-date="false"/>
+  </prompt-parameters>
+  <level id="lvl_r8nx97" description="Principal">
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_r8nx98">
+        <expression type="sql" data-source="MGEDS"><![CDATA[Select tbl.*,  (Select abs(numdec) From tsipar Where chave = tbl.chave) vlrpar From (Select r.codindger,       c.descrindger,       --f.sigla,       --r.codemp,       --u.codune,       u.sigla unneg,       abs(r.vlrindger) vlrindger,       (Select chave          From tsipar p         Where Replace(p.chave, ' ', '') Like 'SF_201808_' || f.sigla || u.sigla            Or Replace(p.chave, ' ', '') Like 'SF_201808_' || Case                 When f.sigla = 'OAO' Then                  f.sigla || r.codune                 When f.sigla = 'QT' Then                  f.sigla || u.codempneg                 When f.sigla = 'ESP' Then                  'KG'                 When f.sigla = 'FRTRX' Then                  'FR' || U.Codempneg                 Else                  f.sigla               End) chave  From dre_resindger r  Join dre_cadindger c    On r.codindger = c.codindger  Join dre_forindger f    On c.codindger = f.codindger  Join ad_tsfune u    On r.codune = u.codune Where r.dtref = :referencia   And c.ativo = 'S'   And f.dhvigor = (Select Max(f2.dhvigor)                      From dre_forindger f2                     Where f.codindger = f2.codindger)) tbl]]></expression>
+        <metadata>
+          <field name="CODINDGER" label="Cód. Indicador" type="I" visible="true" useFooter="false"/>
+          <field name="DESCRINDGER" label="Descr. Indicador" type="S" visible="true" useFooter="false"/>
+          <field name="UNNEG" label="Un. Neg." type="S" visible="true" useFooter="false"/>
+          <field name="VLRINDGER" label="Vlr. Indicador" type="F" visible="true" useFooter="false" mask="#.##0,0000">
+            <formatter isEmpty="false"><![CDATA[<span style="; background-color:#99CCCC">$VALUE</span>]]></formatter>
+          </field>
+          <field name="CHAVE" label="Chave" type="S" visible="true" useFooter="false"/>
+          <field name="VLRPAR" label="Vlr. Chave" type="F" visible="true" useFooter="false" mask="#.##0,0000">
+            <formatter isEmpty="false"><![CDATA[<span style="; background-color:#FF6666">$VALUE</span>]]></formatter>
+          </field>
+          <field name="VLRDIF" label="Dif. Valores" type="F" visible="true" useFooter="false" mask="#.##0,0000">
+            <formatter notEqualThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+            <calculated>
+              <formula><![CDATA[$VLRPAR-$VLRINDGER]]></formula>
+            </calculated>
+          </field>
+        </metadata>
+      </grid>
+    </container>
+  </level>
+  <level id="lvl_r8nya3" description="detalhes">
+    <args>
+      <arg id="codindger" type="integer"/>
+      <arg id="chave" type="text"/>
+    </args>
+    <container orientacao="H" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="50">
+        <grid id="grd_r8nya4"/>
+      </container>
+      <container orientacao="V" tamanhoRelativo="50">
+        <grid id="grd_r8nya5"/>
+      </container>
+    </container>
+  </level>
+</gadget>

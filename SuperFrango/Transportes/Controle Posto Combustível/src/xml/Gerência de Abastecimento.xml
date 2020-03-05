@@ -1,0 +1,410 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="codemp" description="Cód. Empresa" metadata="entity:Empresa@CODEMP" required="true" keep-last="false" keep-date="false"/>
+    <parameter id="data" description="Data" metadata="datePeriod" required="true" keep-last="false" keep-date="true"/>
+    <parameter id="dtreferencia" description="Dt. Aferiçao" metadata="date" required="true" keep-last="false" keep-date="true"/>
+  </prompt-parameters>
+  <level id="lvl_a6g3vaa" description="Principal">
+    <args>
+      <arg id="codprod" type="integer"/>
+    </args>
+    <container orientacao="H" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="542">
+        <container orientacao="V" tamanhoRelativo="105">
+          <grid id="grd_kaitmk">
+            <title><![CDATA[Movimentação de Combustível]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select 
+:data.ini as dtini,
+:data.fin as dtfin,
+pcp.codprod, 
+pro.descrprod,
+ad_pkg_comb.Saldo_estoque(:codemp, pcp.codprod, 3300,'POSTOABAST',:data.ini, :data.fin, 'I') saldo_inicial,
+ad_pkg_comb.Saldo_estoque(:codemp, pcp.codprod, 3300,'POSTOABAST',:data.ini, :data.fin, 'E') entradas,
+ad_pkg_comb.Saldo_estoque(:codemp, pcp.codprod, 3300,'POSTOABAST',:data.ini, :data.fin, 'S') saidas,
+ad_pkg_comb.Saldo_estoque(:codemp, pcp.codprod, 3300,'POSTOABAST',:data.ini, :data.fin, 'F') saldo_final
+ From ad_tsfppcp pcp 
+ Join tgfpro pro On pcp.codprod = pro.codprod
+ Group By pcp.codprod, pro.descrprod
+ order by pcp.codprod]]></expression>
+            <metadata>
+              <field name="DTINI" label="DTINI" type="S" visible="true" useFooter="false"/>
+              <field name="DTFIN" label="DTFIN" type="S" visible="true" useFooter="false"/>
+              <field name="CODPROD" label="Produto" type="I" visible="true" useFooter="false"/>
+              <field name="DESCRPROD" label="Descrição" type="S" visible="true" useFooter="false"/>
+              <field name="SALDO_INICIAL" label="Saldo Inciial" type="I" visible="true" useFooter="true" mask="#.##0">
+                <formatter greaterThan="0"><![CDATA[<span style="color:#0000FF">$VALUE</span>]]></formatter>
+                <formatter lessThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+              </field>
+              <field name="ENTRADAS" label="Entradas" type="I" visible="true" useFooter="true" mask="#.##0">
+                <formatter greaterThan="0"><![CDATA[<span style="color:#0000FF">$VALUE</span>]]></formatter>
+              </field>
+              <field name="SAIDAS" label="Saídas" type="I" visible="true" useFooter="true" mask="#.##0">
+                <formatter lessThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+              </field>
+              <field name="SALDO_FINAL" label="Saldo Final" type="I" visible="true" useFooter="true" mask="#.##0">
+                <formatter greaterEqualThan="0"><![CDATA[<span style="color:#0000FF">$VALUE</span>]]></formatter>
+                <formatter lessThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+              </field>
+            </metadata>
+            <on-click navigate-to="lvl_alxwciu">
+              <param id="codprod">$CODPROD</param>
+              <param id="codemp">:codemp</param>
+              <param id="dataini">$DTINI</param>
+              <param id="datafin">$DTFIN</param>
+            </on-click>
+            <refresh-details ui-list="grd_kj4179">
+              <param id="codprod">$CODPROD</param>
+            </refresh-details>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="100">
+          <grid id="grd_ostyc5">
+            <title><![CDATA[Volume Vendido]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select 
+ dtreferencia, 
+ codprod, 
+ descrprod, 
+ bomba, 
+ qtd_aferida, 
+ saidas,  
+ diferenca 
+from Table(ad_pkg_comb.Afericao_Bomba(:dtreferencia))]]></expression>
+            <metadata>
+              <field name="DTREFERENCIA" label="Dt. Aferição" type="D" visible="true" useFooter="false"/>
+              <field name="CODPROD" label="Cód. Produto" type="I" visible="true" useFooter="false"/>
+              <field name="DESCRPROD" label="Produto" type="S" visible="true" useFooter="false"/>
+              <field name="BOMBA" label="Nro Bomba" type="I" visible="true" useFooter="false"/>
+              <field name="QTD_AFERIDA" label="Qtd Aferida" type="I" visible="true" useFooter="false" mask="#.##0"/>
+              <field name="SAIDAS" label="Saídas" type="F" visible="true" useFooter="false" mask="#.##0"/>
+              <field name="DIFERENCA" label="Diferença" type="F" visible="true" useFooter="false" mask=" #.##0">
+                <formatter notEqualThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+              </field>
+            </metadata>
+            <on-click navigate-to="lvl_akx0dmc">
+              <param id="codprod">$CODPROD</param>
+              <param id="codbomba">$BOMBA</param>
+              <param id="codemp">:codemp</param>
+              <param id="dtreferencia">:dtreferencia</param>
+            </on-click>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="102">
+          <grid id="grd_rjuxjq">
+            <title><![CDATA[Auditoria - <font color="#FF0000">Está faltando integração com o VederRoot</font>]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select p_result.*, fechamento - 0 as diferenca
+from
+(
+Select b.Nrotanque tanque,
+			 I.Controle bomba,
+			 I.Codprod,
+			 p.Descrprod,
+			 ad_pkg_comb.saldo_estoque(i.codemp,i.codprod,i.codlocalorig,i.controle,:data.ini,:data.fin,'F') fechamento
+	From tgfese i
+	Join Ad_tsfppce E
+		On E.Nuppc = 1
+	 And E.Codemp = i.Codemp
+	Join Ad_tsfppcp cp
+		On cp.Codprod = I.Codprod
+	 And cp.Nuppc = 1
+	Join Tgfpro p
+		On I.Codprod = p.Codprod
+	Left Join Ad_tsfppcb b
+		On To_Char(b.Nrobomba) = I.Controle
+ Where i.dtreferencia Between :data.ini And :data.fin
+	 And i.Tipmov In ('Q')
+	 And I.Atualestoque = -1
+ Group By b.Nrotanque, i.codlocalorig, I.Controle, I.Codprod, p.Descrprod, I.Codemp) p_result
+ Order By 1]]></expression>
+            <metadata>
+              <field name="TANQUE" label="Tanque Nº" type="I" visible="true" useFooter="false"/>
+              <field name="BOMBA" label="Bomba Nº" type="S" visible="true" useFooter="false"/>
+              <field name="CODPROD" label="Código" type="I" visible="true" useFooter="false"/>
+              <field name="DESCRPROD" label="Produto" type="S" visible="true" useFooter="false"/>
+              <field name="FECHAMENTO" label="Fechamento" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+              <field name="DIFERENCA" label="Diferença" type="I" visible="true" useFooter="true" mask="#.##0,00"/>
+            </metadata>
+          </grid>
+        </container>
+      </container>
+      <container orientacao="V" tamanhoRelativo="203">
+        <grid id="grd_kj4179">
+          <args>
+            <arg id="codprod" type="integer"/>
+          </args>
+          <title><![CDATA[Abastecimento por Categoria]]></title>
+          <expression type="sql" data-source="MGEDS"><![CDATA[Select nvl(cat.categoria,'Não Informada') categoria,
+			 Sum(Qtdneg) QTDNEG,
+			 Case
+					When Nvl(cat.Categoria, 'Não Informada') = 'Não Informada' Then
+					 '#FF0000'
+				End As FGCOLOR,
+			 Round(Ratio_To_Report(Sum(qtdneg)) Over() * 100, 2) As partic
+	From Tgfite I
+	Join Tgfcab C
+		On I.Nunota = C.Nunota
+	 And C.Statusnota = 'L'
+	Join tgfvei v
+		On v.codveiculo = c.Codveiculo
+	Left Join ad_tsfcat cat
+	  On cat.codcat = v.ad_codcat
+Join Ad_tsfppcp pcp
+		On I.Codprod = pcp.Codprod
+Join Ad_tsfppct T
+		On T.Codtipoper = C.Codtipoper
+ Where I.Codemp = :codemp
+	 And C.Dtneg Between :data.ini And :data.fin
+	and i.codprod = :codprod
+	 And I.Atualestoque = -1
+	 And C.Tipmov = 'Q'
+	 And pcp.Nuppc = 1
+	And (Nvl(Perdaent, 'N') = 'N' And Nvl(Perdasai, 'N') = 'N')
+ Group By nvl(cat.categoria,'Não Informada')]]></expression>
+          <metadata>
+            <field name="CATEGORIA" label="Categoria" type="S" visible="true" useFooter="false"/>
+            <field name="QTDNEG" label="Qtd. Litros" type="I" visible="true" useFooter="true" mask="#.##0,00"/>
+            <field name="FGCOLOR" label="FGCOLOR" type="S" visible="true" useFooter="false"/>
+            <field name="PARTIC" label="% Total" type="I" visible="true" useFooter="false" mask="#.##0,00 %"/>
+          </metadata>
+          <on-click navigate-to="lvl_kj419t">
+            <param id="Categoria">$CATEGORIA</param>
+          </on-click>
+        </grid>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_kj419t" description="detailCat">
+    <args>
+      <arg id="Categoria" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_kj419u">
+        <title><![CDATA[:Categoria :codemp :dtini]]></title>
+        <expression type="sql" data-source="MGEDS"><![CDATA[Select
+	vei.Categoria,
+	C.Codemp,
+	C.Nunota,
+	C.Dtneg,
+	C.Codtipoper,
+	Ad_get.Nometop(C.Codtipoper) top,
+	C.Codparc,
+	PAR.Nomeparc,
+	c.codveiculo,
+	vei.marcamodelo,
+	RegExp_Replace(vei.PLACA, '([A-Z]{3})([0-9]{4})', '\1-\2') PLACA,
+	I.Codprod,
+	P.Descrprod,
+	I.Qtdneg,
+	I.Vlrunit,
+	I.Vlrtot
+From Tgfite I
+	Join Tgfcab C On I.Nunota = C.Nunota
+		And C.Statusnota = 'L'
+	Join Tgfpar PAR On C.Codparc = PAR.Codparc
+	Join Ad_tsfppct T On T.Codtipoper = C.Codtipoper
+		And Nvl(Perdasai, 'N') = 'N'
+	Join Ad_tsfppce E On E.Nuppc = 1
+		And E.Codemp = C.Codemp
+	Join Ad_tsfppcp cp On cp.Codprod = I.Codprod
+		And cp.Nuppc = 1
+	Join Tgfpro P On I.Codprod = P.Codprod
+	Join Tgfvei vei On C.Codveiculo = vei.Codveiculo
+Where C.Codemp = :codemp
+	And C.Dtneg Between :data.ini And :data.fin
+	And C.Tipmov In ('Q')
+	And I.Atualestoque = -1
+	And Nvl(T.Perdasai, 'N') = 'N'
+	And vei.Categoria = :Categoria 
+Order By Dtneg]]></expression>
+        <metadata>
+          <field name="CATEGORIA" label="Categoria" type="S" visible="true" useFooter="false"/>
+          <field name="CODEMP" label="Empresa" type="I" visible="true" useFooter="false"/>
+          <field name="NUNOTA" label="No Único" type="I" visible="true" useFooter="false"/>
+          <field name="DTNEG" label="Dt. Neg" type="D" visible="true" useFooter="false"/>
+          <field name="CODTIPOPER" label="Cód. Top" type="I" visible="true" useFooter="false"/>
+          <field name="TOP" label="Tipo de Operação" type="S" visible="true" useFooter="false"/>
+          <field name="CODPARC" label="Parceiro" type="I" visible="true" useFooter="false"/>
+          <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+          <field name="CODVEICULO" label="CODVEICULO" type="I" visible="true" useFooter="false"/>
+          <field name="MARCAMODELO" label="Marca/Modelo" type="S" visible="true" useFooter="false"/>
+          <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+          <field name="CODPROD" label="Produto" type="I" visible="true" useFooter="false"/>
+          <field name="DESCRPROD" label="Descrição" type="S" visible="true" useFooter="false"/>
+          <field name="QTDNEG" label="Litros" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+          <field name="VLRUNIT" label="Vlr. Unit." type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+          <field name="VLRTOT" label="Vlr. Total" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+        </metadata>
+        <on-click-launcher resource-id="br.com.sankhya.com.mov.CentralNotas">
+          <NUNOTA>$NUNOTA</NUNOTA>
+        </on-click-launcher>
+      </grid>
+    </container>
+  </level>
+  <level id="lvl_akx0dmc" description="detailBom">
+    <args>
+      <arg id="codprod" type="integer"/>
+      <arg id="codbomba" type="integer"/>
+      <arg id="codemp" type="integer"/>
+      <arg id="dtreferencia" type="date"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="50">
+        <grid id="grd_akx0dmd">
+          <title><![CDATA[Aferições do dia :dtreferencia / Bomba :codbomba / Produto: $DESCRPROD]]></title>
+          <expression type="sql" data-source="MGEDS"><![CDATA[/*analitico afericao*/
+Select a.codprod,
+	p.descrprod,
+	a.turno,
+	Sum(Case When tipo = 'A' Then a.qtdlits * -1 Else qtdlits End) qtdlitros
+From ad_tsfadc a
+	Join tgfpro p On a.codprod = p.codprod
+Where a.dtreferencia = :dtreferencia
+	And a.bomba = :codbomba
+	And a.codprod = :codprod
+	And categoria = 'B'
+Group By a.codprod,
+	p.descrprod,
+	a.turno
+Order By turno]]></expression>
+          <metadata>
+            <field name="CODPROD" label="Cód. Produto" type="I" visible="true" useFooter="false"/>
+            <field name="DESCRPROD" label="Descrição" type="S" visible="true" useFooter="false"/>
+            <field name="TURNO" label="Turno" type="S" visible="true" useFooter="false"/>
+            <field name="QTDLITROS" label="Qtd. Litros" type="I" visible="true" useFooter="true" mask="#.##0"/>
+          </metadata>
+        </grid>
+      </container>
+      <container orientacao="V" tamanhoRelativo="50">
+        <grid id="grd_akx0dme">
+          <title><![CDATA[Abastecimentos do dia :dtreferencia - Bomba :nrobomba / :descrprod]]></title>
+          <expression type="sql" data-source="MGEDS"><![CDATA[Select 
+ i.nunota,
+ c.dtentsai,
+ c.codparc,
+ pro.Descrprod,
+ c.Ad_dadosimport nrobomba,
+ i.Codprod,
+ par.nomeparc,
+ ad_pkg_comb.veiculo(c.codveiculo) codveiculo,
+ v.marcamodelo, 
+ ad_get.Formataplaca(v.placa) placa,
+ Nvl(cat.categoria, v.categoria) categoria,
+ i.Qtdneg saidas
+From Tgfite i
+ Join Tgfcab c On i.Nunota = c.Nunota
+ Join tgfpar par On c.codparc = par.codparc
+ Join tgfpro pro On i.codprod = pro.Codprod
+ Left Join tgfvei v On v.codveiculo = ad_pkg_comb.veiculo(c.codveiculo)
+ Left Join ad_tsfcat cat On v.ad_codcat = cat.codcat
+Where Trunc(Dtentsai) = :dtreferencia
+ And i.Atualestoque = -1
+ And c.codemp = :codemp
+ And i.codprod = :codprod
+ And To_Number(c.ad_dadosimport) = :codbomba
+Order By c.dtentsai]]></expression>
+          <metadata>
+            <field name="NUNOTA" label="Nro Único" type="I" visible="true" useFooter="false"/>
+            <field name="DTENTSAI" label="Dt. Saída" type="D" visible="true" useFooter="false"/>
+            <field name="CODPARC" label="Cód. Parceiro" type="I" visible="true" useFooter="false"/>
+            <field name="DESCRPROD" label="Descrição Produto" type="S" visible="true" useFooter="false"/>
+            <field name="NROBOMBA" label="Bomba" type="S" visible="true" useFooter="false"/>
+            <field name="CODPROD" label="Cód. Produto" type="I" visible="true" useFooter="false"/>
+            <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+            <field name="CODVEICULO" label="Cód. Veículo" type="I" visible="true" useFooter="false"/>
+            <field name="MARCAMODELO" label="Modelo" type="S" visible="true" useFooter="false"/>
+            <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+            <field name="CATEGORIA" label="Categoria" type="S" visible="true" useFooter="false"/>
+            <field name="SAIDAS" label="Saídas" type="F" visible="true" useFooter="true" mask="#.##0"/>
+          </metadata>
+        </grid>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_alxwciu" description="detailMov">
+    <args>
+      <arg id="codprod" type="integer"/>
+      <arg id="codemp" type="integer"/>
+      <arg id="dataini" type="date"/>
+      <arg id="datafin" type="date"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="50">
+        <grid id="grd_alxwciv">
+          <expression type="sql" data-source="MGEDS"><![CDATA[Select 
+ i.nunota,
+ c.dtentsai,
+ c.codparc,
+ pro.Descrprod,
+ i.Codprod,
+ par.nomeparc,
+ i.Qtdneg 
+From Tgfite i
+ Join Tgfcab c On i.Nunota = c.Nunota
+ Join tgfpar par On c.codparc = par.codparc
+ Join tgfpro pro On i.codprod = pro.Codprod
+ Left Join tgfvei v On v.codveiculo = ad_pkg_comb.veiculo(c.codveiculo)
+ Left Join ad_tsfcat cat On v.ad_codcat = cat.codcat
+Where trunc(c.dtentsai) between :dataini and :datafin
+ And i.Atualestoque = 1
+ And i.codemp = :codemp
+ And i.codprod = :codprod
+ And c.statusnota = 'L'
+ And i.Codlocalorig = 3300
+ And i.Controle = 'POSTOABAST'
+ And i.Reserva = 'N'
+Order By c.dtentsai
+
+]]></expression>
+          <metadata>
+            <field name="NUNOTA" label="Nro Único" type="I" visible="true" useFooter="false"/>
+            <field name="DTENTSAI" label="Dt. Entrada" type="D" visible="true" useFooter="false"/>
+            <field name="CODPARC" label="Cód. Parceiro" type="I" visible="true" useFooter="false"/>
+            <field name="DESCRPROD" label="Descrição do Produto" type="S" visible="true" useFooter="false"/>
+            <field name="CODPROD" label="Cód. Produto" type="I" visible="true" useFooter="false"/>
+            <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+            <field name="QTDNEG" label="Qtd. Litros" type="F" visible="true" useFooter="true" mask="#.##0"/>
+          </metadata>
+        </grid>
+      </container>
+      <container orientacao="V" tamanhoRelativo="50">
+        <grid id="grd_alxwciw">
+          <expression type="sql" data-source="MGEDS"><![CDATA[Select 
+ i.nunota,
+ c.dtentsai,
+ c.codparc,
+ pro.Descrprod,
+ i.Codprod,
+ par.nomeparc,
+ ad_pkg_comb.veiculo(c.codveiculo) codveiculo,
+ v.marcamodelo, 
+ ad_get.Formataplaca(v.placa) placa,
+ Nvl(cat.categoria, v.categoria) categoria,
+ i.Qtdneg saidas
+From Tgfite i
+ Join Tgfcab c On i.Nunota = c.Nunota
+ Join tgfpar par On c.codparc = par.codparc
+ Join tgfpro pro On i.codprod = pro.Codprod
+ Left Join tgfvei v On v.codveiculo = ad_pkg_comb.veiculo(c.codveiculo)
+ Left Join ad_tsfcat cat On v.ad_codcat = cat.codcat
+Where Trunc(Dtentsai) between :dataini and :datafin
+ And i.Atualestoque = -1
+ And i.codemp = :codemp
+ And i.codprod = :codprod
+Order By c.dtentsai]]></expression>
+          <metadata>
+            <field name="NUNOTA" label="NUNOTA" type="I" visible="true" useFooter="false"/>
+            <field name="DTENTSAI" label="DTENTSAI" type="D" visible="true" useFooter="false"/>
+            <field name="CODPARC" label="CODPARC" type="I" visible="true" useFooter="false"/>
+            <field name="DESCRPROD" label="DESCRPROD" type="S" visible="true" useFooter="false"/>
+            <field name="CODPROD" label="CODPROD" type="I" visible="true" useFooter="false"/>
+            <field name="NOMEPARC" label="NOMEPARC" type="S" visible="true" useFooter="false"/>
+            <field name="CODVEICULO" label="CODVEICULO" type="I" visible="true" useFooter="false"/>
+            <field name="MARCAMODELO" label="MARCAMODELO" type="S" visible="true" useFooter="false"/>
+            <field name="PLACA" label="PLACA" type="S" visible="true" useFooter="false"/>
+            <field name="CATEGORIA" label="CATEGORIA" type="S" visible="true" useFooter="false"/>
+            <field name="SAIDAS" label="SAIDAS" type="F" visible="true" useFooter="true" mask="#.##0"/>
+          </metadata>
+        </grid>
+      </container>
+    </container>
+  </level>
+</gadget>

@@ -1,0 +1,181 @@
+<gadget refresh-time="300000">
+  <prompt-parameters>
+    <parameter id="data" description="Período" metadata="datePeriod" required="true" keep-last="true" keep-date="false"/>
+  </prompt-parameters>
+  <local-vars>
+    <var id="descrStatus">
+      <expression type="sql" data-source="MGEDS"><![CDATA[Select ad_get.opcoescampo(:statusvei,'STATUSVEI','AD_TSFAFV') FROM dual
+]]></expression>
+    </var>
+    <var id="descrProd">
+      <expression type="sql" data-source="MGEDS"><![CDATA[select descrprod from tgfpro where codprod = :codprod
+]]></expression>
+    </var>
+  </local-vars>
+  <level id="lvl_xr86jv" description="Principal">
+    <args>
+      <arg id="statusvei" type="text"/>
+      <arg id="codprod" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_xr86jx" type="pizza">
+            <title><![CDATA[Análise por Status]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select statusvei, ad_get.opcoescampo(p_valor     => statusvei,
+                          p_nomecampo => 'STATUSVEI',
+                          p_nometab   => 'AD_TSFAFV') descrstatusvei, Count(*) qtd
+ From ad_tsfafv a
+ where dtagend between :data.ini and :data.fin
+ group by statusvei]]></expression>
+            <metadata>
+              <field name="STATUSVEI" label="STATUSVEI" type="S" visible="true" useFooter="false"/>
+              <field name="DESCRSTATUSVEI" label="DESCRSTATUSVEI" type="S" visible="true" useFooter="false"/>
+              <field name="QTD" label="QTD" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <series>
+              <serie type="pizza">
+                <field>QTD</field>
+                <nameField>DESCRSTATUSVEI</nameField>
+                <on-click navigate-to="lvl_y8q55h">
+                  <param id="statusvei">$STATUSVEI</param>
+                </on-click>
+              </serie>
+            </series>
+          </chart>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_y8q55t" type="pizza">
+            <title><![CDATA[Análise por Unidade/Núcleo]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select a.codparc, p.nomeparc, Count(*) qtd
+ From ad_tsfafv a
+  join tgfpar p on a.codparc = p.codparc
+ where dtagend between :data.ini and :data.fin
+ group by a.codparc, p.nomeparc]]></expression>
+            <metadata>
+              <field name="CODPARC" label="Cód. Parceiro" type="I" visible="false" useFooter="false"/>
+              <field name="NOMEPARC" label="Unidade/Núcleo" type="S" visible="true" useFooter="false"/>
+              <field name="QTD" label="QTD" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <series>
+              <serie type="pizza">
+                <field>QTD</field>
+                <nameField>NOMEPARC</nameField>
+              </serie>
+            </series>
+          </chart>
+        </container>
+      </container>
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_xr86ka" type="pizza">
+            <title><![CDATA[Análise por Produto]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select a.codprod, p.descrprod, Count(*) qtd
+ From ad_tsfpfv a
+ join tgfpro p on a.codprod = p.codprod
+ where dtagend between :data.ini and :data.fin
+ group by a.codprod, p.descrprod]]></expression>
+            <metadata>
+              <field name="CODPROD" label="CODPROD" type="I" visible="true" useFooter="false"/>
+              <field name="DESCRPROD" label="DESCRPROD" type="S" visible="true" useFooter="false"/>
+              <field name="QTD" label="Qtd" type="I" visible="true" useFooter="false"/>
+            </metadata>
+            <series>
+              <serie type="pizza">
+                <field>QTD</field>
+                <nameField>DESCRPROD</nameField>
+                <refresh-details ui-list="grd_xr86kk">
+                  <param id="codprod">$CODPROD</param>
+                </refresh-details>
+              </serie>
+            </series>
+          </chart>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_xr86kk">
+            <args>
+              <arg id="codprod" type="integer"/>
+            </args>
+            <title><![CDATA[Veículos por Produto: $descrProd]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select 
+ a.dtagend, 
+ u.nomeparc as unidade,
+ a.codveiculo, 
+ v.marcamodelo, 
+ ad_get.formataplaca(v.placa) placa, 
+ p.codparc||' - '||p.nomeparc parceiro, 
+ ad_get.opcoescampo(statusvei,'STATUSVEI','AD_TSFAFV') status,
+  case when statusvei = 'A' then '#FA5858'
+	when statusvei = 'C' then '#58ACFA'
+	when statusvei = 'D' then '#00FFBF'
+	when statusvei = 'I' then '#BDBDBD'
+	when statusvei = 'V' then '#F2F5A9'
+	when statusvei = 'M' then '#F8E0E0'
+	when statusvei = 'P' then '#FFFFFF'
+  end as BKCOLOR
+  From ad_tsfafv a
+	Join tgfvei v On a.codveiculo = v.codveiculo
+	Join tgfpar p On v.codparc = p.codparc
+	join tgfpar u on a.codparc = u.codparc
+ Where a.dtagend Between :data.ini And :data.fin
+  And a.codprod = :codprod]]></expression>
+            <metadata>
+              <field name="DTAGEND" label="Dt. Agend" type="D" visible="true" useFooter="false"/>
+              <field name="UNIDADE" label="Unidade" type="S" visible="true" useFooter="false"/>
+              <field name="CODVEICULO" label="Cód. Veículo" type="I" visible="true" useFooter="false"/>
+              <field name="MARCAMODELO" label="Marca/Modelo" type="S" visible="true" useFooter="false"/>
+              <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+              <field name="PARCEIRO" label="Parceiro Transp." type="S" visible="true" useFooter="false"/>
+              <field name="STATUS" label="Status" type="S" visible="true" useFooter="false"/>
+              <field name="BKCOLOR" label="BKCOLOR" type="S" visible="false" useFooter="false"/>
+            </metadata>
+          </grid>
+        </container>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_y8q55h" description="detailStatus">
+    <args>
+      <arg id="statusvei" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_y8q55i">
+        <title><![CDATA[Detalhe por Status]]></title>
+        <expression type="sql" data-source="MGEDS"><![CDATA[Select 
+ a.nupfv,
+ a.dtagend, 
+ a.codveiculo, 
+ v.marcamodelo, 
+ ad_get.formataplaca(v.placa) placa, 
+ ad_get.opcoescampo(:statusvei, 'STATUSVEI','AD_TSFAFV') status,
+ p.codparc||' - '||p.nomeparc parceiro,
+  case when statusvei = 'A' then '#FA5858'
+	when statusvei = 'C' then '#58ACFA'
+	when statusvei = 'D' then '#00FFBF'
+	when statusvei = 'I' then '#BDBDBD'
+	when statusvei = 'V' then '#F2F5A9'
+	when statusvei = 'M' then '#F8E0E0'
+	when statusvei = 'P' then '#FFFFFF'
+  end as BKCOLOR
+	From ad_tsfafv a
+	Join tgfvei v On a.codveiculo = v.codveiculo
+	Join tgfpar p On v.codparc = p.codparc
+ Where a.dtagend Between :data.ini And :data.fin
+ and statusvei = :statusvei]]></expression>
+        <metadata>
+          <field name="NUPFV" label="NUPFV" type="I" visible="false" useFooter="false"/>
+          <field name="DTAGEND" label="Dt. Agend." type="D" visible="true" useFooter="false"/>
+          <field name="CODVEICULO" label="Cód. Veículo" type="I" visible="true" useFooter="false"/>
+          <field name="MARCAMODELO" label="Marca/Modelo" type="S" visible="true" useFooter="false"/>
+          <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+          <field name="STATUS" label="STATUS" type="S" visible="true" useFooter="false"/>
+          <field name="PARCEIRO" label="Parceiro Transp" type="S" visible="true" useFooter="false"/>
+          <field name="BKCOLOR" label="BKCOLOR" type="S" visible="true" useFooter="false"/>
+        </metadata>
+        <on-click-launcher resource-id="br.com.sankhya.menu.adicional.TSFPFV">
+          <NUPFV>$NUPFV</NUPFV>
+        </on-click-launcher>
+      </grid>
+    </container>
+  </level>
+</gadget>

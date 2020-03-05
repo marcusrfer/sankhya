@@ -1,0 +1,710 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="data" description="Período" metadata="datePeriod" required="true" keep-last="true" keep-date="false"/>
+  </prompt-parameters>
+  <local-vars>
+    <var id="nomereg">
+      <expression type="sql" data-source="MGEDS"><![CDATA[SELECT nomereg FROM tsireg where codreg = nvl(:codregpai, :codreg2)
+]]></expression>
+    </var>
+    <var id="datafin">
+      <expression type="sql" data-source="MGEDS"><![CDATA[select :data.fin from dual]]></expression>
+    </var>
+    <var id="nomecat">
+      <expression type="sql" data-source="MGEDS"><![CDATA[select categoria from ad_tsfcat where codcat = :codcat]]></expression>
+    </var>
+    <var id="dataini">
+      <expression type="sql" data-source="MGEDS"><![CDATA[select :data.ini from dual]]></expression>
+    </var>
+    <var id="nomereg2">
+      <expression type="sql" data-source="MGEDS"><![CDATA[select nomereg from tsireg where codreg = nvl(:codreg2,:codreg3)]]></expression>
+    </var>
+    <var id="totalFat">
+      <expression type="sql" data-source="MGEDS"><![CDATA[Select
+sum(Case When upper(grupo) Like '%BRINDE%' Then Sum(Vlrtot) * -1 Else Sum(Vlrtot) End) vlrtot
+ From Ad_vw_vendas avv
+Where Dtneg Between :data.ini And :data.fin
+ group by upper(grupo) ]]></expression>
+    </var>
+    <var id="totalDesp">
+      <expression type="sql" data-source="MGEDS"><![CDATA[Select
+Sum(Vlrtot) vlrtot
+From Tgfite I
+ Join Tgfcab C On I.Nunota = C.Nunota And C.Statusnota = 'L'
+ Join Tgfpro P On I.Codprod = P.Codprod 
+ Join Ad_tsfppcp pcp On I.Codprod = pcp.Codprod And pcp.Nuppc = 1
+ Join Ad_tsfppct T On T.Codtipoper = C.Codtipoper	And (Nvl(Perdaent, 'N') = 'N'And Nvl(Perdasai, 'N') = 'N')
+Where I.Codemp = 2
+ And C.Dtneg Between :data.ini And :data.fin
+ And I.Atualestoque = -1
+ And C.Tipmov in ('Q','T')]]></expression>
+    </var>
+    <var id="custoOp">
+      <expression type="sql" data-source="MGEDS"><![CDATA[select round((:totalDesp / :totalFat)*100,4)||' %' from dual]]></expression>
+    </var>
+    <var id="fmtTotalFat">
+      <expression type="sql" data-source="MGEDS"><![CDATA[select to_char(:totalFat,'L999G999G999D09') from dual]]></expression>
+    </var>
+    <var id="fmtTotalDesp">
+      <expression type="sql" data-source="MGEDS"><![CDATA[select to_char(:totalDesp,'L999G999G999D09') from dual]]></expression>
+    </var>
+  </local-vars>
+  <level id="lvl_ovv9nu" description="Principal">
+    <container orientacao="H" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_1foq12">
+            <title><![CDATA[Consumo Médio por Categoria]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select t.* , round(kmtotal/Qtdlitros,2) mediakm
+	From 
+	(	Select
+		Codcat,
+		Categoria,
+		Sum(Qtdlitros) Qtdlitros,
+		(Select Nvl(Sum(Distancia), 0)
+ 		  From Ad_vw_kmrodado km
+     	Where km.Dtneg Between :data.ini And :data.fin
+		And Codcat = av.Codcat)
+		kmtotal
+	From Ad_vw_abastvei av
+	Where av.Dtneg Between :data.ini And :data.fin
+	Group By Codcat, Categoria
+	) T
+Order By Codcat, Categoria]]></expression>
+            <metadata>
+              <field name="CODCAT" label="Cód. Categoria" type="I" visible="true" useFooter="false"/>
+              <field name="CATEGORIA" label="Categoria" type="S" visible="true" useFooter="false"/>
+              <field name="QTDLITROS" label="Qtd Litros" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+              <field name="KMTOTAL" label="Km Total" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+              <field name="MEDIAKM" label="Média Km/Lt" type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+            </metadata>
+            <on-click navigate-to="lvl_1qnxuk">
+              <param id="codcat">$CODCAT</param>
+            </on-click>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_aebcygg">
+            <title><![CDATA[Faturamento]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select
+Grupo,
+(Case When tipmov = 'D' Or upper(grupo) Like '%BRINDE%' Then Sum(Qtdvolalt) * -1 Else Sum(Qtdvolalt) End) qtdneg,
+codvolpad,
+(Case When upper(grupo) Like '%BRINDE%' Then Sum(Vlrtot) * -1 Else Sum(Vlrtot)End) vlrtot
+ From Ad_vw_vendas avv
+Where Dtneg Between :data.ini And :data.fin
+ Group By Grupo, Tipmov,codvolpad]]></expression>
+            <metadata>
+              <field name="GRUPO" label="Tipo" type="S" visible="true" useFooter="false"/>
+              <field name="QTDNEG" label="Qtd." type="I" visible="true" useFooter="true" mask="#.##0,00"/>
+              <field name="CODVOLPAD" label="UN." type="S" visible="true" useFooter="false"/>
+              <field name="VLRTOT" label="Vlr. Total" type="I" visible="true" useFooter="true" mask="#.##0,00"/>
+            </metadata>
+          </grid>
+        </container>
+      </container>
+      <container orientacao="V" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="31300">
+          <grid id="grd_acv4mb5">
+            <title><![CDATA[Consumo Médio por Região]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select codreg, nomereg, qtdabast, kmrodado, Round(kmrodado/qtdabast,2) mediakm
+	From (Select rb.codreg,
+							 rb.nomereg,
+							 Sum(qtdlitros) qtdabast,
+							 (Select Nvl(Sum(k.distancia), 1)
+									From ad_vw_kmrodado k
+									Left Join tgford ord On k.ordemcarga = ord.ordemcarga And k.codemp = ord.codemp
+									Left Join tsireg reg On ord.codreg = reg.codreg and reg.codreg < 9000000
+									Join tsireg rp2 On reg.codregpai = rp2.codreg
+									Join tsireg ra2 On rp2.codregpai = ra2.codreg
+									Join tsireg rb2 On ra2.codregpai = rb2.codreg
+								 Where k.dtneg between :data.ini and :data.fin
+									 And rb2.codreg = rb.codreg) kmrodado
+					From ad_vw_abastvei v
+					Join tgfpar p On v.codparc = p.codparc
+					Join tsireg r On p.codreg = r.codreg
+					Join tsireg rp On r.codregpai = rp.codreg
+					Join tsireg ra On rp.codregpai = ra.codreg
+					Join tsireg rb On ra.codregpai = rb.codreg
+				 Where v.dtneg between :data.ini and :data.fin
+				 Group By rb.codreg, rb.nomereg)]]></expression>
+            <metadata>
+              <field name="CODREG" label="Cód. Região" type="I" visible="true" useFooter="false"/>
+              <field name="NOMEREG" label="Região" type="S" visible="true" useFooter="false"/>
+              <field name="QTDABAST" label="Qtd. Lts" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+              <field name="KMRODADO" label="Km Rodado" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+              <field name="MEDIAKM" label="Média KM" type="F" visible="true" useFooter="false"/>
+            </metadata>
+            <on-click navigate-to="lvl_acv4mcu">
+              <param id="codregpai">$CODREG</param>
+            </on-click>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="22100">
+          <grid id="grd_aebcyia">
+            <title><![CDATA[Despesas com Combustível]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select
+	I.Codprod,
+	P.Descrprod,
+	Sum(Qtdneg) QTDNEG,
+	Round(Avg(Vlrunit), 2) VLRUNIT,
+	Sum(Vlrtot) vlrtot,
+	'#0404B4' As FGCOLOR
+From Tgfite I
+		Join Tgfcab C On I.Nunota = C.Nunota
+			And C.Statusnota = 'L'
+		Join Tgfpro P On I.Codprod = P.Codprod
+		Join Ad_tsfppcp pcp On I.Codprod = pcp.Codprod
+			And pcp.Nuppc = 1
+		Join Ad_tsfppct T On T.Codtipoper = C.Codtipoper
+			And (Nvl(Perdaent, 'N') = 'N'
+			And Nvl(Perdasai, 'N') = 'N')
+Where I.Codemp = 2
+	And C.Dtneg Between :data.ini And :data.fin
+	And I.Atualestoque = -1
+	And C.Tipmov in ('Q','T')
+Group By I.Codemp, I.Codprod, P.Descrprod
+	Order By 3]]></expression>
+            <metadata>
+              <field name="CODPROD" label="CODPROD" type="I" visible="true" useFooter="false"/>
+              <field name="DESCRPROD" label="DESCRPROD" type="S" visible="true" useFooter="false"/>
+              <field name="QTDNEG" label="QTDNEG" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+              <field name="VLRUNIT" label="VLRUNIT" type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+              <field name="VLRTOT" label="VLRTOT" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+              <field name="FGCOLOR" label="FGCOLOR" type="S" visible="true" useFooter="false"/>
+            </metadata>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="8400">
+          <simple-value id="svl_aj3ggje" tamTexto="18">
+            <value-expression><![CDATA[<span style='color: #0000FF;'>Total Faturado:</span> $fmtTotalFat
+<font color="#FF0000">Total Despesas:</font> $fmtTotalDesp
+<b>Custo Operacional:</b> $custoOp]]></value-expression>
+          </simple-value>
+        </container>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_1qnxuk" description="detailCat">
+    <args>
+      <arg id="codcat" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_1qnxul">
+            <title><![CDATA[Média de Km/Litro - Categoria $nomecat]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select T.*, Round(Kmtotal / Qtdneg, 2) mediakm
+		From (
+	Select 
+	 Codcat,
+		av.Categoria,
+		av.Codveiculo,
+		v.Marcamodelo,
+		ad_get.formataplaca(v.Placa) Placa,
+		Sum(Qtdlitros) QTDNEG,
+		(Select Nvl(Sum(Distancia), 0)
+					From Ad_vw_kmrodado km
+				Where km.Dtneg Between :data.ini And :data.fin
+						And Codcat = av.Codcat
+						And km.Codveiculo = av.Codveiculo) kmtotal
+	From Ad_vw_abastvei av
+	Join tgfvei v On av.Codveiculo = v.Codveiculo And Nvl(v.ad_controlakm, 'N') = 'S'
+	Where av.Dtneg Between :data.ini And :data.fin
+	And Not Exists	(Select 1 From Ad_itemconjvei ai Where ai.Codveiculo = av.Codveiculo)
+	Group By Codcat, av.Categoria, av.Codveiculo, v.Marcamodelo, v.Placa
+								
+Union All
+								
+ Select 
+	 Codcat,
+		Categoria,
+		(Select C.Codveiculo
+					From Tgfvei v, Ad_itemconjvei C
+				Where C.Codveiculo = v.Codveiculo
+						And C.Tipo = 'C'
+						And Nuconjvei = Fc_codconj_veic_sf(Av.Codveiculo)
+						And Rownum = 1),
+		(Select marcamodelo
+					From Tgfvei v, Ad_itemconjvei c
+				Where c.Codveiculo = v.Codveiculo
+						And c.Tipo = 'C'
+						And Nuconjvei = Fc_codconj_veic_sf(av.Codveiculo)
+						And Rownum = 1),
+		(Select vc.Descricao
+					From Ad_vincconjvei vc
+				Where Nuconjvei = Fc_codconj_veic_sf(Codveiculo)) placa,
+		Sum(Qtdlitros) QTDNEG,
+		(Select Nvl(Sum(Distancia), 0)
+					From Ad_vw_kmrodado km
+				Where km.Dtneg Between :data.ini And :data.fin
+						And Codcat = av.Codcat
+						And Fc_codconj_veic_sf(km.Codveiculo) = Fc_codconj_veic_sf(av.Codveiculo)) kmtotal
+		From Ad_vw_abastvei av
+	Where av.Dtneg Between :data.ini And :data.fin
+			And Exists (Select 1 From Ad_itemconjvei ai Where ai.Codveiculo = av.Codveiculo)
+	Group By Codcat, Categoria, Fc_codconj_veic_sf(Codveiculo)) T
+	Where Codcat = :codcat
+	Order By codveiculo]]></expression>
+            <metadata>
+              <field name="CODCAT" label="Cód. Categoria" type="I" visible="true" useFooter="false"/>
+              <field name="CATEGORIA" label="Categoria" type="S" visible="true" useFooter="false"/>
+              <field name="CODVEICULO" label="Cód. Veículo" type="I" visible="true" useFooter="false"/>
+              <field name="MARCAMODELO" label="Marca/Modelo" type="S" visible="true" useFooter="false"/>
+              <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+              <field name="QTDNEG" label="Qtd. Lts" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+              <field name="KMTOTAL" label="Km Rodado" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+              <field name="MEDIAKM" label="Média KM" type="I" visible="true" useFooter="false" mask="#.##0,00"/>
+            </metadata>
+            <refresh-details ui-list="grd_aiwfvxb,grd_aiwfvxp">
+              <param id="codvei">$CODVEICULO</param>
+            </refresh-details>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_aiwfvzo" type="column" nroColuna="10">
+            <title><![CDATA[Melhores Médias]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select ad_get.formataPlaca(T.placa) Placa, Round(Kmtotal / Qtdneg, 2) mediakm
+	From (Select Codcat,
+							 av.Categoria,
+							 av.Codveiculo,
+							 v.Marcamodelo,
+							 v.Placa,
+							 Sum(Qtdlitros) QTDNEG,
+							 (Select Nvl(Sum(Distancia), 0)
+									From Ad_vw_kmrodado km
+								 Where km.Dtneg Between :data.ini And :data.fin
+									 And Codcat = av.Codcat
+									 And km.Codveiculo = av.Codveiculo) kmtotal
+					From Ad_vw_abastvei av
+					Join tgfvei v On av.Codveiculo = v.Codveiculo
+				 Where av.Dtneg Between :data.ini And :data.fin
+					 And Not Exists (Select 1 From Ad_itemconjvei ai Where ai.Codveiculo = av.Codveiculo)
+				 Group By Codcat, av.Categoria, av.Codveiculo, v.Marcamodelo, v.Placa
+				
+				Union All
+				
+				Select Codcat,
+							 Categoria,
+							 (Select C.Codveiculo
+									From Tgfvei v, Ad_itemconjvei C
+								 Where C.Codveiculo = v.Codveiculo
+									 And C.Tipo = 'C'
+									 And Nuconjvei = Fc_codconj_veic_sf(Av.Codveiculo)
+									 And Rownum = 1),
+							 (Select Marcamodelo
+									From Tgfvei v, Ad_itemconjvei c
+								 Where c.Codveiculo = v.Codveiculo
+									 And c.Tipo = 'C'
+									 And Nuconjvei = Fc_codconj_veic_sf(av.Codveiculo)
+									 And Rownum = 1),
+							 (Select vc.Descricao From Ad_vincconjvei vc Where Nuconjvei = Fc_codconj_veic_sf(Codveiculo)) placa,
+							 Sum(Qtdlitros) QTDNEG,
+							 (Select Nvl(Sum(Distancia), 0)
+									From Ad_vw_kmrodado km
+								 Where km.Dtneg Between :data.ini And :data.fin
+									 And Codcat = av.Codcat
+									 And Fc_codconj_veic_sf(km.Codveiculo) = Fc_codconj_veic_sf(av.Codveiculo)) kmtotal
+					From Ad_vw_abastvei av
+				 Where av.Dtneg Between :data.ini And :data.fin
+					 And Exists (Select 1 From Ad_itemconjvei ai Where ai.Codveiculo = av.Codveiculo)
+				 Group By Codcat, Categoria, Fc_codconj_veic_sf(Codveiculo)) T
+ Where Codcat = :codcat
+ and rownum <= 10
+ Order By Round(Kmtotal / Qtdneg, 2) ]]></expression>
+            <metadata>
+              <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+              <field name="MEDIAKM" label="Média KM" type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+            </metadata>
+            <horizontal-axis>
+              <category field="$PLACA" rotation="0" dropLabel="true">
+                <title>Veículo</title>
+              </category>
+            </horizontal-axis>
+            <vertical-axis>
+              <linear resultRotation="-90" vResizing="true">
+                <mask/>
+                <title>Valor</title>
+              </linear>
+            </vertical-axis>
+            <series>
+              <serie type="column">
+                <xField>$PLACA</xField>
+                <yField>$MEDIAKM</yField>
+              </serie>
+            </series>
+          </chart>
+        </container>
+      </container>
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_aiwfvxb">
+            <args>
+              <arg id="codvei" type="integer"/>
+            </args>
+            <title><![CDATA[Abastecimentos por Veículo: $CODVEICULO / $MARCAMODELO / $PLACA]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select
+	Dtneg,
+	Codemp,
+	Codtipoper,
+	ad_get.Nometop(codtipoper) operacao,
+	av.Codveiculo,
+	vei.Marcamodelo,
+	ad_get.formataPlaca(Placa) Placa,
+	Ordemcarga,
+	Codcat,
+	av.Categoria,
+	av.Codparc,
+	Qtdlitros qtdneg
+From Ad_vw_abastvei av
+	Join tgfvei vei On av.Codveiculo = vei.Codveiculo
+Where Dtneg Between :data.ini And :data.fin
+	And (av.Codveiculo = :codvei or av.Codveiculo In (select codveiculo from Ad_itemconjvei ai Where Nuconjvei = Fc_codconj_veic_sf(:codvei)))
+order By Dtneg]]></expression>
+            <metadata>
+              <field name="DTNEG" label="Dt. Neg" type="D" visible="true" useFooter="false"/>
+              <field name="CODEMP" label="Cód. Empresa" type="I" visible="true" useFooter="false"/>
+              <field name="CODTIPOPER" label="Cód. TOP" type="I" visible="true" useFooter="false"/>
+              <field name="OPERACAO" label="Operação" type="S" visible="true" useFooter="false"/>
+              <field name="CODVEICULO" label="Cód. Veículo" type="I" visible="true" useFooter="false"/>
+              <field name="MARCAMODELO" label="Marca/Modelo" type="S" visible="true" useFooter="false"/>
+              <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+              <field name="ORDEMCARGA" label="OC" type="I" visible="true" useFooter="false"/>
+              <field name="CODCAT" label="Cód. Cat." type="I" visible="true" useFooter="false"/>
+              <field name="CATEGORIA" label="Categoria" type="S" visible="true" useFooter="false"/>
+              <field name="CODPARC" label="Cód. Parceiro" type="I" visible="true" useFooter="false"/>
+              <field name="QTDNEG" label="Qtd. Lts" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+            </metadata>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_aiwfvxp">
+            <args>
+              <arg id="codvei" type="integer"/>
+            </args>
+            <title><![CDATA[Entregas por Veículo: $CODVEICULO / $MARCAMODELO / $PLACA]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select
+	Dtneg,
+	Codemp,
+	Codcat,
+	kr.Categoria,
+	kr.Codveiculo,
+	vei.Marcamodelo,
+	Ad_get.Formataplaca(vei.placa) placa,
+	kr.Ordemcarga,
+	nvl(km.kmrodado,0) kmAutotrack,
+	kr.Distancia  kmRota
+From Ad_vw_kmrodado kr
+Join Tgfvei vei On kr.Codveiculo = vei.Codveiculo
+Left Join Ad_vw_kmreal km On kr.Codveiculo = km.Codveiculo And kr.Ordemcarga = km.Ordemcarga
+Where Dtneg Between :data.ini And :data.fin
+	And (kr.Codveiculo = :codvei
+	Or kr.Codveiculo In (Select
+		Codveiculo
+		From Ad_itemconjvei ai
+		Where Nuconjvei = Fc_codconj_veic_sf(:codvei)))]]></expression>
+            <metadata>
+              <field name="DTNEG" label="Dt. Neg" type="D" visible="true" useFooter="false"/>
+              <field name="CODEMP" label="Cód. Empresa" type="I" visible="true" useFooter="false"/>
+              <field name="CODCAT" label="Cód. Cat" type="I" visible="true" useFooter="false"/>
+              <field name="CATEGORIA" label="Categoria" type="S" visible="true" useFooter="false"/>
+              <field name="CODVEICULO" label="Cód Veículo" type="I" visible="true" useFooter="false"/>
+              <field name="MARCAMODELO" label="Marca/Modelo" type="S" visible="true" useFooter="false"/>
+              <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+              <field name="ORDEMCARGA" label="OC" type="I" visible="true" useFooter="false"/>
+              <field name="KMAUTOTRACK" label="Dist. Real" type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+              <field name="KMROTA" label="Dist. Rota" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+            </metadata>
+            <on-click navigate-to="lvl_1qnxwi">
+              <param id="codemp">$CODEMP</param>
+              <param id="ordemcarga">$ORDEMCARGA</param>
+            </on-click>
+          </grid>
+        </container>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_1qnxux" description="detailVei">
+    <args>
+      <arg id="codvei" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="50">
+        <grid id="grd_1qnxuy">
+          <title><![CDATA[Abastecimentos por Veículo: $CODVEICULO / $MARCAMODELO / $PLACA]]></title>
+          <expression type="sql" data-source="MGEDS"><![CDATA[Select
+	Dtneg,
+	Codemp,
+	Codtipoper,
+	ad_get.Nometop(codtipoper) operacao,
+	av.Codveiculo,
+	vei.Marcamodelo,
+	ad_get.formataPlaca(Placa) Placa,
+	Ordemcarga,
+	Codcat,
+	av.Categoria,
+	av.Codparc,
+	Qtdlitros Qtdneg
+From Ad_vw_abastvei av
+	Join tgfvei vei On av.Codveiculo = vei.Codveiculo
+Where Dtneg Between :data.ini And :data.fin
+	And (av.Codveiculo = :codvei or av.Codveiculo In (select codveiculo from Ad_itemconjvei ai Where Nuconjvei = Fc_codconj_veic_sf(:codvei)))
+order By Dtneg]]></expression>
+          <metadata>
+            <field name="DTNEG" label="Dt. Negciação" type="D" visible="true" useFooter="false"/>
+            <field name="CODEMP" label="Cód. Empresa" type="I" visible="true" useFooter="false"/>
+            <field name="CODTIPOPER" label="TOP" type="I" visible="true" useFooter="false"/>
+            <field name="OPERACAO" label="Operação" type="S" visible="true" useFooter="false"/>
+            <field name="CODVEICULO" label="Cód. Veículo" type="I" visible="true" useFooter="false"/>
+            <field name="MARCAMODELO" label="Marca/Modelo" type="S" visible="true" useFooter="false"/>
+            <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+            <field name="ORDEMCARGA" label="Nº OC" type="I" visible="true" useFooter="false"/>
+            <field name="CODCAT" label="Cód. Categoria" type="I" visible="true" useFooter="false"/>
+            <field name="CATEGORIA" label="Categoria" type="S" visible="true" useFooter="false"/>
+            <field name="CODPARC" label="Cód. Parceiro" type="I" visible="true" useFooter="false"/>
+            <field name="QTDNEG" label="Qtd. Lts" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+          </metadata>
+          <on-click navigate-to="lvl_1qnxwi">
+            <param id="codemp">$CODEMP</param>
+            <param id="ordemcarga">$ORDEMCARGA</param>
+          </on-click>
+        </grid>
+      </container>
+      <container orientacao="V" tamanhoRelativo="50">
+        <grid id="grd_1qnxuz">
+          <title><![CDATA[Entregas por Veículo: $CODVEICULO / $MARCAMODELO / $PLACA]]></title>
+          <expression type="sql" data-source="MGEDS"><![CDATA[Select dtneg, Codemp, Codcat, kr.Categoria, kr.Codveiculo,	vei.Marcamodelo,
+	  ad_get.formataPlaca(placa) Placa, Ordemcarga, Distancia
+From Ad_vw_kmrodado kr
+Join tgfvei vei On kr.Codveiculo = vei.Codveiculo
+Where Dtneg Between :data.ini And :data.fin
+	And (kr.Codveiculo = :codvei Or kr.Codveiculo In
+	(Select codveiculo From Ad_itemconjvei ai Where Nuconjvei = Fc_codconj_veic_sf(:codvei)))]]></expression>
+          <metadata>
+            <field name="DTNEG" label="Dt. Negociação" type="D" visible="true" useFooter="false"/>
+            <field name="CODEMP" label="Cód. Empresa" type="I" visible="true" useFooter="false"/>
+            <field name="CODCAT" label="Cód. Categoria" type="I" visible="true" useFooter="false"/>
+            <field name="CATEGORIA" label="Categoria" type="S" visible="true" useFooter="false"/>
+            <field name="CODVEICULO" label="Cód. Veículo" type="I" visible="true" useFooter="false"/>
+            <field name="MARCAMODELO" label="Marca/Modelo" type="S" visible="true" useFooter="false"/>
+            <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+            <field name="ORDEMCARGA" label="Nº OC" type="I" visible="true" useFooter="false"/>
+            <field name="DISTANCIA" label="Distancia" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+          </metadata>
+          <on-click navigate-to="lvl_1qnxwi">
+            <param id="codemp">$CODEMP</param>
+            <param id="ordemcarga">$ORDEMCARGA</param>
+          </on-click>
+        </grid>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_1qnxwi" description="detailOC">
+    <args>
+      <arg id="codemp" type="integer"/>
+      <arg id="ordemcarga" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_1qnxwj">
+        <expression type="sql" data-source="MGEDS"><![CDATA[Select cab.codemp, cab.ordemcarga, cab.nunota, cab.numnota, cab.dtneg, cab.codparc, par.nomeparc, cab.codvend,
+			 ven.apelido, par.codcid, cid.nomecid, par.codbai, bai.nomebai, nvl(peso,cab.pesobruto) peso
+	From tgfcab cab
+	Join tgford ord On cab.ordemcarga = ord.ordemcarga
+								 And ord.codemp = cab.codemp
+	Join tgfpar par On cab.codparc = par.codparc
+	Join tsicid cid On par.codcid = cid.codcid
+	Join tgfven ven On cab.codvend = ven.codvend
+	Join tsibai bai On par.codbai = bai.codbai
+ Where cab.statusnota = 'L'
+	 --And cab.tipmov in ('V','T')
+	 And cab.codemp = :codemp
+	 And cab.ordemcarga = :ordemcarga]]></expression>
+        <metadata>
+          <field name="CODEMP" label="Cód. Empresa" type="I" visible="true" useFooter="false"/>
+          <field name="ORDEMCARGA" label="Nº OC" type="I" visible="true" useFooter="false"/>
+          <field name="NUNOTA" label="Nro Único" type="I" visible="true" useFooter="false"/>
+          <field name="NUMNOTA" label="Nro Nota" type="I" visible="true" useFooter="false"/>
+          <field name="DTNEG" label="Dt. Neg" type="D" visible="true" useFooter="false"/>
+          <field name="CODPARC" label="Cód. Parceiro" type="I" visible="true" useFooter="false"/>
+          <field name="NOMEPARC" label="Parceiro" type="S" visible="true" useFooter="false"/>
+          <field name="CODVEND" label="Cód. Vendedor" type="I" visible="true" useFooter="false"/>
+          <field name="APELIDO" label="Vendedor" type="S" visible="true" useFooter="false"/>
+          <field name="CODCID" label="Cód. Cidade" type="I" visible="true" useFooter="false"/>
+          <field name="NOMECID" label="Cidade" type="S" visible="true" useFooter="false"/>
+          <field name="CODBAI" label="Cód. Bairro" type="I" visible="true" useFooter="false"/>
+          <field name="NOMEBAI" label="Bairro" type="S" visible="true" useFooter="false"/>
+          <field name="PESO" label="Peso" type="I" visible="true" useFooter="true"/>
+        </metadata>
+        <on-click-launcher resource-id="br.com.sankhya.com.mov.CentralNotas">
+          <NUNOTA>$NUNOTA</NUNOTA>
+        </on-click-launcher>
+      </grid>
+    </container>
+  </level>
+  <level id="lvl_acv4mcu" description="detailReg1">
+    <args>
+      <arg id="codregpai" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_acv4mcv">
+            <title><![CDATA[Sub-Categorias da Região $nomereg]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select codreg, nomereg, qtdabast, kmrodado, Round(kmrodado/qtdabast,2) mediakm
+	From (Select ra.codreg,
+							 ra.nomereg,
+							 Sum(qtdlitros) qtdabast,
+							 (Select Nvl(Sum(k.distancia), 1)
+									From ad_vw_kmrodado k
+									Left Join tgford ord On k.ordemcarga = ord.ordemcarga
+																			And k.codemp = ord.codemp
+									Left Join tsireg reg On ord.codreg = reg.codreg
+									Join tsireg rp2 On reg.codregpai = rp2.codreg
+									Join tsireg ra2 On rp2.codregpai = ra2.codreg
+									left Join tsireg rb2 On ra2.codregpai = rb2.codreg
+								 Where k.dtneg between :data.ini and :data.fin
+									 And ra2.codreg = ra.codreg
+									and rb2.codreg = :codregpai) kmrodado
+					From ad_vw_abastvei v
+					Join tgfpar p On v.codparc = p.codparc
+					Join tsireg r On p.codreg = r.codreg
+					Join tsireg rp On r.codregpai = rp.codreg
+					Join tsireg ra On rp.codregpai = ra.codreg
+					Join tsireg rb On ra.codregpai = rb.codreg
+				 Where v.dtneg between :data.ini and :data.fin
+					and rb.codreg = :codregpai
+				 Group By ra.codreg, ra.nomereg)
+]]></expression>
+            <metadata>
+              <field name="CODREG" label="Cód. Região" type="I" visible="true" useFooter="false"/>
+              <field name="NOMEREG" label="Região" type="S" visible="true" useFooter="false"/>
+              <field name="QTDABAST" label="Qtd.. Lts" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+              <field name="KMRODADO" label="Km Rodado" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+              <field name="MEDIAKM" label="Média Km" type="F" visible="true" useFooter="false"/>
+            </metadata>
+            <refresh-details ui-list="grd_ac179dr">
+              <param id="codreg2">$CODREG</param>
+            </refresh-details>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_ac179dr">
+            <args>
+              <arg id="codreg2" type="integer"/>
+            </args>
+            <title><![CDATA[Sub-Categorias da Região $nomereg2]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[	Select 
+ 	codreg, 
+	nomereg, 
+	nvl(qtdabast,0) qtdabast, 
+	nvl(kmrodado, 0) kmrodado,
+	nvl(Round(kmrodado/qtdabast,2),0) mediakm
+	From (Select rp.codreg,
+			rp.nomereg,
+			 Sum(qtdlitros) qtdabast,
+			 (Select Sum(k.distancia)
+				From ad_vw_kmrodado k
+				Left Join tgford ord On k.ordemcarga = ord.ordemcarga And k.codemp = ord.codemp
+				left join tgfpar par on ord.codparcdest = par.codparc
+				Left Join tsireg reg On par.codreg = reg.codreg
+				left Join tsireg rp2 On reg.codregpai = rp2.codreg
+				left Join tsireg ra2 On rp2.codregpai = ra2.codreg
+				left Join tsireg rb2 On ra2.codregpai = rb2.codreg
+			 Where k.dtneg between :data.ini and :data.fin
+				 And rp2.codreg = rp.codreg
+				and ra2.codreg = :codreg2) kmrodado
+			From ad_vw_abastvei v
+			Join tgfpar p On v.codparc = p.codparc
+			Join tsireg r On p.codreg = r.codreg
+			Join tsireg rp On r.codregpai = rp.codreg
+			Join tsireg ra On rp.codregpai = ra.codreg
+			Join tsireg rb On ra.codregpai = rb.codreg
+		 Where v.dtneg between :data.ini and :data.fin
+			and ra.codreg = :codreg2
+		 Group By rp.codreg, rp.nomereg)]]></expression>
+            <metadata>
+              <field name="CODREG" label="Cód. Região" type="I" visible="true" useFooter="false"/>
+              <field name="NOMEREG" label="Região" type="S" visible="true" useFooter="false"/>
+              <field name="QTDABAST" label="Qtd. lts" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+              <field name="KMRODADO" label="Km Rodado" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+              <field name="MEDIAKM" label="Média Km" type="F" visible="true" useFooter="false"/>
+            </metadata>
+            <refresh-details ui-list="grd_ac179ew,grd_ac179fo">
+              <param id="codreg3">$CODREG</param>
+            </refresh-details>
+          </grid>
+        </container>
+      </container>
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_ac179ew">
+            <args>
+              <arg id="codreg3" type="integer"/>
+            </args>
+            <title><![CDATA[Abastecimentos da Região $nomereg2]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select r.codreg, r.nomereg, v.dtneg, v.codemp, v.codtipoper, v.codveiculo, vei.marcamodelo, 
+ad_get.formataPlaca(vei.placa) placa, v.categoria, v.codparc, Sum(qtdlitros) qtdlitros
+	From ad_vw_abastvei v
+	Join tgfpar p On v.codparc = p.codparc
+	Join tsireg r On p.codreg = r.codreg
+	Join tsireg rp On r.codregpai = rp.codreg
+	Join tsireg ra On rp.codregpai = ra.codreg
+	left Join tsireg rb On ra.codregpai = rb.codreg
+	join tgfvei vei on v.codveiculo = vei.codveiculo
+ Where v.dtneg between :data.ini and :data.fin
+	and rp.codreg = :codreg3
+ Group By r.codreg, r.nomereg, v.dtneg, v.codemp, v.codtipoper, v.codveiculo, vei.marcamodelo, vei.placa, v.categoria, v.codparc
+order by v.dtneg, r.codreg, v.codveiculo]]></expression>
+            <metadata>
+              <field name="CODREG" label="Cód. Região" type="I" visible="true" useFooter="false"/>
+              <field name="NOMEREG" label="Região" type="S" visible="true" useFooter="false"/>
+              <field name="DTNEG" label="Dt. Neg." type="D" visible="true" useFooter="false"/>
+              <field name="CODEMP" label="Cód. Empresa" type="I" visible="true" useFooter="false"/>
+              <field name="CODTIPOPER" label="Tip, Mov." type="I" visible="true" useFooter="false"/>
+              <field name="CODVEICULO" label="Cód Veículo" type="I" visible="true" useFooter="false"/>
+              <field name="MARCAMODELO" label="Marca/Modelo" type="S" visible="true" useFooter="false"/>
+              <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+              <field name="CATEGORIA" label="Categoria" type="S" visible="true" useFooter="false"/>
+              <field name="CODPARC" label="Cód. Parceiro" type="I" visible="true" useFooter="false"/>
+              <field name="QTDLITROS" label="Qtd. Lts" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+            </metadata>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_ac179fo">
+            <args>
+              <arg id="codreg3" type="integer"/>
+            </args>
+            <title><![CDATA[Entregas Realizadas na Região $nomereg2]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select rp.codreg, rP.nomereg, k.dtneg, k.dtneg, k.categoria, k.codveiculo, vei.marcamodelo, 
+ad_get.formataPlaca(vei.placa) placa, k.ordemcarga, Sum(k.distancia) distancia
+	From ad_vw_kmrodado k
+	Left Join tgford ord On k.ordemcarga = ord.ordemcarga
+											And k.codemp = ord.codemp
+ left join tgfpar par on ord.codparcdest = par.codparc
+	Left Join tsireg reg On par.codreg = reg.codreg
+	left Join tsireg rp On reg.codregpai = rp.codreg
+	left Join tsireg ra On rp.codregpai = ra.codreg
+	left Join tsireg rb On ra.codregpai = rb.codreg
+	Left Join tgfvei vei On k.codveiculo = vei.codveiculo
+ Where k.dtneg Between :data.ini And :data.fin
+  And rp.codreg = :codreg3
+ Group By rp.codreg, rP.nomereg, k.dtneg, k.dtneg, k.categoria, k.codveiculo, vei.marcamodelo, vei.placa, k.ordemcarga
+order by k.dtneg,rp.codreg, k.codveiculo]]></expression>
+            <metadata>
+              <field name="CODREG" label="Cód. Região" type="I" visible="true" useFooter="false"/>
+              <field name="NOMEREG" label="Região" type="S" visible="true" useFooter="false"/>
+              <field name="DTNEG" label="Dt. neg" type="D" visible="true" useFooter="false"/>
+              <field name="CATEGORIA" label="Categoria" type="S" visible="true" useFooter="false"/>
+              <field name="CODVEICULO" label="Cód. Veículo" type="I" visible="true" useFooter="false"/>
+              <field name="MARCAMODELO" label="Marca/Modelo" type="S" visible="true" useFooter="false"/>
+              <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+              <field name="ORDEMCARGA" label="Nº OC" type="I" visible="true" useFooter="false"/>
+              <field name="DISTANCIA" label="Distância" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+            </metadata>
+          </grid>
+        </container>
+      </container>
+    </container>
+  </level>
+</gadget>

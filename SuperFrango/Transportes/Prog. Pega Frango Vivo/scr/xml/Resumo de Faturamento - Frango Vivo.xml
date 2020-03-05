@@ -1,0 +1,70 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="data" description="Período" metadata="datePeriod" required="true" keep-last="true" keep-date="false"/>
+  </prompt-parameters>
+  <local-vars>
+    <var id="v_Dataini">
+      <expression type="sql" data-source="MGEDS"><![CDATA[SELECT  to_char(:data.ini,'dd/mm/yyyy')FROM dual]]></expression>
+    </var>
+    <var id="v_Datafin">
+      <expression type="sql" data-source="MGEDS"><![CDATA[SELECT  to_char(:data.fin,'dd/mm/yyyy')FROM dual]]></expression>
+    </var>
+  </local-vars>
+  <level id="lvl_xr86lt" description="Principal">
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_xr86lu">
+        <title><![CDATA[Período de $v_Dataini à $v_Datafin]]></title>
+        <expression type="sql" data-source="MGEDS"><![CDATA[Select tb1.*, totalfrete - totabast As totliquido  From (Select tb.codparctransp,               (Select nomeparc                  From tgfpar p1                 Where codparc = tb.codparctransp) As nomeparc,               tb.codveiculo,               tb.marcamodelo,               ad_get.formataplaca(tb.placa) As placa,               Round(Sum(viagem), 2) qtdviagens,               Round(Sum(qtdneg), 2) totalaves,               Round(Sum(peso), 2) pesototal,               Round(Sum(distancia), 2) kmtotal,               Round(Sum(vlrnota), 2) totalnotas,               Round(Sum(vlrfrete), 2) totalfrete,               Round(Sum(peso) / dias, 2) As mediapesodia,               Round(Sum(distancia) / dias, 2) As mediakmdia,               Round(Sum(peso) / Sum(viagem), 2) As mediapesovg,               Round(Sum(distancia) / Sum(viagem), 2) As mediakmvg,               Nvl((Select Sum(vlrnota)                     From tgfcab c1                    Where c1.codtipoper In (266, 267, 269)                      And c1.dtneg Between :data.ini And :data.fin                      And c1.codveiculo = tb.codveiculo                      And c1.statusnota = 'L'), 0) totabast          From (Select c.codparctransp,                       c.codveiculo,                       v.marcamodelo,                       v.placa,                       1 As viagem,                       PEG.QTDAVESABAT qtdneg,                       peg.pesoliq peso, --c.peso,                       c.ad_km As distancia,                       c.vlrnota,                       c.vlrfrete,                       Case                          When To_Date(:data.fin, 'dd/mm/yyyy') - To_Date(:data.ini, 'dd/mm/yyyy') = 0 Then                           1                          Else                           To_Date(:data.fin, 'dd/mm/yyyy') - To_Date(:data.ini, 'dd/mm/yyyy')                        End dias                  From tgfcab c                  Join tgfvei v On c.codveiculo = v.codveiculo                  Join tgfite i On c.nunota = i.nunota                  Join tsiemp e On c.codemp = e.codmun                  Join tgfpar p On c.codparc = p.codparc			Join tgfpeg peg on c.nunota = peg.nunota                 Where c.tipmov = 'V'                   And c.statusnota = 'L'			 And peg.cancelado = 'N'                   And c.codtipoper = (Select codtipoper                                         From ad_centparamtop                                        Where nupar = 7)                   And c.dtneg Between :data.ini And :data.fin) Tb         Group By tb.codparctransp, tb.codveiculo, tb.marcamodelo, tb.placa, tb.dias) Tb1order by codparctransp]]></expression>
+        <metadata>
+          <field name="CODPARCTRANSP" label="Cód. Parc. Transp." type="I" visible="true" useFooter="false"/>
+          <field name="NOMEPARC" label="Nome Parc. Transp" type="S" visible="true" useFooter="false"/>
+          <field name="CODVEICULO" label="Cód. Veículo" type="I" visible="true" useFooter="false"/>
+          <field name="MARCAMODELO" label="Marca/Modelo" type="S" visible="true" useFooter="false"/>
+          <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+          <field name="QTDVIAGENS" label="Qtd. Viagens" type="I" visible="true" useFooter="false" mask="#.##0"/>
+          <field name="TOTALAVES" label="Total Aves" type="F" visible="true" useFooter="true" mask="#.##0"/>
+          <field name="PESOTOTAL" label="Total Kg" type="F" visible="true" useFooter="true" mask="#.##0"/>
+          <field name="KMTOTAL" label="Total Km" type="F" visible="true" useFooter="true" mask="#.##0"/>
+          <field name="TOTALNOTAS" label="Vlr Total Notas" type="F" visible="true" useFooter="true" mask="R$ #.##0,00"/>
+          <field name="TOTALFRETE" label="Vlr. Total Frete" type="F" visible="true" useFooter="true" mask="R$ #.##0,00"/>
+          <field name="MEDIAPESODIA" label="Média Kg/Dia" type="F" visible="true" useFooter="false" mask="#.##0"/>
+          <field name="MEDIAKMDIA" label="Média Km/Dia" type="F" visible="true" useFooter="false" mask="#.##0"/>
+          <field name="MEDIAPESOVG" label="Média Kg/Viagem" type="F" visible="true" useFooter="false" mask="#.##0"/>
+          <field name="MEDIAKMVG" label="Média Km/Viagem" type="F" visible="true" useFooter="false" mask="#.##0"/>
+          <field name="TOTABAST" label="Total Abastecimento" type="F" visible="true" useFooter="true" mask="R$ #.##0,00"/>
+          <field name="TOTLIQUIDO" label="Total L¿quido" type="F" visible="true" useFooter="true" mask="#.##0,00">
+            <formatter greaterThan="0"><![CDATA[<span style="color:#0000FF">$VALUE</span>]]></formatter>
+            <formatter lessThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+          </field>
+        </metadata>
+        <on-click navigate-to="lvl_n76x3z">
+          <param id="codparctransp">$CODPARCTRANSP</param>
+        </on-click>
+      </grid>
+    </container>
+  </level>
+  <level id="lvl_n76x3z" description="detPedido">
+    <args>
+      <arg id="codparctransp" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_n76x30">
+        <expression type="sql" data-source="MGEDS"><![CDATA[Select cab.nunota, 	cab.dtfatur,  	CAB.CODPARCTRANSP,       TRANS.RAZAOSOCIAL,       CAB.CODVEICULO,       TRANS.PLACA,	cab.codparc,	ad_get.nome_parceiro(cab.codparc, 'fantasia') nomeparc,       CAB.AD_KM KM,       CAB.VLRFRETE,       PEG.PESOLIQ,       PEG.QTDAVESABAT  From TGFCAB CAB, VGFTRANSVEI_SF TRANS, TGFPEG PEG, TGFITE ITE Where CAB.CODPARCTRANSP = TRANS.CODPARC   And CAB.CODVEICULO = TRANS.CODVEICULO   And CAB.NUNOTA = PEG.NUNOTA   And CAB.NUNOTA = ITE.NUNOTA   And ((CAB.DTFATUR >= :data.ini) And (CAB.DTFATUR <= :data.fin) And (CAB.STATUSNOTA = 'L') And       (ITE.SEQUENCIA > 0) And (CAB.CODTIPOPER = 27) And (CAB.ORDEMCARGA <> 0) And       PEG.CANCELADO = 'N') 	And cab.codparctransp = :codparctransporder by dtfatur ]]></expression>
+        <metadata>
+          <field name="NUNOTA" label="Nro Único" type="I" visible="true" useFooter="false"/>
+          <field name="DTFATUR" label="Dt. FAtur" type="D" visible="true" useFooter="false"/>
+          <field name="CODPARCTRANSP" label="Parc Transp" type="I" visible="true" useFooter="false"/>
+          <field name="RAZAOSOCIAL" label="Razão Transp" type="S" visible="true" useFooter="false"/>
+          <field name="CODVEICULO" label="Cód. Veículo" type="I" visible="true" useFooter="false"/>
+          <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+          <field name="CODPARC" label="Parceiro" type="I" visible="true" useFooter="false"/>
+          <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+          <field name="KM" label="KM" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+          <field name="VLRFRETE" label="Vlr. Frete" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+          <field name="PESOLIQ" label="Peso" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+          <field name="QTDAVESABAT" label="Qtd. Abat." type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+        </metadata>
+      </grid>
+    </container>
+  </level>
+</gadget>

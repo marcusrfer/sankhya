@@ -1,0 +1,80 @@
+<gadget refresh-time="900000">
+  <prompt-parameters>
+    <parameter id="Periodo" description="Periodo" metadata="datePeriod" required="true" keep-last="true" keep-date="true"/>
+  </prompt-parameters>
+  <local-vars>
+    <var id="v_UsuLogado">
+      <expression type="sql" data-source="MGEDS"><![CDATA[SELECT stp_get_codusulogado() FROM  dual
+
+
+
+]]></expression>
+    </var>
+  </local-vars>
+  <level id="lvl_283l3h" description="Principal">
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="734">
+        <container orientacao="V" tamanhoRelativo="119">
+          <simple-value id="svl_adjausp" tamTexto="12">
+            <value-expression><![CDATA[<span style='color: #FFFFFF; background-color: #81F781;'><b>1 dia de Atraso</b></span>
+<span style='color: #FFFFFF; background-color: #F2F5A9;'><b>entre 1 e 4 dias de Atraso</b></span>
+<span style='color: #FFFFFF; background-color: #F5A9A9;'><b>+4 dia de Atraso</b></span>
+<span>* Clique sobre o n&uacutemero &uacutenico para visualizar o registro de origem</span>]]></value-expression>
+          </simple-value>
+        </container>
+        <container orientacao="V" tamanhoRelativo="980">
+          <grid id="grd_283l3j" entityName="LiberacaoLimite" multiplaSelecao="S">
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select l.nuchave, l.tabela, ad_pkg_lib.nro_documento(tabela, nuchave) as nrodoc,
+'<a title = "Abrir Tela" target="_parent" href="'||ad_fnc_urlskw(
+(case when l.tabela = 'AD_MULCONT' then 'AD_MULCONTROL' else l.tabela end), l.nuchave)||'">'||l.nuchave||'</a>' as nrounico, i.descrinstancia as origem,
+ l.evento||' - '||e.descricao descricao,
+ --d.ordemcarga,
+ '<span style="color:blue">'||trunc(dhsolicit)||'</span>' dtsolicit ,
+ us.codusu||' - '||us.nomeusu solicitante,
+ ul.codusu||' - '||ul.nomeusu liberador,
+ l.vlratual,
+ l.observacao,
+trunc(sysdate) - trunc(dhsolicit) dias_atraso,
+ case
+ when trunc(sysdate) - trunc(dhsolicit) <= 1 then '#81F781'
+ when trunc(sysdate) - trunc(dhsolicit) between 1 and 3 then '#F2F5A9'
+ when trunc(sysdate) - trunc(dhsolicit) > 4 then '#F5A9A9' end as BKCOLOR
+From tsilib l
+ Inner Join tgflibeve e On l.evento = e.nuevento
+ Inner Join tsiusu us On l.codususolicit = us.codusu
+ Inner Join tsiusu ul On l.codusulib = ul.codusu
+ Inner join tddins i on i.nometab = (case when l.tabela = 'AD_MULCONT' then 'AD_MULCONTROL' else l.tabela end) and i.nuinstanciapai is null
+-- Inner join tddins i on i.nometab = l.tabela and i.nuinstanciapai is null
+-- Inner join ad_tsfdef d on d.nudef = l.nuchave
+Where  l.dhlib is null
+ and nvl(reprovado,'N') <> 'S'
+ and trunc(dhsolicit) between :periodo.ini and :periodo.fin
+ and (l.codusulib  = :v_usulogado
+ or :v_usulogado in (0,216)
+ or :v_usulogado in (select codususupl
+                     from tsisupl sp
+                    where sp.codusu = l.codusulib
+                    and trunc(sysdate) <= sp.dtfim)
+)
+order by dhsolicit]]></expression>
+            <metadata>
+              <field name="NUCHAVE" label="Nro Unico" type="S" visible="true" useFooter="false"/>
+              <field name="TABELA" label="TABELA" type="S" visible="true" useFooter="false"/>
+              <field name="NRODOC" label="Nro. Documento" type="I" visible="true" useFooter="false"/>
+              <field name="NROUNICO" label="Nro. Único" type="S" visible="true" useFooter="false"/>
+              <field name="ORIGEM" label="Origem" type="S" visible="true" useFooter="false"/>
+              <field name="DESCRICAO" label="Descricao" type="S" visible="true" useFooter="false"/>
+              <field name="DTSOLICIT" label="Dt. Solicitacao" type="D" visible="true" useFooter="false"/>
+              <field name="SOLICITANTE" label="Solicitante" type="S" visible="true" useFooter="false"/>
+              <field name="LIBERADOR" label="Liberador" type="S" visible="true" useFooter="false"/>
+              <field name="VLRATUAL" label="Vlr. Solicitado" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+              <field name="OBSERVACAO" label="Observacao" type="S" visible="true" useFooter="false"/>
+              <field name="DIAS_ATRASO" label="Dias Atraso" type="I" visible="true" useFooter="false"/>
+              <field name="BKCOLOR" label="BKCOLOR" type="S" visible="true" useFooter="false"/>
+            </metadata>
+          </grid>
+        </container>
+      </container>
+    </container>
+  </level>
+</gadget>

@@ -1,0 +1,304 @@
+<gadget refresh-time="360000">
+  <prompt-parameters>
+    <parameter id="codemp" description="Empresa" metadata="multiList:Text" listType="sql" required="true" keep-last="false" keep-date="false">
+      <expression type="SQL"><![CDATA[select cab.codemp as VALUE,emp.codemp||' - '||Initcap(emp.NOMEFANTASIA) as LABELfrom tgfcab cabjoin tsiemp emp oncab.codemp = emp.codempwhere cab.codtipoper in (173,1173)group by cab.codemp,emp.codemp||' - '||Initcap(emp.NOMEFANTASIA) order by cab.codemp]]></expression>
+    </parameter>
+    <parameter id="periodo" description="Período" metadata="datePeriod" required="true" keep-last="false" keep-date="false"/>
+  </prompt-parameters>
+  <local-vars>
+    <var id="DtIni">
+      <expression type="sql" data-source="MGEDS"><![CDATA[SELECT  :periodo.iniFROM dual]]></expression>
+    </var>
+    <var id="DtFin">
+      <expression type="sql" data-source="MGEDS"><![CDATA[SELECT  :periodo.fin	FROM dual]]></expression>
+    </var>
+    <var id="descrproj">
+      <expression type="sql" data-source="MGEDS"><![CDATA[select identificacao from tcsprj where codproj = :codproj]]></expression>
+    </var>
+    <var id="descrprod">
+      <expression type="sql" data-source="MGEDS"><![CDATA[select ad_get.descrproduto(:codprod) from dual]]></expression>
+    </var>
+    <var id="nomeparc">
+      <expression type="sql" data-source="MGEDS"><![CDATA[SELECT ad_get.nome_parceiro(:codparc,'fantasia') FROM dual]]></expression>
+    </var>
+  </local-vars>
+  <level id="lvl_ai5a0ft" description="Principal">
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="121">
+        <simple-value id="svl_ai5a0gj">
+          <value-expression><![CDATA[<h3>Período: $DtIni à $DtFin</h3><br>(somente notas)]]></value-expression>
+        </simple-value>
+      </container>
+      <container orientacao="H" tamanhoRelativo="2307">
+        <container orientacao="V" tamanhoRelativo="50">
+          <container orientacao="V" tamanhoRelativo="50">
+            <chart id="cht_a1dyh0e" type="column" nroColuna="10">
+              <title><![CDATA[Total por Serviço ]]></title>
+              <expression type="sql" data-source="MGEDS"><![CDATA[Select  /*+ RESULT_CACHE */ ite.codprod,  initcap(pro.descrprod) descrprod,  sum(ite.vlrtot) vlrtotFrom tgfcab cab join tgfite ite on ite.nunota = cab.nunota join tgfpro pro on ite.codprod = pro.codprod where cab.tipmov = 'C' and cab.codemp in :codemp and cab.dtneg between :periodo.ini and :periodo.fin and cab.statusnota = 'L' and ite.usoprod = 'S' and cab.codtipoper in (173,1173) and pro.codgrupoprod = 90020000 Group By ite.codprod,  initcap(pro.descrprod) order By 3 desc]]></expression>
+              <metadata>
+                <field name="CODPROD" label="Cód. Serviço" type="I" visible="true" useFooter="false"/>
+                <field name="DESCRPROD" label="Serviço" type="S" visible="true" useFooter="false"/>
+                <field name="VLRTOT" label="Valor" type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+              </metadata>
+              <horizontal-axis>
+                <category field="DESCRPROD" rotation="0" dropLabel="false">
+                  <initView value="first"/>
+                  <title>Serviço</title>
+                </category>
+              </horizontal-axis>
+              <vertical-axis>
+                <linear resultRotation="-90" vResizing="true">
+                  <mask/>
+                  <showStackLabels/>
+                  <title>Valor</title>
+                </linear>
+              </vertical-axis>
+              <series>
+                <serie type="column">
+                  <xField>$DESCRPROD</xField>
+                  <yField>$VLRTOT</yField>
+                  <display><![CDATA[Total por Serviço]]></display>
+                  <color>0x9966</color>
+                  <on-click navigate-to="lvl_ayj9dhf">
+                    <param id="codprod">$CODPROD</param>
+                  </on-click>
+                </serie>
+              </series>
+            </chart>
+          </container>
+          <container orientacao="V" tamanhoRelativo="50">
+            <chart id="cht_a1dyh1f" type="column" nroColuna="10">
+              <title><![CDATA[Total por Máquinas]]></title>
+              <expression type="sql" data-source="MGEDS"><![CDATA[With horas As (Select nunota, codvol, codmaq, Sum(tothoras) qtdneg, Sum(vlrunit * tothoras) vlrtot		From (Select a.nunota,								 a.nuapont,								 a.numcontrato,								 t.dtapont,								 a.codprod,								 a.codmaq,								 a.codvol,								 t.tothoras tothoras,								 ad_pkg_ahm.get_ultimo_valor(a.NumContrato, a.Codprod, a.codmaq, a.codvol, t.dtapont) vlrunit						From ad_tsfahmapd a						Join ad_tsfahmtad t							On a.nuapont = t.nuapont						 And a.numcontrato = t.numcontrato						 And a.codprod = t.codprod						 And a.codmaq = t.codmaq						 And a.codvol = t.codvol						 And a.dtapont = t.dtapont)	 Group By codvol, nunota, codmaq)Select /*+ RESULT_CACHE */ nvl(h.codmaq,0) codmaq,  ad_pkg_ahm.descrmaquina(h.codmaq) descrmaq,  sum(ite.vlrtot) vlrtot ---sum(Nvl(h.vlrtot, ite.vlrtot)) vlrtot	From tgfcab cab	Join tgfite ite		On ite.nunota = cab.nunota	Join tgfpro pro		On ite.codprod = pro.codprod	Join tgfvar Var		On cab.nunota = var.nunota	 And ite.sequencia = var.Sequencia	Left Join horas h		On var.Nunotaorig = h.nunota Where ite.codemp in :codemp	 And cab.tipmov = 'C'	 And cab.statusnota = 'L'	 And ite.usoprod = 'S'	 And cab.codtipoper In (173, 1173)	 And pro.codgrupoprod = 90020000	 And cab.dtneg Between :periodo.ini And :periodo.finGroup By nvl(h.codmaq,0), ad_pkg_ahm.descrmaquina(h.codmaq)Order By 3 Desc]]></expression>
+              <metadata>
+                <field name="CODMAQ" label="CODMAQ" type="I" visible="true" useFooter="false"/>
+                <field name="DESCRMAQ" label="Máquina" type="S" visible="true" useFooter="false"/>
+                <field name="VLRTOT" label="Valor" type="F" visible="true" useFooter="false" mask="#,##0.00"/>
+              </metadata>
+              <bia-infos>
+                <bia-info id="bia_a4wfge8">
+                  <descr-gbi>teste</descr-gbi>
+                  <campo-valor>$VLRTOT</campo-valor>
+                  <campo-agrup>$DESCRMAQ</campo-agrup>
+                </bia-info>
+              </bia-infos>
+              <horizontal-axis>
+                <category field="DESCRMAQ" rotation="0" dropLabel="false">
+                  <initView value="first"/>
+                  <title>Máquinas</title>
+                </category>
+              </horizontal-axis>
+              <vertical-axis>
+                <linear resultRotation="-90" vResizing="true">
+                  <mask/>
+                  <title>Valor</title>
+                </linear>
+              </vertical-axis>
+              <series>
+                <serie type="column">
+                  <xField>$DESCRMAQ</xField>
+                  <yField>$VLRTOT</yField>
+                  <display><![CDATA[Valor por Máquinas]]></display>
+                  <color>0x6699</color>
+                  <on-click navigate-to="lvl_ayj9dit">
+                    <param id="codmaq">$CODMAQ</param>
+                    <param id="descrmaq">$DESCRMAQ</param>
+                  </on-click>
+                </serie>
+              </series>
+            </chart>
+          </container>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <container orientacao="V" tamanhoRelativo="50">
+            <chart id="cht_a1dyh58" type="pizza">
+              <title><![CDATA[Total por Paceiro]]></title>
+              <expression type="sql" data-source="MGEDS"><![CDATA[Select /*+ RESULT_CACHE */ cab.codparc, par.nomeparc, Sum(ite.vlrtot) vlrtot	From tgfcab cab	Join tgfite ite		On ite.nunota = cab.nunota	Join tgfpro pro		On ite.codprod = pro.codprod	Join tgfpar par On cab.codparc = par.codparc Where cab.tipmov = 'C'	 And cab.codemp in :codemp	 And cab.dtneg Between :periodo.ini And :periodo.fin	 And cab.statusnota = 'L'	 And ite.usoprod = 'S'	 And cab.codtipoper In (173, 1173)	 And pro.codgrupoprod = 90020000 Group By cab.codparc, par.nomeparc Order By 3 Desc Fetch First 10 Rows Only]]></expression>
+              <metadata>
+                <field name="CODPARC" label="Cód." type="I" visible="true" useFooter="false"/>
+                <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+                <field name="VLRTOT" label="Valor" type="F" visible="true" useFooter="false" mask="#,##0.00"/>
+              </metadata>
+              <series>
+                <serie type="pizza">
+                  <field>VLRTOT</field>
+                  <nameField>NOMEPARC</nameField>
+                  <on-click navigate-to="lvl_ayj9dll">
+                    <param id="codparc">$CODPARC</param>
+                  </on-click>
+                </serie>
+              </series>
+            </chart>
+          </container>
+          <container orientacao="V" tamanhoRelativo="50">
+            <chart id="cht_a1dyh2g" type="pizza">
+              <title><![CDATA[Total por Projeto]]></title>
+              <expression type="sql" data-source="MGEDS"><![CDATA[Select /*+ RESULT_CACHE */ Nvl(rat.codproj, cab.codproj) codproj,			 ad_get.descrProjeto(Nvl(rat.codproj, cab.codproj)) descrproj,			 round(Sum(ite.vlrtot * Nvl( (rat.percrateio/100) ,1) ),2) vlrtot	From tgfcab cab	Join tgfite ite On ite.nunota = cab.nunota	Join tgfpro pro On ite.codprod = pro.codprod	Left Join tgfrat rat On cab.nunota = rat.nufin	 And rat.origem = 'E' Where cab.tipmov = 'C'	 And cab.codemp in :codemp	 And cab.dtneg Between :periodo.ini And :periodo.fin	 And cab.statusnota = 'L'	 And ite.usoprod = 'S'	 And cab.codtipoper In (173, 1173)	 And pro.codgrupoprod = 90020000 Group By Nvl(rat.codproj, cab.codproj), ad_get.descrProjeto(Nvl(rat.codproj, cab.codproj)) Fetch First 10 Rows Only]]></expression>
+              <metadata>
+                <field name="CODPROJ" label="Cód. Projeto" type="I" visible="true" useFooter="false"/>
+                <field name="DESCRPROJ" label="Descrição" type="S" visible="true" useFooter="false"/>
+                <field name="VLRTOT" label="Vlr. Total" type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+              </metadata>
+              <series>
+                <serie type="pizza">
+                  <field>VLRTOT</field>
+                  <nameField>DESCRPROJ</nameField>
+                  <on-click navigate-to="lvl_ayj9dmr">
+                    <param id="codproj">$CODPROJ</param>
+                  </on-click>
+                </serie>
+              </series>
+            </chart>
+          </container>
+        </container>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_ayj9dhf" description="detServ">
+    <args>
+      <arg id="codprod" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_ayj9dhg" tamTexto="12">
+        <title><![CDATA[<h1>:codprod - $descrprod</h1><p>$DtIni a $DtFin]]></title>
+        <expression type="sql" data-source="MGEDS"><![CDATA[With horas As (Select nunota, codvol, Sum(tothoras) qtdneg    From (Select a.nunota,                 t.nuapont,                 t.numcontrato,                 t.dtapont,                 t.codprod,                 t.codmaq,                 t.codvol,                 t.tothoras tothoras,                 ad_pkg_ahm.get_ultimo_valor(t.NumContrato, t.Codprod, t.codmaq, t.codvol, t.dtapont) vlrunit            From ad_tsfahmapd a            Join ad_tsfahmtad t              On a.nuapont = t.nuapont             And a.numcontrato = t.numcontrato             And a.codprod = t.codprod             And a.codmaq = t.codmaq             And a.codvol = t.codvol             And a.dtapont = t.dtapont           Group By a.nunota,                    t.nuapont,                    t.numcontrato,                    t.dtapont,                    t.codprod,                    t.codmaq,                    t.codvol,                    t.tothoras)   Group By codvol, nunota)Select /*+ RESULT_CACHE */ cab.codemp, cab.nunota, ite.sequencia, var.Nunotaorig, var.Sequenciaorig, cab.numnota, cab.numcontrato, ite.codprod, Case    When (Select temmed            From tcscon c           Where c.numcontrato = cab.numcontrato             And cab.numcontrato > 0) = 'S' Then     'Sim'    Else     'Não'  End temmed, cab.tipmov, cab.codtipoper, ad_get.nometop(cab.codtipoper) descroper, cab.dtneg, cab.codparc, par.nomeparc, cab.numcontrato, ite.qtdneg, -- Nvl(h.qtdneg, ite.qtdneg) qtdneg, ite.codvol, --Nvl(h.codvol, ite.codvol) codvol, ite.vlrtot, Case    When (Select temmed            From tcscon c           Where c.numcontrato = cab.numcontrato             And cab.numcontrato > 0) = 'S' Then     '#3333FF'  End As FGCOLOR  From tgfcab cab  Join tgfite ite on ite.nunota = cab.nunota  Join tgfpar par On cab.codparc = par.codparc  Join tgfpro pro On ite.codprod = pro.codprod  Join tgfvar Var On cab.nunota = var.nunota   And ite.sequencia = var.Sequencia  Left Join horas h On var.Nunotaorig = h.nunota Where ite.Codprod = :codprod   And ite.codemp In :codemp   And cab.tipmov = 'C'   And cab.statusnota = 'L'   And ite.usoprod = 'S'   And cab.codtipoper In (173, 1173)   And pro.codgrupoprod = 90020000   And cab.dtneg Between :periodo.ini And :periodo.fin Order By cab.dtneg]]></expression>
+        <metadata>
+          <field name="CODEMP" label="Cód. Empresa" type="I" visible="true" useFooter="false"/>
+          <field name="NUNOTA" label="Nro Único" type="I" visible="true" useFooter="false"/>
+          <field name="SEQUENCIA" label="SEQUENCIA" type="I" visible="false" useFooter="false"/>
+          <field name="NUNOTAORIG" label="NUNOTAORIG" type="I" visible="false" useFooter="false"/>
+          <field name="SEQUENCIAORIG" label="SEQUENCIAORIG" type="I" visible="false" useFooter="false"/>
+          <field name="NUMNOTA" label="Nro. Nota" type="I" visible="true" useFooter="false"/>
+          <field name="NUMCONTRATO" label="Nro. Contrato" type="I" visible="true" useFooter="false"/>
+          <field name="CODPROD" label="CODPROD" type="I" visible="false" useFooter="false"/>
+          <field name="TEMMED" label="Apontamento" type="S" visible="true" useFooter="false"/>
+          <field name="TIPMOV" label="Tipo Movimento" type="S" visible="false" useFooter="false"/>
+          <field name="CODTIPOPER" label="Top" type="I" visible="true" useFooter="false"/>
+          <field name="DESCROPER" label="Descrição Top" type="S" visible="true" useFooter="false"/>
+          <field name="DTNEG" label="Dt. Neg" type="D" visible="true" useFooter="false"/>
+          <field name="CODPARC" label="Cód. Parceiro" type="I" visible="true" useFooter="false"/>
+          <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+          <field name="QTDNEG" label="Qtd." type="I" visible="true" useFooter="SUM" mask="#.##0"/>
+          <field name="CODVOL" label="Un" type="S" visible="true" useFooter="false"/>
+          <field name="VLRTOT" label="Vlr. Serviço" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+          <field name="FGCOLOR" label="FGCOLOR" type="S" visible="true" useFooter="false"/>
+        </metadata>
+        <on-click-launcher resource-id="br.com.sankhya.com.mov.CentralNotas">
+          <NUNOTA>$NUNOTA</NUNOTA>
+        </on-click-launcher>
+      </grid>
+    </container>
+  </level>
+  <level id="lvl_ayj9dit" description="detMaq">
+    <args>
+      <arg id="codmaq" type="integer"/>
+      <arg id="descrmaq" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_ayj9diu">
+        <title><![CDATA[<h1>:codmaq - :descrmaq</h1><p>$DtIni a $DtFin]]></title>
+        <expression type="sql" data-source="MGEDS"><![CDATA[With horas As (Select nuapont, nunota, codvol, codmaq, Id, Sum(tothoras) qtdneg, Sum(vlrunit * tothoras) vlrtot    From (Select a.nunota,                 a.nuapont,                 a.numcontrato,                 t.dtapont,                 a.codprod,                 a.codmaq,                 m.id,                 a.codvol,                 t.tothoras tothoras,                 ad_pkg_ahm.get_ultimo_valor(a.NumContrato, a.Codprod, a.codmaq, a.codvol, t.dtapont) vlrunit            From ad_tsfahmapd a            Join ad_tsfahmmaq m              On a.nuapont = m.nuapont             And a.nuseqmaq = m.nuseqmaq            Join ad_tsfahmtad t              On a.nuapont = t.nuapont             And a.numcontrato = t.numcontrato             And a.codprod = t.codprod             And a.codmaq = t.codmaq             And a.codvol = t.codvol             And a.dtapont = t.dtapont)   Group By nuapont, codvol, nunota, codmaq, Id)Select /*+ RESULT_CACHE */ cab.codemp, Nvl(h.codmaq, 0) codmaq, ad_pkg_ahm.descrmaquina(h.codmaq) descrmaq, cab.nunota, cab.numnota, cab.numcontrato, h.nuapont, h.codmaq, h.id, ite.codprod, pro.descrprod, cab.codparc, ad_get.Nome_Parceiro(cab.codparc, 'fantasia') nomeparc, cab.codtipoper, ad_get.Nometop(cab.codtipoper) descroper, cab.dtneg, ite.qtdneg, --h.qtdneg, ite.codvol, --h.codvol, ite.vlrtot --Nvl(h.vlrtot, ite.vlrtot) vlrtot  From tgfcab cab  Join tgfite ite    On ite.nunota = cab.nunota  Join tgfpro pro    On ite.codprod = pro.codprod  Join tgfvar Var    On cab.nunota = var.nunota   And ite.sequencia = var.Sequencia  Left Join horas h    On var.Nunotaorig = h.nunota Where ite.codemp In :codemp   And Nvl(h.codmaq, 0) = :codmaq   And cab.tipmov = 'C'   And cab.statusnota = 'L'   And ite.usoprod = 'S'   And cab.codtipoper In (173, 1173)   And pro.codgrupoprod = 90020000   And cab.dtneg Between :periodo.ini And :periodo.fin]]></expression>
+        <metadata>
+          <field name="CODEMP" label="Empresa" type="I" visible="true" useFooter="false"/>
+          <field name="CODMAQ" label="Cód. Maquina" type="I" visible="false" useFooter="false"/>
+          <field name="DESCRMAQ" label="Descr. Máquina" type="S" visible="false" useFooter="false"/>
+          <field name="NUNOTA" label="Nro Único" type="I" visible="true" useFooter="false"/>
+          <field name="NUMNOTA" label="NUMNOTA" type="I" visible="false" useFooter="false"/>
+          <field name="NUMCONTRATO" label="Nro. Contrato" type="I" visible="true" useFooter="false"/>
+          <field name="NUAPONT" label="Nro Apontamento" type="I" visible="true" useFooter="false"/>
+          <field name="ID" label="ID" type="S" visible="true" useFooter="false"/>
+          <field name="CODPROD" label="Cód. Produto" type="I" visible="true" useFooter="false"/>
+          <field name="DESCRPROD" label="Descr. Serviço" type="S" visible="true" useFooter="false"/>
+          <field name="CODPARC" label="Cód. Parceiro" type="I" visible="true" useFooter="false"/>
+          <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+          <field name="CODTIPOPER" label="Top" type="I" visible="false" useFooter="false"/>
+          <field name="DESCROPER" label="Descr. Operação" type="S" visible="false" useFooter="false"/>
+          <field name="DTNEG" label="Dt. Pedido" type="D" visible="true" useFooter="false" mask="DD/MM/YYYY"/>
+          <field name="QTDNEG" label="Qtd." type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+          <field name="CODVOL" label="Un. Medição" type="S" visible="true" useFooter="false"/>
+          <field name="VLRTOT" label="Vlr. Total" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+        </metadata>
+        <on-click-launcher resource-id="br.com.sankhya.com.mov.CentralNotas">
+          <NUNOTA>$NUNOTA</NUNOTA>
+        </on-click-launcher>
+      </grid>
+    </container>
+  </level>
+  <level id="lvl_ayj9dll" description="detParc">
+    <args>
+      <arg id="codparc" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_ayj9dlm">
+        <title><![CDATA[<h1>:codparc  - $nomeparc</h1><p>$DtIni a $DtFin]]></title>
+        <expression type="sql" data-source="MGEDS"><![CDATA[With horas As (Select nunota, nuapont, codmaq, Id,  codvol, Sum(tothoras) qtdneg, Sum(tothoras * vlrunit) vlrtot	From (Select a.nunota, a.nuapont, a.numcontrato, t.dtapont, a.codprod, a.codmaq, m.id,		a.codvol, t.tothoras tothoras, 	ad_pkg_ahm.get_ultimo_valor(a.NumContrato, a.Codprod, a.codmaq, a.codvol, t.dtapont) vlrunit		From ad_tsfahmapd a		Join ad_tsfahmmaq m		 On a.nuapont = m.nuapont And a.nuseqmaq = m.nuseqmaq		Join ad_tsfahmtad t		On a.nuapont = t.nuapont		 And a.numcontrato = t.numcontrato		 And a.codprod = t.codprod		 And a.codmaq = t.codmaq		 And a.codvol = t.codvol		 And a.dtapont = t.dtapont)	 Group By nunota, nuapont, codmaq, Id,  codvol)Select /*+ RESULT_CACHE */ cab.codemp,cab.nunota, ite.sequencia, var.Nunotaorig, var.Sequenciaorig, cab.numnota, cab.numcontrato,ite.codprod, Nvl(h.nuapont, 0) nuapont, cab.tipmov, cab.codtipoper, ad_get.nometop(cab.codtipoper) descroper,cab.dtneg, cab.codparc, par.nomeparc, nvl(h.codmaq, 0) codmaq, ad_pkg_ahm.Descrmaquina(Nvl(h.codmaq,0)) descrmaq,h.id, Nvl(h.qtdneg, ite.qtdneg) qtdneg, Nvl(h.codvol, ite.codvol) codvol, nvl(h.vlrtot,0) vlrtotapont, ite.vlrtot, case when h.nuapont > 0 and  nvl(h.vlrtot,0) != ite.vlrtot then '#FF0000' end as FGCOLOR	From tgfcab cab	Join tgfite ite On ite.nunota = cab.nunota	Join tgfpar par On cab.codparc = par.codparc	Join tgfpro pro On ite.codprod = pro.codprod	Join tgfvar Var On cab.nunota = var.nunota	 And ite.sequencia = var.Sequencia	Left Join horas h On var.Nunotaorig = h.nunota Where cab.codparc = :codparc	 And ite.codemp in :codemp	 And cab.tipmov = 'C'	 And cab.statusnota = 'L'	 And ite.usoprod = 'S'	 And cab.codtipoper In (173, 1173)	 And pro.codgrupoprod = 90020000	 And cab.dtneg Between :periodo.ini And :periodo.fin Order By cab.dtneg]]></expression>
+        <metadata>
+          <field name="CODEMP" label="Cód. Empresa" type="I" visible="false" useFooter="false"/>
+          <field name="NUNOTA" label="Nro Único" type="I" visible="true" useFooter="false"/>
+          <field name="SEQUENCIA" label="SEQUENCIA" type="I" visible="false" useFooter="false"/>
+          <field name="NUNOTAORIG" label="NUNOTAORIG" type="I" visible="false" useFooter="false"/>
+          <field name="SEQUENCIAORIG" label="SEQUENCIAORIG" type="I" visible="false" useFooter="false"/>
+          <field name="NUMNOTA" label="Nro Nota" type="I" visible="true" useFooter="false"/>
+          <field name="NUMCONTRATO" label="Nro Contrato" type="I" visible="true" useFooter="false"/>
+          <field name="CODPROD" label="Cód Produto" type="I" visible="true" useFooter="false"/>
+          <field name="NUAPONT" label="Nro Apontamento" type="I" visible="true" useFooter="false"/>
+          <field name="TIPMOV" label="TIPMOV" type="S" visible="false" useFooter="false"/>
+          <field name="CODTIPOPER" label="Top" type="I" visible="true" useFooter="false"/>
+          <field name="DESCROPER" label="Descrição Operação" type="S" visible="true" useFooter="false"/>
+          <field name="DTNEG" label="Dt. Nota" type="D" visible="true" useFooter="false" mask="DD/MM/YYYY"/>
+          <field name="CODPARC" label="Cód. Parceiro" type="I" visible="false" useFooter="false"/>
+          <field name="NOMEPARC" label="NOMEPARC" type="S" visible="false" useFooter="false"/>
+          <field name="CODMAQ" label="Cód. Máquina" type="I" visible="true" useFooter="false"/>
+          <field name="DESCRMAQ" label="Descr. Máquina" type="S" visible="true" useFooter="false"/>
+          <field name="ID" label="ID" type="S" visible="true" useFooter="false"/>
+          <field name="QTDNEG" label="Qtd." type="F" visible="true" useFooter="SUM" mask="#.##0"/>
+          <field name="CODVOL" label="Un." type="S" visible="true" useFooter="false"/>
+          <field name="VLRTOTAPONT" label="VLRTOTAPONT" type="F" visible="false" useFooter="false" mask="[object Object]"/>
+          <field name="VLRTOT" label="Vlr. Total" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+          <field name="FGCOLOR" label="FGCOLOR" type="S" visible="true" useFooter="false"/>
+        </metadata>
+        <on-click-launcher resource-id="br.com.sankhya.com.mov.CentralNotas">
+          <NUNOTA>$NUNOTA</NUNOTA>
+        </on-click-launcher>
+      </grid>
+    </container>
+  </level>
+  <level id="lvl_ayj9dmr" description="detPrj">
+    <args>
+      <arg id="codproj" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_ayj9dms">
+        <title><![CDATA[<h1>:codproj - $descrproj</h1><p>$DtIni a $DtFin]]></title>
+        <expression type="sql" data-source="MGEDS"><![CDATA[With horas As (Select nunota, nuapont, codmaq, Id,  codvol, Sum(tothoras) qtdneg, Sum(tothoras * vlrunit) vlrtot  From (Select a.nunota, a.nuapont, a.numcontrato, t.dtapont, a.codprod, a.codmaq, m.id,    a.codvol, t.tothoras tothoras,   ad_pkg_ahm.get_ultimo_valor(a.NumContrato, a.Codprod, a.codmaq, a.codvol, t.dtapont) vlrunit    From ad_tsfahmapd a    Join ad_tsfahmmaq m     On a.nuapont = m.nuapont And a.nuseqmaq = m.nuseqmaq    Join ad_tsfahmtad t    On a.nuapont = t.nuapont     And a.numcontrato = t.numcontrato     And a.codprod = t.codprod     And a.codmaq = t.codmaq     And a.codvol = t.codvol     And a.dtapont = t.dtapont)   Group By nunota, nuapont, codmaq, Id,  codvol)Select /*+ RESULT_CACHE */ cab.codemp,  cab.nunota,  ite.sequencia,  var.Nunotaorig,  var.Sequenciaorig, cab.numnota, cab.numcontrato, ite.codprod, Nvl(h.nuapont, 0) nuapont, cab.tipmov, cab.codtipoper, ad_get.nometop(cab.codtipoper) descroper, cab.dtneg, cab.codparc, par.nomeparc, nvl(h.codmaq, 0) codmaq, ad_pkg_ahm.Descrmaquina(Nvl(h.codmaq,0)) descrmaq, h.id, Nvl(h.qtdneg, ite.qtdneg) qtdneg, Nvl(h.codvol, ite.codvol) codvol,  Round(Nvl(h.vlrtot, 0) * (Nvl((rat.percrateio / 100), 1)), 2) vlrtotapont, Round(ite.vlrtot * (Nvl((rat.percrateio / 100), 1)), 2) vlrtotFrom tgfcab cab Join tgfite ite On ite.nunota = cab.nunota Join tgfpro pro On ite.codprod = pro.codprod Join tgfpar par On cab.codparc = par.codparc Join tgfvar Var On cab.nunota = var.nunota And ite.sequencia = var.Sequencia Left Join horas h On var.Nunotaorig = h.nunota Left Join tgfrat rat On cab.nunota = rat.nufin And rat.origem = 'E'Where cab.tipmov = 'C' And cab.codemp in :codemp And Nvl(rat.codproj, cab.codproj) = :codproj And cab.dtneg Between :periodo.ini And :periodo.fin And cab.statusnota = 'L' And ite.usoprod = 'S' And cab.codtipoper In (173, 1173) And pro.codgrupoprod = 90020000Order By cab.dtneg]]></expression>
+        <metadata>
+          <field name="CODEMP" label="CODEMP" type="I" visible="true" useFooter="false"/>
+          <field name="NUNOTA" label="Nro Único" type="I" visible="true" useFooter="false"/>
+          <field name="SEQUENCIA" label="Sequência" type="I" visible="false" useFooter="false"/>
+          <field name="NUNOTAORIG" label="NUNOTAORIG" type="I" visible="false" useFooter="false"/>
+          <field name="SEQUENCIAORIG" label="SEQUENCIAORIG" type="I" visible="false" useFooter="false"/>
+          <field name="NUMNOTA" label="Nro. Nota" type="I" visible="true" useFooter="false"/>
+          <field name="NUMCONTRATO" label="Nro. Contrato" type="I" visible="true" useFooter="false"/>
+          <field name="CODPROD" label="Cód. Serviço" type="I" visible="true" useFooter="null"/>
+          <field name="NUAPONT" label="Nro. Apontamento" type="I" visible="true" useFooter="false"/>
+          <field name="TIPMOV" label="TIPMOV" type="S" visible="false" useFooter="false"/>
+          <field name="CODTIPOPER" label="Top" type="I" visible="true" useFooter="false"/>
+          <field name="DESCROPER" label="Descr. Operação" type="S" visible="true" useFooter="false"/>
+          <field name="DTNEG" label="Dt. Neg" type="D" visible="true" useFooter="false"/>
+          <field name="CODPARC" label="Cód. Parceiro" type="I" visible="true" useFooter="false"/>
+          <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+          <field name="CODMAQ" label="Cód. Máquina" type="I" visible="true" useFooter="null"/>
+          <field name="DESCRMAQ" label="Descr. Máquina" type="S" visible="true" useFooter="false"/>
+          <field name="ID" label="ID" type="S" visible="true" useFooter="false"/>
+          <field name="QTDNEG" label="Qtd. Neg." type="F" visible="true" useFooter="false"/>
+          <field name="CODVOL" label="Un." type="S" visible="true" useFooter="false"/>
+          <field name="VLRTOTAPONT" label="VLRTOTAPONT" type="I" visible="false" useFooter="false"/>
+          <field name="VLRTOT" label="Vlr. Total" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+        </metadata>
+        <on-click-launcher resource-id="br.com.sankhya.com.mov.CentralNotas">
+          <NUNOTA>$NUNOTA</NUNOTA>
+        </on-click-launcher>
+      </grid>
+    </container>
+  </level>
+</gadget>

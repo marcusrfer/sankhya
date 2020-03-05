@@ -1,0 +1,77 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="codprod" description="Produto" metadata="entity:Produto@CODPROD" required="true" keep-last="true" keep-date="false"/>
+    <parameter id="dtref" description="Referência" metadata="date" required="true" keep-last="true" keep-date="false"/>
+    <parameter id="codune" description="Unid neg" metadata="entity:TSFUNE@CODUNE" required="true" keep-last="true" keep-date="false"/>
+  </prompt-parameters>
+  <level id="lvl_ax4jiiv" description="Principal">
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="100">
+        <simple-value id="svl_ax4jii2" tamTexto="12">
+          <expression type="sql" data-source="MGEDS"><![CDATA[Select codprod||' - '||descrprod as produto, to_date(to_char(:dtref),'DD/MM/YYYY') dtref from tgfpro where codprod = :codprod]]></expression>
+          <metadata>
+            <field name="PRODUTO" label="PRODUTO" type="S" visible="true" useFooter="false"/>
+            <field name="DTREF" label="DTREF" type="D" visible="true" useFooter="false"/>
+          </metadata>
+          <value-expression><![CDATA[<div style='text-align: center;'><span style='font-size: 18px;'><b>Demonstrativo Econômico do Exercício</b></span></div>Produto: <b>$PRODUTO</b>Referência: <b>$DTREF</b>]]></value-expression>
+        </simple-value>
+      </container>
+      <container orientacao="H" tamanhoRelativo="822">
+        <container orientacao="V" tamanhoRelativo="170">
+          <grid id="grd_ax4jii3">
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select Distinct  case when r.coduf = 0 then 'EX' else u.uf end as uf From dre_resindpad r Join tsiufs u On u.coduf = r.coduf  where r.dtref = :dtref and r.codprod = :codprodOrder By 1]]></expression>
+            <metadata>
+              <field name="UF" label="UF" type="S" visible="true" useFooter="false"/>
+            </metadata>
+            <refresh-details ui-list="grd_ax4jii4">
+              <param id="uf">$UF</param>
+            </refresh-details>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="1950">
+          <grid id="grd_ax4jii4">
+            <args>
+              <arg id="uf" type="text"/>
+            </args>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select *	From (Select e.SeqInd,  --case when p.totalizador = 'S' then '#8FBC8F' end as BKCOLOR, '('||e.codindpad||') '||LPad(e.descricao,(Length(e.descricao)+grau-1) , ' ') Descricao, u.Sigla, i.coduf, i.vlrindpad		 From dre_resindpad i		 Join dre_estrutura e On e.codindpad = i.codindpad		 Join dre_cadindpad p on i.codindpad = p.codindpad		 Join ad_tsfune u On i.codune = u.codune		 Join tsiufs f on f.coduf = i.coduf		Where i.Dtref = :dtref		And i.Codprod = :Codprod		and case when i.coduf = 0 then 'EX' else f.uf end = :uf			)Pivot(Sum(vlrindpad)	 For sigla In('ANP' As ANP,'BSB' As BSB,			'ENT' As ENT,			'EXT' As EXT,			'GCO' As GCO,			'GRE' As GRE,			'GYN' As GYN,			'MTZ' As MTZ,			'PA' As PA,			'UDI' As UDI)	) Order By seqind]]></expression>
+            <metadata>
+              <field name="SEQIND" label="SEQIND" type="I" visible="true" useFooter="false"/>
+              <field name="DESCRICAO" label="Descrição Indicador" type="S" visible="true" useFooter="false"/>
+              <field name="CODUF" label="CODUF" type="I" visible="false" useFooter="false"/>
+              <field name="ANP" label="ANP" type="F" visible="true" useFooter="false" mask="#.##0,0000">
+                <formatter lessThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+              </field>
+              <field name="BSB" label="BSB" type="F" visible="true" useFooter="false" mask="#.##0,0000">
+                <formatter lessThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+              </field>
+              <field name="ENT" label="ENT" type="F" visible="true" useFooter="false" mask="#.##0,0000">
+                <formatter lessThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+              </field>
+              <field name="EXT" label="EXT" type="F" visible="true" useFooter="false" mask="#.##0,0000">
+                <formatter lessThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+              </field>
+              <field name="GCO" label="GCO" type="F" visible="true" useFooter="false" mask="#.##0,0000">
+                <formatter lessThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+              </field>
+              <field name="GRE" label="GRE" type="F" visible="true" useFooter="false" mask="#.##0,0000">
+                <formatter lessThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+              </field>
+              <field name="GYN" label="GYN" type="F" visible="true" useFooter="false" mask="#.##0,0000">
+                <formatter lessThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+              </field>
+              <field name="MTZ" label="MTZ" type="F" visible="true" useFooter="false" mask="#.##0,0000">
+                <formatter lessThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+              </field>
+              <field name="PA" label="PA" type="F" visible="true" useFooter="false" mask="#.##0,0000">
+                <formatter lessThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+              </field>
+              <field name="UDI" label="UDI" type="F" visible="true" useFooter="false" mask="#.##0,0000">
+                <formatter lessThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+              </field>
+            </metadata>
+          </grid>
+        </container>
+      </container>
+    </container>
+  </level>
+</gadget>

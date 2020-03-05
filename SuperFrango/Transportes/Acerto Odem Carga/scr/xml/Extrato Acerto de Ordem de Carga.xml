@@ -1,0 +1,199 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="NUCHAVE" description="Nro Unico" metadata="entity:Financeiro@NUFIN" required="false" keep-last="false" keep-date="false"/>
+  </prompt-parameters>
+  <local-vars>
+    <var id="nuAcerto">
+      <expression type="sql" data-source="MGEDS"><![CDATA[SELECT NUCOMPENS
+FROM TGFFIN
+WHERE NUFIN = :NUCHAVE]]></expression>
+    </var>
+    <var id="CODPARC">
+      <expression type="sql" data-source="MGEDS"><![CDATA[SELECT CODPARC 
+ FROM TGFFIN
+WHERE NUFIN = :NUCHAVE]]></expression>
+    </var>
+    <var id="DTNEG">
+      <expression type="sql" data-source="MGEDS"><![CDATA[SELECT DTNEG
+ FROM TGFFIN
+WHERE NUFIN = :NUCHAVE
+
+
+
+
+
+]]></expression>
+    </var>
+  </local-vars>
+  <level id="lvl_aqz1cb5" description="Principal">
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="390">
+        <simple-value id="svl_aqz1ccb" tamTexto="12">
+          <args>
+            <arg id="NROUNICO" type="integer"/>
+          </args>
+          <expression type="sql" data-source="MGEDS"><![CDATA[Select Distinct (NUACERTO)  acerto,
+TO_DATE(DHALTER) DTALTER ,
+PAR.CODPARC ,
+PAR.NOMEPARC
+	From TGFFRE FRE, TGFFIN FIN, TGFPAR PAR
+ Where (FRE.TIPACERTO Is Null Or FRE.TIPACERTO = 'F')
+	 And FRE.NUFIN = FIN.NUFIN
+	 And FIN.CODPARC = PAR.CODPARC
+	 And FRE.NUACERTO = :NuAcerto
+ Order By 1 Desc]]></expression>
+          <metadata>
+            <field name="ACERTO" label="Nro Acerto" type="I" visible="true" useFooter="false"/>
+            <field name="DTALTER" label="Dt. Acerto" type="D" visible="true" useFooter="false" mask="DD/MM/YYYY"/>
+            <field name="CODPARC" label="Cod. Parceiro" type="I" visible="true" useFooter="false"/>
+            <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+          </metadata>
+          <value-expression><![CDATA[Numero do Acerto: $ACERTO
+Data do Acerto: $DTALTER
+Parceiro: $NOMEPARC]]></value-expression>
+        </simple-value>
+      </container>
+      <container orientacao="V" tamanhoRelativo="1789">
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_aqz1cb6" multiplaSelecao="N">
+            <title><![CDATA[Lancamentos de Origem]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select 
+TABELA as TABELA,
+TIPO AS TIPO, 
+ NROUNICO,
+ NUACORDO AS NUACORDO,  
+ CODPARC AS CODPARC,  
+ NOMEPARC AS NOMEPARC, 
+ DTNEG AS DTNEG,
+ VALOR AS VALOR
+	From (
+	 /*Adiantamentos de frete*/
+	 Select 'TGFFIN' AS TABELA,'Adiantamentos de frete' As tipo, fin.nufin As nrounico, fin.NUCOMPENS As nuacordo,
+ fin.CODPARC,	par.nomeparc, fin.dtneg, fin.vlrdesdob*-1 As valor
+		 From VGFFIN FIN, TGFPAR PAR
+		Where FIN.CODPARC = PAR.CODPARC
+			And FIN.RECDESP = 1
+			And NUFIN In (Select NUFIN
+							From TGFFRE
+						Where NUACERTO = :NuAcerto
+						 And (TIPACERTO Is Null Or TIPACERTO = 'F'))
+			And (721 = 0 Or FIN.CODTIPOPER <> 721)
+	 Union All
+	 /*Abastecimentos*/
+	 Select 'TGFFIN','Abastecimentos', fin.nufin, fin.NUCOMPENS, fin.CODPARC, par.nomeparc, fin.dtneg, fin.vlrdesdob*-1
+		 From VGFFIN FIN, TGFPAR PAR
+		Where FIN.CODPARC = PAR.CODPARC
+			And FIN.RECDESP = 1
+			And FIN.NUFIN In (Select NUFIN
+								From TGFFRE
+							 Where NUACERTO = :NuAcerto
+							 And (TIPACERTO Is Null Or TIPACERTO = 'F'))
+			And FIN.CODTIPOPER = 721
+	 Union All
+	 /*Frete por OC*/
+	 Select 'TGFCAB', 'Fretes Contratados', CAB.NUNOTA, fre.nuacerto, ORD.CODPARCTRANSP, PAR.NOMEPARC, ORD.DTINIC, Sum(CAB.VLRFRETE)
+		 From TGFORD ORD, TGFPAR PAR, TGFVEI VEI, TGFCAB CAB, TGFTOP TPO, tgffre fre
+		Where ORD.ORDEMCARGA > 0
+			And ORD.SITUACAO = 'F'
+			And ORD.CODPARCTRANSP = PAR.CODPARC
+			And ORD.CODVEICULO = VEI.CODVEICULO
+			And VEI.PROPRIO = 'N'
+			And ORD.CODEMP = (Select Case When CODEMPOC Is Null Then CODEMP  Else CODEMPOC  End
+								From TGFEMP
+							Where CODEMP = CAB.CODEMP)
+			And CAB.ORDEMCARGA = ORD.ORDEMCARGA
+			And CAB.CODTIPOPER = TPO.CODTIPOPER
+			And CAB.DHTIPOPER = TPO.DHALTER
+			And CAB.STATUSNOTA = 'L'
+			And CAB.TIPMOV <> 'Q'
+			And TPO.CODMODDOC Not In (8, 57)
+			And FRE.NUNOTA = CAB.NUNOTA
+			And FRE.NUACERTO = :NuAcerto
+			And (FRE.TIPACERTO Is Null Or FRE.TIPACERTO = 'F')
+		Group By CAB.NUNOTA, fre.nuacerto, ORD.DTINIC, ORD.CODPARCTRANSP, PAR.NOMEPARC
+	 Union All
+	 Select 'TGFCAB', 'Fretes Pautados', cab.nunota,fre.nuacerto, CAB.CODPARCTRANSP, PAR.NOMEPARC, CAB.DTNEG, CAB.VLRNOTA*-1
+		 From TGFCAB CAB, TGFTOP TPO, TGFPAR PAR, TGFVEI VEI, TGFPAR CLI, TSICID CID, tgffre fre
+		Where CAB.STATUSNOTA = 'L'
+			And CAB.CODPARCTRANSP = PAR.CODPARC
+			And CAB.CODVEICULO = VEI.CODVEICULO
+			And VEI.PROPRIO = 'N'
+			And CAB.CODTIPOPER = TPO.CODTIPOPER
+			And CAB.DHTIPOPER = TPO.DHALTER
+			And TPO.CODMODDOC In (8, 57)
+			And CAB.CODPARC = CLI.CODPARC
+			And CLI.CODCID = CID.CODCID
+			And FRE.NUNOTA = CAB.NUNOTA
+			And (FRE.TIPACERTO Is Null Or FRE.TIPACERTO = 'F')
+			And FRE.NUACERTO = :NuAcerto)
+ Order By tipo]]></expression>
+            <metadata>
+              <field name="TABELA" label="TABELA" type="S" visible="true" useFooter="false"/>
+              <field name="TIPO" label="Tipo" type="S" visible="true" useFooter="false"/>
+              <field name="NROUNICO" label="Nro Unico" type="I" visible="true" useFooter="false"/>
+              <field name="NUACORDO" label="Nro Acerto" type="I" visible="true" useFooter="false"/>
+              <field name="CODPARC" label="Cod Parceiro" type="I" visible="true" useFooter="false"/>
+              <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+              <field name="DTNEG" label="Dt. Negoc." type="D" visible="true" useFooter="false"/>
+              <field name="VALOR" label="Valor" type="F" visible="true" useFooter="true" mask="#.##0,00;-n"/>
+            </metadata>
+            <on-click navigate-to="lvl_argdibn">
+              <param id="NROUNICO">$NROUNICO</param>
+              <param id="TABELA">$TABELA</param>
+            </on-click>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_ass5p2g" multiplaSelecao="N">
+            <title><![CDATA[Adiantamentos Pendentes Vencidos]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select nufin, numnota, dtneg, dtvenc, historico, vlrdesdob
+ from tgffin f1
+where codparc = :CODPARC
+ and dhbaixa is null
+ and recdesp = 1
+ and dtvenc < :DTNEG
+ and codnat  in (9050100, 9053200)
+ and vlrdesdob <> 0]]></expression>
+            <metadata>
+              <field name="NUFIN" label="Nro Unico" type="I" visible="false" useFooter="false"/>
+              <field name="NUMNOTA" label="Nro Nota" type="I" visible="true" useFooter="false"/>
+              <field name="DTNEG" label="Dt. Negoc." type="D" visible="true" useFooter="false"/>
+              <field name="DTVENC" label="Dt. Vencimeto" type="D" visible="true" useFooter="false"/>
+              <field name="HISTORICO" label="Historico" type="S" visible="true" useFooter="false"/>
+              <field name="VLRDESDOB" label="Valor" type="F" visible="true" useFooter="true"/>
+            </metadata>
+          </grid>
+        </container>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_argdibn" description="detail">
+    <args>
+      <arg id="NROUNICO" type="integer"/>
+      <arg id="TABELA" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_argdibo" entityName="LiberacaoLimite" multiplaSelecao="S">
+        <expression type="sql" data-source="MGEDS"><![CDATA[SELECT distinct numnota, dtneg, top.descroper, nat.descrnat, dtvenc , vlrdesdob
+ FROM TGFFIN fin
+inner join tgftop top on fin.codtipoper = top.codtipoper
+inner join tgfnat nat on fin.codnat = nat.codnat
+WHERE NUFIN = :NROUNICO
+
+
+]]></expression>
+        <metadata>
+          <field name="NUMNOTA" label="Nro Nota" type="I" visible="true" useFooter="false"/>
+          <field name="DTNEG" label="Dt. Negocia¿¿o" type="D" visible="true" useFooter="false"/>
+          <field name="DESCROPER" label="Tipo de Opera¿¿o" type="S" visible="true" useFooter="false"/>
+          <field name="DESCRNAT" label="Natureza" type="S" visible="true" useFooter="false"/>
+          <field name="DTVENC" label="Dt. Vencimento" type="D" visible="true" useFooter="false"/>
+          <field name="VLRDESDOB" label="Valor" type="F" visible="true" useFooter="true" mask="R$ #.##0,00"/>
+        </metadata>
+        <on-click-launcher resource-id="br.com.sankhya.fin.cad.movimentacaoFinanceira">
+          <NUFIN>$NROUNICO</NUFIN>
+        </on-click-launcher>
+      </grid>
+    </container>
+  </level>
+</gadget>

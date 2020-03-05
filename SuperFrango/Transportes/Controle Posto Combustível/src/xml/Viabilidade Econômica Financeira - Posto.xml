@@ -1,0 +1,260 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="codemp" description="Empresa" metadata="entity:Empresa@CODEMP" required="true" keep-last="true" keep-date="false" order="0"/>
+    <parameter id="dtneg" description="Dt. Neg.:" metadata="datePeriod" required="true" keep-last="true" keep-date="false" order="1"/>
+  </prompt-parameters>
+  <local-vars>
+    <var id="descrprod">
+      <expression type="sql" data-source="MGEDS"><![CDATA[Select initcap(descrprod) from tgfpro where codprod = :codprod]]></expression>
+    </var>
+  </local-vars>
+  <level id="lvl_a3kisqv" description="Principal">
+    <args>
+      <arg id="codprod" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="100">
+        <simple-value id="svl_a40x3ac">
+          <expression type="sql" data-source="MGEDS"><![CDATA[select  dtini, dtfin, Case When t.resultado > 0 Then 'Lucro' Else 'Prejuízo' End As tipo, Case When t.resultado > 0 Then '#08088A' Else '#FF0000' End as FGCOLOR, t.resultadofrom  (Select    ad_pkg_comb.ResultadoPosto(:codemp, :dtneg.ini, :dtneg.fin,'R') As resultado,	to_char(:dtneg.ini,'dd/mm/yyyy') as dtini,	to_char(:dtneg.fin,'dd/mm/yyyy') as dtfin From dual) T]]></expression>
+          <metadata>
+            <field name="DTINI" label="DTINI" type="S" visible="true" useFooter="false" mask="DD/MM/YYYY"/>
+            <field name="DTFIN" label="DTFIN" type="S" visible="true" useFooter="false" mask="DD/MM/YYYY"/>
+            <field name="TIPO" label="TIPO" type="S" visible="true" useFooter="false" mask="[object Object]"/>
+            <field name="FGCOLOR" label="FGCOLOR" type="S" visible="false" useFooter="false"/>
+            <field name="RESULTADO" label="RESULTADO" type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+          </metadata>
+          <value-expression><![CDATA[<b>Empresa:</b> :codemp <div style='text-align: center;'><span style='font-size: 20px;'><b>Resultado do Período: </b></span><span style='font-size: 22px;'>$TIPO de $RESULTADO</span></div><b>Período:</b> $DTINI a $DTFIN]]></value-expression>
+        </simple-value>
+      </container>
+      <container orientacao="H" tamanhoRelativo="1318">
+        <container orientacao="V" tamanhoRelativo="50">
+          <container orientacao="V" tamanhoRelativo="33">
+            <grid id="grd_a40x276">
+              <title><![CDATA[Entradas]]></title>
+              <expression type="sql" data-source="MGEDS"><![CDATA[select codemp, codprod, descrprod, qtdneg, vlrunit, (qtdneg * vlrunit) vlrtot from (Select	Codemp,	Codprod,	Descrprod,	Sum(QTDNEG) QTDNEG,	round(Sum(Qtdneg * vlrunit) / sum(qtdneg),4) vlrunit,	'#FF0000' FGCOLORFrom ad_vw_combWhere Codemp = :Codemp	And Dtneg Between :dtneg.ini And :dtneg.fin	And Atualestoque = 1Group By Codemp, Codprod, Descrprod)Order By 3]]></expression>
+              <metadata>
+                <field name="CODEMP" label="Empresa" type="I" visible="true" useFooter="false"/>
+                <field name="CODPROD" label="Cód. Produto" type="I" visible="true" useFooter="false"/>
+                <field name="DESCRPROD" label="Produto" type="S" visible="true" useFooter="false"/>
+                <field name="QTDNEG" label="Qtd. Neg." type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+                <field name="VLRUNIT" label="Vlr. Unit. Médio" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+                <field name="VLRTOT" label="Vlr. Total" type="F" visible="true" useFooter="true" mask="#.##0,0000"/>
+              </metadata>
+              <on-click navigate-to="lvl_a3p5zi4">
+                <param id="codprod">$CODPROD</param>
+              </on-click>
+              <refresh-details ui-list="cht_a0b9uyq">
+                <param id="codprod">$CODPROD</param>
+              </refresh-details>
+            </grid>
+          </container>
+          <container orientacao="V" tamanhoRelativo="33">
+            <chart id="cht_a0b9uyq" type="column" nroColuna="15">
+              <args>
+                <arg id="codprod" type="integer"/>
+              </args>
+              <title><![CDATA[Evolução do Custo do Produto <b>$descrprod</b>]]></title>
+              <expression type="sql" data-source="MGEDS"><![CDATA[Select Trunc(vc.dtneg, 'mm') DTATUAL, round(sum(qtdneg * vlrunit) / sum(qtdneg),4) As CUSMED From ad_vw_comb vcWhere To_Number(To_Char(Dtneg, 'yyyy')) = To_Number(To_Char(Sysdate, 'yyyy')) And codprod = :codprod And dtneg >= add_months(:dtneg.fin, -6) And dtneg <= :dtneg.fin and atualestoque = 1Group By Trunc(vc.dtneg,'mm') order by 1]]></expression>
+              <metadata>
+                <field name="DTATUAL" label="Mês" type="D" visible="true" useFooter="false"/>
+                <field name="CUSMED" label="Valor" type="F" visible="true" useFooter="false" mask="###0,0000;-n"/>
+              </metadata>
+              <horizontal-axis>
+                <category field="DTATUAL" rotation="0" dropLabel="false">
+                  <initView value="first"/>
+                  <title>Referência</title>
+                </category>
+              </horizontal-axis>
+              <vertical-axis>
+                <linear resultRotation="-90" vResizing="true">
+                  <mask>#.##0,00</mask>
+                  <title>Vlr Médio</title>
+                </linear>
+              </vertical-axis>
+              <series>
+                <serie type="column">
+                  <xField>$DTATUAL</xField>
+                  <yField>$CUSMED</yField>
+                  <display><![CDATA[Custo Médio]]></display>
+                  <color>0xff0000</color>
+                </serie>
+              </series>
+            </chart>
+          </container>
+          <container orientacao="V" tamanhoRelativo="33">
+            <grid id="grd_a40x28a">
+              <title><![CDATA[Receitas Operacionais <font size="8">(VlrSaidas - (QtdSaidas * CustoMedio))</font>]]></title>
+              <expression type="sql" data-source="MGEDS"><![CDATA[Select Distinct	pcp.Codprod,	Pro.Descrprod,	ad_pkg_comb.Diferenca_posto(:codemp, pcp.Codprod, :dtneg.ini, :dtneg.fin) As VLRTOT,	Case When ad_pkg_comb.Diferenca_posto(:codemp, pcp.Codprod, :dtneg.ini, :dtneg.fin)  < 0 	 Then '#FF0000' Else '#0404B4' End As FGCOLORFrom Ad_tsfppcp pcp	join tgfpro pro on pcp.Codprod = pro.Codprod	where pcp.Nuppc = 1	and ad_pkg_comb.Diferenca_posto(:codemp, pcp.Codprod, :dtneg.ini, :dtneg.fin) <> 0	Order By 2]]></expression>
+              <metadata>
+                <field name="CODPROD" label="Cód. Produto" type="I" visible="true" useFooter="false"/>
+                <field name="DESCRPROD" label="Descrição do Produto" type="S" visible="true" useFooter="false"/>
+                <field name="VLRTOT" label="Vlr. Total" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+                <field name="FGCOLOR" label="FGCOLOR" type="S" visible="false" useFooter="false"/>
+              </metadata>
+            </grid>
+          </container>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <container orientacao="V" tamanhoRelativo="33">
+            <grid id="grd_a40x277">
+              <title><![CDATA[Saídas]]></title>
+              <expression type="sql" data-source="MGEDS"><![CDATA[Select	c.Codemp,	c.Codprod,	c.Descrprod,	Sum(Qtdneg) QTDNEG,	Round( sum(vlrtot - vlrdesc) / sum(qtdneg), 4) VLRUNIT,	sum(vlrtot - vlrdesc) vlrtot,	'#0404B4' As FGCOLORFrom ad_vw_comb c       Where c.Codemp = :codemp         And c.Dtneg Between :dtneg.ini And :dtneg.fin         And c.Atualestoque = -1	 and c.tipmov in ('Q','T')Group By c.Codemp, c.Codprod, c.Descrprod	Order By 3]]></expression>
+              <metadata>
+                <field name="CODEMP" label="Cód. Empresa" type="I" visible="true" useFooter="false"/>
+                <field name="CODPROD" label="Cód. Produto" type="I" visible="true" useFooter="false"/>
+                <field name="DESCRPROD" label="Descrição do Produto" type="S" visible="true" useFooter="false"/>
+                <field name="QTDNEG" label="Qtd. Saída" type="F" visible="true" useFooter="true" mask="#.##0,00;-n"/>
+                <field name="VLRUNIT" label="Vlr. Unit. Médio" type="F" visible="true" useFooter="false" mask="###0,0000;-n"/>
+                <field name="VLRTOT" label="Vlr. Total" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"/>
+                <field name="FGCOLOR" label="FGCOLOR" type="S" visible="false" useFooter="false"/>
+              </metadata>
+              <on-click navigate-to="lvl_a3p5zj8">
+                <param id="codprod">$CODPROD</param>
+              </on-click>
+            </grid>
+          </container>
+          <container orientacao="V" tamanhoRelativo="33">
+            <grid id="grd_a40x279">
+              <title><![CDATA[Abastecimentos por Veículos que possuem acerto]]></title>
+              <expression type="sql" data-source="MGEDS"><![CDATA[Select  c.Codemp, c.Codprod, c.Descrprod, sum(qtdneg) qtdneg, round(sum(vlrtot)/sum(qtdneg),2) vlrunit, sum(vlrtot) vlrtot, '#0404B4' As FGCOLORFrom ad_vw_comb c Join tgfvei v On c.codveiculo = v.codveiculo Where c.Codemp = :codemp And c.Dtneg Between :dtneg.ini And :dtneg.fin And c.Atualestoque = -1 and v.empparc = 'P' AND c.codparc <> 38 And Nvl(v.codparc,0) != 0 and not exists (select 1 			from tgfvei v2			where v.codveiculo = v2.codveiculo			And codparc in (select codparc from tgfpar where nomeparc like '%LOCALIZA%'))Group By c.codemp, c.codprod, c.descrprod Order By 3]]></expression>
+              <metadata>
+                <field name="CODEMP" label="Cód. Empresa" type="I" visible="true" useFooter="false"/>
+                <field name="CODPROD" label="Cód. Produto" type="I" visible="true" useFooter="false"/>
+                <field name="DESCRPROD" label="Descrição do Produto" type="S" visible="true" useFooter="false"/>
+                <field name="QTDNEG" label="Qtd. Negociada" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+                <field name="VLRUNIT" label="Vlr. Unit. Médio" type="F" visible="true" useFooter="false" mask="#.##0,0000;-n"/>
+                <field name="VLRTOT" label="Vlr. Total" type="F" visible="true" useFooter="null" mask="#.##0,00;-n"/>
+                <field name="FGCOLOR" label="FGCOLOR" type="S" visible="false" useFooter="false"/>
+              </metadata>
+              <on-click navigate-to="lvl_ay6t8j1">
+                <param id="codprod">$CODPROD</param>
+              </on-click>
+            </grid>
+          </container>
+          <container orientacao="V" tamanhoRelativo="33">
+            <grid id="grd_a40x28b">
+              <title><![CDATA[Despesas Operacionais]]></title>
+              <expression type="sql" data-source="MGEDS"><![CDATA[Select 	'Despesas com o Posto' tipo,    ad_pkg_comb.ResultadoPosto(:codemp, 	nvl(to_date(to_char(:dtneg.ini,'dd/mm/yyyy')),trunc(sysdate,'mm')), 	nvl(to_date(to_char(:dtneg.fin,'dd/mm/yyyy')),last_day(trunc(sysdate,'mm'))),	'D') As valor, 	'#FF0000' AS FGCOLOR	From dualunionSelect 'Depreciação Mensal',nvl(Sum(vlrlanc),0),	'#FF0000' AS FGCOLOR from tcblan  Where codctactb = 11109  And trunc(dtmov) between :dtneg.ini and :dtneg.fin  And Codcencus = 90300100unionselect 	'Perda na Compra',    ad_pkg_comb.ResultadoPosto(:codemp, 	nvl(to_date(to_char(:dtneg.ini,'dd/mm/yyyy')),trunc(sysdate,'mm')), 	nvl(to_date(to_char(:dtneg.fin,'dd/mm/yyyy')),last_day(trunc(sysdate,'mm'))),	'E') As valor,	'#FF0000' AS FGCOLOR from dualunionselect 	'Perda na Venda',    ad_pkg_comb.ResultadoPosto(:codemp, 	nvl(to_date(to_char(:dtneg.ini,'dd/mm/yyyy')),trunc(sysdate,'mm')), 	nvl(to_date(to_char(:dtneg.fin,'dd/mm/yyyy')),last_day(trunc(sysdate,'mm'))),	'S') As valor,'#FF0000' AS FGCOLOR from dual]]></expression>
+              <metadata>
+                <field name="TIPO" label="Tipo de Despesa" type="S" visible="true" useFooter="false"/>
+                <field name="VALOR" label="Valor" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+                <field name="FGCOLOR" label="FGCOLOR" type="S" visible="false" useFooter="false"/>
+              </metadata>
+              <on-click navigate-to="lvl_a40x2vl">
+                <param id="X">1</param>
+              </on-click>
+            </grid>
+          </container>
+        </container>
+      </container>
+    </container>
+  </level>
+  <level id="lvl_a3p5zi4" description="DetailEnt">
+    <args>
+      <arg id="codprod" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_a3p5zi7">
+        <title><![CDATA[Detalhamento Lançamentos de Entradas no Período]]></title>
+        <expression type="sql" data-source="MGEDS"><![CDATA[Select 		V.Codemp, 	V.nunota, 	c.dtneg, 	c.codtipoper, 	ad_get.nometop(c.codtipoper) top, 	c.codparc, 	par.nomeparc, 	V.Codprod, 	t.Descrprod, 	Qtdneg,	vlrunit,	VlrtotFrom tgfite v join tgfcab c on c.nunota = v.nunota Join Tgfpro t On V.Codprod = t.Codprod join tgfpar par on c.codparc = par.codparcWhere V.Codemp = :codemp	And c.Dtneg Between :dtneg.ini And :dtneg.fin	And c.Tipmov In ('C') And V.Atualestoque = 1	and V.codprod = :codprodorder by c.dtneg]]></expression>
+        <metadata>
+          <field name="CODEMP" label="Cód. Empresa" type="I" visible="true" useFooter="false"/>
+          <field name="NUNOTA" label="Nro Único" type="I" visible="true" useFooter="false"/>
+          <field name="DTNEG" label="Dt. Neg." type="D" visible="true" useFooter="false"/>
+          <field name="CODTIPOPER" label="Cód. Operação" type="I" visible="true" useFooter="false"/>
+          <field name="TOP" label="Tipo Operação" type="S" visible="true" useFooter="false"/>
+          <field name="CODPARC" label="Cód. Parceiro" type="I" visible="true" useFooter="false"/>
+          <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+          <field name="CODPROD" label="Cód. Produto" type="I" visible="true" useFooter="false"/>
+          <field name="DESCRPROD" label="Descrição do Produto" type="S" visible="true" useFooter="false"/>
+          <field name="QTDNEG" label="Qtd. Negociada" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+          <field name="VLRUNIT" label="Vlr. Unit. Médio" type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+          <field name="VLRTOT" label="Vlr. Total" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+        </metadata>
+        <on-click-launcher resource-id="br.com.sankhya.com.mov.CentralNotas">
+          <NUNOTA>$NUNOTA</NUNOTA>
+        </on-click-launcher>
+      </grid>
+    </container>
+  </level>
+  <level id="lvl_a3p5zj8" description="DetailSai">
+    <args>
+      <arg id="codprod" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_a3p5zj9">
+        <title><![CDATA[Detalhamento Lançamentos de Saídas no Período]]></title>
+        <expression type="sql" data-source="MGEDS"><![CDATA[Select	C.Codemp,	C.Nunota,	C.Dtneg,	C.Codtipoper,	ad_get.Nometop(C.Codtipoper) top,	C.Codparc,	PAR.Nomeparc,	RegExp_Replace(vei.Placa, '([A-Z]{3})([0-9]{4})', '\1-\2') PLACA,	I.Codprod,	P.Descrprod,	I.Qtdneg,	I.Vlrunit,	I.VlrtotFrom Tgfite I		Join Tgfcab C On I.Nunota = C.Nunota			And C.Statusnota = 'L'		Join Tgfpar PAR On C.Codparc = PAR.Codparc		Join Ad_tsfppct T On T.Codtipoper = C.Codtipoper			And Nvl(Perdasai, 'N') = 'N'		Join Ad_tsfppce E On E.Nuppc = 1			And E.Codemp = C.Codemp		Join Ad_tsfppcp cp On cp.Codprod = I.Codprod			And cp.Nuppc = 1		Join Tgfpro P On I.Codprod = P.Codprod		Join Tgfvei vei On C.Codveiculo = vei.CodveiculoWhere C.Codemp = :codemp	And C.Dtneg Between :dtneg.ini And :dtneg.fin	And C.Tipmov In ('Q')	And I.Atualestoque = -1	And Nvl(T.Perdasai, 'N') = 'N'	And I.Codprod = :codprod	Order By Dtneg]]></expression>
+        <metadata>
+          <field name="CODEMP" label="Cód. Empresa" type="I" visible="true" useFooter="false"/>
+          <field name="NUNOTA" label="Nro Único" type="I" visible="true" useFooter="false"/>
+          <field name="DTNEG" label="Dt. Neg" type="D" visible="true" useFooter="false"/>
+          <field name="CODTIPOPER" label="Cód. Operação" type="I" visible="true" useFooter="false"/>
+          <field name="TOP" label="Tipo Operação" type="S" visible="true" useFooter="false"/>
+          <field name="CODPARC" label="Cód. Parceiro" type="I" visible="true" useFooter="false"/>
+          <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+          <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+          <field name="CODPROD" label="Cód. Produto" type="I" visible="true" useFooter="false"/>
+          <field name="DESCRPROD" label="Descrição do Produto" type="S" visible="true" useFooter="false"/>
+          <field name="QTDNEG" label="Qtd. Negociada (lts)" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+          <field name="VLRUNIT" label="Vlr. Unit. Médio" type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+          <field name="VLRTOT" label="Vlr. Total" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+        </metadata>
+        <on-click-launcher resource-id="br.com.sankhya.com.mov.CentralNotas">
+          <NUNOTA>$NUNOTA</NUNOTA>
+        </on-click-launcher>
+      </grid>
+    </container>
+  </level>
+  <level id="lvl_a40x2vl" description="DetailFin">
+    <args>
+      <arg id="X" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_a40x2vm">
+        <expression type="sql" data-source="MGEDS"><![CDATA[	Select numet, codemp, dtneg, codnat, cus.codcencus, cus.descrcencus, valor, historico	From (Select v.numet,	frr.codemp,	frr.dtneg,	frr.codnat,	frr.codcencus,	(frr.vlrdesdob + frr.vlrjuro + frr.vlrmulta - frr.vlrdesc) As valor,	frr.historico	From ad_sfvincmetaindg v, ad_sfvincmetaindgcr cr, finreqratbrinde frr	Where v.codmeta = cr.codmeta	And cr.codcencus = frr.codcencus	And frr.dtneg Between :dtneg.ini And :dtneg.fin	And v.classific = 3	And frr.codemp <= 510	And v.numet = 8615	And frr.nufin Not In (13924430)	And frr.codproj Not In (50104400, 50104500)	And frr.codtipoper <> 1006	And Not frr.historico Like '%ISS%'	And Not (frr.codtipoper In (690, 694) And frr.recdesp = 1)	And Not (frr.codtipoper In (160, 432) And	frr.codnat In (4010500,4015800,4015900,4012500,4010200,4011000,						 4016100,4551000,4010900,4016000,4559900,4012600))	And Not (frr.codnat In (4020300) And frr.recdesp = 1 And codemp In (3, 4))	And Not (frr.codtipoper = 610 And frr.codparc = 15589 And recdesp = -1)	And Not frr.codnat In	(Select nt1.codnat	From ad_sfvincmetaindg v1, ad_sfvincmetaindgcr cr1, ad_sfvincmetaindgnat nt1	Where v1.codmeta = cr1.codmeta	And v1.codmeta = nt1.codmeta	And cr1.codcencus = cr.codcencus)	Union	Select v.numet,	frr.codemp,	frr.dtneg,	frr.codnat,	frr.codcencus,	Round(Case	When (FRR.CODTIPOPER In (690, 694) And FRR.RECDESP = 1) Then	0	Else	(Case		When FRR.CODTIPOPER = 160 And		FRR.CODNAT In (4010500,4015800,4015900,4012500,4010200,4011000,				4016100,4551000,4010900,4016000,4559900,4012600) Then		 0		Else		 (Case			 When FRR.CODNAT In (4020300) And FRR.RECDESP = 1 And CODEMP In (3, 4) Then				0			 Else				(Case					When FRR.CODTIPOPER = 610 And FRR.CODPARC In (15589, 16857) And RECDESP = -1 Then					 0					Else					 FRR.VLRDESDOB + FRR.VLRJURO + FRR.VLRMULTA - FRR.VLRDESC				End)		 End)	End)	End,	2) As VALOR,	frr.historico	From ad_sfvincmetaindg    v,	ad_sfvincmetaindgcr  cr,	ad_sfvincmetaindgnat nt,	finreqratbrinde      frr	Where v.codmeta = cr.codmeta	And v.codmeta = nt.codmeta	And frr.codcencus = cr.codcencus	And frr.codnat = nt.codnat	And frr.dtneg Between :dtneg.ini And :dtneg.fin	And v.ativo = 'S'	And v.classific In (1, 2)	And Nvl(v.codgrupo, 0) Not In (455)	And frr.nufin Not In (13924430)	And frr.codemp <= 510	And frr.codtipoper <> 1006	And Nvl(frr.codctabcoint, 0) <> 72	And frr.codproj Not In (50104400, 50104500)	And v.numet In (8601,		 8602,8603,8604,8605,8606,8607,8637,14820,8608,8609,8610,		 8619,8620,8621,8622,8623,8611,8612,8626,8627,8613,8629,		 8630,8631,8633,8634,8636,8638)						Union						Select V.NUMET,	0 As codemp,	FOLHA.REFERENCIA As dtneg,	0 As codnat,	CR.CODCENCUS,	(FOLHA.CUSTOTOTAL * -1) As VALOR,	'Folha de Pagamento - Despesas salários e encargos'	From AD_SFVINCMETAINDG V, AD_SFVINCMETAINDGCR CR, VW_CUSTO_FOLHA FOLHA	Where V.CODMETA = CR.CODMETA	And FOLHA.FUCENTRCUS = CR.CODCENCUS	And Nvl(V.CODGRUPO, 0) In (455)	And V.ATIVO = 'S'	And FOLHA.REFERENCIA Between :dtneg.ini And :dtneg.fin	And v.numet = 8625						Union						Select V.NUMET,	0 As codemp,	he.REFERENCIA As dtneg,	0 As codnat,	CR.CODCENCUS,	(Case	When EVENTO In (30, 20575, 28825) Then	HE.VALOR + HE.ENCARGOS	Else	0	End) + (Case	When EVENTO In (10670, 20650, 28830) Then	HE.VALOR + HE.ENCARGOS	Else	0	End) + (Case	When EVENTO In (11910, 12840, 20655, 28835) Then	HE.VALOR + HE.ENCARGOS	Else	0	End) As valor,	'Folha de Pagamentos - Custo Horas Extras (8635)'	From AD_SFVINCMETAINDG V, AD_SFVINCMETAINDGCR CR, VW_CUSTO_FOLHA_HE HE	Where V.CODMETA = CR.CODMETA	And HE.FUCENTRCUS = CR.CODCENCUS	And V.CLASSIFIC = 8	And V.ATIVO = 'S'	And HE.REFERENCIA Between :dtneg.ini And :dtneg.fin	And v.numet = 8635) Tbl_indg	Join tsicus cus	On tbl_indg.codcencus = cus.codcencus]]></expression>
+        <metadata>
+          <field name="NUMET" label="Nro Meta" type="I" visible="true" useFooter="false"/>
+          <field name="CODEMP" label="Cód. Empresa" type="I" visible="true" useFooter="false"/>
+          <field name="DTNEG" label="Dt. Neg" type="D" visible="true" useFooter="false"/>
+          <field name="CODNAT" label="Cód. Natureza" type="I" visible="true" useFooter="false"/>
+          <field name="CODCENCUS" label="Cod. CR" type="I" visible="true" useFooter="false"/>
+          <field name="DESCRCENCUS" label="Descr. CR" type="S" visible="true" useFooter="false"/>
+          <field name="VALOR" label="Valor" type="F" visible="true" useFooter="true" mask="#.##0,00">
+            <formatter greaterThan="0"><![CDATA[<span style="color:#0000FF">$VALUE</span>]]></formatter>
+            <formatter lessThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter>
+          </field>
+          <field name="HISTORICO" label="Histórico" type="S" visible="true" useFooter="false"/>
+        </metadata>
+        <on-click-launcher resource-id="br.com.sankhya.fin.cad.movimentacaoFinanceira">
+          <NUFIN>$NUFIN</NUFIN>
+        </on-click-launcher>
+      </grid>
+    </container>
+  </level>
+  <level id="lvl_ay6t8j1" description="detSaiLiq">
+    <args>
+      <arg id="codprod" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_ay6t8j2">
+        <expression type="sql" data-source="MGEDS"><![CDATA[Select  c.nunota, c.Codemp, c.dtneg, c.Codprod, c.Descrprod, c.codparc, p.nomeparc, c.codveiculo, ad_get.formataplaca(v.placa) placa, v.marcamodelo, c.qtdneg,  c.vlrunit, c.vlrtotFrom ad_vw_comb c join tgfpar p on c.codparc = p.codparc Join tgfvei v On c.codveiculo = v.codveiculo Where c.Codemp = :codemp And c.Dtneg Between :dtneg.ini And :dtneg.fin and c.codprod = :codprod And c.Atualestoque = -1 and c.codparc <> 38 --And nvl(v.ad_codveictf,0) = (Case When v.Ad_Tpeqpabast = 'IBUTTON' Or v.ad_tpeqpabast = 'TAG' Then 0 Else v.ad_codveictf End) and v.empparc = 'P' and not exists (select 1 			from tgfvei v2			where v.codveiculo = v2.codveiculo			And codparc in (select codparc from tgfpar where nomeparc like '%LOCALIZA%')) Order By c.dtneg, c.codveiculo]]></expression>
+        <metadata>
+          <field name="NUNOTA" label="Nº Único" type="I" visible="true" useFooter="false"/>
+          <field name="CODEMP" label="Empresa" type="I" visible="true" useFooter="false"/>
+          <field name="DTNEG" label="Dt. Negociação" type="D" visible="true" useFooter="false"/>
+          <field name="CODPROD" label="Cód. Produto" type="I" visible="true" useFooter="false"/>
+          <field name="DESCRPROD" label="Produto" type="S" visible="true" useFooter="false"/>
+          <field name="CODPARC" label="Parceiro" type="I" visible="true" useFooter="false"/>
+          <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+          <field name="CODVEICULO" label="Cód. Veículo" type="I" visible="true" useFooter="false"/>
+          <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+          <field name="MARCAMODELO" label="Modelo" type="S" visible="true" useFooter="false"/>
+          <field name="QTDNEG" label="Qtd Lts" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+          <field name="VLRUNIT" label="Vlr. Unit" type="F" visible="true" useFooter="false"/>
+          <field name="VLRTOT" label="Vlr. Total" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+        </metadata>
+      </grid>
+    </container>
+  </level>
+</gadget>

@@ -1,0 +1,53 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="codemp" description="Cód. Empresa" metadata="entity:Empresa@CODEMP" required="false" keep-last="true" keep-date="false"/>
+    <parameter id="codprod" description="Cód. Produto" metadata="entity:Produto@CODPROD" required="true" keep-last="true" keep-date="false"/>
+    <parameter id="dtreferencia" description="Referência" metadata="date" required="true" keep-last="true" keep-date="false"/>
+  </prompt-parameters>
+  <level id="lvl_aubnmt1" description="Principal">
+    <args>
+      <arg id="sigla" type="text"/>
+    </args>
+    <container orientacao="H" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="808">
+        <container orientacao="V" tamanhoRelativo="100">
+          <simple-value id="svl_aubnmuo">
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select descrprod from tgfpro where codprod = :codprod]]></expression>
+            <metadata>
+              <field name="DESCRPROD" label="DESCRPROD" type="S" visible="true" useFooter="false"/>
+            </metadata>
+            <value-expression><![CDATA[<div style='text-align: center'><span style='font-size: 24px;'>:codprod - $DESCRPROD</span></div>]]></value-expression>
+          </simple-value>
+        </container>
+        <container orientacao="V" tamanhoRelativo="1719">
+          <grid id="grd_aubnmuj">
+            <args>
+              <arg id="sigla" type="text"/>
+            </args>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select t.codemp, t.codune, e.sigla, u.uf, t.*From (Select *	From (Select r.codemp, r.codune, r.coduf, r.codprod, r.codindpad, r.vlrindpad		From dre_resindpad r		 Where r.dtref = :dtreferencia		And r.codindpad In (1, 2, 3, 4, 5, 6, 8, 9, 23, 24, 27, 46)		And (r.codemp = :codemp or nvl(:codemp, 0) = 0 )		And r.codprod = :codprod				) Pivot( Sum(vlrindpad)	 For codindpad In('1' As "VLRVENDA", 46 as "VLRTRANSF", '2' As "ICMS", '3' As "CredOut", '4' As "CredOutTransf",	'5' As "CredPres", '6' "IcmsTransf", '8' "Pis", '9' "Cofins",	'23' "Protegegoias", '24' "ProtegeGoiasTransf", '27' "SubstTrib")			)	) t	Join tgfpro p On t.codprod = p.codprod	Join tsiufs u On t.coduf = u.coduf	Join ad_tsfune e On t.codune = e.codune]]></expression>
+            <metadata>
+              <field name="CODEMP" label="Cód. Empresa" type="I" visible="true" useFooter="false"/>
+              <field name="CODUNE" label="Cód. Unidade" type="I" visible="true" useFooter="false"/>
+              <field name="SIGLA" label="Sigla Unidade" type="S" visible="true" useFooter="false"/>
+              <field name="UF" label="UF" type="S" visible="true" useFooter="false"/>
+              <field name="CODUF" label="Cód. UF" type="I" visible="false" useFooter="false"/>
+              <field name="CODPROD" label="CODPROD" type="I" visible="false" useFooter="false"/>
+              <field name="VLRVENDA" label="Vlr. Venda" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="VLRTRANSF" label="Vlr. Transf" type="F" visible="true" useFooter="null" mask="#.##0,0000"/>
+              <field name="ICMS" label="Vlr. Icms" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="CredOut" label="Cred. Outorgado" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="CredOutTransf" label="Cred Out Transf" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="CredPres" label="Cred Presumido" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="IcmsTransf" label="Icms Transf" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="Pis" label="Pis" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="Cofins" label="Cofins" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="Protegegoias" label="Protege GO" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="ProtegeGoiasTransf" label="Protege GO Transf" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="SubstTrib" label="Subst. Trib" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+            </metadata>
+          </grid>
+        </container>
+      </container>
+    </container>
+  </level>
+</gadget>

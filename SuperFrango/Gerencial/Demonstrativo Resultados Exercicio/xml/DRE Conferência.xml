@@ -1,0 +1,87 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="dtreferencia" description="Referência" metadata="date" required="true" keep-last="true" keep-date="false" order="0"/>
+    <parameter id="codemp" description="Cód. Empresa" metadata="entity:Empresa@CODEMP" required="false" keep-last="true" keep-date="false" order="1"/>
+    <parameter id="codprod" description="Cód. Produto" metadata="entity:Produto@CODPROD" required="false" keep-last="true" keep-date="false" order="2"/>
+    <parameter id="codune" description="Cód. Unidade" metadata="entity:TSFUNE@CODUNE" required="false" keep-last="false" keep-date="false" order="3"/>
+    <parameter id="coduf" description="Cód. UF" metadata="entity:UnidadeFederativa@CODUF" required="false" keep-last="false" keep-date="false" order="4"/>
+    <parameter id="codgrupoprod" description="Grupo Produtos" metadata="entity:GrupoProduto@CODGRUPOPROD" required="false" keep-last="false" keep-date="false" order="5"/>
+  </prompt-parameters>
+  <level id="lvl_aubnmt1" description="Principal">
+    <args>
+      <arg id="sigla" type="text"/>
+    </args>
+    <container orientacao="H" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="808">
+        <container orientacao="V" tamanhoRelativo="100">
+          <simple-value id="svl_aubnmuo">
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select descrprod from tgfpro where codprod = :codprod]]></expression>
+            <metadata>
+              <field name="DESCRPROD" label="DESCRPROD" type="S" visible="true" useFooter="false"/>
+            </metadata>
+            <value-expression><![CDATA[<div style='text-align: center'><span style='font-size: 24px;'>:codprod - $DESCRPROD</span></div>]]></value-expression>
+          </simple-value>
+        </container>
+        <container orientacao="V" tamanhoRelativo="1719">
+          <grid id="grd_a7i2vs8">
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select r.dtref,       r.codemp,       r.codune,       r.sigla,       r.codgrupoprod,       r.descrgrupoprod,       r.codprod,       r.descrprod,       r.coduf,       r.uf,       r.precovenda,       r.icmsvenda,	 Round((r.icmsvenda * 100 / r.precovenda),2) aliqicmsvenda,       r.credoutvenda,	 Round((r.credoutvenda * 100 / r.precovenda),2) aliqcredoutvenda,       r.credouttransf,	 Round( fc_divide(r.credouttransf * 100 , r.vlrtransf) ,2) aliqcreouttransf,        r.credpresumido,	 Round(r.credpresumido * 100 / r.precovenda,2) aliqcredpres,       r.icmstransf,	 Round( fc_divide(r.icmstransf * 100 , r.vlrtransf),2) aliqicmstransf,       r.pis,	 Round(r.pis * 100 / r.precovenda,2) aliqpis,       r.cofins,	 Round(r.cofins * 100 / r.precovenda,2) aliqcofins,       r.credpiscofins,       r.qtdtotal,       r.custoprod,       r.crossdock,       r.overadm,       r.overprod,       r.overun,       r.freteterra,       r.fretemar,       r.comissao,       r.protgovenda,	 Round(r.protgovenda * 100 / case when r.credoutvenda = 0 then 1 else r.credoutvenda end,2) aliqprotgovenda,       r.protgotrans,	 Round(r.protgotrans * 100 / case when r.credouttransf = 0 then 1 else r.credouttransf end,2) aliqprotgotrans,       r.protedutribdf,	 Round(r.protedutribdf * 100 / r.precovenda,2) aliqprotedutribdf,       r.fungerempdf,	 Round(r.fungerempdf * 100 / r.precovenda,2) aliqfungerempdf,       r.substtrib,	  Round(r.substtrib * 100 / r.precovenda,2) aliqsubsttrib,       r.antecipicms,       r.despfin,       r.recfin,       r.descontos,       r.despdir,       r.vlrtransf,       r.precovdasemstFrom dre_report rwhere dtref = :dtreferencia  and (codemp = :codemp or nvl(:codemp,0) = 0)  and (codune = :codune or nvl(:codune,0) = 0)  and (codprod = :codprod or nvl(:codprod,0) = 0) and (codgrupoprod = :codgrupoprod or nvl(:codgrupoprod,0) = 0) and (coduf = :coduf or nvl(:coduf,0) = 0)]]></expression>
+            <metadata>
+              <field name="DTREF" label="Dt. Refenrência" type="D" visible="true" useFooter="false"/>
+              <field name="CODEMP" label="Còd. Empresa" type="I" visible="true" useFooter="false"/>
+              <field name="CODUNE" label="Cód. Unidade" type="I" visible="true" useFooter="false"/>
+              <field name="SIGLA" label="Sigla Un" type="S" visible="true" useFooter="false"/>
+              <field name="CODGRUPOPROD" label="Cód. Grupo" type="I" visible="true" useFooter="false"/>
+              <field name="DESCRGRUPOPROD" label="Descr. Grupo" type="S" visible="true" useFooter="false"/>
+              <field name="CODPROD" label="Cód. Produto" type="I" visible="true" useFooter="false"/>
+              <field name="DESCRPROD" label="Produto" type="S" visible="true" useFooter="false"/>
+              <field name="CODUF" label="Cód. Uf" type="I" visible="true" useFooter="false"/>
+              <field name="UF" label="UF" type="S" visible="true" useFooter="false"/>
+              <field name="PRECOVENDA" label="Preço Venda" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="ICMSVENDA" label="Icms Venda" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="ALIQICMSVENDA" label="Aliq ICMS" type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+              <field name="CREDOUTVENDA" label="Créd. Out. Venda" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="ALIQCREDOUTVENDA" label="Aliq CrédOut Vda" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="CREDOUTTRANSF" label="Créd. Out Transf" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="ALIQCREOUTTRANSF" label="Aliq Créd Out Transf" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="CREDPRESUMIDO" label="Créd. Presumido" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="ALIQCREDPRES" label="Aliq Créd. Presum." type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="ICMSTRANSF" label="ICMS Transf." type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="ALIQICMSTRANSF" label="Aliq ICMS Transf." type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="PIS" label="PIS" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="ALIQPIS" label="Aliq. PIS" type="F" visible="true" useFooter="false" mask="###0,00"/>
+              <field name="COFINS" label="COFINS" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="ALIQCOFINS" label="Aliq COFINS" type="F" visible="true" useFooter="false" mask="###0,00"/>
+              <field name="CREDPISCOFINS" label="Créd. PIS/COFINS" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="QTDTOTAL" label="Qtd." type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="CUSTOPROD" label="Custo Prod." type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="CROSSDOCK" label="Cross Dock" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="OVERADM" label="Over Adm" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="OVERPROD" label="Over Prod" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="OVERUN" label="Over Uni." type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="FRETETERRA" label="Frete Terrestre" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="FRETEMAR" label="Frete Marítimo" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="COMISSAO" label="Comissão" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="PROTGOVENDA" label="Protege GO" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="ALIQPROTGOVENDA" label="Aliq Protege GO" type="F" visible="true" useFooter="false" mask="###0,00"/>
+              <field name="PROTGOTRANS" label="Protege GO Transf" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="ALIQPROTGOTRANS" label="Aliq. Protege Transf" type="F" visible="true" useFooter="false" mask="###0,00"/>
+              <field name="PROTEDUTRIBDF" label="Prot. Edu. Trib. DF" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="ALIQPROTEDUTRIBDF" label="Aliq Prod Edu Trib DF" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="FUNGEREMPDF" label="Fundo Ger. Emprego" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="ALIQFUNGEREMPDF" label="Aliq Fundo Emp." type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="SUBSTTRIB" label="Subst. Trib." type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="ALIQSUBSTTRIB" label="Aliq Subst. Trib" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="ANTECIPICMS" label="Antecipação ICMS" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="DESPFIN" label="Desp. Financeira" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="RECFIN" label="Receita Financeira" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="DESCONTOS" label="Descontos" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="DESPDIR" label="Desp. Diretoria" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="VLRTRANSF" label="Vlr. Transf" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+              <field name="PRECOVDASEMST" label="Preço sem ST" type="F" visible="true" useFooter="false" mask="#.##0,0000"/>
+            </metadata>
+          </grid>
+        </container>
+      </container>
+    </container>
+  </level>
+</gadget>

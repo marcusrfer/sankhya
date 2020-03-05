@@ -1,0 +1,201 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="codemp" description="Cód. Empresa" metadata="entity:Empresa@CODEMP" required="true" keep-last="true" keep-date="false"/>
+  </prompt-parameters>
+  <local-vars>
+    <var id="descrstatus">
+      <expression type="sql" data-source="MGEDS"><![CDATA[select nvl(Ad_get.Opcoescampo(:statusvei, 'STATUSVEI', 'AD_CONTCARGTO'),'Não Classificados') from dual]]></expression>
+    </var>
+    <var id="descrprod">
+      <expression type="sql" data-source="MGEDS"><![CDATA[select descrprod from tgfpro where codprod = :codprod				]]></expression>
+    </var>
+  </local-vars>
+  <level id="lvl_6m3beq" description="Principal">
+    <args>
+      <arg id="statusvei" type="text"/>
+      <arg id="codemp" type="integer"/>
+      <arg id="codprod" type="integer"/>
+      <arg id="codparc" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <chart id="cht_6m3bes" type="pizza">
+            <title><![CDATA[<span style='color:#0000FF;'>Total por Status</span>]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select 
+	c.codemp,	
+	c.statusvei,
+	ad_get.opcoescampo(c.statusvei, 'STATUSVEI', 'AD_CONTCARGTO') status,
+	Sum(i.qtde) qtd_total
+From ad_contcargto c
+Join ad_itecargto i
+ On c.sequencia = i.sequencia
+Where c.codemp = :codemp
+ and c.status <> 'CANCELADO'
+ And c.statusvei Is Not Null And c.statusvei <> 'C'
+Group By c.codemp, c.statusvei]]></expression>
+            <metadata>
+              <field name="CODEMP" label="CODEMP" type="I" visible="false" useFooter="false"/>
+              <field name="STATUSVEI" label="STATUSVEI" type="S" visible="false" useFooter="false"/>
+              <field name="STATUS" label="Status" type="S" visible="true" useFooter="false"/>
+              <field name="QTD_TOTAL" label="Qtd. Total" type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+            </metadata>
+            <series>
+              <serie type="pizza">
+                <field>QTD_TOTAL</field>
+                <nameField>STATUS</nameField>
+                <refresh-details ui-list="grd_6m3bex">
+                  <param id="statusvei">$STATUSVEI</param>
+                  <param id="codemp">$CODEMP</param>
+                </refresh-details>
+              </serie>
+            </series>
+          </chart>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_6m3bex" tamTexto="12">
+            <args>
+              <arg id="statusvei" type="text"/>
+              <arg id="codemp" type="integer"/>
+            </args>
+            <title><![CDATA[Produtos com Status: <span style='color:#0000FF;'>$descrstatus</span>]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[ Select /*+ result_cache */
+ c.Statusvei,
+ ad_get.opcoescampo(c.statusvei, 'STATUSVEI', 'AD_CONTCARGTO') Status,
+ i.Codprod, 
+ p.descrprod,
+ Sum(i.qtde) qtd_total
+From ad_contcargto c
+ Join ad_itecargto i On c.sequencia = i.sequencia
+ Join tgfpro p On i.codprod = p.codprod
+Where c.codemp = :codemp  
+ And c.Statusvei = :statusvei
+ and c.status Not Like ('CANCELADO')
+And c.statusvei Is Not Null And c.statusvei <> 'C'
+Group By  Statusvei,
+ i.Codprod, 
+ p.descrprod]]></expression>
+            <metadata>
+              <field name="STATUSVEI" label="STATUSVEI" type="S" visible="false" useFooter="false"/>
+              <field name="STATUS" label="STATUS" type="S" visible="false" useFooter="false"/>
+              <field name="CODPROD" label="Cód. Produto" type="I" visible="true" useFooter="false"/>
+              <field name="DESCRPROD" label="Descr. Produto" type="S" visible="true" useFooter="false"/>
+              <field name="QTD_TOTAL" label="Qtd." type="I" visible="true" useFooter="true" mask="#.##0,00"/>
+            </metadata>
+            <refresh-details ui-list="grd_6m3bfu">
+              <param id="codprod">$CODPROD</param>
+              <param id="codemp">:codemp</param>
+              <param id="statusvei">$STATUSVEI</param>
+            </refresh-details>
+          </grid>
+        </container>
+      </container>
+      <container orientacao="H" tamanhoRelativo="50">
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_6m3bfu">
+            <args>
+              <arg id="codprod" type="integer"/>
+              <arg id="codemp" type="integer"/>
+              <arg id="statusvei" type="text"/>
+            </args>
+            <title><![CDATA[Parceiros do Produto: <span style='color:#0000FF;'>$descrprod</span>]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select /*+ result_cache */
+ c.statusvei,
+ i.Codprod,
+ p.Descrprod,
+ i.codparc As codparcprod,
+'<a title="Abrir Paínel" target="_parent" href="'||ad_fnc_urlskw('TSIDSB',162)||'">'||To_Char(i.codparc)||'</a>' linkcodparc,
+ a.nomeparc As Nomeparcprod,
+ Sum(i.qtde) qtd_total
+From ad_contcargto c
+Join ad_itecargto i On c.sequencia = i.sequencia
+Join tgfpro p On i.codprod = p.codprod
+Join tgfpar a On i.codparc = a.codparc
+Where c.Codemp = :codemp
+ And c.Statusvei = :statusvei
+ And i.Codprod = :codprod
+ And c.status <> 'CANCELADO'
+ And c.statusvei Is Not Null And c.statusvei <> 'C'
+Group By  c.statusvei,
+ i.Codprod,
+ p.Descrprod,
+ i.codparc,
+ a.nomeparc]]></expression>
+            <metadata>
+              <field name="STATUSVEI" label="STATUSVEI" type="S" visible="false" useFooter="false"/>
+              <field name="CODPROD" label="CODPROD" type="I" visible="false" useFooter="false"/>
+              <field name="DESCRPROD" label="DESCRPROD" type="S" visible="false" useFooter="false"/>
+              <field name="CODPARCPROD" label="Cód. Parceiro" type="I" visible="false" useFooter="false"/>
+              <field name="LINKCODPARC" label="Cód. Parceiro" type="S" visible="true" useFooter="false"/>
+              <field name="NOMEPARCPROD" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+              <field name="QTD_TOTAL" label="Qtd. Total" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+            </metadata>
+            <refresh-details ui-list="grd_6m3bgs">
+              <param id="statusvei">$STATUSVEI</param>
+              <param id="codprod">$CODPROD</param>
+              <param id="codparc">$CODPARCPROD</param>
+            </refresh-details>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="50">
+          <grid id="grd_6m3bgs">
+            <args>
+              <arg id="statusvei" type="text"/>
+              <arg id="codprod" type="integer"/>
+              <arg id="codparc" type="integer"/>
+            </args>
+            <title><![CDATA[Detalhes do Parceiro: <span style='color:#0000FF;'>$nomeparc</span>]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select /*+ result_cache */
+ i.Sequencia,
+ c.Codveiculo,
+ ad_get.formataplaca(v.placa) placa,
+ mot.codparc codmot,
+ mot.nomeparc motorista,
+ i.codparc codparcprod,
+ par.nomeparc Nomeparcprod,
+ c.Datahoralanc,
+ c.Datasaidatrans,
+ c.Datachegadapatio,
+ c.Dataentradadesc,
+ c.Datafimdescarga,
+ i.qtde qtdneg
+	From ad_contcargto c
+	Join ad_itecargto i
+		On c.sequencia = i.sequencia
+	Join tgfvei v
+	  On c.codveiculo = v.codveiculo
+	Join tgfpar mot
+	 On mot.codparc = v.codmotorista
+	Join tgfpar par
+	  On i.codparc = par.codparc
+ Where C.Codemp = :codemp
+	 And c.Statusvei = :statusvei
+	 And i.Codprod = :codprod
+	 And i.codparc = :codparc
+	 And c.status Not Like ('CANCELADO')
+	 And c.statusvei Is Not Null
+	 And c.statusvei <> 'C']]></expression>
+            <metadata>
+              <field name="SEQUENCIA" label="Sequência" type="I" visible="true" useFooter="false"/>
+              <field name="CODVEICULO" label="Cód. Veículo" type="I" visible="true" useFooter="false"/>
+              <field name="PLACA" label="Placa" type="S" visible="true" useFooter="false"/>
+              <field name="CODMOT" label="Cód. Motorista" type="I" visible="true" useFooter="false"/>
+              <field name="MOTORISTA" label="Motorista" type="S" visible="true" useFooter="false"/>
+              <field name="CODPARCPROD" label="Cód. Parceiro" type="I" visible="true" useFooter="false"/>
+              <field name="NOMEPARCPROD" label="Nome Parceiro" type="I" visible="true" useFooter="false"/>
+              <field name="DATAHORALANC" label="Dh. Lançamento" type="T" visible="true" useFooter="false"/>
+              <field name="DATASAIDATRANS" label="Dh. Saída Transp." type="T" visible="true" useFooter="false"/>
+              <field name="DATACHEGADAPATIO" label="Dh. Chegada Pátio" type="T" visible="true" useFooter="false"/>
+              <field name="DATAENTRADADESC" label="Dh. Entrada Descarga" type="T" visible="true" useFooter="false"/>
+              <field name="DATAFIMDESCARGA" label="Dh. Término Descarga" type="T" visible="true" useFooter="false"/>
+              <field name="QTDNEG" label="Qtd. Neg" type="F" visible="true" useFooter="true" mask="#.##0,00;-n"/>
+            </metadata>
+            <on-click-launcher resource-id="br.com.sankhya.menu.adicional.CONTCARGTO">
+              <SEQUENCIA>$SEQUENCIA</SEQUENCIA>
+            </on-click-launcher>
+          </grid>
+        </container>
+      </container>
+    </container>
+  </level>
+</gadget>

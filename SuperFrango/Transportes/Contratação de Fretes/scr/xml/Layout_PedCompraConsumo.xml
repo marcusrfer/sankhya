@@ -1,0 +1,99 @@
+<layout-nota useDescriptionAsTitle="S">
+  <painel orientacao="H">
+    <painel tamanhoRelativo="154.54545454545453" orientacao="V">
+      <painel tamanhoRelativo="194.6938775510204" orientacao="H">
+        <painel tamanhoRelativo="100" titulo="Cabe�alho">
+          <formulario>
+            <campo nome="NUNOTA" entidade="CabecalhoNota"/>
+            <campo editavel="false" descricao="Nro. Pedido" nome="NUMNOTA" entidade="CabecalhoNota"/>
+            <campo editavel="false" nome="CODTIPOPER" entidade="CabecalhoNota"/>
+            <campo descricao="Dt.  Compra" nome="DTNEG" entidade="CabecalhoNota"/>
+            <campo descricao="Dt. Entrega" nome="DTPREVENT" entidade="CabecalhoNota"/>
+            <campo nome="CODEMP" entidade="CabecalhoNota"/>
+            <campo requerido="true" nome="CODPARC" entidade="CabecalhoNota"/>
+            <campo requerido="true" nome="CODTIPVENDA" entidade="CabecalhoNota"/>
+            <campo requerido="true" nome="CODCENCUS" entidade="CabecalhoNota"/>
+            <campo requerido="true" nome="CODNAT" entidade="CabecalhoNota"/>
+            <campo nome="CODPROJ" entidade="CabecalhoNota"/>
+            <campo descricao="Nr Nota Fornecedor" nome="DANFE" entidade="CabecalhoNota"/>
+            <campo nome="AD_CHAVENFE" entidade="CabecalhoNota"/>
+            <campo nome="OBSERVACAO" entidade="CabecalhoNota"/>
+            <campo descricao="Status do Pedido" nome="STATUSNOTA" entidade="CabecalhoNota"/>
+            <campo descricao="Usu�rio Inclus�o" nome="CODUSUINC" entidade="CabecalhoNota"/>
+            <campo requerido="true" nome="CODVEND" entidade="CabecalhoNota"/>
+            <campo nome="AD_LIBPED" entidade="CabecalhoNota"/>
+          </formulario>
+        </painel>
+        <painel tamanhoRelativo="232.7731092436975" titulo="Itens">
+          <grade id="grd-itens" descricao="Itens" entidade="ItemNota" saveTime="28/12/2016 11:57:49" titleMP="">
+            <campo nome="CODPROD" entidade="ItemNota"/>
+            <campo nome="DESCRPROD" entidade="Produto"/>
+            <campo nome="USOPROD" entidade="ItemNota"/>
+            <campo nome="CODLOCALORIG" entidade="ItemNota"/>
+            <campo nome="CONTROLE" entidade="ItemNota"/>
+            <campo nome="QTDNEG" entidade="ItemNota"/>
+            <campo nome="CODVOL" entidade="ItemNota"/>
+            <campo nome="DESCRVOL" entidade="Volume"/>
+            <campo nome="QTDENTREGUE" entidade="ItemNota"/>
+            <campo nome="QTDPENDENTE" entidade="ItemNota"/>
+            <campo nome="VLRUNIT" entidade="ItemNota"/>
+            <campo nome="VLRTOT" entidade="ItemNota"/>
+          </grade>
+        </painel>
+      </painel>
+      <painel tamanhoRelativo="102.04081632653062" titulo="Rodap�">
+        <tabcontrol>
+          <tab titulo="Totais">
+            <formulario>
+              <campo editavel="false" descricao="Vlr. Previsto" nome="VLRNOTA" entidade="CabecalhoNota"/>
+            </formulario>
+          </tab>
+          <tab titulo="Financeiro">
+            <grade id="grd-finan" descricao="Financeiro" entidade="Financeiro" saveTime="05/04/2016 14:02:01" titleMP="">
+              <campo nome="NUFIN" entidade="Financeiro"/>
+              <campo nome="CODEMP" entidade="Financeiro"/>
+              <campo nome="CODTIPTIT" entidade="Financeiro"/>
+              <campo nome="DESCRTIPTIT" entidade="TipoTitulo"/>
+              <campo nome="DTVENC" entidade="Financeiro"/>
+              <campo nome="VLRDESDOB" entidade="Financeiro"/>
+              <campo nome="CODNAT" entidade="Financeiro"/>
+              <campo nome="DESCRNAT" entidade="Natureza"/>
+              <campo nome="CODCENCUS" entidade="Financeiro"/>
+              <campo nome="DESCRCENCUS" entidade="CentroResultado"/>
+              <campo nome="CODPROJ" entidade="Financeiro"/>
+              <campo nome="IDENTIFICACAO" entidade="Projeto"/>
+              <campo nome="HISTORICO" entidade="Financeiro"/>
+            </grade>
+          </tab>
+          <tab titulo="Transportes">
+            <formulario>
+              <campo nome="QTDVOL" entidade="CabecalhoNota"/>
+              <campo nome="VOLUME" entidade="CabecalhoNota"/>
+              <campo nome="PESO" entidade="CabecalhoNota"/>
+              <campo nome="CODPARCTRANSP" entidade="CabecalhoNota"/>
+              <campo nome="TIPFRETE" entidade="CabecalhoNota"/>
+              <campo nome="CIF_FOB" entidade="CabecalhoNota"/>
+              <campo nome="LOCALENTREGA" entidade="CabecalhoNota"/>
+              <campo nome="LOCALCOLETA" entidade="CabecalhoNota"/>
+              <campo nome="AD_OBSCOTFRE" entidade="CabecalhoNota"/>
+              <campo nome="VENCFRETE" entidade="CabecalhoNota"/>
+              <campo nome="VLRFRETETOTAL" entidade="CabecalhoNota"/>
+              <campo nome="AD_COTFRETE" entidade="CabecalhoNota"/>
+            </formulario>
+          </tab>
+        </tabcontrol>
+      </painel>
+    </painel>
+  </painel>
+  <defaults>
+    <campo entidade="CabecalhoNota" nome="DTNEG">
+      <expressao tipo="variavel">${data}</expressao>
+    </campo>
+    <campo entidade="CabecalhoNota" nome="CODTIPOPER">
+      <expressao tipo="literal">921</expressao>
+    </campo>
+    <campo entidade="CabecalhoNota" nome="NUMNOTA">
+      <expressao tipo="literal">0</expressao>
+    </campo>
+  </defaults>
+</layout-nota>

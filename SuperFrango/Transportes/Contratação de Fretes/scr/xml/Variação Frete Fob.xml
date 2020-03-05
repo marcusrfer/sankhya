@@ -1,0 +1,74 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="peso" description="Peso" metadata="decimal" required="true" keep-last="true" keep-date="false" order="0"/>
+    <parameter id="periodo" description="Per¿odo" metadata="datePeriod" required="true" keep-last="true" keep-date="true" order="1"/>
+  </prompt-parameters>
+  <level id="lvl_tmsmn1" description="Principal">
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="160">
+        <simple-value id="svl_vzln9e">
+          <value-expression><![CDATA[Legenda:
+<span style='background-color: #8181F7;'color: #000000;'>Varia&ccedil;&atilde;o entre 0 a 30%</span>
+<span style='background-color: #F2F5A9;'color: #000000;'>Varia&ccedil;&atilde;o entre 30 a 70%</span>
+<span style='background-color: #F78181;'color: #000000;'>Varia&ccedil;&atilde;o entre 70 a 100%</span>]]></value-expression>
+        </simple-value>
+      </container>
+      <container orientacao="V" tamanhoRelativo="1023">
+        <grid id="grd_tmsmn2" tamTexto="12">
+          <expression type="sql" data-source="MGEDS"><![CDATA[Select nunota,
+ f.codemp,
+ f.codciddest,
+ f.ciddestino,
+ f.dtneg,
+ f.codparc,
+ f.nomeparc,
+ f.codcidorig,
+ f.cidorigem,
+ f.codparctransp,
+ f.nomeparctransp,
+ f.vlrnota,
+ f.pesobruto,
+ f.vlrfrete,
+ f.melhorparc,
+ mp.nomeparc nomemelhorparc,
+ f.melhorvalor,
+ ((1-(f.melhorvalor/f.vlrfrete))*100) as Percvar,
+ f.vlrfrete - f.melhorvalor as dif,
+ (Sum(f.vlrfrete - f.melhorvalor) Over (Order By dtneg Rows Between Unbounded Preceding And current Row)) As totaldif,
+ case 
+  when  ((1-(f.melhorvalor/f.vlrfrete))*100) between 0 and 30 then '#8181F7'  
+when  ((1-(f.melhorvalor/f.vlrfrete))*100) between 31 and 70 then '#F2F5A9'
+  when  ((1-(f.melhorvalor/f.vlrfrete))*100) between 71 and 100 then '#F78181' end as BKCOLOR
+	From ad_vw_fretefob f
+inner join tgfpar mp on f.melhorparc = mp.codparc
+where f.dtneg between :periodo.ini and :periodo.fin
+ and f.pesobruto < :peso
+order by dtneg]]></expression>
+          <metadata>
+            <field name="NUNOTA" label="Nro Unico" type="I" visible="true" useFooter="false"/>
+            <field name="CODEMP" label="Empresa" type="I" visible="true" useFooter="false"/>
+            <field name="CODCIDDEST" label="CODCIDDEST" type="I" visible="false" useFooter="false"/>
+            <field name="CIDDESTINO" label="Cidade Destino" type="S" visible="true" useFooter="false"/>
+            <field name="DTNEG" label="Dt. Neg" type="D" visible="true" useFooter="false"/>
+            <field name="CODPARC" label="Parceiro" type="I" visible="true" useFooter="false"/>
+            <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+            <field name="CODCIDORIG" label="CODCIDORIG" type="I" visible="false" useFooter="false"/>
+            <field name="CIDORIGEM" label="Cidade Origem" type="S" visible="true" useFooter="false"/>
+            <field name="CODPARCTRANSP" label="Parceiro Transp" type="I" visible="true" useFooter="false"/>
+            <field name="NOMEPARCTRANSP" label="Transportador" type="S" visible="true" useFooter="false"/>
+            <field name="VLRNOTA" label="Valor da Nota" type="F" visible="true" useFooter="true"/>
+            <field name="PESOBRUTO" label="Peso" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+            <field name="VLRFRETE" label="Valor frete" type="F" visible="true" useFooter="true" mask="#.##0,00"/>
+            <field name="MELHORPARC" label="Melhor Parceiro" type="I" visible="true" useFooter="false"/>
+            <field name="NOMEMELHORPARC" label="Transp. Melhor Pre¿o" type="S" visible="true" useFooter="false"/>
+            <field name="MELHORVALOR" label="Melhor valor" type="I" visible="true" useFooter="true" mask="#.##0,00"/>
+            <field name="PERCVAR" label="%Var" type="I" visible="true" useFooter="false" mask="#.##0,00 %"/>
+            <field name="DIF" label="Dif." type="I" visible="true" useFooter="true" mask="#.##0,00"/>
+            <field name="TOTALDIF" label="Saldo Dif." type="I" visible="true" useFooter="false" mask="#.##0,00"/>
+            <field name="BKCOLOR" label="BKCOLOR" type="S" visible="true" useFooter="false"/>
+          </metadata>
+        </grid>
+      </container>
+    </container>
+  </level>
+</gadget>

@@ -1,0 +1,3642 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<metadata>
+  <exportInfo>
+    <exportTime>18/02/2020 17:24:54</exportTime>
+    <systemVersion>4.1b131</systemVersion>
+    <systemCharSet>ISO-8859-1</systemCharSet>
+    <dbMetadata>
+      <dbUser>SANKHYA</dbUser>
+      <urlConnection><![CDATA[jdbc:oracle:thin:@ssaprod-scan.ssa-br.com:1521/ORCL]]></urlConnection>
+      <jdbcDriver><![CDATA[Oracle JDBC driver 12.1.0.1.0]]></jdbcDriver>
+      <DBMS><![CDATA[Oracle - Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
+With the Partitioning, Real Application Clusters, OLAP, Advanced Analytics
+and Real Application Testing options]]></DBMS>
+    </dbMetadata>
+  </exportInfo>
+  <instances>
+    <instance name="TSFCAPITN">
+      <instanceDescription><![CDATA[Itinerário]]></instanceDescription>
+      <tableInfo name="AD_TSFCAPITN" sequenceType="A" sequenceField="NUITN">
+        <category><![CDATA[Carro de Apoio]]></category>
+        <telaDescription><![CDATA[/* Autor: Marcus Rangel */
+Solicitação de Carro de apoio, aba itinerário.]]></telaDescription>
+        <tableDescription><![CDATA[Itinerário]]></tableDescription>
+        <primaryKey>
+          <NUCAPSOL />
+          <NUITN />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="NUITN" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Nro Seq. Itinerário]]></description>
+          <properties>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUCAPSOL" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Nro Solicitação]]></description>
+        </field>
+        <field name="TIPOTIN" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Tipo]]></description>
+          <options>
+            <option value="O"><![CDATA[Origem]]></option>
+            <option value="D" default="S"><![CDATA[Destino]]></option>
+          </options>
+        </field>
+        <field name="CODCID" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Cidade]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODEND" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód.Endereço]]></description>
+          <expression><![CDATA[import java.math.BigDecimal;
+import java.lang.Exception;
+if($col_CODEND == null){
+return $col_CODEND;
+}
+else{
+if($col_CODEND.signum() == 0){
+throw new Exception("Atenção, Código do Endereço Não Poder Ser 0-<SEM ENDERECO>!!!");
+} else {
+return $col_CODEND;
+}
+}]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODBAI" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Código do Bairro]]></description>
+          <expression><![CDATA[import java.math.BigDecimal;
+import java.lang.Exception;
+if($col_CODBAI == null){
+return $col_CODBAI;
+}
+else{
+if($col_CODBAI.signum() == 0){
+throw new Exception("Atenção, Código do Bairro Não Poder Ser 0-<SEM BAIRRO>!!!");
+} else {
+return $col_CODBAI;
+}
+}]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="COMPLEMENTO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Complemento]]></description>
+        </field>
+        <field name="REFERENCIA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Referência]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Endereco" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIEND" />
+          <fields>
+            <field localName="CODEND" targetName="CODEND" />
+          </fields>
+        </relation>
+        <relation entityName="Bairro" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIBAI" />
+          <fields>
+            <field localName="CODBAI" targetName="CODBAI" />
+          </fields>
+        </relation>
+        <relation entityName="Cidade" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICID" />
+          <fields>
+            <field localName="CODCID" targetName="CODCID" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="TSFCAP">
+      <instanceDescription><![CDATA[Agendamento Carro de Apoio]]></instanceDescription>
+      <tableInfo name="AD_TSFCAP" sequenceType="A" sequenceField="NUAP">
+        <category><![CDATA[Carro de Apoio]]></category>
+        <telaDescription><![CDATA[/*Autor: Marcus Rangel*/
+Tela na qual será realizado o agendamento / cancelamento da solicitação de carro de apoio]]></telaDescription>
+        <tableDescription><![CDATA[Agendamento CAP]]></tableDescription>
+        <primaryKey>
+          <NUAP />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="NUAP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Nro Agendamento]]></description>
+          <properties>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="filterOrder"><![CDATA[0]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="filterGroup"><![CDATA[Geral]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+            <prop name="filterLabel"><![CDATA[Nro Agendamento]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSUSOL" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Solicitante]]></description>
+          <properties>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="filterOrder"><![CDATA[1]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="filterGroup"><![CDATA[Geral]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Cód. Solicitante]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="DHSOLICIT" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Solicitação]]></description>
+          <properties>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[4]]></prop>
+            <prop name="filterGroup"><![CDATA[Datas]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Dt. Solicitação]]></prop>
+            <prop name="filterType"><![CDATA[period]]></prop>
+          </properties>
+        </field>
+        <field name="ORDEMCARGA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Ordem de carga]]></description>
+          <properties>
+            <prop name="apresentacao"><![CDATA[JUSTIFICATIVA]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSUEXC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Resp. Agend.]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODPARCTRANSP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Transportador]]></description>
+          <expression><![CDATA[$sql.select("CODPARC","TGFVEI","CODVEICULO = "+$col_CODVEICULO);
+ if ($sql.next()){
+  return $sql.getBigDecimal(1);
+ }]]></expression>
+          <properties>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="filterOrder"><![CDATA[2]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="filterGroup"><![CDATA[Geral]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Cód. Transportador]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODVEICULO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Código do Veículo]]></description>
+          <properties>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="filterOrder"><![CDATA[3]]></prop>
+            <prop name="filterGroup"><![CDATA[Geral]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="apresentacao"><![CDATA[PLACA]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Código do Veículo]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="STATUS" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Status]]></description>
+          <options>
+            <option value="A"><![CDATA[Agendado]]></option>
+            <option value="C"><![CDATA[Cancelado]]></option>
+            <option value="P"><![CDATA[Pendente]]></option>
+            <option value="R"><![CDATA[Realizado]]></option>
+            <option value="M" default="S"><![CDATA[Combinada]]></option>
+          </options>
+          <properties>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterOrder"><![CDATA[6]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterGroup"><![CDATA[Status]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[mult-list]]></prop>
+            <prop name="filterLabel"><![CDATA[Status]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="TAXI" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Necessita Taxi?]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+          <properties>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="MOTIVOTAXI" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Justificativa]]></description>
+          <properties>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="KMINICIAL" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[KM Inicial]]></description>
+          <properties>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[0]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="KMFINAL" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[KM Final]]></description>
+          <properties>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[0]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="TOTALKM" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Total KM]]></description>
+          <expression><![CDATA[result = 0;
+ result = (
+ $col_KMFINAL.doubleValue() - $col_KMINICIAL.doubleValue()
+ );
+if (result > 0){
+ return result;
+}
+ return $valorCampo;]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[0]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="VLRCORRIDA" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Vlr. Corrida]]></description>
+        </field>
+        <field name="NUCAPSOL" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Nro Solicitação]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DTAGEND" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Agendamento]]></description>
+          <properties>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="filterOrder"><![CDATA[5]]></prop>
+            <prop name="filterGroup"><![CDATA[Datas]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Dt. Agendamento]]></prop>
+            <prop name="filterType"><![CDATA[period]]></prop>
+          </properties>
+        </field>
+        <field name="ROTA" systemField="N" dataType="C" presentationType="T" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Itinerário]]></description>
+        </field>
+        <field name="DTAGENDFIM" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Agend. Fim]]></description>
+          <properties>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="COMBINADA" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Agend. Combinado?]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="CODCONTATO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Motorista]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="QTDPASSAGEIROS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Qtd. Passageiros]]></description>
+        </field>
+        <field name="MOTORISTA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Motorista]]></description>
+          <expression><![CDATA[$sql.select("CODMOTORISTA","TGFVEI","CODVEICULO = "+$col_CODVEICULO);
+ if ($sql.next()){
+  return $sql.getBigDecimal(1);
+ }]]></expression>
+        </field>
+        <field name="DEPTOSOL" systemField="N" dataType="S" presentationType="P" calculated="S" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Departamento]]></description>
+          <expression><![CDATA[if($valorCampo == null){
+ $sql.select("ad_get.DescrCenCus(CODCENCUS)",
+ "AD_TSFCAPSOL","NUCAPSOL = "+$col_NUCAPSOL);
+ if($sql.next()) {
+   return $sql.getString(1);
+ }
+}
+return $valorCampo;]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODCIDORIG" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Cid. Origem]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODCIDDEST" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Cid. Destino]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NOMECIDORIG" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Cidade Origem]]></description>
+          <expression><![CDATA[if ($col_CODCIDORIG != null){
+$sql.select("NOMECID","TSICID","CODCID="+$col_CODCIDORIG);
+if ($sql.next()){
+return $sql.getString(1);
+ };
+}
+return $valorCampo;]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NOMECIDDEST" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Cidade Destino]]></description>
+          <expression><![CDATA[if ($col_CODCIDDEST != null){
+$sql.select("NOMECID","TSICID","CODCID="+$col_CODCIDDEST);
+if ($sql.next()){
+return $sql.getString(1);
+ };
+}
+return $valorCampo;]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DHMOV" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Movimentação]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DTREABRE" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Reabert/Canc]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="MOTIVOREABRE" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Motivo Reabert/Canc.]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSUREABRE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Usuário Reabert/Canc]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUAPPAI" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Nro Agendamento Pai]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="TEMACERTO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Gera Acerto?]]></description>
+          <expression><![CDATA[if ($valorCampo == null){
+ return "S";
+}
+return $valorCampo;]]></expression>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="MOTIVO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Motivo]]></description>
+        </field>
+        <field name="MOTCONF" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Motorista Confirmou?]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="OBSMOTORISTA" systemField="N" dataType="S" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Observação Motorista]]></description>
+        </field>
+        <field name="QTDFAVOR" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Qtd. Favores]]></description>
+        </field>
+        <field name="DHENVIO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Envio]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Parceiro" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPAR" />
+          <expression><![CDATA[@form-filter[this.CODPARC IN (select CODPARC from tgfvei where codveiculo = form.CODVEICULO)]]]></expression>
+          <fields>
+            <field localName="CODPARCTRANSP" targetName="CODPARC" />
+          </fields>
+        </relation>
+        <relation entityName="Cidade" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICID" />
+          <fields>
+            <field localName="CODCIDORIG" targetName="CODCID" />
+          </fields>
+        </relation>
+        <relation entityName="Contato" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFCTT" />
+          <expression><![CDATA[@form-filter[this.CODPARC = form.CODPARCTRANSP]@ref-param[force-one-to-one=true]]]></expression>
+          <fields>
+            <field localName="CODCONTATO" targetName="CODCONTATO" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSUSOL" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="Veiculo" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFVEI" />
+          <fields>
+            <field localName="CODVEICULO" targetName="CODVEICULO" />
+          </fields>
+        </relation>
+        <relation entityName="OrdemCarga" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFORD" />
+          <expression><![CDATA[@ref-param[force-one-to-one=true]]]></expression>
+          <fields>
+            <field localName="ORDEMCARGA" targetName="ORDEMCARGA" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSUEXC" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="Parceiro" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPAR" />
+          <expression><![CDATA[this.MOTORISTA = 'S']]></expression>
+          <fields>
+            <field localName="MOTORISTA" targetName="CODPARC" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSUREABRE" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="TSFCAPSOL" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFCAPSOL" />
+          <fields>
+            <field localName="NUCAPSOL" targetName="NUCAPSOL" />
+          </fields>
+        </relation>
+        <relation entityName="Contato" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFCTT" />
+          <fields>
+            <field localName="CODPARCTRANSP" targetName="CODPARC" />
+          </fields>
+        </relation>
+        <relation entityName="TSFCAP" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFCAP" />
+          <fields>
+            <field localName="NUAPPAI" targetName="NUAP" />
+          </fields>
+        </relation>
+        <relation entityName="TSFCAPDOC" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFCAPDOC" />
+          <fields>
+            <field localName="NUAP" targetName="NUAP" />
+          </fields>
+        </relation>
+        <relation entityName="Cidade" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICID" />
+          <fields>
+            <field localName="CODCIDDEST" targetName="CODCID" />
+          </fields>
+        </relation>
+        <relation entityName="TSFCAPFRT" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFCAPFRT" />
+          <fields>
+            <field localName="NUAP" targetName="NUAP" />
+          </fields>
+        </relation>
+      </relationShip>
+      <actions>
+        <action type="SP">
+          <description><![CDATA[Combinar]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_CAP_UNIFAGEND" refreshType="SEL" txManual="false" rootEntity="TSFCAP" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_CAP_UNIFAGEND" (p_codusu    Number,
+																									 p_idsessao  Varchar2,
+																									 p_qtdlinhas Int,
+																									 p_mensagem  Out Varchar2) Is
+	r_Cap       ad_TSFCAP%Rowtype;
+	r_New       ad_tsfcap%Rowtype;
+	v_proxNuap  Number;
+	v_Seqdoc    Int := 0;
+	v_count     Int := 0;
+	v_mergeRota Clob;
+	v_qtdPsg    Number := 0;
+	T_Nuap      Dbms_utility.Maxname_array;
+
+Begin
+	/*
+  * Autor: Marcus Rangel.
+  * Processo: Agendamento de Carro de Apoio.
+  * Objetivo: Realizar a combinaÃ§Ã£o de agendamentos, para atender corridas distintas com o mesmo destino.
+  */
+
+	r_cap.codusuexc := p_codusu;
+
+	For I In 1 .. p_qtdlinhas
+	Loop
+		r_cap.nuap := Act_int_field(p_idsessao, I, 'NUAP');
+		T_Nuap(I) := r_cap.nuap;
+	End Loop;
+
+	If p_qtdlinhas < 2 Then
+		p_Mensagem := 'Selecione no mínimo 2 lançamentos para combinar.';
+		Return;
+	End If;
+
+	/*Insere o novo agendamento*/
+	Begin
+	
+		-- v_msg := Ad_pkg_cap.Msg_combinacao(v_proxnuap);
+		For r In T_Nuap.first .. T_Nuap.last
+		Loop
+		
+			Select *
+				Into r_Cap
+				From ad_tsfcap
+			 Where nuap = T_Nuap(r);
+		
+			/*tratativa para preencher alguns campos da tela como o parceiro, As cidades*/
+			If r_new.codparctransp Is Null Then
+				r_new.codparctransp := r_cap.codparctransp;
+			End If;
+		
+			If r_new.codveiculo Is Null Then
+				r_new.codveiculo := r_cap.codveiculo;
+			End If;
+		
+			If r_new.codcidorig Is Null Then
+				r_new.codcidorig := r_cap.codcidorig;
+			End If;
+		
+			If r_new.codciddest Is Null Then
+				r_new.codciddest := r_cap.codciddest;
+			End If;
+		
+			If r_new.kminicial Is Null Or r_new.kminicial = 0 Then
+				r_new.kminicial := r_cap.kminicial;
+			End If;
+		
+			If r_new.kmfinal Is Null Or r_new.kmfinal = 0 Then
+				r_new.kmfinal := r_cap.kmfinal;
+			End If;
+		
+			If r_new.totalkm Is Null Or r_new.totalkm = 0 Then
+				r_new.totalkm := r_cap.totalkm;
+			End If;
+		
+			If v_mergerota Is Null Then
+				v_mergerota := r_Cap.Rota || Chr(13) || 'Motivo: ' || r_cap.motivo || Chr(13) ||
+											 'Horário: ' || To_Char(r_cap.dtagend, 'dd/mm/yyyy hh24:mi:ss') || Chr(13) ||
+                                             'Passageiros: ' || To_Char(r_cap.qtdpassageiros);
+			
+			Else
+				v_mergerota := v_mergerota || Chr(13) ||
+											 '----------------------------------------------------------------------------------------' ||
+											 Chr(13) || r_Cap.Rota || Chr(13) || 'Motivo: ' || r_cap.motivo || Chr(13) ||
+											 'Horário: ' || To_Char(r_cap.dtagend, 'dd/mm/yyyy hh24:mi:ss') || Chr(13) ||
+                                             'Passageiros: ' || To_Char(r_cap.qtdpassageiros);
+			End If;
+		
+			v_qtdPsg := v_qtdPsg + r_cap.qtdpassageiros;
+		
+		End Loop;
+	
+	End;
+
+	<<insere_agend>>
+
+	Declare
+		v_nomecidorig Varchar2(200);
+		v_nomeciddest Varchar2(200);
+	Begin
+	
+		stp_keygen_tgfnum('AD_TSFCAP', 1, 'AD_TSFCAP', 'NUAP', 0, v_proxNuap);
+	
+		Select nomecid
+			Into v_nomecidorig
+			From tsicid
+		 Where codcid = r_new.codcidorig;
+	
+		Select nomecid
+			Into v_nomeciddest
+			From tsicid
+		 Where codcid = r_new.codciddest;
+	
+		Insert Into Ad_tsfcap
+			(Nuap, Dhsolicit, Status, Combinada, rota, Codusuexc, Codveiculo, Codparctransp, Motorista,
+			 Kminicial, Kmfinal, Totalkm, Qtdpassageiros, codcidorig, nomecidorig, codciddest, nomeciddest)
+		Values
+			(v_proxNuap, Sysdate, 'P', 'S', v_mergeRota, r_cap.codusuexc, r_Cap.codveiculo,
+			 r_new.CodParcTransp, r_Cap.Motorista, r_new.kminicial, r_new.kmfinal, r_new.totalkm, v_qtdPsg,
+			 r_new.codcidorig, r_new.nomecidorig, r_new.codciddest, r_new.nomeciddest);
+	
+	Exception
+		When dup_val_on_index Then
+			Merge Into tgfnum n
+			Using (Select Max(Nuap) MaxNuap
+							 From Ad_Tsfcap) c
+			On (n.arquivo = 'AD_TSFCAP' And n.codemp = 1 And n.serie = ' ')
+			When Matched Then
+				Update
+					 Set n.ultcod = c.MaxNuap
+			When Not Matched Then
+				Insert
+					(arquivo, codemp, serie, automatico, ultcod)
+				Values
+					('AD_TSFCAP', 1, ' ', 'S', c.maxNuap);
+		
+			Goto insere_agend;
+		When Others Then
+			p_Mensagem := 'Erro ao inserir o agendamento. ' || Sqlcode || ' - ' || Sqlerrm;
+			Return;
+	End;
+
+	/* Atualiza o status dos lanÃ§amento de origem */
+	For P In T_Nuap.First .. T_Nuap.Last
+	Loop
+		Begin
+			Update Ad_tsfcap C
+				 Set C.Status = 'M',
+						 --C.Rota    = C.Rota || Chr(13) || 'Agendamento combinado, resultando no agendamento nro ' || v_proxNuap,
+						 c.nuappai = v_proxNuap
+			 Where Nuap = T_Nuap(P);
+		Exception
+			When Others Then
+				p_Mensagem := 'Erro ao atualizar agendamentos de origem. ' || Sqlerrm;
+				Return;
+		End;
+	End Loop P;
+
+	-- atualiza o NUAP das solicitaÃ§Ãµes
+	Begin
+		ad_pkg_cap.atualiza_StatusSol(p_NroAgendamento => v_proxNuap, p_StatusSolicit => 'E',
+																	p_enviaEmail => 'N', p_enviaAviso => 'N', p_errmsg => p_mensagem);
+		If p_Mensagem Is Not Null Then
+			Return;
+		End If;
+	End;
+
+	-- insere os documentos
+	For Origdoc In (Select nuap
+										From ad_tsfcap
+									 Where Nuappai = v_proxNuap)
+	Loop
+	
+		For Doc In (Select *
+									From Ad_tsfcapdoc
+								 Where Nuap = Origdoc.Nuap)
+		Loop
+			v_Seqdoc := v_seqdoc + 1;
+			v_count  := 0;
+		
+			Select Count(*)
+				Into v_count
+				From Ad_tsfcapdoc
+			 Where Nuap = v_proxNuap
+				 And Codcencus = Doc.Codcencus
+				 And Codsolicit = Doc.Codsolicit;
+		
+			If v_count = 0 Then
+				Begin
+					Insert Into Ad_tsfcapdoc
+						(Nuap, Seqdoc, Codcencus, Codsolicit, Entregue)
+					Values
+						(v_proxNuap, v_Seqdoc, Doc.Codcencus, Doc.Codsolicit, 'N');
+				Exception
+					When DUP_VAL_ON_INDEX Then
+						v_proxNuap := v_proxNuap + 1;
+				End;
+			Else
+				Continue;
+			End If;
+		
+		End Loop Doc;
+	
+	End Loop Origdoc;
+
+	-- insere o rateio
+	Declare
+		v_seqRat Int;
+	Begin
+	
+		Delete From ad_tsfcapfrt
+		 Where nuap = v_proxNuap;
+	
+		Select Nvl(Max(r.numfrt), 1)
+			Into v_seqRat
+			From ad_tsfcapfrt r
+		 Where nuap = v_proxNuap;
+	
+		For c_Rat In (Select r.codemp,
+												 r.codcencus,
+												 r.codnat,
+												 Nvl(r.codproj, 0) codproj,
+												 ratio_to_report(Count(*)) over() * 100 As percentual
+										From ad_tsfcapfrt r
+										Join ad_tsfcap c
+											On r.nuap = c.nuap
+									 Where c.nuappai = v_proxNuap
+									 Group By r.codemp, r.codcencus, r.codnat, Nvl(r.codproj, 0))
+		Loop
+			v_seqRat := v_seqRat + 1;
+			Insert Into ad_tsfcapfrt
+				(nuap, numfrt, codemp, codcencus, codnat, codproj, percentual)
+			Values
+				(v_proxNuap, v_seqRat, c_rat.codemp, c_rat.codcencus, c_rat.codnat, c_rat.codproj,
+				 c_rat.percentual);
+		End Loop;
+	End;
+
+	p_mensagem := 'LanÃ§amentos combinados com sucesso! Foi gerado o agendamento nÃºmero <a  target ="_parent" href="' ||
+								Ad_fnc_urlskw('AD_TSFCAP', v_proxnuap) || '"><font color="#0000FF">' || v_proxNuap ||
+								'</font></a>';
+
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Cancelar]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_CAP_CANCAGEND" refreshType="SEL" txManual="false" rootEntity="TSFCAP" />
+            <params>
+              <promptParam label="Motivo do Cancelamento" name="MOTIVO" required="true" saveLast="false" paramType="S" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_CAP_CANCAGEND" (p_codusu    number,
+                                                 p_idsessao  varchar2,
+                                                 p_qtdlinhas int,
+                                                 p_mensagem  out varchar2) is
+  v_nrounico number;
+  v_motivo   varchar2(400);
+  r_sol      ad_tsfcapsol%rowtype;
+  r_cap      ad_tsfcap%rowtype;
+  v_msg      varchar2(4000);
+
+begin
+  /*
+   Autor: Marcus Rangel
+   Processo: Carro de Apoio
+   Objetivo: Realizar o processo de solicitação e cancelamento tanto da solicitação 
+   quanto do agendamento, verificando se existe fechamento e tratando o mesmo.
+  */
+
+  stp_set_atualizando('S');
+
+  for i in 1 .. p_qtdlinhas
+  loop
+    v_nrounico := act_int_field(p_idsessao, i, 'NUCAPSOL');
+    v_motivo   := act_txt_param(p_idsessao, 'MOTIVO');
+  
+    if v_nrounico is not null then
+    
+      select * into r_sol from ad_tsfcapsol where nucapsol = v_nrounico;
+    
+      /*If r_sol.status Not In ('E', 'A') Then
+        p_Mensagem := 'Somente solicitações com status "<font color="#FF0000">Enviada</font>"' ||
+                      'ou "<font color="#FF0000">Agendada</font>" podem ser canceladas.<br><br>' ||
+                      'Procure o responsável pelo agendamento para corrgir essa situação.';
+        Return;
+      End If;*/
+    
+      begin
+        select * into r_cap from ad_tsfcap where nuap = r_sol.nuap;
+      exception
+        when no_data_found then
+          -- se não tem agendamento, só cancela
+          update ad_tsfcapsol set status = 'C' where nucapsol = r_sol.nucapsol;
+        
+          p_mensagem := 'Cancelamento efetuado com sucesso!';
+          return;
+      end;
+    
+      ad_set.ins_avisosistema(p_titulo     => 'Solicitação de Cancelamento.',
+                              p_descricao  => 'O usuário ' ||
+                                              ad_get.nomeusu(r_sol.codusu, 'resumido') ||
+                                              ' solicitou o cancelamento do agendamento ' ||
+                                              r_sol.nuap || ', resultante da solicitação ' ||
+                                              v_nrounico || ', alegando o seguinte motivo: <b> ' ||
+                                              v_motivo || '</b>',
+                              p_solucao    => 'Para maiores detalhes, acesse o registro ',
+                              p_usurem     => r_sol.codusu,
+                              p_usudest    => r_cap.codusuexc,
+                              p_prioridade => 1,
+                              p_tabela     => 'AD_TSFCAP',
+                              p_nrounico   => r_sol.nuap,
+                              p_erro       => p_mensagem);
+    
+      if p_mensagem is not null then
+        return;
+      end if;
+    
+      v_msg := 'Solicitação de Cancelamento enviada com Sucesso!!!';
+    
+    else
+      --entra no cancelamento real
+    
+      v_nrounico := act_int_field(p_idsessao, i, 'NUAP');
+    
+      for r_cap in (select * from ad_tsfcap where nuap = v_nrounico)
+      loop
+      
+        if r_cap.status not in ('P', 'A') then
+          p_mensagem := 'Somente agendamentos com status "<font color="#FF0000">Pendente</font>"' ||
+                        'ou "<font color="#FF0000">Agendado</font>" podem ser cancelados.<br><br>';
+          return;
+        end if;
+      
+        /*Verifica se existe acerto*/
+        -- encontra o acerto do agendamento em questão, verifica se o acerto ainda está pendente    
+        ad_pkg_cap.exclui_acerto(r_cap.nuap, p_mensagem);
+        if p_mensagem is not null then
+          return;
+        end if;
+      
+        /*Atualiza o status das solicitações de origem, envia e-mail para os solicitantes e aviso via sistema*/
+        begin
+          ad_pkg_cap.atualiza_statussol(r_cap.nuap, 'C', 'S', 'S', p_mensagem);
+        
+          if p_mensagem is not null then
+            return;
+          end if;
+        
+        end;
+      
+        begin
+          update ad_tsfcap c
+             set c.status       = 'C',
+                 c.dtreabre     = sysdate,
+                 c.motivoreabre = v_motivo,
+                 c.codusureabre = stp_get_codusulogado
+           where c.nuap = r_cap.nuap;
+        exception
+          when others then
+            p_mensagem := 'Erro ao atulizar o status do agendamento. ' || sqlerrm;
+            return;
+        end;
+      
+      end loop r_cap;
+    
+      p_mensagem := 'Cancelamento realizado com sucesso!!!';
+    
+    end if;
+  
+  end loop;
+
+  stp_set_atualizando('N');
+
+end;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Informar Necessidade de Táxi]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_CAP_CONFTAXI" refreshType="SEL" txManual="false" rootEntity="TSFCAP" />
+            <params>
+              <promptParam label="Justificativa para necessidade de Taxi" name="MOTIVOTAXI" required="false" saveLast="false" paramType="S" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_CAP_CONFTAXI" (p_codusu    Number,
+																									p_idsessao  Varchar2,
+																									p_qtdlinhas Int,
+																									p_mensagem  Out Varchar2) Is
+	v_nuAp   Number;
+	v_Motivo Varchar2(400);
+	errmsg   Varchar2(4000);
+	error Exception;
+Begin
+	/*
+  * Autor: Marcus Rangel
+  * Processo: Carro de Apoio
+  * Objetivo: Informar o motivo da necessidade de táxi no agendamento da corrida.
+  */
+	For I In 1 .. p_qtdlinhas
+	Loop
+		v_nuAp   := act_int_field(p_idsessao, I, 'NUAP');
+		v_Motivo := act_txt_param(p_idsessao, 'MOTIVOTAXI');
+	
+		Begin
+			Update ad_tsfcap c
+				 Set c.taxi = 'S', c.motivotaxi = v_Motivo
+			 Where c.nuap = v_nuAp;
+		Exception
+			When Others Then
+				errmsg := 'Erro ao atualizar as informações do Táxi. ' || Sqlerrm;
+				Raise error;
+		End;
+	End Loop;
+	p_mensagem := 'Informações atualizadas com sucesso!!!';
+Exception
+	When error Then
+		p_mensagem := errmsg;
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Confirmar]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_CAP_CONFAGEND" refreshType="SEL" txManual="false" rootEntity="TSFCAP" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_CAP_CONFAGEND" (p_codusu    number,
+                                                 p_idsessao  varchar2,
+                                                 p_qtdlinhas int,
+                                                 p_mensagem  out varchar2) is
+  v_nuap          number;
+  r_cap           ad_tsfcap%rowtype;
+  v_count         int := 0;
+  v_valqtdpessoas boolean := false;
+  v_valagenda     boolean := false;
+  v_titulo        varchar2(200);
+  v_mensagem      varchar2(2000);
+  v_msgvalqtd     varchar2(200);
+  v_msgvalagd     varchar2(200);
+  v_incluir       boolean := false;
+  v_lotacao       number := 0;
+  errmsg          varchar2(4000);
+  error exception;
+begin
+  /*
+  autor: marcus rangel
+  processo: carro de apoio
+  objetivo: validar as informações do agendamento, retornar as informações para solicitaçao
+  
+  log de alterações:
+  23/11/2016 - correção nro aviso linha 101
+  28/11/2016 - inserida validação por passageiros
+  
+  */
+
+  for i in 1 .. p_qtdlinhas
+  loop
+  
+    v_nuap := act_int_field(p_idsessao, i, 'NUAP');
+  
+    select * into r_cap from ad_tsfcap where nuap = v_nuap;
+  
+    /* validações */
+    begin
+    
+      /* valida status do agendamento */
+      if r_cap.status = 'A' then
+        errmsg := 'Agendamento já realizado';
+        raise error;
+      elsif r_cap.status = 'C' then
+        errmsg := 'Agendamento cancelada!!!';
+        raise error;
+      elsif r_cap.status = 'R' then
+        errmsg := 'Agendamento já realizado!!!';
+        raise error;
+      end if;
+    
+      /* valida o veículo do agendamento */
+      if r_cap.codveiculo is null or r_cap.codveiculo = 0 and p_codusu != 0 then
+        errmsg := 'Informe um veículo válido para realizar a confirmação.';
+        raise error;
+      end if;
+    
+      /* valida se as datas de agendamento estão preenchidas */
+      if (r_cap.dtagend is null or r_cap.dtagendfim is null) then
+        errmsg := 'Informe as datas de agendamento para realizar a confirmação.';
+        raise error;
+      end if;
+    
+      /*valida as datas de inicio e término, impedir que agende com data retroativa*/
+      /*      
+      if to_date(r_cap.dtagend, 'DD/MM/YYYY HH24:MI:SS') < to_date(sysdate, 'DD/MM/YYYY HH24:MI:SS') then
+        errmsg := 'Não é permitido agendamento retroativo.';
+        raise error;
+      end if;
+      */
+    
+      /* valida quantidade de passageiros */
+    
+      select nvl(v.maxlotacao, 0)
+        into v_lotacao
+        from tgfvei v
+       where v.codveiculo = r_cap.codveiculo;
+      if v_lotacao is null or v_lotacao = 0 then
+        v_msgvalqtd     := 'Lotação não informada no cadasto do veículo!';
+        v_valqtdpessoas := false;
+      end if;
+    
+      if r_cap.qtdpassageiros <= v_lotacao then
+        v_valqtdpessoas := true;
+      else
+        v_msgvalqtd     := 'Veículo com problemas de excesso de lotação (' || v_lotacao || '/' ||
+                           r_cap.qtdpassageiros || '). <br>Deseja continuar?';
+        v_valqtdpessoas := false;
+      
+      end if;
+    
+      /* valida o conflito de agendamento */
+    
+      for c_agend in (select *
+                        from ad_tsfcap c
+                       where c.status = 'A'
+                         and c.codparctransp = r_cap.codparctransp
+                         and c.codveiculo = r_cap.codveiculo
+                       order by c.dtagend desc)
+      loop
+        if r_cap.dtagend between c_agend.dtagend and c_agend.dtagendfim then
+          v_count     := 1;
+          v_msgvalagd := 'Veículo com conflito de agenda nessa data/horário (' ||
+                         to_char(r_cap.dtagend, 'dd/mm/yyyy') || ' das ' ||
+                         to_char(r_cap.dtagend, 'HH24:mi') || ' às ' ||
+                         to_char(r_cap.dtagendfim, 'HH24:mi') || ')';
+        end if;
+        exit when v_count = 1;
+      end loop;
+    
+      if v_count = 0 then
+        v_valagenda := true;
+      else
+        v_valagenda := false;
+      end if;
+    
+      if v_valagenda = false and v_valqtdpessoas = false then
+        v_mensagem := v_msgvalqtd || chr(13) || v_msgvalagd;
+      elsif v_valagenda = true and v_valqtdpessoas = false then
+        v_mensagem := v_msgvalqtd;
+      elsif v_valagenda = false and v_valqtdpessoas = true then
+        v_mensagem := v_msgvalagd;
+      end if;
+    
+      if v_mensagem is not null then
+        v_titulo := 'Problemas Encontrados';
+      
+        v_incluir := act_escolher_simnao(v_titulo, v_mensagem, p_idsessao, i) = 'S';
+      
+        if v_incluir then
+          null;
+        else
+          return;
+        end if;
+      
+      end if;
+    
+      -- valida se o motorista possui voucher pendentes de validação
+      -- 'M' de motorista
+      -- v de veículo
+      --errmsg := ad_pkg_cap.voucher_pendentes(v_nuap, 'M');
+      errmsg := ad_pkg_cap.voucher_pendentes(v_nuap, 'V');
+    
+      if errmsg is not null then
+        raise error;
+      end if;
+    
+    end; -- validaçao
+  
+    /* atualiza o status das solicitações */
+    begin
+    
+      ad_pkg_cap.atualiza_statussol(p_nroagendamento => v_nuap,
+                                    p_statussolicit  => 'A',
+                                    p_enviaemail     => 'S',
+                                    p_enviaaviso     => 'S',
+                                    p_errmsg         => errmsg);
+    
+      if errmsg is not null then
+        raise error;
+      end if;
+    
+    end;
+  
+    /* atualiza numeração da pk da tabela */
+  
+    /* atualiza o status do agendamento */
+    begin
+      update ad_tsfcap c set c.status = 'A' where nuap = v_nuap;
+    exception
+      when others then
+        errmsg := 'Erro ao atualizar o status do agendamento. ' || sqlerrm;
+        raise error;
+    end;
+  
+  end loop i;
+
+  p_mensagem := 'Agendamento confirmado com suscesso!!!';
+
+exception
+
+  when error then
+    rollback;
+    p_mensagem := '<p><font color="#FF0000" size="14"><b>Atenção!!!</b></font></p>' ||
+                  '<img src="http://www.freeiconspng.com/uploads/error-icon-21.png" height="42" width="42">' ||
+                  errmsg || '</img>';
+end;]]></storedProcedure>
+        </action>
+        <action type="LC">
+          <description><![CDATA[Análise Carro de Apoio]]></description>
+          <actionConfig>
+            <laucher resourceID="br.com.sankhya.menu.adicional.nuDsb.168.1" />
+          </actionConfig>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Finalizar]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_CAP_FINALIZAGEND" refreshType="SEL" txManual="false" rootEntity="TSFCAP" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_CAP_FINALIZAGEND" (p_codusu    Number,
+                                                      p_idsessao  Varchar2,
+                                                      p_qtdlinhas Int,
+                                                      p_mensagem  Out Varchar2) Is
+  v_nuAp      Number;
+  r_cap       ad_tsfcap%Rowtype;
+  v_nuAcerto  Number;
+  v_seqAcerto Int := 0;
+  v_Existe    Int := 0;
+  errmsg      Varchar2(4000);
+  error Exception;
+Begin
+  /*
+   * Autor: Marcus Rangel
+   * Processo: Carro de Apoio
+   * Objetivo: Concluir a corrida do carro de apoio e gerar a informação na rotina de acerto de veículos de apoio
+  */
+
+  For I In 1 .. p_qtdlinhas
+  Loop
+    v_nuAp := act_int_field(p_idsessao, I, 'NUAP');
+  
+    Select *
+      Into r_cap
+      From ad_tsfcap
+     Where nuap = v_nuap;
+  
+    /* Se não gera acerto, vai para o fim da execução, atualiza status da solicitação e do agendamento e sai*/
+    If Nvl(r_cap.temacerto, 'N') = 'N' Then
+      Goto fim_processo;
+    End If;
+  
+    Select Count(*)
+      Into v_Existe
+      From ad_diaacertotransp d
+      Join ad_cabacertotransp t
+        On d.nuacerto = t.nuacerto
+     Where t.codparc = r_cap.codparctransp
+       And t.referencia = Trunc(r_cap.dtagendfim, 'mm')
+       And d.nuap = r_cap.nuap
+       And Exists (Select 1
+              From ad_ratacertotransp r
+             Where r.nuacerto = d.nuacerto
+               And r.seqacertodia = d.seqacertodia);
+  
+    If r_cap.status = 'R' And v_existe > 0 Then
+      errmsg := 'Agendamento já Realizado.';
+      Raise error;
+    Elsif r_cap.status = 'P' Then
+      errmsg := 'Somenete agendamentos confirmados podem ser finalizados.';
+      Raise error;
+    End If;
+  
+    If r_cap.kminicial = 0 Or r_cap.kmfinal = 0 Then
+      errmsg := 'Para concluir o agendamento é necessário que a quilometragem inicial e final sejam informadas.';
+      Raise error;
+    End If;
+  
+    If r_cap.taxi = 'S' And r_cap.vlrcorrida = 0 Then
+      errmsg := 'Por favor informe o valor da corrida de táxi.';
+      Raise error;
+    End If;
+  
+    -- valida rateio
+    Begin
+      For rat In (Select *
+                    From ad_tsfcapfrt r
+                   Where r.nuap = r_cap.nuap)
+      Loop
+      
+        ad_stp_valida_natcrproj_sf(rat.codemp, 0, rat.codnat, rat.codcencus, rat.codproj, 0,
+                                   p_Mensagem);
+      
+        If p_mensagem Is Not Null Then
+          Return;
+        End If;
+      
+      End Loop;
+    End;
+    -- fim valida rateio
+  
+    /* envia para a tela de acerto */
+    Begin
+    
+      v_nuAcerto := ad_pkg_cap.get_nroacerto(v_nuAp);
+    
+      --se não existe, inserir o registro
+      If Nvl(v_nuAcerto, 0) = 0 Then
+      
+        --stp_obtemid('AD_CABACERTOTRANSP', v_nuAcerto);
+        stp_keygen_tgfnum('AD_CABACERTOTRANSP', 1, 'AD_CABACERTOTRANSP', 'NUACERTO', 0, v_nuAcerto);
+      
+        --- insere o cabeçalho
+        Begin
+          --Execute Immediate 'ALTER TRIGGER TRG_INC_UPT_CABACERTOTRANSP_SF DISABLE';
+        
+          Insert Into ad_cabacertotransp c
+            (nuacerto, codparc, referencia, ordemcarga, codveiculo, tipo, vlrcomb)
+          Values
+            (v_nuAcerto, r_cap.codparctransp, Trunc(r_cap.dtagend, 'mm'), r_cap.ordemcarga,
+             r_cap.codveiculo, (Case When r_cap.taxi = 'S' Then 'TAXI' Else 'OUTROS' End),
+             Case When r_cap.codparctransp = 365883 Then 0.001 Else 0 End);
+          -- verificar o conteúdo da trigger commentada acima, 
+          -- verificar com Rodrigo sobre essa validação, se alí é o melhor lugar
+          -- ao invés do momento de gerar o pedido
+        
+          --Execute Immediate 'ALTER TRIGGER TRG_INC_UPT_CABACERTOTRANSP_SF ENABLE';
+        Exception
+          When Others Then
+            Rollback;
+            errmsg := 'Erro ao inserir o cabeçalho do acerto. ' || Sqlerrm;
+            --Execute Immediate 'ALTER TRIGGER TRG_INC_UPT_CABACERTOTRANSP_SF ENABLE';
+            Raise error;
+        End;
+      
+        -- insere a viagem
+        Begin
+          v_seqAcerto := v_seqAcerto + 1;
+        
+          Insert Into AD_DIAACERTOTRANSP
+            (NUACERTO, SEQACERTODIA, DIA, KM, NUAP)
+          Values
+            (v_nuAcerto, v_seqAcerto, Trunc(r_cap.dtagendfim), r_cap.totalkm, r_cap.nuap);
+        Exception
+          When Others Then
+            Rollback;
+            errmsg := 'Erro ao inserir a dia da viagem no acerto. ' || Sqlerrm;
+            Raise error;
+        End;
+      
+        /* RATEIO */
+        Begin
+          ad_pkg_cap.insere_rateio_acerto(p_nroagend => v_nuap, p_nroacerto => v_nuAcerto,
+                                          p_seqacerto => v_seqAcerto, p_errmsg => errmsg);
+          If errmsg Is Not Null Then
+            Raise error;
+          End If;
+        End;
+      
+        -- o cabeçalho do acerto já existe, inserir somente o data da viagem
+      Else
+      
+        Declare
+          v_AcertoFechado Int := 0;
+        Begin
+          Select Count(*)
+            Into v_AcertoFechado
+            From ad_cabacertotransp t
+           Where t.codparc = r_cap.codparctransp
+             And Trunc(t.referencia, 'mm') = Trunc(r_cap.dtagendfim, 'mm')
+             And t.nunota Is Not Null;
+        
+          If v_AcertoFechado > 0 Then
+            errmsg := 'O Acerto para este parceiro, referente este mês, já está encerrado,' ||
+                      ' não sendo possível incluir esse lançamento ao mesmo. <br>' ||
+                      'Favor entrar em contato com a área de transportes para a reabertura do acerto para que essa corrida possa ser incluída.';
+            Raise error;
+          End If;
+        End;
+      
+        Select Count(*)
+          Into v_Existe
+          From ad_diaacertotransp dat
+         Where dat.dia = Trunc(r_cap.dtagendfim)
+           And dat.km = r_cap.totalkm
+           And dat.nuap = r_cap.nuap;
+      
+        If v_existe > 0 Then
+          /* errmsg := 'Agendamento já consta no acerto ' || v_nuAcerto;
+          Raise error;*/
+          Begin
+            Delete From ad_diaacertotransp dat
+             Where dat.dia = Trunc(r_cap.dtagendfim)
+               And dat.km = r_cap.totalkm
+               And dat.nuap = r_cap.nuap;
+          Exception
+            When Others Then
+              p_mensagem := 'Não foi possível remover o lançamento no acerto do veículo, devido o seguinte erro: ' ||
+                            Sqlerrm;
+              Raise error;
+          End;
+        End If;
+      
+        Select Nvl(Max(seqacertodia), 0) + 1
+          Into v_seqAcerto
+          From ad_diaacertotransp
+         Where nuacerto = v_nuAcerto;
+      
+        Begin
+          Insert Into AD_DIAACERTOTRANSP
+            (NUACERTO, SEQACERTODIA, DIA, KM, NUAP)
+          Values
+            (v_nuAcerto, v_seqAcerto, Trunc(r_cap.dtagendfim), r_cap.totalkm, r_cap.nuap);
+        Exception
+          When Others Then
+            errmsg := 'Erro ao inserir o dia da viagem. ' || Chr(13) || Sqlerrm;
+        End;
+      
+        /* INSERE O RATEIO */
+        Begin
+        
+          ad_pkg_cap.insere_rateio_acerto(p_nroagend => v_nuap, p_nroacerto => v_nuAcerto,
+                                          p_seqacerto => v_seqAcerto, p_errmsg => errmsg);
+          If errmsg Is Not Null Then
+            Raise error;
+          End If;
+        End;
+      
+      End If;
+    
+    End;
+    <<fim_processo>>
+  /*Atualiza o status das solicitações de origem, envia e-mail para os solicitantes e aviso via sistema*/
+    Begin
+      ad_pkg_cap.atualiza_statussol(p_nroagendamento => r_cap.nuap, p_statussolicit => 'R',
+                                    p_enviaemail => 'S', p_enviaaviso => 'S', p_errmsg => Errmsg);
+    
+      If errmsg Is Not Null Then
+        Raise error;
+      End If;
+    
+    End;
+  
+    Begin
+      Update ad_tsfcap c
+         Set c.status = 'R'
+       Where nuap = r_cap.nuap;
+    End;
+  
+  End Loop;
+
+  p_mensagem := 'Realização da corrida registrada com sucesso!!!';
+
+Exception
+  When error Then
+    p_mensagem := errmsg;
+  When Others Then
+    P_mensagem := Sqlerrm();
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Reabrir]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_CAP_REABREAGEND" refreshType="SEL" txManual="false" rootEntity="TSFCAP" />
+            <params>
+              <promptParam label="Motivo" name="MOTIVO" required="true" saveLast="false" paramType="S" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_CAP_REABREAGEND" (P_CODUSU Number, P_IDSESSAO Varchar2, P_QTDLINHAS Number, P_MENSAGEM Out Varchar2) As
+	r_Cap  ad_tsfcap%Rowtype;
+	errmsg Varchar2(4000);
+	error Exception;
+Begin
+	/*
+  * Autor: Marcus Rangel
+  * Processo: Carro de Apoio
+  * Objetivo: Reabrir o agendamento para correção, o procedimento defaz todas as ações realizadas no fechamento do agendamento
+  */
+
+	For I In 1 .. P_QTDLINHAS
+	Loop
+		r_cap.nuap := ACT_INT_FIELD(P_IDSESSAO, I, 'NUAP');
+
+		Select *
+			Into r_cap
+			From ad_tsfcap
+		 Where nuap = r_cap.nuap;
+
+		r_cap.motivoreabre := act_txt_param(p_IdSessao, 'MOTIVO');
+
+		If R_Cap.Status Not In ('R','C') Then
+			errmsg := 'Somente agendamentos finalizados/cancelados podem ser reabertos.';
+			Raise error;
+		End If;
+
+		If Length(r_cap.motivoreabre) < 15 Then
+			errmsg := 'Motivo informado incompleto. Detalhe mais o motiva da reabertura.';
+			Raise error;
+		End If;
+
+		-- encontra o acerto do agendamento em questão, verifica se o acerto ainda está pendente
+    if r_cap.status = 'R' then
+      ad_pkg_cap.exclui_acerto(p_nroagend => r_cap.nuap, p_errmsg => errmsg);
+      If errmsg Is Not Null Then
+        Raise error;
+      End If;
+    end if;
+
+		-- atualiza o status do agendamento de origem
+		Begin
+			Update Ad_Tsfcap Cap
+				 Set Cap.Status = case When R_Cap.Status = 'R' Then 'A' Else 'P' End, 
+             Cap.Dtreabre = Sysdate, 
+             Cap.Codusureabre = P_Codusu, 
+             cap.motivoreabre = r_cap.motivoreabre
+			 Where nuap = r_cap.nuap;
+
+			Ad_Pkg_Cap.Atualiza_Statussol(P_Nroagendamento => R_Cap.Nuap,
+																		p_statussolicit  => case when r_cap.status = 'R' then 'A' else 'E' end,
+																		p_enviaemail     => 'N',
+																		p_enviaaviso     => 'N',
+																		p_errmsg         => errmsg);
+			If errmsg Is Not Null Then
+				Raise error;
+			End If;
+		Exception
+			When Others Then
+				errmsg := 'Erro ao atualizar o status do agendamento ' || r_cap.nuap || '. - ' || Sqlerrm;
+				Raise error;
+		End;
+
+	End Loop I;
+
+	P_MENSAGEM := 'Agendamento reaberto com sucesso!';
+
+Exception
+	When error Then
+		Rollback;
+		P_MENSAGEM := errmsg;
+	When Others Then
+		P_MENSAGEM := Sqlerrm;
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Duplicar]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_CAP_DUPLANC" refreshType="NONE" txManual="false" rootEntity="TSFCAP" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_CAP_DUPLANC" (P_CODUSU Number, P_IDSESSAO Varchar2, P_QTDLINHAS Number,
+																								 P_MENSAGEM Out Varchar2) As
+	v_NuCapSol Number;
+	v_NuCap    Number;
+	v_ProxNum  Number;
+	v_NumLink  Varchar2(4000);
+	Errmsg     Varchar2(4000);
+	Error Exception;
+Begin
+	/* 
+  * Autor: M. Rangel
+  * Processo: Carro de Apoio
+  * Objetivo: Duplicar o lançamento, a aba intinerário e rateio.
+  */
+
+	For L In 1 .. P_QTDLINHAS
+	Loop
+	
+		v_NuCapSol := ACT_INT_FIELD(P_IDSESSAO, L, 'NUCAPSOL');
+		v_NuCap    := ACT_INT_FIELD(P_IDSESSAO, L, 'NUAP');
+	
+		If v_NuCapSol Is Not Null And v_NuCap Is Null Then
+		
+			/*Prenche o cabeçalho*/
+			For C In (Select *
+									From ad_tsfcapsol
+								 Where nucapsol = v_NucapSol)
+			Loop
+			
+				--v_ProxNum := ad_get.ultCod('AD_TSFCAPSOL', 1, ' ') + 1;
+			
+				stp_keygen_tgfnum('AD_TSFCAPSOL', 1, 'AD_TSFCAPSOL', 'NUCAPSOL', 0, v_proxnum);
+			
+				Begin
+					Insert Into ad_tsfcapsol
+						(nucapsol, codusu, dhsolicit, codcencus, tiposol, status, dtagend, nuap, dhalter, qtdpassageiros)
+					Values
+						(v_ProxNum, P_CODUSU, Sysdate, c.codcencus, c.tiposol, 'P', Null, Null, Sysdate, 1);
+				Exception
+					When Others Then
+						P_MENSAGEM := 'Erro ao duplicar o cabeçalho da solicitação. ' || Sqlerrm;
+						Return;
+				End;
+			
+				/*preenche o itinerário*/
+				For I In (Select *
+										From ad_tsfcapitn
+									 Where nucapsol = v_NucapSol)
+				Loop
+					<<insert_sol>>
+					Begin
+						Insert Into ad_tsfcapitn
+							(nucapsol, nuitn, tipotin, codcid, codend, codbai, complemento, referencia)
+						Values
+							(v_ProxNum, i.nuitn, i.tipotin, i.codcid, i.codend, i.codbai, i.complemento, i.referencia);
+					Exception
+						When dup_val_on_index Then
+							v_ProxNum := v_ProxNum + 1;
+							Goto insert_sol;
+						When Others Then
+							P_MENSAGEM := 'Erro ao duplicar o itinerário. ' || Sqlerrm;
+							Return;
+					End;
+				
+				End Loop I;
+			
+				/*Preenche o rateio*/
+				For R In (Select *
+										From ad_tsfcaprat
+									 Where nucapsol = v_NucapSol)
+				Loop
+				
+					Begin
+						Insert Into ad_tsfcaprat
+							(nucapsol, nucaprat, codemp, codnat, codcencus, percentual)
+						Values
+							(v_ProxNum, r.nucaprat, r.codemp, r.codnat, r.codcencus, r.percentual);
+					Exception
+						When Others Then
+							Errmsg := 'Erro ao duplicar o rateio da solicitação. ' || Sqlerrm;
+							Raise error;
+					End;
+				
+				End Loop R;
+			
+				/*Update tgfnum
+          Set ultcod = v_ProxNum
+        Where arquivo = 'AD_TSFCAPSOL';*/
+			
+				v_NumLink := '<a target="_top" href="' || ad_fnc_urlskw('AD_TSFCAPSOL', v_ProxNum, Null, Null) || '">' || v_ProxNum ||
+										 '</a>';
+			
+			End Loop C;
+		
+		Else
+		
+			For C In (Select *
+									From Ad_tsfcap
+								 Where Nuap = v_nucap)
+			Loop
+			
+				--v_ProxNum := ad_get.ultcod('AD_TSFCAP', 1, ' ') + 1;
+			
+				stp_keygen_tgfnum('AD_TSFCAP', 1, 'AD_TSFCAP', 'NUAP', 0, v_ProxNum);
+			
+				<<Insert_cap>>
+				Begin
+					Insert Into Ad_tsfcap
+						(Nuap, Codususol, Dhsolicit, Ordemcarga, Codusuexc, Codparctransp, Codveiculo, Status, Taxi, Motivotaxi, Kminicial,
+						 Kmfinal, Totalkm, Vlrcorrida, Nucapsol, Dtagend, Rota, Dtagendfim, Combinada, Codcontato, Qtdpassageiros, Motorista,
+						 Motivo, Deptosol, Codcidorig, Codciddest, Nomeciddest, Nomecidorig, Dhmov, Dtreabre, Motivoreabre, Codusureabre,
+						 Nuappai, Temacerto)
+					Values
+						(v_ProxNum, C.Codususol, C.Dhsolicit, C.Ordemcarga, C.Codusuexc, C.Codparctransp, C.Codveiculo, 'P', C.Taxi,
+						 C.Motivotaxi, 0, 0, 0, 0, C.Nucapsol, C.Dtagend, C.Rota, Null, 'N', C.Codcontato, C.Qtdpassageiros, C.Motorista,
+						 C.Motivo, C.Deptosol, C.Codcidorig, C.Codciddest, C.Nomeciddest, C.Nomecidorig, Sysdate, Null, Null, Null, Null, 'N');
+				Exception
+					When dup_val_on_index Then
+						v_ProxNum := v_ProxNum + 1;
+						Goto insert_cap;
+					When Others Then
+						errmsg := 'Erro ao duplicar o agendamento. ' || Sqlerrm;
+						Raise error;
+				End;
+			
+				For R In (Select *
+										From Ad_tsfcapdoc d
+									 Where Nuap = v_Nucap)
+				Loop
+				
+					Begin
+						Insert Into Ad_tsfcapdoc
+							(Seqdoc, Nuap, Codcencus, Codsolicit, Entregue, Codusuresp, Entreguetransp)
+						Values
+							(R.Seqdoc, v_ProxNum, R.Codcencus, R.Codsolicit, 'N', R.Codusuresp, 'N');
+					Exception
+						When Others Then
+							errmsg := 'Erro ao duplicar os documentos do agendamento. ' || Sqlerrm;
+							Raise error;
+					End;
+				
+				End Loop R;
+			
+				v_NumLink := '<a target="_top" href="' || ad_fnc_urlskw('AD_TSFCAP', v_ProxNum, Null, Null) || '">' || v_ProxNum ||
+										 '</a>';
+			
+			End Loop C;
+		
+		End If;
+	
+	End Loop L;
+
+	/*Update tgfnum
+    Set ultcod = v_ProxNum
+  Where arquivo = 'AD_TSFCAP';*/
+
+	P_MENSAGEM := 'Lançamento duplicado com sucesso.<br> Lançamento nro: ' || v_NumLink;
+
+Exception
+	When ERROR Then
+		Rollback;
+		P_MENSAGEM := Errmsg;
+	When Others Then
+		P_MENSAGEM := 'Erro: ' || Sqlerrm;
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Refazer Rateio]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_CAP_REFAZRATEIO_SF" refreshType="SEL" txManual="false" rootEntity="TSFCAP" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_CAP_REFAZRATEIO_SF" (P_CODUSU    Number,
+                                                      P_IDSESSAO  Varchar2,
+                                                      P_QTDLINHAS Number,
+                                                      P_MENSAGEM  Out Varchar2) As
+  r_cap ad_tsfcap%Rowtype;
+Begin
+  /* 
+  * Autor: M. Rangel
+  * Processo: Carro de Apoio
+  * Objetivo: Corrigir o rateio na aba de mesmo nome na tela de agendamento de carro de apoio
+  */
+
+  For i In 1 .. P_QTDLINHAS
+  Loop
+    r_cap.nuap := ACT_INT_FIELD(P_IDSESSAO, I, 'NUAP');
+  
+    If r_cap.status Not In ('A', 'P') Then
+      p_mensagem := 'Somente agendamentos não finalizados podem ser refeitos';
+      Return;
+    End If;
+  
+    Delete From ad_tsfcapfrt t
+     Where t.nuap = r_cap.nuap;
+  
+    For r_sol In (With filhos As
+                     (Select nuap, nuappai, nucapsol
+                       From ad_tsfcap c
+                      Where c.nuappai = r_cap.nuap)
+                    Select rownum,
+                           r.codemp,
+                           r.codnat,
+                           r.codcencus,
+                           Nvl(r.codproj, 0) codproj,
+                           Round(ratio_to_report(Count(*)) Over() * 100, 4) As Percentual
+                      From ad_tsfcap c
+                      Left Join filhos f
+                        On f.nuappai = c.nuap
+                      Join ad_tsfcapsol s
+                        On s.nucapsol = Nvl(c.nucapsol, f.nucapsol)
+                      Join ad_tsfcaprat r
+                        On s.nucapsol = r.nucapsol
+                     Where c.nuap = r_cap.nuap
+                     Group By rownum, r.codemp, r.codnat, r.codcencus, Nvl(r.codproj, 0)
+                     Order By Rownum)
+    Loop
+      Dbms_Output.Put_Line(r_cap.nuap || ' | ' || r_sol.codcencus || ' | ' || r_sol.percentual);
+    
+      Insert Into ad_tsfcapfrt
+        (nuap, numfrt, codemp, codcencus, codnat, codproj, percentual)
+      Values
+        (r_cap.nuap, r_sol.rownum, r_sol.codemp, r_sol.codcencus, r_sol.codnat, r_sol.codproj,
+         r_sol.percentual);
+    
+    End Loop r_sol;
+  
+  End Loop i;
+
+  P_MENSAGEM := 'Rateio recalculado com sucesso!!!';
+Exception
+  When Others Then
+    p_mensagem := 'Ocorreu um erro ao realizar o processo. <br> Detalhes: ' || Sqlerrm;
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Solicita Serv Transp.]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_CAP_GERASOLSERV_SF" refreshType="SEL" txManual="false" rootEntity="TSFCAP" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_CAP_GERASOLSERV_SF" (p_codusu    Number,
+                                                        p_idsessao  Varchar2,
+                                                        p_qtdlinhas Number,
+                                                        p_mensagem  Out Varchar2) As
+  a          ad_tsfcap%Rowtype;
+  r          ad_tsfcapfrt%Rowtype;
+  v_Codsolst Number;
+Begin
+
+  /* Autor: M. Rangel
+  * Processo: Carro de Apoio
+  * Objetivo: Gerar solicitações de serviços de transporte (aluguel de Van, ex)
+  */
+
+  For i In 1 .. p_qtdlinhas
+  Loop
+  
+    a.nuap := act_int_field(p_idsessao, i, 'NUAP');
+  
+    -- busca os dados do agendamento  
+    Begin
+      Select *
+        Into a
+        From ad_tsfcap
+       Where nuap = a.nuap;
+    Exception
+      When Others Then
+        p_mensagem := Sqlerrm;
+        Return;
+    End;
+  
+    --- busca os dados do rateio
+    Begin
+      Select *
+        Into r
+        From ad_tsfcapfrt
+       Where nuap = a.nuap Fetch First 1 rows Only;
+    Exception
+      When Others Then
+        p_mensagem := Sqlerrm;
+        Return;
+    End;
+  
+    Begin
+      stp_keygen_tgfnum('AD_TSFSSTC', 1, 'AD_TSFSSTC', 'CODSOLST', 0, v_codsolst);
+    
+      -- insert o cabeçalho da solicitação
+      Begin
+        Insert Into ad_tsfsstc
+          (codsolst, codsol, dhsolicit, codemp, codnat, codcencus, codproj, dtinicio, dtfim,
+           codparc, status, numcontrato, dhalter, codusu, obs, nunotaorig, origem)
+        Values
+          (v_codsolst, a.codususol, Sysdate, 1, r.codnat, r.codcencus, r.codproj, a.dtagend,
+           a.dtagend, Null, 'P', Null, Sysdate, p_codusu, a.rota, Null, Null);
+      Exception
+        When Others Then
+          p_mensagem := 'Erro ao criar o cabeçalho da solicitação. <br>' || Sqlerrm;
+          Return;
+      End;
+    
+      -- insert do serviço
+      Begin
+        Insert Into ad_tsfssti
+          (codserv, codsolst, qtdneg, codvol, vlrunit, vlrtot, numcontrato, codparc, nussti,
+           descrserv)
+        Values
+          (7102, v_codsolst, 1, 'UN', 0, 0, Null, 0, 1, ad_get.Descrproduto(7102));
+      Exception
+        When Others Then
+          p_mensagem := 'Erro ao inserir o serviço na solicitação! <br>' || Sqlerrm;
+          Return;
+      End;
+    
+      -- envia a solicitação para análise da área de transporte
+      -- cancela o agendamento
+      Declare
+        v_sessao Varchar2(100);
+        v_msg    Varchar2(4000);
+      Begin
+        ad_set.Inseresessao('CODSOLST', 1, 'I', v_codsolst, v_sessao);
+        ad_stp_sst_envanalise(p_codusu, v_sessao, 1, v_msg);
+        ad_set.Inseresessao('NUAP', 1, 'I', a.nuap, v_sessao);
+        ad_set.Inseresessao('MOTIVO', 0, 'S',
+                            'Solicitação enviada à área de transporte para contratação do mesmo!',
+                            v_sessao);
+        AD_STP_CAP_CANCAGEND(p_codusu, v_sessao, 1, v_msg);
+        ad_set.Remove_Sessao(v_sessao);
+      Exception
+        When Others Then
+          p_mensagem := Sqlerrm;
+          Return;
+      End;
+    
+    Exception
+      When Others Then
+        p_mensagem := Sqlerrm;
+        Return;
+    End;
+  
+  End Loop i;
+
+  p_mensagem := 'Operação realizada com sucesso, gerada a solicitação nº ' || v_codsolst;
+
+End;]]></storedProcedure>
+        </action>
+      </actions>
+    </instance>
+    <instance name="TSFCAPRAT">
+      <instanceDescription><![CDATA[Rateio]]></instanceDescription>
+      <tableInfo name="AD_TSFCAPRAT" sequenceType="A" sequenceField="NUCAPRAT">
+        <category><![CDATA[Carro de Apoio]]></category>
+        <telaDescription><![CDATA[/* Autor: Marcus Rangel */
+Solicitação do carro de apoio, aba rateio.]]></telaDescription>
+        <tableDescription><![CDATA[Rateio]]></tableDescription>
+        <primaryKey>
+          <NUCAPSOL />
+          <NUCAPRAT />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="NUCAPRAT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Nro Seq. Rateio]]></description>
+        </field>
+        <field name="NUCAPSOL" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Nro Solicitação]]></description>
+          <properties>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODEMP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="5">
+          <description><![CDATA[Cód. Empresa]]></description>
+          <properties>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODNAT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Natureza]]></description>
+          <properties>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODCENCUS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód.Centro Resultado]]></description>
+          <properties>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="PERCENTUAL" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[% Rateio]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="CODPROJ" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Projeto]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Natureza" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFNAT" />
+          <fields>
+            <field localName="CODNAT" targetName="CODNAT" />
+          </fields>
+        </relation>
+        <relation entityName="Empresa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIEMP" />
+          <fields>
+            <field localName="CODEMP" targetName="CODEMP" />
+          </fields>
+        </relation>
+        <relation entityName="Projeto" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TCSPRJ" />
+          <fields>
+            <field localName="CODPROJ" targetName="CODPROJ" />
+          </fields>
+        </relation>
+        <relation entityName="CentroResultadoDespesa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICUS" />
+          <expression><![CDATA[this.ATIVO = 'S']]></expression>
+          <fields>
+            <field localName="CODCENCUS" targetName="CODCENCUS" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="TSFCAPDOC">
+      <instanceDescription><![CDATA[Documentos Carro de Apoio]]></instanceDescription>
+      <tableInfo name="AD_TSFCAPDOC" sequenceType="A" sequenceField="SEQDOC">
+        <category><![CDATA[Carro de Apoio]]></category>
+        <telaDescription><![CDATA[/* Autor: Marcus Rangel */
+Agendamento de Carro de Apoio, aba Documentos.]]></telaDescription>
+        <tableDescription><![CDATA[Documentos Carro de Apoio]]></tableDescription>
+        <primaryKey>
+          <NUAP />
+          <SEQDOC />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="NUAP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Nro Agendamento]]></description>
+        </field>
+        <field name="SEQDOC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Seq]]></description>
+        </field>
+        <field name="CODCENCUS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód.Centro Resultado]]></description>
+        </field>
+        <field name="CODUSURESP" systemField="N" dataType="S" presentationType="P" calculated="S" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Usuário Resp. CR]]></description>
+          <expression><![CDATA[if ($valorCampo == null){
+ $sql.select("AD_GET.NOMEUSU(CODUSURESP,'COMPLETO')",
+"TSICUS","CODCENCUS="+$col_CODCENCUS);
+ if ($sql.next()){
+   return $sql.getString(1);
+  }
+ }
+return $valorCampo;]]></expression>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODSOLICIT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Solicitante]]></description>
+        </field>
+        <field name="ENTREGUE" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Voucher Entegue pelo Usuário?]]></description>
+          <expression><![CDATA[if ($valorCampo == null){
+ return "N";
+}
+ $valorCampo;]]></expression>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="ENTREGUETRANSP" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Voucher Entegue pelo Transportador?]]></description>
+          <expression><![CDATA[if ($valorCampo == null){
+ return "N";
+}
+ $valorCampo;]]></expression>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="CentroResultado" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICUS" />
+          <fields>
+            <field localName="CODCENCUS" targetName="CODCENCUS" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODSOLICIT" targetName="CODUSU" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="TSFCAPFRT">
+      <instanceDescription><![CDATA[Rateio]]></instanceDescription>
+      <tableInfo name="AD_TSFCAPFRT" sequenceType="A" sequenceField="NUMFRT">
+        <category><![CDATA[Carro de Apoio]]></category>
+        <telaDescription><![CDATA[/*Autor: Marcus Rangel*/
+Aba "Rateio" na tela de Agendamento de Carro de Apoio]]></telaDescription>
+        <tableDescription><![CDATA[Rateio]]></tableDescription>
+        <primaryKey>
+          <NUAP />
+          <NUMFRT />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="NUAP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Nro Agendamento]]></description>
+        </field>
+        <field name="NUMFRT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Seq.]]></description>
+        </field>
+        <field name="CODEMP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="5">
+          <description><![CDATA[Cód. Empresa]]></description>
+        </field>
+        <field name="CODCENCUS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. C. R.]]></description>
+        </field>
+        <field name="CODNAT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Natureza]]></description>
+        </field>
+        <field name="CODPROJ" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Projeto]]></description>
+        </field>
+        <field name="PERCENTUAL" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Percentual]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Natureza" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFNAT" />
+          <fields>
+            <field localName="CODNAT" targetName="CODNAT" />
+          </fields>
+        </relation>
+        <relation entityName="Empresa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIEMP" />
+          <fields>
+            <field localName="CODEMP" targetName="CODEMP" />
+          </fields>
+        </relation>
+        <relation entityName="Projeto" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TCSPRJ" />
+          <fields>
+            <field localName="CODPROJ" targetName="CODPROJ" />
+          </fields>
+        </relation>
+        <relation entityName="CentroResultadoDespesa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICUS" />
+          <expression><![CDATA[this.ATIVO = 'S']]></expression>
+          <fields>
+            <field localName="CODCENCUS" targetName="CODCENCUS" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="TSFCAPSOL">
+      <instanceDescription><![CDATA[Solicitação de Carro de Apoio]]></instanceDescription>
+      <tableInfo name="AD_TSFCAPSOL" sequenceType="A" sequenceField="NUCAPSOL">
+        <category><![CDATA[Carro de Apoio]]></category>
+        <telaDescription><![CDATA[/*Autor: Marcus Rangel */
+Solicitação de Carro de Apoio.]]></telaDescription>
+        <tableDescription><![CDATA[Solicitação de Carro de Apoio]]></tableDescription>
+        <primaryKey>
+          <NUCAPSOL />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="NUCAPSOL" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Nro Solicitação]]></description>
+          <properties>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="filterOrder"><![CDATA[0]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="filterGroup"><![CDATA[Geral]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSU" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Solicitante]]></description>
+          <expression><![CDATA[if ($valorCampo == null){
+ return  $ctx_usuario_logado;
+}
+ return $valorCampo;]]></expression>
+          <properties>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[1]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="filterGroup"><![CDATA[Geral]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="CODCENCUS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód.Centro Resultado]]></description>
+          <properties>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="filterOrder"><![CDATA[5]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+            <prop name="filterGroup"><![CDATA[Centro de Resultados]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[mult-list]]></prop>
+          </properties>
+        </field>
+        <field name="DHSOLICIT" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Solicitação]]></description>
+          <properties>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="filterOrder"><![CDATA[2]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="filterGroup"><![CDATA[Geral]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[period]]></prop>
+          </properties>
+        </field>
+        <field name="TIPOSOL" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Tipo de Solicitação]]></description>
+          <options>
+            <option value="A"><![CDATA[Agendamento]]></option>
+            <option value="C" default="S"><![CDATA[Cancelamento]]></option>
+          </options>
+          <properties>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="filterOrder"><![CDATA[4]]></prop>
+            <prop name="filterGroup"><![CDATA[Geral]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="STATUS" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Status]]></description>
+          <expression><![CDATA[status = ' ';
+if ($valorCampo == null){
+ status = "P";
+return status;
+}
+return $valorCampo;]]></expression>
+          <options>
+            <option value="E"><![CDATA[Enviada]]></option>
+            <option value="A"><![CDATA[Agendada]]></option>
+            <option value="C"><![CDATA[Cancelada]]></option>
+            <option value="P"><![CDATA[Pendente]]></option>
+            <option value="R"><![CDATA[Realizada]]></option>
+            <option value="AL"><![CDATA[Aguard. Liberação]]></option>
+            <option value="L"><![CDATA[Liberada]]></option>
+            <option value="SR" default="S"><![CDATA[Sol. Reprovada]]></option>
+          </options>
+          <properties>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterOrder"><![CDATA[6]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="filterGroup"><![CDATA[Status]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[mult-list]]></prop>
+            <prop name="combobox"><![CDATA[S]]></prop>
+          </properties>
+        </field>
+        <field name="DTAGEND" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Agendamento]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUAP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Nro Agendamento]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DHALTER" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Alteração]]></description>
+          <properties>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="QTDPASSAGEIROS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Qtde. Passageiros]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DHENVIO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Envio]]></description>
+          <properties>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="MOTIVO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Motivo]]></description>
+        </field>
+        <field name="ORIGEM" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Origem]]></description>
+          <expression><![CDATA[br.com.sankhya.ws.ServiceContext ctx;
+ctx = br.com.sankhya.ws.ServiceContext.getCurrent();
+javax.servlet.http.HttpServletRequest req;
+
+String origem = "";
+
+  if (ctx != null) {
+   req = ctx.getHttpRequest();
+
+   if (req != null) {
+    String resourceID = req.getParameter("resourceID");
+    if ("br.com.sankhya.menu.adicional.TSFCAPSOL".equals(resourceID)) {
+     origem = "carroApoio";
+    } else {
+     origem = "RollOnOff";
+    } 
+   }
+  }
+  return origem;]]></expression>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="CentroResultado" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICUS" />
+          <fields>
+            <field localName="CODCENCUS" targetName="CODCENCUS" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSU" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="TSFCAPITN" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFCAPITN" />
+          <fields>
+            <field localName="NUCAPSOL" targetName="NUCAPSOL" />
+          </fields>
+        </relation>
+        <relation entityName="TSFCAP" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFCAP" />
+          <fields>
+            <field localName="NUAP" targetName="NUAP" />
+          </fields>
+        </relation>
+        <relation entityName="TSFCAPRAT" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFCAPRAT" />
+          <fields>
+            <field localName="NUCAPSOL" targetName="NUCAPSOL" />
+          </fields>
+        </relation>
+      </relationShip>
+      <actions>
+        <action type="SP">
+          <description><![CDATA[Solicitar Cancelamento]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_CAP_CANCAGEND" refreshType="SEL" txManual="false" rootEntity="TSFCAPSOL" />
+            <params>
+              <promptParam label="Motivo do Cancelamento" name="MOTIVO" required="true" saveLast="false" paramType="S" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_CAP_CANCAGEND" (p_codusu    number,
+                                                 p_idsessao  varchar2,
+                                                 p_qtdlinhas int,
+                                                 p_mensagem  out varchar2) is
+  v_nrounico number;
+  v_motivo   varchar2(400);
+  r_sol      ad_tsfcapsol%rowtype;
+  r_cap      ad_tsfcap%rowtype;
+  v_msg      varchar2(4000);
+
+begin
+  /*
+   Autor: Marcus Rangel
+   Processo: Carro de Apoio
+   Objetivo: Realizar o processo de solicitação e cancelamento tanto da solicitação 
+   quanto do agendamento, verificando se existe fechamento e tratando o mesmo.
+  */
+
+  stp_set_atualizando('S');
+
+  for i in 1 .. p_qtdlinhas
+  loop
+    v_nrounico := act_int_field(p_idsessao, i, 'NUCAPSOL');
+    v_motivo   := act_txt_param(p_idsessao, 'MOTIVO');
+  
+    if v_nrounico is not null then
+    
+      select * into r_sol from ad_tsfcapsol where nucapsol = v_nrounico;
+    
+      /*If r_sol.status Not In ('E', 'A') Then
+        p_Mensagem := 'Somente solicitações com status "<font color="#FF0000">Enviada</font>"' ||
+                      'ou "<font color="#FF0000">Agendada</font>" podem ser canceladas.<br><br>' ||
+                      'Procure o responsável pelo agendamento para corrgir essa situação.';
+        Return;
+      End If;*/
+    
+      begin
+        select * into r_cap from ad_tsfcap where nuap = r_sol.nuap;
+      exception
+        when no_data_found then
+          -- se não tem agendamento, só cancela
+          update ad_tsfcapsol set status = 'C' where nucapsol = r_sol.nucapsol;
+        
+          p_mensagem := 'Cancelamento efetuado com sucesso!';
+          return;
+      end;
+    
+      ad_set.ins_avisosistema(p_titulo     => 'Solicitação de Cancelamento.',
+                              p_descricao  => 'O usuário ' ||
+                                              ad_get.nomeusu(r_sol.codusu, 'resumido') ||
+                                              ' solicitou o cancelamento do agendamento ' ||
+                                              r_sol.nuap || ', resultante da solicitação ' ||
+                                              v_nrounico || ', alegando o seguinte motivo: <b> ' ||
+                                              v_motivo || '</b>',
+                              p_solucao    => 'Para maiores detalhes, acesse o registro ',
+                              p_usurem     => r_sol.codusu,
+                              p_usudest    => r_cap.codusuexc,
+                              p_prioridade => 1,
+                              p_tabela     => 'AD_TSFCAP',
+                              p_nrounico   => r_sol.nuap,
+                              p_erro       => p_mensagem);
+    
+      if p_mensagem is not null then
+        return;
+      end if;
+    
+      v_msg := 'Solicitação de Cancelamento enviada com Sucesso!!!';
+    
+    else
+      --entra no cancelamento real
+    
+      v_nrounico := act_int_field(p_idsessao, i, 'NUAP');
+    
+      for r_cap in (select * from ad_tsfcap where nuap = v_nrounico)
+      loop
+      
+        if r_cap.status not in ('P', 'A') then
+          p_mensagem := 'Somente agendamentos com status "<font color="#FF0000">Pendente</font>"' ||
+                        'ou "<font color="#FF0000">Agendado</font>" podem ser cancelados.<br><br>';
+          return;
+        end if;
+      
+        /*Verifica se existe acerto*/
+        -- encontra o acerto do agendamento em questão, verifica se o acerto ainda está pendente    
+        ad_pkg_cap.exclui_acerto(r_cap.nuap, p_mensagem);
+        if p_mensagem is not null then
+          return;
+        end if;
+      
+        /*Atualiza o status das solicitações de origem, envia e-mail para os solicitantes e aviso via sistema*/
+        begin
+          ad_pkg_cap.atualiza_statussol(r_cap.nuap, 'C', 'S', 'S', p_mensagem);
+        
+          if p_mensagem is not null then
+            return;
+          end if;
+        
+        end;
+      
+        begin
+          update ad_tsfcap c
+             set c.status       = 'C',
+                 c.dtreabre     = sysdate,
+                 c.motivoreabre = v_motivo,
+                 c.codusureabre = stp_get_codusulogado
+           where c.nuap = r_cap.nuap;
+        exception
+          when others then
+            p_mensagem := 'Erro ao atulizar o status do agendamento. ' || sqlerrm;
+            return;
+        end;
+      
+      end loop r_cap;
+    
+      p_mensagem := 'Cancelamento realizado com sucesso!!!';
+    
+    end if;
+  
+  end loop;
+
+  stp_set_atualizando('N');
+
+end;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Enviar para Agendamento]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_CAP_ENVIAAGEND" refreshType="SEL" txManual="false" rootEntity="TSFCAPSOL" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_CAP_ENVIAAGEND" (p_codusu    number,
+                                                  p_idsessao  varchar2,
+                                                  p_qtdlinhas int,
+                                                  p_mensagem  out varchar2) is
+  r_sol           ad_tsfcapsol%rowtype;
+  r_cap           ad_tsfcap%rowtype;
+  r_rat           ad_tsfcaprat%rowtype;
+  r_lib           tsilib%rowtype;
+  v_dtenvio       date := sysdate;
+  v_rota          varchar2(4000);
+  v_mailexec      tmdfmg.email%type;
+  v_count         int := 0;
+  v_percrattot    float;
+  v_origdestigual boolean;
+  v_horasuteis    int;
+  o               int := 0;
+  d               int := 0;
+  v_incluir       boolean := true;
+  v_titulo        varchar2(2000);
+  v_msgconf       varchar2(2000);
+  v_simnao        char(1);
+  itaberai        boolean := false;
+  errmsg          varchar2(4000);
+  error exception;
+  debugando boolean := false;
+begin
+  /*
+  Autor: Marcus Rangel
+  Processo: Carro de Apoio
+  Objetivo: Enviar a solicitação de carro para o responsável pelo agendamento.
+  
+  */
+
+  /* mudanças
+  23/11/2016 - Inserida a quantidade de passageiros
+  28/11/2016 - Tratativa para prazo mÃ­nimo se origem = destino
+  02/12/2016 - Adicionado motivo da viagem
+  13/01/2017 - Consulta que verifica documentos pendentes alterada para considerar 
+             agendamentos "vencidos" sem voucher como pendente de documentos
+  26/06/2017 - lançaar solicitação com data retroativa
+  26/06/2017 - Se origem e destino iguais e iguais a ItaberaÃ­, não valida prazo.
+  29/05/2018 - M. Rangel - Enviar o rateio da solictaçaÃ£o para o agendamento gerado.
+  */
+
+  --ad_pkg_cap.v_permite_edicao := true;
+
+  for i in 1 .. p_qtdlinhas
+  loop
+    r_sol.nucapsol := act_int_field(p_idsessao, i, 'NUCAPSOL');
+  
+    begin
+      select * into r_sol from ad_tsfcapsol s where s.nucapsol = r_sol.nucapsol;
+    exception
+      when no_data_found then
+        errmsg := 'A Solicitação de Carro de Apoio nro ' || r_sol.nucapsol ||
+                  ' não existe ou não foi encontrada.';
+        raise error;
+    end;
+  
+    /*Validações*/
+    begin
+    
+      /* Valida o Status*/
+      if r_sol.status not in ('P', 'L', 'SR') then
+        errmsg := 'Somente solicitações pendentes ou liberadas podem ser enviadas para agendamento.';
+        raise error;
+      end if;
+    
+      if r_sol.status in ('P', 'SR') then
+      
+        /* Valida o centro de resultado */
+        if r_sol.codcencus is null or r_sol.codcencus = 0 then
+          errmsg := 'Centro de Resultados não informado.';
+          raise error;
+        end if;
+      
+        /*  valida existÃªncia de agendamento*/
+        if r_sol.nuap is not null then
+          errmsg := 'Já consta um agendamento para essa solicitação (Nro ' || r_sol.nuap || ')';
+          raise error;
+        end if;
+      
+        /*valida o percentual do rateio*/
+        begin
+          select sum(r.percentual)
+            into v_percrattot
+            from ad_tsfcaprat r
+           where nucapsol = r_sol.nucapsol;
+        
+          if v_percrattot is not null and v_percrattot <> 100 then
+            errmsg := 'Total do rateio incorreto. Verifique se a soma do rateio atingiu 100%.';
+            raise error;
+          end if;
+        end;
+      
+        /*
+        Valida a data de agendamento, impedindo que envie solicitaçaÃµes com data retroativa
+        If r_sol.dtagend < v_DtEnvio Then
+          Errmsg := 'A data de agendamento não pode ser menor que a data atual. Por favor, atualize a data de agendamento.';
+          Raise error;
+        End If;
+        */
+      
+        begin
+          if r_sol.qtdpassageiros is null then
+            errmsg := 'Informe a quantidades de passageiros.';
+            raise error;
+          end if;
+        end;
+      
+        -- Valida Documentos Pendentes
+        --- 'S' de SolicitaçaÃ£o
+        begin
+          errmsg := ad_pkg_cap.voucher_pendentes(r_sol.nucapsol, 'S');
+          if errmsg is not null then
+            raise error;
+          end if;
+        end;
+      
+        /* Valida digitacao do itinerário */
+        begin
+          select count(*)
+            into v_count
+            from ad_tsfcapitn
+           where nucapsol = r_sol.nucapsol
+             and tipotin in ('O', 'D');
+        
+          if mod(v_count, 2) = 1 or v_count = 0 then
+            errmsg := 'Necessário informar a origem e o destino na aba "Itinerário".';
+            raise error;
+          end if;
+        
+          for c_int in (select case
+                                 when i.tipotin = 'O' then
+                                  1
+                                 else
+                                  0
+                               end as orig,
+                               case
+                                 when i.tipotin = 'D' then
+                                  1
+                                 else
+                                  0
+                               end as dest
+                          from ad_tsfcapitn i
+                         where i.nucapsol = r_sol.nucapsol)
+          loop
+            o := o + c_int.orig;
+            d := d + c_int.dest;
+          end loop;
+        
+          if o <> d then
+            errmsg := 'Favor verifique as origens e o destinos na aba itinerário!';
+            raise error;
+          end if;
+        
+          /* Grava na solicitação o momento que o usuário solicitou o envio
+          e o lançaamento passou das validaçaÃµes iniciais. A diferençaa entre o
+          horário do envio da solicitação e o horário de recebimento do
+          agendamento se dará pelo tempo para liberar a solicitação */
+          begin
+            update ad_tsfcapsol s set s.dhenvio = v_dtenvio where nucapsol = r_sol.nucapsol;
+          exception
+            when others then
+              errmsg := 'Ocorreu um erro ao atualizar os horários de envio da solicitação. <br>' ||
+                        sqlerrm;
+              raise error;
+          end;
+        
+          /* Alteraçao realizada no dia 26/06/2017 a pedido do Sr. Márcio Moura
+          * A solicitação consiste em permirtir o lançamento de solicitações retroativas
+          * sem a necessidade de aprovação do GE, apenas do responsável da área.
+          * tal medida, visa permitir lançaar no sistema as solicitações que foram
+          * atendidas sem passar pelo processo desenhado no sistema.
+          */
+          if r_sol.dtagend < r_sol.dhsolicit or r_sol.dtagend < v_dtenvio then
+          
+            v_titulo  := 'Atenção, problemas com as datas';
+            v_msgconf := 'A solicitação em questão, possui data de agendamento menor que a data de solicitação ou de envio.' ||
+                         '<br> Essa solicitação será enviada para Aprovação da Área.<br>Deseja Continuar?';
+          
+            --v_Incluir := Act_Confirmar(v_Titulo, v_MsgConf, p_Idsessao, i);
+          
+            if debugando = false then
+              v_simnao := act_escolher_simnao(p_titulo    => v_titulo,
+                                              p_texto     => v_msgconf,
+                                              p_chave     => p_idsessao,
+                                              p_sequencia => i);
+            else
+              v_simnao := 'S';
+            end if;
+          
+            if nvl(v_simnao, 'N') = 'S' then
+              v_incluir := true;
+            else
+              rollback;
+              p_mensagem := '-1';
+              return;
+            end if;
+          
+            if v_incluir then
+            
+              --busca o liberador
+              select evelibsolcarrohor, e.codlibcap
+                into r_lib.evento, r_lib.codusulib
+                from ad_tsfelt e
+               where e.nuelt = 1;
+            
+              --insere a solicitação de liberação
+              ad_set.ins_liberacao(p_tabela    => 'AD_TSFCAPSOL',
+                                   p_nuchave   => r_sol.nucapsol,
+                                   p_evento    => r_lib.evento,
+                                   p_valor     => 1,
+                                   p_codusulib => r_lib.codusulib,
+                                   p_obslib    => 'Ref. Solicitação de carro de apoio nro ' ||
+                                                  r_sol.nucapsol,
+                                   p_errmsg    => errmsg);
+              if errmsg is not null then
+                raise error;
+              end if;
+            
+              /* Atualiza o status da solicitação para "Aguardando liberaçaÃ£o"*/
+              begin
+                update ad_tsfcapsol set status = 'AL' where nucapsol = r_sol.nucapsol;
+              exception
+                when others then
+                  errmsg := sqlerrm;
+                  raise error;
+              end;
+            
+              return;
+            
+            end if;
+          
+          end if;
+        
+        end;
+      
+        /* Valida o prazo mínimo de agendamento para cidades diferentes */
+        begin
+          v_origdestigual := ad_pkg_cap.compara_destino(r_sol.nucapsol);
+        
+          /*AlteraçaÃ£o dia 26/06/2017
+          * Passar somente se origem e destino forem iguai a Itaberaí
+          */
+          if v_origdestigual then
+          
+            for c_int in (select distinct itn.tipotin, codcid
+                            from ad_tsfcapitn itn
+                           where itn.nucapsol = r_sol.nucapsol)
+            loop
+            
+              if c_int.tipotin = 'O' and c_int.codcid = 2 then
+                itaberai := true;
+              else
+                itaberai := false;
+              end if;
+            
+              if c_int.tipotin = 'D' and c_int.codcid = 2 then
+                itaberai := true;
+              else
+                itaberai := false;
+              end if;
+            
+            end loop;
+          end if;
+        
+          if v_origdestigual and itaberai then
+            null;
+          else
+          
+            /* If ((((r_Sol.Dtagend - r_Sol.Dhsolicit) * 24) < 24) Or 
+            (((r_Sol.Dtagend - v_DtEnvio) * 24) < 24)) And r_sol.status = 'P' Then */
+          
+            --v_HorasUteis := ad_get.horasuteis(r_Sol.Dhsolicit, r_sol.dtagend);
+            v_horasuteis := ad_get.horasuteis(p_dataini => v_dtenvio, p_datafin => r_sol.dtagend);
+          
+            if v_horasuteis < nvl(get_tsipar_inteiro('PRAZOSOLCARROAP'), 24) then
+            
+              v_titulo  := 'Atenção, problemas com horário';
+              v_msgconf := 'A solicitação em questão, não atende ao prazo ' ||
+                           'de antecedência mínima de 24 Hrs. ' ||
+                           'Essa solicitação será enviada para Aprovação do responsável.' || '
+              <br>Deseja Continuar?';
+            
+              --v_Incluir := Act_Confirmar(v_Titulo, v_MsgConf, p_Idsessao, i);
+            
+              v_simnao := act_escolher_simnao(p_titulo    => v_titulo,
+                                              p_texto     => v_msgconf,
+                                              p_chave     => p_idsessao,
+                                              p_sequencia => i);
+            
+              if nvl(v_simnao, 'N') = 'S' then
+                v_incluir := true;
+              else
+                v_incluir := false;
+              end if;
+            
+              if v_incluir then
+              
+                select evelibsolcarrohor, e.codusuge
+                  into r_lib.evento, r_lib.codusulib
+                  from ad_tsfelt e
+                 where e.nuelt = 1;
+              
+                if r_lib.evento is null or r_lib.codusulib is null then
+                  errmsg := 'Os parâmetros "Evento de liberação" ou "Liberador" não estão ' ||
+                            'informados na tela de Eventos de <i>liberações de Transporte</i>';
+                  raise error;
+                end if;
+              
+                /* Insere a liberaçaÃ£o para o GE */
+                ad_set.ins_liberacao(p_tabela    => 'AD_TSFCAPSOL',
+                                     p_nuchave   => r_sol.nucapsol,
+                                     p_evento    => r_lib.evento,
+                                     p_valor     => 1,
+                                     p_codusulib => r_lib.codusulib,
+                                     p_obslib    => 'Ref. Solicitação de carro de apoio nro ' ||
+                                                    r_sol.nucapsol,
+                                     p_errmsg    => errmsg);
+              
+                if errmsg is not null then
+                  raise error;
+                end if;
+              
+                /* Insere o envio da solicitação de liberaçaÃ£o */
+                ad_set.ins_avisosistema(p_titulo     => 'Liberação Solicitada',
+                                        p_descricao  => 'Foi solicitada liberação para carros de apoio solicitados fora do prazo!' ||
+                                                        '\nMotivo: ' || r_sol.motivo,
+                                        p_solucao    => 'Verifique o lançamento para maiores detalhes',
+                                        p_usurem     => p_codusu,
+                                        p_usudest    => r_lib.codusulib,
+                                        p_prioridade => 1,
+                                        p_tabela     => 'AD_TSFCAPSOL',
+                                        p_nrounico   => r_sol.nucapsol,
+                                        p_erro       => errmsg);
+              
+                if errmsg is not null then
+                  raise error;
+                end if;
+              
+                /* Envia o mail da solicitação de liberaçaÃ£o */
+                select u.email into v_mailexec from tsiusu u where codusu = r_lib.codusulib;
+              
+                ad_stp_gravafilabi(p_assunto  => 'Liberação Solicitada.',
+                                   p_mensagem => 'Foi solicitada liberação para agendamento de carro de apoio fora do prazo de antecedência de 24 Hrs. ' ||
+                                                 '\nNro Solicitação: ' || r_sol.nucapsol ||
+                                                 '\nSolicitante: ' ||
+                                                 ad_get.nomeusu(r_sol.codusu, 'completo') ||
+                                                 '\nDt. Solicitação: ' ||
+                                                 to_char(r_sol.dhsolicit, 'DD/MM/YYYY') ||
+                                                 '\nMotivo: ' || r_sol.motivo,
+                                   p_email    => v_mailexec);
+              
+                /* Atualiza o status da solicitação para "Aguardando liberaçaÃ£o"*/
+                begin
+                  update ad_tsfcapsol set status = 'AL' where nucapsol = r_sol.nucapsol;
+                exception
+                  when others then
+                    errmsg := sqlerrm;
+                    raise error;
+                end;
+              
+                return;
+              else
+                rollback;
+                p_mensagem := '-1';
+                return;
+              end if;
+            
+            end if;
+          end if;
+        
+        end;
+        -- fim valida cidade
+      
+        -- valida rateio
+        begin
+          for rat in (select * from ad_tsfcaprat r where r.nucapsol = r_sol.nucapsol)
+          loop
+          
+            ad_stp_valida_natcrproj_sf(rat.codemp,
+                                       189,
+                                       rat.codnat,
+                                       rat.codcencus,
+                                       rat.codproj,
+                                       0,
+                                       p_mensagem);
+          
+            if p_mensagem is not null then
+              rollback;
+              return;
+            end if;
+          
+          end loop;
+        end;
+        -- fim valida rateio
+      
+      end if;
+    end;
+    -- fim validações
+  
+    /* Insere o agendamento */
+    begin
+      --r_Cap.Codusuexc := Get_Tsipar_Inteiro('CODUSURESPCAP');
+    
+      select e.codlibcap into r_cap.codusuexc from ad_tsfelt e where e.nuelt = 1;
+    
+      if r_cap.codusuexc is null /*Or r_cap.codusuexc = 0*/
+       then
+        errmsg := 'O usuário responsável na tela de eventos de <í>liberação de Transportes.</i>';
+        raise error;
+      end if;
+    
+      v_rota := null;
+      for r in (select decode(itn.tipotin, 'O', 'Origem', 'D', 'Destino', 'I', 'Intermediário') || ': ' ||
+                        cid.nomecid || ' - ' || ufs.uf || ', ' || end.tipo || '  ' || end.nomeend || ', ' ||
+                        itn.complemento || ' - ' || bai.nomebai || ' - ' || itn.referencia as v_end
+                  from ad_tsfcapitn itn
+                  left join tsiend end
+                    on (itn.codend = end.codend)
+                  left join tsibai bai
+                    on (itn.codbai = bai.codbai)
+                  left join tsicid cid
+                    on (itn.codcid = cid.codcid)
+                  left join tsiufs ufs
+                    on (cid.uf = ufs.coduf)
+                 where itn.nucapsol = r_sol.nucapsol)
+      loop
+        if v_rota is null then
+          v_rota := r.v_end;
+        else
+          v_rota := v_rota || chr(13) || r.v_end;
+        end if;
+      
+      end loop;
+    
+      v_rota := 'Solicitação nº: ' || r_sol.nucapsol || ', Usu. Solicitante: ' ||
+                ad_get.nomeusu(r_sol.codusu, 'resumido') || chr(13) || v_rota;
+    
+      /* Busca o itenerário para registrar no agendamento
+      SolicitaçaÃ£o realizada por Márcio Moura em 15/05/2017*/
+    
+      for c_cid in (select * from ad_tsfcapitn itn where itn.nucapsol = r_sol.nucapsol)
+      loop
+        begin
+        
+          if c_cid.tipotin = 'O' then
+            r_cap.codcidorig := c_cid.codcid;
+          elsif c_cid.tipotin = 'D' then
+            r_cap.codciddest := c_cid.codcid;
+          end if;
+        
+          select c.nomecid into r_cap.nomecidorig from tsicid c where c.codcid = r_cap.codcidorig;
+          select c.nomecid into r_cap.nomeciddest from tsicid c where c.codcid = r_cap.codciddest;
+        
+        exception
+          when no_data_found then
+            if r_cap.codciddest is null then
+              r_cap.codciddest := r_cap.codcidorig;
+            end if;
+          when others then
+            errmsg := 'Erro ao buscar as cidades de origem e destino da solicitação nro ' ||
+                      r_sol.nucapsol;
+            raise error;
+        end;
+      end loop;
+    
+      /* Gera o agendamento */
+      <<inicio_agend>>
+    
+      begin
+      
+        stp_keygen_tgfnum('AD_TSFCAP', 1, 'AD_TSFCAP', 'NUAP', 0, r_cap.nuap);
+      
+        insert into ad_tsfcap
+          (nuap, codususol, dhsolicit, dtagend, codusuexc, status, taxi, motivotaxi, kminicial,
+           kmfinal, totalkm, vlrcorrida, ordemcarga, nucapsol, rota, qtdpassageiros, motivo,
+           codcidorig, nomecidorig, codciddest, nomeciddest, dhmov, dhenvio)
+        values
+          (r_cap.nuap, r_sol.codusu, r_sol.dhsolicit, r_sol.dtagend, r_cap.codusuexc, 'P', 'N',
+           null, 0, 0, 0, 0, 0, r_sol.nucapsol, v_rota, r_sol.qtdpassageiros, r_sol.motivo,
+           r_cap.codcidorig, r_cap.nomecidorig, r_cap.codciddest, r_cap.nomeciddest, sysdate,
+           r_sol.dhenvio);
+      
+      exception
+        when dup_val_on_index then
+        
+          merge into tgfnum n
+          using (select max(nuap) maxnuap from ad_tsfcap) c
+          on (n.arquivo = 'AD_TSFCAP' and n.codemp = 1 and n.serie = ' ')
+          when matched then
+            update set n.ultcod = c.maxnuap
+          when not matched then
+            insert
+              (arquivo, codemp, serie, automatico, ultcod)
+            values
+              ('AD_TSFCAP', 1, ' ', 'S', c.maxnuap);
+        
+          goto inicio_agend;
+        when others then
+          errmsg := 'Erro ao inserir o agendamento. ' || sqlerrm;
+          raise error;
+      end;
+    
+      -- insere o rateio quando sÃ³ há um CR, tratativa para quando enviar para a tela de acerto, conseguir realizar o calculo com varias corridas no mesmo dia.
+      begin
+        select count(*) into v_count from ad_tsfcaprat rat where rat.nucapsol = r_sol.nucapsol;
+      
+        if v_count = 0 then
+        
+          select nvl(codemp, 1) into r_rat.codemp from tsiusu u where codusu = r_sol.codusu;
+        
+          insert into ad_tsfcaprat
+            (nucapsol, nucaprat, codemp, codnat, codcencus, percentual)
+          values
+            (r_sol.nucapsol, 1, r_rat.codemp, 4051300, r_sol.codcencus, 100);
+        end if;
+      exception
+        when others then
+          errmsg := 'Erro ao inserir o rateio Único na solicitação';
+          raise error;
+      end;
+    
+      -- insere os documentos
+      begin
+        insert into ad_tsfcapdoc
+          (nuap, seqdoc, codsolicit, codcencus, entregue)
+        values
+          (r_cap.nuap, 1, r_sol.codusu, r_sol.codcencus, 'N');
+      exception
+        when others then
+          errmsg := 'Erro ao inserir o controle de documento. <br>' || sqlerrm;
+          raise error;
+      end;
+    
+      -- envia o rateio
+      declare
+        v_numfrt pls_integer := 0;
+      begin
+        for c_rat in (select * from ad_tsfcaprat where nucapsol = r_sol.nucapsol)
+        loop
+        
+          v_numfrt := v_numfrt + 1;
+        
+          insert into ad_tsfcapfrt
+            (nuap, numfrt, codemp, codcencus, codnat, codproj, percentual)
+          values
+            (r_cap.nuap, v_numfrt, c_rat.codemp, c_rat.codcencus, c_rat.codnat, c_rat.codproj,
+             c_rat.percentual);
+        
+        end loop;
+      end;
+    
+      /* Insere o aviso do sistema */
+      begin
+        ad_set.ins_avisosistema(p_titulo     => 'Nova Solicitação de Agendamento.',
+                                p_descricao  => 'Uma nova solicitação de agendamento de carro de apoio ' ||
+                                                'foi registrada por usuário ' ||
+                                                ad_get.nomeusu(r_sol.codusu, 'resumido') || '.',
+                                p_solucao    => 'Para detalhes, acesse o registro ',
+                                p_usurem     => r_sol.codusu,
+                                p_prioridade => 2,
+                                p_usudest    => r_cap.codusuexc,
+                                p_tabela     => 'AD_TSFCAP',
+                                p_nrounico   => r_cap.nuap,
+                                p_erro       => errmsg);
+      
+        if errmsg is not null then
+          raise error;
+        end if;
+      end;
+    
+      /* Notifica o agendador sobre a nova solicitação por e-mail */
+      /*15/05/2017 - Removido a pedido de Marcio Moura, atual responsável pela área na empresa */
+    
+      /*
+      Begin
+        Select Email Into v_Mailexec From Tsiusu Where Codusu = r_Cap.Codusuexc;
+        Select Nomeusu Into v_Nomesol From Tsiusu Where Codusu = r_Sol.Codusu;
+      
+        Ad_Stp_Gravafilabi(p_Assunto  => 'Nova solicitação de Agendamento.',
+                           p_Mensagem => 'AtençaÃ£o, uma nova solicitação de agendamento de carro de apoio, do usuário ' ||
+                                         v_Nomesol || ' foi cadastrada. ' ||
+                                         'NÃºmero da solicitação: <a href="' || v_Link ||
+                                         '" target="_black" title="Abri Tela">' || r_Cap.Nuap ||
+                                         '</a><br>',
+                           p_Email    => v_Mailexec);
+      End;
+      */
+    
+      begin
+        update ad_tsfcapsol s
+           set s.status = 'E',
+               nuap     = r_cap.nuap
+         where nucapsol = r_sol.nucapsol;
+      end;
+    
+    end;
+  end loop;
+
+  if p_qtdlinhas < 2 then
+    p_mensagem := 'Lançameto(s) enviado(s) para Agendamento com sucesso!!!<br> Agendamento nro: ' ||
+                  r_cap.nuap;
+  else
+    p_mensagem := 'Foram enviadas ' || p_qtdlinhas || ' solicitações para agendamento ' ||
+                  'com sucesso!!!';
+  end if;
+
+exception
+  when error then
+    rollback;
+    p_mensagem := '<p><font color="#FF0000" size="14"><b>Atenção!!!</b></font></p>' || errmsg;
+    /* When Others Then
+    Rollback;
+    Errmsg     := Sqlerrm;
+    p_Mensagem := '<p><font color="#FF0000" size="14"><b>AtençaÃ£o!!!</b></font></p>' || Errmsg;*/
+end;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Duplicar Lançametno]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_CAP_DUPLANC" refreshType="ALL" txManual="false" rootEntity="TSFCAPSOL" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_CAP_DUPLANC" (P_CODUSU Number, P_IDSESSAO Varchar2, P_QTDLINHAS Number,
+																								 P_MENSAGEM Out Varchar2) As
+	v_NuCapSol Number;
+	v_NuCap    Number;
+	v_ProxNum  Number;
+	v_NumLink  Varchar2(4000);
+	Errmsg     Varchar2(4000);
+	Error Exception;
+Begin
+	/* 
+  * Autor: M. Rangel
+  * Processo: Carro de Apoio
+  * Objetivo: Duplicar o lançamento, a aba intinerário e rateio.
+  */
+
+	For L In 1 .. P_QTDLINHAS
+	Loop
+	
+		v_NuCapSol := ACT_INT_FIELD(P_IDSESSAO, L, 'NUCAPSOL');
+		v_NuCap    := ACT_INT_FIELD(P_IDSESSAO, L, 'NUAP');
+	
+		If v_NuCapSol Is Not Null And v_NuCap Is Null Then
+		
+			/*Prenche o cabeçalho*/
+			For C In (Select *
+									From ad_tsfcapsol
+								 Where nucapsol = v_NucapSol)
+			Loop
+			
+				--v_ProxNum := ad_get.ultCod('AD_TSFCAPSOL', 1, ' ') + 1;
+			
+				stp_keygen_tgfnum('AD_TSFCAPSOL', 1, 'AD_TSFCAPSOL', 'NUCAPSOL', 0, v_proxnum);
+			
+				Begin
+					Insert Into ad_tsfcapsol
+						(nucapsol, codusu, dhsolicit, codcencus, tiposol, status, dtagend, nuap, dhalter, qtdpassageiros)
+					Values
+						(v_ProxNum, P_CODUSU, Sysdate, c.codcencus, c.tiposol, 'P', Null, Null, Sysdate, 1);
+				Exception
+					When Others Then
+						P_MENSAGEM := 'Erro ao duplicar o cabeçalho da solicitação. ' || Sqlerrm;
+						Return;
+				End;
+			
+				/*preenche o itinerário*/
+				For I In (Select *
+										From ad_tsfcapitn
+									 Where nucapsol = v_NucapSol)
+				Loop
+					<<insert_sol>>
+					Begin
+						Insert Into ad_tsfcapitn
+							(nucapsol, nuitn, tipotin, codcid, codend, codbai, complemento, referencia)
+						Values
+							(v_ProxNum, i.nuitn, i.tipotin, i.codcid, i.codend, i.codbai, i.complemento, i.referencia);
+					Exception
+						When dup_val_on_index Then
+							v_ProxNum := v_ProxNum + 1;
+							Goto insert_sol;
+						When Others Then
+							P_MENSAGEM := 'Erro ao duplicar o itinerário. ' || Sqlerrm;
+							Return;
+					End;
+				
+				End Loop I;
+			
+				/*Preenche o rateio*/
+				For R In (Select *
+										From ad_tsfcaprat
+									 Where nucapsol = v_NucapSol)
+				Loop
+				
+					Begin
+						Insert Into ad_tsfcaprat
+							(nucapsol, nucaprat, codemp, codnat, codcencus, percentual)
+						Values
+							(v_ProxNum, r.nucaprat, r.codemp, r.codnat, r.codcencus, r.percentual);
+					Exception
+						When Others Then
+							Errmsg := 'Erro ao duplicar o rateio da solicitação. ' || Sqlerrm;
+							Raise error;
+					End;
+				
+				End Loop R;
+			
+				/*Update tgfnum
+          Set ultcod = v_ProxNum
+        Where arquivo = 'AD_TSFCAPSOL';*/
+			
+				v_NumLink := '<a target="_top" href="' || ad_fnc_urlskw('AD_TSFCAPSOL', v_ProxNum, Null, Null) || '">' || v_ProxNum ||
+										 '</a>';
+			
+			End Loop C;
+		
+		Else
+		
+			For C In (Select *
+									From Ad_tsfcap
+								 Where Nuap = v_nucap)
+			Loop
+			
+				--v_ProxNum := ad_get.ultcod('AD_TSFCAP', 1, ' ') + 1;
+			
+				stp_keygen_tgfnum('AD_TSFCAP', 1, 'AD_TSFCAP', 'NUAP', 0, v_ProxNum);
+			
+				<<Insert_cap>>
+				Begin
+					Insert Into Ad_tsfcap
+						(Nuap, Codususol, Dhsolicit, Ordemcarga, Codusuexc, Codparctransp, Codveiculo, Status, Taxi, Motivotaxi, Kminicial,
+						 Kmfinal, Totalkm, Vlrcorrida, Nucapsol, Dtagend, Rota, Dtagendfim, Combinada, Codcontato, Qtdpassageiros, Motorista,
+						 Motivo, Deptosol, Codcidorig, Codciddest, Nomeciddest, Nomecidorig, Dhmov, Dtreabre, Motivoreabre, Codusureabre,
+						 Nuappai, Temacerto)
+					Values
+						(v_ProxNum, C.Codususol, C.Dhsolicit, C.Ordemcarga, C.Codusuexc, C.Codparctransp, C.Codveiculo, 'P', C.Taxi,
+						 C.Motivotaxi, 0, 0, 0, 0, C.Nucapsol, C.Dtagend, C.Rota, Null, 'N', C.Codcontato, C.Qtdpassageiros, C.Motorista,
+						 C.Motivo, C.Deptosol, C.Codcidorig, C.Codciddest, C.Nomeciddest, C.Nomecidorig, Sysdate, Null, Null, Null, Null, 'N');
+				Exception
+					When dup_val_on_index Then
+						v_ProxNum := v_ProxNum + 1;
+						Goto insert_cap;
+					When Others Then
+						errmsg := 'Erro ao duplicar o agendamento. ' || Sqlerrm;
+						Raise error;
+				End;
+			
+				For R In (Select *
+										From Ad_tsfcapdoc d
+									 Where Nuap = v_Nucap)
+				Loop
+				
+					Begin
+						Insert Into Ad_tsfcapdoc
+							(Seqdoc, Nuap, Codcencus, Codsolicit, Entregue, Codusuresp, Entreguetransp)
+						Values
+							(R.Seqdoc, v_ProxNum, R.Codcencus, R.Codsolicit, 'N', R.Codusuresp, 'N');
+					Exception
+						When Others Then
+							errmsg := 'Erro ao duplicar os documentos do agendamento. ' || Sqlerrm;
+							Raise error;
+					End;
+				
+				End Loop R;
+			
+				v_NumLink := '<a target="_top" href="' || ad_fnc_urlskw('AD_TSFCAP', v_ProxNum, Null, Null) || '">' || v_ProxNum ||
+										 '</a>';
+			
+			End Loop C;
+		
+		End If;
+	
+	End Loop L;
+
+	/*Update tgfnum
+    Set ultcod = v_ProxNum
+  Where arquivo = 'AD_TSFCAP';*/
+
+	P_MENSAGEM := 'Lançamento duplicado com sucesso.<br> Lançamento nro: ' || v_NumLink;
+
+Exception
+	When ERROR Then
+		Rollback;
+		P_MENSAGEM := Errmsg;
+	When Others Then
+		P_MENSAGEM := 'Erro: ' || Sqlerrm;
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Visualizar informações do Agendamento]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_CAP_INFOAGEND_SF" refreshType="NONE" txManual="false" rootEntity="TSFCAPSOL" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_CAP_INFOAGEND_SF" (p_codusu number,
+                                                      p_idsessao varchar2,
+                                                      p_qtdlinhas number,
+                                                      p_mensagem out varchar2) as
+  field_nucapsol number;
+  r_cap          ad_tsfcap%rowtype;
+begin
+
+  /* Autor: M. Rangel
+  * Processo: Carro de Apoio
+  * Objetivo: Exibir um popup na tela contendo informações básicas sobre o agendamento
+  */
+
+  for i in 1 .. p_qtdlinhas
+  loop
+    field_nucapsol := act_int_field(p_idsessao, i, 'NUCAPSOL');
+  
+    begin
+      select c.* into r_cap from ad_tsfcapsol s join ad_tsfcap c on s.nuap = c.nuap where s.nucapsol = field_nucapsol;
+    
+      p_mensagem := 'O agendamento encontra-se <b>' || ad_get.opcoescampo(r_cap.status, 'STATUS', 'AD_TSFCAP') ||
+                    '</b>.<br>';
+      p_mensagem := p_mensagem || chr(13) || ' <b>Dt. Agendamento: </b>' ||
+                    to_char(r_cap.dtagend, 'dd/mm/yyyy hh24:mi:ss') || '<br>';
+      p_mensagem := p_mensagem || chr(13) || '<b>Motorista: </b>' || r_cap.motorista || ' - ' ||
+                    ad_get.nome_parceiro(r_cap.motorista, 'completo') || '<br>';
+      p_mensagem := p_mensagem || chr(13) || '<b>Veículo: </b>' || ad_get.formataplaca(r_cap.codveiculo) || '<br><br>';
+      p_mensagem := p_mensagem || chr(13) ||
+                    '<p style="color:red">As informações são melhor visualizadas no layout Novo.';
+    
+    exception
+      when no_data_found then
+        p_mensagem := 'Solicitação não foi agendada ainda!';
+        return;
+      when others then
+        p_mensagem := 'Erro ao consultar informações do agendamento. ' || chr(13) || sqlerrm;
+        return;
+    end;
+  
+  end loop;
+
+end;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Criação de Solicitações em Lote]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_CAP_CRIALOTESOL_SF" refreshType="ALL" txManual="false" rootEntity="TSFCAPSOL" />
+            <params>
+              <promptParam label="Qtd. Viagens" name="QTDVIAGENS" required="true" saveLast="false" paramType="I" />
+              <promptParam label="Tipo" name="TIPOVIAGEM" required="true" saveLast="false" options="1=Ida;2=Ida e Volta" paramType="SO" />
+              <promptParam label="Dh. Partida" name="DHPARTIDA" required="false" saveLast="false" paramType="DH" />
+              <promptParam label="Dh. Retorno" name="DHRETORNO" required="true" saveLast="false" paramType="DH" />
+              <promptParam label="Origem" name="CODCIDORIG" required="true" saveLast="false" entityName="Cidade" paramType="ENTITY" />
+              <promptParam label="Destino" name="CODCIDDEST" required="true" saveLast="false" entityName="Cidade" paramType="ENTITY" />
+              <promptParam label="Qtd. Passageiros" name="QTDPASSAGEIROS" required="true" saveLast="false" paramType="I" />
+              <promptParam label="Observações/Motivo" name="OBS" required="true" saveLast="false" paramType="S" />
+              <promptParam label="Endereço" name="ENDERECO" required="false" saveLast="false" paramType="S" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_CAP_CRIALOTESOL_SF" (p_codusu Number, p_idsessao Varchar2, p_qtdlinhas Number,
+																												p_mensagem Out Varchar2) As
+	p_qtdviagens     Number;
+	p_tipoviagem     Number;
+	p_dhpartida      Date;
+	p_dhretorno      Date;
+	p_codcidorig     Varchar2(4000);
+	p_codciddest     Varchar2(4000);
+	p_qtdpassageiros Number;
+	p_obs            Varchar2(4000);
+	p_endereco       Varchar2(4000);
+
+	r_sol   ad_tsfcapsol%Rowtype;
+	r_itn   ad_tsfcapitn%Rowtype;
+	v_Volta Boolean Default False;
+
+	Type type_numsol Is Table Of Number;
+	t_sol type_numsol := type_numsol();
+	i_sol Int := 0;
+
+	v_session Varchar2(4000);
+Begin
+	/* 
+  * Autor: M. Rangel
+  * Processo: Carro de Apoio
+  * Objetivo: Ação "Criar solicitações em Lotes" da tela de solicitações de carro de apoio.
+  */
+
+	If Lower(p_idsessao) = 'debug' Then
+		p_qtdviagens     := 1;
+		p_tipoviagem     := To_Number('2');
+		p_dhpartida      := To_Date('30/07/2018 08:00:00', 'dd/mm/yyyy hh24:mi:ss');
+		p_dhretorno      := To_Date('30/07/2018 18:00:00', 'dd/mm/yyyy hh24:mi:ss');
+		p_codcidorig     := 2;
+		p_codciddest     := 3;
+		p_qtdpassageiros := 4;
+		p_endereco       := 'TESTE TESTE TESTE TESTE TESTE TESTE TESTE TESTE TESTE';
+		p_obs            := 'TESTE TESTE TESTE TESTE TESTE TESTE TESTE TESTE TESTE';
+	Else
+		p_qtdviagens     := act_int_param(p_idsessao, 'QTDVIAGENS');
+		p_tipoviagem     := To_Number(act_txt_param(p_idsessao, 'TIPOVIAGEM'));
+		p_dhpartida      := act_dta_param(p_idsessao, 'DHPARTIDA');
+		p_dhretorno      := act_dta_param(p_idsessao, 'DHRETORNO');
+		p_codcidorig     := act_txt_param(p_idsessao, 'CODCIDORIG');
+		p_codciddest     := act_txt_param(p_idsessao, 'CODCIDDEST');
+		p_qtdpassageiros := act_int_param(p_idsessao, 'QTDPASSAGEIROS');
+		p_obs            := act_txt_param(p_idsessao, 'OBS');
+		p_endereco       := act_txt_param(p_idsessao, 'ENDERECO');
+	End If;
+
+	If p_tipoviagem = 2 And p_dhretorno Is Null Then
+		p_mensagem := 'Para viagens Ida e Volta é necessário informar a data de retornno.';
+		Return;
+	End If;
+
+	If p_dhretorno < p_dhpartida Then
+		p_mensagem := 'A data de retorno não pode ser inferior à data de partida';
+		Return;
+	End If;
+
+	<<inicio>>
+	For v In 1 .. p_qtdviagens
+	Loop
+		Begin
+			-- inicia o index da array
+			i_sol := i_sol + 1;
+		
+			--busca o número da solicitação
+			stp_keygen_tgfnum('AD_TSFCAPSOL', 1, 'AD_TSFCAPSOL', 'NUCAPSOL', 0, r_sol.nucapsol);
+		
+			-- preenche os demais campos da tabela
+			r_sol.codusu := p_codusu;
+		
+			Select u.codcencuspad
+				Into r_sol.codcencus
+				From tsiusu u
+			 Where codusu = p_codusu;
+		
+			r_sol.dhsolicit      := Sysdate;
+			r_sol.tiposol        := 'A';
+			r_sol.status         := 'P';
+			r_sol.dtagend := Case
+												 When v_Volta Then
+													p_dhretorno + v - 1
+												 Else
+													p_dhpartida + v - 1
+											 End;
+			r_sol.nuap           := Null;
+			r_sol.dhalter        := Sysdate;
+			r_sol.qtdpassageiros := p_qtdpassageiros;
+			r_sol.dhenvio        := Null;
+			r_sol.motivo         := p_obs;
+		
+			-- insere a solicitação
+			Insert Into ad_tsfcapsol
+			Values r_sol;
+		
+		Exception
+			When Others Then
+				p_mensagem := 'Erro ao buscar os dados para a criação da solicitação. ' || Sqlerrm;
+				Return;
+		End;
+	
+		-- prepara para insert do itinerário
+		Begin
+			For i In 1 .. 2
+			Loop
+				r_itn.nuitn    := i;
+				r_itn.nucapsol := r_sol.nucapsol;
+				r_itn.tipotin := Case
+													 When i = 1 Then
+														'O'
+													 Else
+														'D'
+												 End;
+			
+				-- se for a volta
+				If v_volta Then
+					r_itn.codcid := Case
+														When i = 1 Then
+														 p_codciddest
+														Else
+														 p_codcidorig
+													End;
+				Else
+					r_itn.codcid := Case
+														When i = 1 Then
+														 p_codcidorig
+														Else
+														 p_codciddest
+													End;
+				End If;
+			
+				r_itn.codend      := 0;
+				r_itn.codbai      := 0;
+				r_itn.complemento := p_endereco;
+				r_itn.referencia  := Null;
+			
+				-- insere o itinerário
+				Insert Into ad_tsfcapitn
+				Values r_itn;
+			
+			End Loop i;
+		
+		Exception
+			When Others Then
+				p_mensagem := 'Erro ao preencher as informações do itinerário. ' || Sqlerrm;
+				Return;
+		End;
+	
+		-- insere o rateio
+		Begin
+			Insert Into ad_tsfcaprat
+				(nucapsol, nucaprat, codemp, codnat, codcencus, percentual, codproj)
+			Values
+				(r_sol.nucapsol, 1, 1, 4051300, r_sol.codcencus, 100, 0);
+		Exception
+			When Others Then
+				p_mensagem := 'Erro ao preencher as informações sobre o rateio ' || Sqlerrm;
+				Return;
+		End;
+	
+		--iniciar e popula array
+		t_sol.extend;
+		t_sol(i_sol) := r_sol.nucapsol;
+	
+	End Loop v;
+
+	-- verifica se ida e volta se for, reinicia com os destinos trocados
+	If p_tipoviagem = 2 And v_Volta = False Then
+		v_Volta := True;
+		Goto inicio;
+	End If;
+
+	Begin
+	
+		If act_escolher_simnao(P_TITULO    => 'Envio para Agendamento',
+													 P_TEXTO     => 'Deseja enviar diretamente as solicitações criadas para o agendamento dos carros?',
+													 P_CHAVE     => p_idsessao,
+													 P_SEQUENCIA => 1) = 'S' Then
+		
+			v_session := DBMS_Random.String('A', 20);
+		
+			For a In t_sol.first .. t_sol.last
+			Loop
+				ad_set.Inseresessao('NUCAPSOL', a, 'I', t_sol(a), v_session);
+			End Loop;
+		
+			ad_stp_cap_enviaagend(p_Codusu, v_session, t_sol.last, p_mensagem);
+		
+			ad_set.Remove_Sessao(v_session);
+		
+		Else
+			Null;
+		End If;
+	
+	End;
+
+	p_mensagem := 'Solicitações criadas com sucesso!';
+
+End;]]></storedProcedure>
+        </action>
+      </actions>
+    </instance>
+  </instances>
+</metadata>
+

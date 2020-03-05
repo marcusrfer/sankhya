@@ -1,0 +1,87 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="NUCHAVE" description="Nro Único" metadata="entity:Financeiro@null" required="false" keep-last="false" keep-date="false"/>
+  </prompt-parameters>
+  <level id="lvl_alt2qbu" description="Principal">
+    <simple-value id="svl_alt2qbv">
+      <expression type="sql" data-source="MGEDS"><![CDATA[select 
+ codemp,
+ numnota,
+ dtneg,
+ dtvenc,
+ vlrdesdob
+from tgffin
+ where nufin = :nuchave
+]]></expression>
+      <metadata>
+        <field name="CODEMP" label="Empresa" type="I" visible="true" useFooter="false"/>
+        <field name="NUMNOTA" label="Nro Nota" type="I" visible="true" useFooter="false"/>
+        <field name="DTNEG" label="Dt. Neg." type="D" visible="true" useFooter="false"/>
+        <field name="DTVENC" label="Dt. Venc." type="D" visible="true" useFooter="false"/>
+        <field name="VLRDESDOB" label="Valor" type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+      </metadata>
+      <value-expression><![CDATA[<table>
+ <tr>
+  <td>Empresa: </td>
+  <td>$CODEMP</td>
+ <tr>
+ <tr>
+  <td>Nro. Documento: </td>
+  <td>$NUMNOTA</td>
+ <tr>
+ <tr>
+  <td>Dt. Negocia&ccedil;&atilde;o: </td>
+  <td>$DTNEG</td>
+ <tr>
+ <tr>
+  <td>Dt. Vencimento: </td>
+  <td>$DTVENC</td>
+ <tr>
+ <tr>
+  <td>Valor </td>
+  <td>$VLRDESDOB</td>
+ <tr>
+</table>]]></value-expression>
+    </simple-value>
+    <grid id="grd_alt2qbw">
+      <expression type="sql" data-source="MGEDS"><![CDATA[select t.tabela,
+ t.tipo,
+ t.nrounico,
+'<a title="Abrir Tela" target=_parent href="'||ad_fnc_urlskw(tabela,nrounico)||'">'||nrounico||'</a>' as nuchave,
+ t.numnota,
+ t.nuacordo,
+ t.ordemcarga,
+ t.codnat,
+ n.descrnat,
+ t.codcencus,
+ c.descrcencus,
+ t.codparc,
+ t.nomeparc,
+ t.dtneg,
+ t.valor,
+ t.historico 
+ from table(ad_pkg_lib.get_orig(:nuchave)) t , tsicus c, tgfnat n
+where t.codcencus = c.codcencus
+ and t.codnat = n.codnat
+ and tipmov <> 'Q' And codtipoper Not In (501) And nvl(serie,'S') <> 'A  ']]></expression>
+      <metadata>
+        <field name="TABELA" label="TABELA" type="S" visible="true" useFooter="false"/>
+        <field name="TIPO" label="TIPO" type="S" visible="true" useFooter="false"/>
+        <field name="NROUNICO" label="NROUNICO" type="I" visible="true" useFooter="false"/>
+        <field name="NUCHAVE" label="Nro Unico" type="S" visible="true" useFooter="false"/>
+        <field name="NUMNOTA" label="Nro Documento" type="I" visible="true" useFooter="false"/>
+        <field name="NUACORDO" label="Nro Acordo" type="I" visible="true" useFooter="false"/>
+        <field name="ORDEMCARGA" label="Ordem Carga" type="I" visible="true" useFooter="false"/>
+        <field name="CODNAT" label="Cod. Natureza" type="I" visible="true" useFooter="false"/>
+        <field name="DESCRNAT" label="Descr. Natureza" type="S" visible="true" useFooter="false"/>
+        <field name="CODCENCUS" label="CR" type="I" visible="true" useFooter="false"/>
+        <field name="DESCRCENCUS" label="Descr CR" type="S" visible="true" useFooter="false"/>
+        <field name="CODPARC" label="Parceiro" type="I" visible="true" useFooter="false"/>
+        <field name="NOMEPARC" label="Nome Parceiro" type="S" visible="true" useFooter="false"/>
+        <field name="DTNEG" label="Dt. Neg" type="D" visible="true" useFooter="false"/>
+        <field name="VALOR" label="Valor" type="I" visible="true" useFooter="true" mask="#.##0,00"/>
+        <field name="HISTORICO" label="HISTORICO" type="S" visible="true" useFooter="false"/>
+      </metadata>
+    </grid>
+  </level>
+</gadget>

@@ -1,0 +1,647 @@
+create or replace package ad_pkg_fmp is
+ /****************************************************************************
+ Autor: Marcus Rangel
+ Processo: Frete Matéria Prima
+ Objetivo: Container para objetos envolvidos no processo de matéria prima
+ *****************************************************************************/
+
+ function get_qtdcontrato(p_nunotaorig number, p_codparc number, p_codprod number) return float deterministic;
+ /****************************************************************************
+ Autor: 
+ Objetivo: 
+ *****************************************************************************/
+
+ function get_qtdatendida(p_nunotaorig number, p_codparc number, p_codprod number) return float deterministic;
+ /****************************************************************************
+ Autor: 
+ Objetivo: 
+ *****************************************************************************/
+
+ function get_qtdcarreg(p_nunotaorig number, p_codparc number, p_codprod number, p_tipo char) return float;
+ /****************************************************************************
+ Autor: 
+ Objetivo: 
+ *****************************************************************************/
+
+ procedure set_vlrdesconto_quebra(p_sequencia number, p_seqite number, erro out varchar2);
+ /****************************************************************************
+ Autor: M. Rangel
+ Objetivo: Calcular a melhor data de vencimento considerando teto e calcular e
+           atualizar o desconto financeiro pela quebra do produto
+ *****************************************************************************/
+
+ function get_nunota(p_seq number, p_ordem int) return number;
+
+ procedure set_nunota(p_seq number, p_ordem int);
+
+ --M. Rangel
+ -- get e set do número do contrato de compras para o carregamento de milho
+ function get_nrocontratocpa(p_seq number, p_ordem int) return number;
+
+ procedure set_nrocontratocpa(p_seq number, p_ordem int);
+
+ /** m. rangel - 18/04/2019
+ * Função que retorna o endereço informado na aba "Agendamento" no contrato,
+ * case não encontre, retorna o endereço do parceiro do contrato.
+ **/
+ function get_endereco_contrato(p_numcontrato number) return varchar2 deterministic;
+
+ function get_qtdneg_media_vei(p_codveiculo number, p_codprod number) return float deterministic;
+
+end ad_pkg_fmp;
+/
+create or replace package body ad_pkg_fmp is
+
+ function get_qtdcontrato(p_nunotaorig number, p_codparc number, p_codprod number) return float deterministic is
+  v_qtdneg float;
+ begin
+  select nvl(sum(ite.qtdneg), 0)
+    into v_qtdneg
+    from tgfcab cab
+    join tgfite ite
+      on ite.nunota = cab.nunota
+   where cab.nunota = p_nunotaorig
+     and cab.codparc = p_codparc
+     and ite.codprod = p_codprod;
+ 
+  return nvl(v_qtdneg, 0);
+ exception
+  when others then
+   return 0;
+ end get_qtdcontrato;
+
+ function get_endereco_contrato(p_numcontrato number) return varchar2 deterministic is
+  v_result varchar2(1000);
+ begin
+  begin
+   select e.nomeend || ', ' || a.complemento || chr(13) || cid.nomecid || ', ' || bai.nomebai
+     into v_result
+     from ad_tcsamp a
+     left join tsicid cid
+       on a.codcid = cid.codcid
+     left join tsibai bai
+       on a.codbai = bai.codbai
+     left join tsiend e
+       on a.codend = e.codend
+    where numcontrato = p_numcontrato
+      and rownum = 1;
+  
+  exception
+   when no_data_found then
+    select e.nomeend || ', ' || a.complemento || chr(13) || cid.nomecid || ', ' || bai.nomebai
+      into v_result
+      from tgfpar a
+      join tcscon c
+        on c.codparc = a.codparc
+      left join tsicid cid
+        on a.codcid = cid.codcid
+      left join tsibai bai
+        on a.codbai = bai.codbai
+      left join tsiend e
+        on a.codend = e.codend
+     where c.numcontrato = p_numcontrato;
+   
+   when others then
+    v_result := 'Erro! Endereço do contrato não encontrado' || sqlerrm;
+  end;
+ 
+  return v_result;
+ end;
+
+ function get_qtdatendida(p_nunotaorig number, p_codparc number, p_codprod number) return float deterministic is
+  v_qtdneg float;
+ begin
+  select nvl(sum(ite.qtdneg), 0)
+  --Select Distinct Nvl(Sum(var.qtdatendida), 0)
+    into v_qtdneg
+    from tgfvar var
+    join tgfcab cab
+      on var.nunota = cab.nunota
+    join tgfite ite
+      on ite.nunota = cab.nunota
+     and ite.sequencia = var.sequencia
+   where var.nunotaorig = p_nunotaorig
+     and (cab.codparc = p_codparc or 0 = 0)
+     and ite.codprod = p_codprod;
+ 
+  return nvl(v_qtdneg, 0);
+ exception
+  when others then
+   return 0;
+ end get_qtdatendida;
+
+ function get_qtdcarreg(p_nunotaorig number, p_codparc number, p_codprod number, p_tipo char) return float is
+  functionresult float;
+  v_programado   float;
+  v_carregado    float;
+  v_recebido     float;
+ begin
+  /*
+  p - programado
+  C - Carregado
+  R - Recebido
+  S - Saldo
+  */
+  if p_tipo = 'P' then
+   select case
+           when nvl(sum(ic.qtde), 0) = 0 then
+            sum(v.pesomax)
+           else
+            sum(ic.qtde)
+          end
+     into functionresult
+     from ad_contcargto cc
+     join ad_itecargto ic
+       on cc.sequencia = ic.sequencia
+     join tgfvei v
+       on cc.codveiculo = v.codveiculo
+    where nvl(cc.statusvei, 'PA') in ('T', 'A')
+         -- transito e programado
+      and ic.numcontrato = p_nunotaorig
+      and ic.codprod = p_codprod
+      and (ic.codparc = p_codparc or 0 = 0);
+  
+  elsif p_tipo = 'C' then
+  
+   --patio e descarregando
+   select case
+           when nvl(sum(ic.qtde), 0) = 0 then
+            sum(v.pesomax)
+           else
+            sum(ic.qtde)
+          end
+     into functionresult
+     from ad_contcargto cc
+     join ad_itecargto ic
+       on cc.sequencia = ic.sequencia
+     join tgfvei v
+       on cc.codveiculo = v.codveiculo
+    where nvl(cc.statusvei, 'PA') in ('P', 'D')
+      and ic.numcontrato = p_nunotaorig
+      and ic.codprod = p_codprod
+      and (ic.codparc = p_codparc or 0 = 0);
+  
+   -- descarregado
+  elsif p_tipo = 'R' then
+  
+   select nvl(sum(ic.qtde), 0)
+     into functionresult
+     from ad_contcargto cc
+     join ad_itecargto ic
+       on cc.sequencia = ic.sequencia
+    where nvl(cc.statusvei, 'PA') in ('C')
+      and cc.nunota = p_nunotaorig
+      and ic.codprod = p_codprod
+      and (ic.codparc = p_codparc or 0 = 0);
+  
+  elsif p_tipo = 'S' then
+  
+   select case
+           when nvl(sum(ic.qtde), 0) = 0 then
+            sum(v.pesomax)
+           else
+            sum(ic.qtde)
+          end
+     into v_programado
+     from ad_contcargto cc
+     join ad_itecargto ic
+       on cc.sequencia = ic.sequencia
+     left join tgfvei v
+       on cc.codveiculo = v.codveiculo
+    where cc.statusvei in ('T', 'A')
+      and ic.numcontrato = p_nunotaorig
+      and ic.codprod = p_codprod
+      and (ic.codparc = p_codparc or 0 = 0);
+  
+   select case
+           when nvl(sum(ic.qtde), 0) = 0 then
+            sum(v.pesomax)
+           else
+            sum(ic.qtde)
+          end
+     into v_carregado
+     from ad_contcargto cc
+     join ad_itecargto ic
+       on cc.sequencia = ic.sequencia
+     left join tgfvei v
+       on cc.codveiculo = v.codveiculo
+    where cc.statusvei in ('P', 'D')
+      and ic.numcontrato = p_nunotaorig
+      and ic.codprod = p_codprod
+      and (ic.codparc = p_codparc or 0 = 0);
+  
+   select nvl(sum(ic.qtde), 0)
+     into v_recebido
+     from ad_contcargto cc
+     join ad_itecargto ic
+       on cc.sequencia = ic.sequencia
+    where cc.statusvei in ('C')
+      and ic.numcontrato = p_nunotaorig
+      and ic.codprod = p_codprod
+      and (ic.codparc = p_codparc or 0 = 0);
+  
+   functionresult := get_qtdcontrato(p_nunotaorig, p_codparc, p_codprod) -
+                     (v_programado + v_carregado + v_recebido);
+  
+  end if;
+ 
+  return nvl(functionresult, 0);
+ exception
+  when others then
+   return 0;
+ end get_qtdcarreg;
+
+ procedure set_vlrdesconto_quebra(p_sequencia number, p_seqite number, erro out varchar2) is
+  v_dtvenc     date;
+  v_diasvencto int;
+  ic           ad_itecargto%rowtype;
+  --erro         Varchar2(4000);
+ begin
+ 
+  -- verifica se a amarração do carregamento está presente
+  begin
+   select c.nunota,
+          f.seqcargto
+     into ic.nunota,
+          ic.sequencia
+     from tgfcab c
+     join ad_itecargto t
+       on c.numnota = t.numnota
+      and c.codparc = t.codparc
+      and c.chavenfe = t.chavenfe
+     join ad_itectefab f
+       on f.seqcargto = t.sequencia
+    where f.sequencia = p_sequencia
+      and f.seqite = p_seqite;
+  
+  exception
+   when others then
+    null;
+  end;
+ 
+  -- cria amarração (NUNOTA) caso não exista
+ 
+  begin
+   variaveis_pkg.v_atualizando := true;
+   update ad_itecargto
+      set nunota = ic.nunota
+    where sequencia = ic.sequencia
+      and ordem = 1
+      and nunota is null;
+  
+   variaveis_pkg.v_atualizando := false;
+  exception
+   when others then
+    null;
+  end;
+ 
+  for i in (select icte.sequencia,
+                   icte.seqite,
+                   icte.seqcargto,
+                   icte.nunota,
+                   icte.numcte,
+                   icte.dataemissao,
+                   ccte.dtmov,
+                   icar.ordem ordcargto,
+                   icar.codprod,
+                   ccpa.nunota nunotacpa,
+                   ccpa.codtipoper || ' - ' || ad_get.nometop(ccpa.codtipoper) top,
+                   itec.qtdneg qtdnegcte,
+                   irom.nunota nunotarom,
+                   irom.qtdneg as qtdnegrom,
+                   icpa.vlrunit,
+                   itec.qtdneg pesocte,
+                   nvl(irom.qtdneg, icpa.ad_pesobalanca) pesobalanca,
+                   itec.qtdneg - nvl(irom.qtdneg, icpa.ad_pesobalanca) difpeso,
+                   round((1 - (nvl(irom.qtdneg, icpa.ad_pesobalanca) / itec.qtdneg)) * 100, 4) quebra,
+                   round((round((1 - (nvl(irom.qtdneg, icpa.ad_pesobalanca) / itec.qtdneg)) * 100, 4) - 0.25) *
+                         itec.qtdneg / 100 * icpa.vlrunit,
+                         2) vlrdesconto
+              from ad_itectefab icte
+              join tgfcab ccte
+                on ccte.nunota = icte.nunota
+              join tgfite itec
+                on ccte.nunota = itec.nunota
+              join ad_itecargto icar
+                on icar.sequencia = icte.seqcargto
+              join tgfcab ccpa
+                on ccpa.numnota = icar.numnota
+               and ccpa.codparc = icar.codparc
+               and ccpa.chavenfe = icar.chavenfe
+              join tgfite icpa
+                on icpa.nunota = ccpa.nunota
+               and icpa.codprod = icar.codprod
+              join tgffin f
+                on icte.nunota = f.nunota
+              left join tgfvar v
+                on v.nunotaorig = ccpa.nunota
+            -- romaneio --
+              left join tgfcab crom
+                on crom.nunota = v.nunota
+              left join tgfite irom
+                on crom.nunota = irom.nunota
+             where icte.sequencia = p_sequencia
+               and icte.seqite = p_seqite
+               and nvl(f.ad_conferido, 'N') = 'N'
+             order by icte.dataemissao)
+  loop
+   --get o percentual da quebra
+   --v_quebra := Round((1 - (i.pesobalanca / i.qtdneg)) * 100, 4);
+  
+   -- gravar o % quebra no carregamento    
+   begin
+    if i.quebra is null then
+     ad_set.insere_msglog('QUEBRA -  Não encontrou o valor da quebra, está nula. Seq.: ' || p_sequencia || '/' ||
+                          p_seqite);
+     continue;
+    end if;
+   
+    variaveis_pkg.v_atualizando := true;
+    update ad_itecargto
+       set percquebra  = i.quebra,
+           vlrdesconto = i.vlrdesconto
+     where sequencia = i.seqcargto
+       and ordem = i.ordcargto;
+   
+    --Commit;
+   
+    variaveis_pkg.v_atualizando := false;
+   exception
+    when others then
+     raise;
+   end;
+  
+   if i.quebra > 0.25 then
+   
+    --v_vlrdesconto := (i.qtdneg - i.pesobalanca) * i.vlrunit;
+    --v_vlrdesconto := (v_quebra - 0.25) * i.qtdneg / 100 * i.vlrunit;
+    begin
+    
+     -- busca prazo médio para vencimento
+     select nvl(e.diasvencfretemp, 1) into v_diasvencto from ad_tsfelt e where e.nuelt = 1;
+    
+     -- determina data de vencimento inicial
+    
+     if v_dtvenc is null then
+      v_dtvenc := trunc(sysdate) + v_diasvencto;
+     end if;
+     while to_char(v_dtvenc, 'd') in (1, 7)
+     loop
+      v_dtvenc := v_dtvenc + 1;
+     end loop;
+    
+     --verificação do vencimento e do teto
+    
+     savepoint before_simula_fin;
+     <<update_fin>>
+     begin
+      /* esse update é para simular a alteração real como provisão = N, nesse momento, a nota ainda não foi confirmada e o financeiro 
+      é uma provisão ainda e alterar o vencimento não irá provocar a validação da trigger, por isso tem que o provisão = N, mas na 
+      atualização real, a mudança do vencimento em si, não irei alterar o status da provisão*/
+      update tgffin
+         set dtvenc   = v_dtvenc,
+             provisao = 'N'
+       where nunota = i.nunota;
+     
+      rollback to before_simula_fin;
+     exception
+      when others then
+       rollback to before_simula_fin;
+       erro := sqlerrm;
+       if lower(erro) like '%teto%' or lower(erro) like '%vencimento%' then
+        v_dtvenc := v_dtvenc + 1;
+        while to_char(v_dtvenc, 'd') in (1, 7)
+        loop
+         v_dtvenc := v_dtvenc + 1;
+        end loop;
+       
+        erro := null;
+        goto update_fin;
+       else
+        dbms_output.put_line(erro);
+        return;
+       end if;
+      
+     end update_fin;
+    
+     -- update do financeiro
+    
+     begin
+      update tgffin
+         set dtvenc  = v_dtvenc,
+             vlrdesc = i.vlrdesconto
+       where nunota = i.nunota;
+     
+     exception
+      when others then
+       raise;
+     end;
+    
+    end;
+   
+   else
+    dbms_output.put_line('Não possui desconto (' || i.vlrdesconto);
+   end if;
+  
+   ad_set.insere_msglog('Quebra calculada para o nunota ' || i.nunota);
+  end loop;
+ 
+ end set_vlrdesconto_quebra;
+
+ function get_nunota(p_seq number, p_ordem int) return number is
+  ic       ad_itecargto%rowtype;
+  cab      tgfcab%rowtype;
+  v_result number;
+ begin
+  select *
+    into ic
+    from ad_itecargto
+   where sequencia = p_seq
+     and ordem = p_ordem;
+ 
+  begin
+   select nunota
+     into v_result
+     from tgfcab c
+    where c.numnota = ic.numnota
+      and c.codparc = ic.codparc
+      and c.codtipoper = 622
+      and exists (select 1
+             from tgfite i
+            where i.nunota = c.nunota
+              and i.codprod = ic.codprod);
+  
+  exception
+   when no_data_found then
+    select *
+      into cab
+      from tgfcab c
+     where c.numnota = ic.numnota
+       and c.codparc = ic.codparc
+       and c.chavenfe = ic.chavenfe;
+   
+    if cab.codtipoper = 622 then
+     v_result := cab.nunota;
+    else
+     select nunota
+       into v_result
+       from tgfcab c
+      where c.numnota = cab.numnota
+        and (c.codparc = cab.codparc or c.codparc = ic.coddest);
+    
+    end if;
+   
+  end;
+ 
+  return v_result;
+ exception
+  when others then
+   return 0;
+ end get_nunota;
+
+ procedure set_nunota(p_seq number, p_ordem int) is
+  v_nunota number;
+ begin
+  v_nunota                    := get_nunota(p_seq, p_ordem);
+  variaveis_pkg.v_atualizando := true;
+  update ad_itecargto
+     set nunota = v_nunota
+   where sequencia = p_seq
+     and ordem = p_ordem
+     and nvl(nunota, 0) = 0;
+ 
+  dbms_output.put_line(p_seq || ' - ' || p_ordem || ' - ' || v_nunota);
+ 
+  variaveis_pkg.v_atualizando := false;
+ exception
+  when others then
+   dbms_output.put_line(sqlerrm);
+ end set_nunota;
+
+ function get_nrocontratocpa(p_seq number, p_ordem int) return number is
+  p_nrocontrato number;
+  i             int := 0;
+ begin
+  for r in (select i.sequencia,
+                   c.statusvei,
+                   c.datahoralanc,
+                   c.datasaidatrans,
+                   i.codprod,
+                   i.codparc,
+                   i.coddest,
+                   i.numnota,
+                   i.nunota,
+                   i.numcontrato,
+                   i.qtde
+              from ad_itecargto i
+              join ad_contcargto c
+                on i.sequencia = c.sequencia
+             where i.sequencia = p_seq
+               and i.ordem = p_ordem
+                  --And i.codparc = :codparc
+                  --And codprod = 10001
+               and c.status <> 'CANCELADO'
+               and i.cancelado = 'NÃO'
+            --And nvl(i.qtde, 0)> 0
+             order by c.datasaidatrans)
+  loop
+  
+   /*teoricamente, não haverá carragamentos sem nunota, pois é no momento
+    que informa o nunota, que preenche a quantidade, logo só entrará no loop
+   o que tiver quantidade informada, e se tem quantidade tem nunota */
+   <<consulta>>
+   if nvl(r.nunota, 0) != 0 then
+    begin
+     select c2.numcontrato
+       into p_nrocontrato
+       from tgfcab c
+       join tcscon n
+         on c.numcontrato = n.numcontrato
+       left join tgfcab c2
+         on c2.nunota = n.nunota
+      where c.nunota = r.nunota;
+    
+    exception
+     when no_data_found then
+      p_nrocontrato := 0;
+      dbms_output.put_line('Não encontrou contrato ' || p_seq);
+    end;
+   else
+    begin
+     select c.numcontrato
+       into p_nrocontrato
+       from tcscon c
+       join tcspsc p
+         on c.numcontrato = p.numcontrato
+      where (c.codparc = r.codparc or c.codparc = r.coddest)
+        and p.codprod = r.codprod
+        and c.ad_objcontrato = 'Insumo'
+        and c.ativo = 'S'
+        and c.ad_dtinicio <= to_date(r.datahoralanc, 'dd/mm/yyyy');
+    exception
+     when no_data_found then
+      p_nrocontrato := 0;
+      dbms_output.put_line('Não encontrou nada ' || r.sequencia);
+     when too_many_rows then
+      p_nrocontrato := 0;
+      dbms_output.put_line('Encontrou + d 1 contrato para a sequencia ' || r.sequencia);
+    end;
+   
+   end if;
+  
+   if nvl(p_nrocontrato, 0) = 0 and i = 0 then
+    i        := i + 1;
+    r.nunota := null;
+    goto consulta;
+   end if;
+  
+  end loop;
+ 
+  return p_nrocontrato;
+ 
+ end get_nrocontratocpa;
+
+ procedure set_nrocontratocpa(p_seq number, p_ordem int) is
+  v_nrocontrato number;
+ begin
+  v_nrocontrato := get_nrocontratocpa(p_seq, p_ordem);
+  begin
+   variaveis_pkg.v_atualizando := true;
+   update ad_itecargto
+      set numcontrato = v_nrocontrato
+    where sequencia = p_seq
+      and ordem = p_ordem;
+  
+   variaveis_pkg.v_atualizando := false;
+  exception
+   when others then
+    dbms_output.put_line('Erro: ' || p_seq || ' - ' || p_ordem || ' - ' || sqlerrm);
+  end;
+ 
+ end set_nrocontratocpa;
+
+ function get_qtdneg_media_vei(p_codveiculo number, p_codprod number) return float deterministic is
+  v_result   float;
+  v_dtrefini date;
+  v_dtreffin date;
+ begin
+  v_dtrefini := add_months(sysdate, -60);
+  v_dtreffin := sysdate;
+  select avg(ic.qtde)
+    into v_result
+    from ad_itecargto ic
+    join ad_contcargto cc
+      on ic.sequencia = ic.sequencia
+   where cc.codveiculo = p_codveiculo
+     and ic.codprod = p_codprod
+     and nvl(cc.status, 'CANCELADO') != 'CANCELADO'
+     and cc.datasaidatrans between v_dtrefini and v_dtreffin;
+ 
+  return v_result;
+ exception
+  when others then
+   return 0;
+ end;
+
+end ad_pkg_fmp;
+/

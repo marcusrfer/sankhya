@@ -1,0 +1,1288 @@
+CREATE OR REPLACE Package Ad_Pkg_Lib As
+
+  /*
+  * Autor: Marcus Rangel
+  * Processo: Liberações de rotinas personalizadas
+  * Objetivo: Exibir a origem de lançamento liberados que estão pendentes
+  *           ou não na movimentação financeira.
+  */
+
+  v_diasvencto Pls_Integer;
+  v_diasatraso Pls_Integer;
+  msgAdicional Varchar2(4000);
+  mailheader   Varchar2(4000);
+  htmlhead     Varchar2(4000);
+  htmlbottom   Varchar2(4000);
+  htmllinklib  Varchar2(4000);
+  htmllinksnk  Varchar2(4000);
+  ultimoenvio  Date;
+  ultenviohrs  Number;
+  urgente      Boolean Default False;
+  enviar       Boolean Default False;
+  depurando    Boolean Default False;
+  v_mensagem   Clob;
+
+  Type Ty_Orig Is Record(
+    Tabela       Varchar2(100),
+    Tipo         Varchar2(100),
+    Nrounico     Number,
+    Numnota      Number,
+    Serie        Char(3),
+    Nuacordo     Number,
+    Ordemcarga   Number,
+    Dtordcarga   Date,
+    Codnat       Number,
+    Codcencus    Number,
+    Codtipoper   Number,
+    Tipmov       Char(1),
+    Codparc      Number,
+    Nomeparc     Varchar2(400),
+    Dtneg        Date,
+    Valor        Float,
+    Historico    Varchar2(400),
+    Codliberador Number,
+    Dhlib        Date);
+
+  Type Tb_Orig Is Table Of Ty_Orig;
+
+  Function Get_Orig(p_Nufin Number) Return Tb_Orig
+    Pipelined;
+
+  Function Nro_Documento(p_Nometab Varchar2,
+                         p_Nuchave Number) Return Number;
+
+  Function get_dtvencto(p_tabela  In Varchar2,
+                        p_nuchave In Number) Return Date;
+
+  Function Get_Fnc_Orig(p_Nufin Number) Return Varchar2;
+
+  Procedure envia_mail_agendado;
+
+  Cursor cur_usuarios Is
+    Select l.codusulib,
+           ad_get.Mailusu(l.codusulib) email,
+           To_Number(Nvl(u.ad_intervalolibmail, '24')) As horasreenvio,
+           u.ad_codper codperfil
+      From tsilib l
+      Join tsiusu u
+        On l.codusulib = u.codusu
+     Where dhlib Is Null
+       And dhsolicit Between Sysdate - 60 And Sysdate - 1
+       And evento >= 1000
+       And codusulib > 0
+     Group By codusulib,
+              ad_get.Mailusu(l.codusulib),
+              To_Number(Nvl(u.ad_intervalolibmail, '24')),
+              u.ad_codper
+     Order By codusulib;
+
+  Cursor cur_eventos(p_codusulib Number) Is
+    Select evento
+      From tsilib l
+     Where dhlib Is Null
+       And dhsolicit Between Sysdate - 60 And Sysdate - 1
+       And evento >= 1000
+       And l.codusulib = p_codusulib
+     Group By l.evento
+     Order By 1;
+
+  Cursor cur_pendencias(p_evento    Number,
+                        p_codusulib Number) Is
+    Select Distinct tabela,
+                    nuchave,
+                    l.evento,
+                    e.descricao As descrevento,
+                    l.dhsolicit,
+                    codususolicit,
+                    codusulib,
+                    vlratual
+      From tsilib l
+      Join vgflibeve e
+        On l.evento = e.evento
+     Where dhlib Is Null
+       And Trunc(l.dhsolicit) Between Sysdate - 60 And Sysdate - 1
+       And l.evento = p_evento
+       And codusulib = p_codusulib
+       And l.evento >= 1000
+     Order By l.evento;
+
+  Cursor cur_lib_evento(p_evento Number) Is
+    Select lim.evento, lim.codusu, ad_get.Mailusu(lim.codusu) As mail
+      From tsilim lim
+     Where lim.evento = p_evento
+     Group By lim.evento, lim.codusu, ad_get.Mailusu(lim.codusu);
+
+  Cursor cur_liberacoes Is
+    Select l.tabela,
+           l.nuchave,
+           l.evento,
+           e.descricao,
+           l.dhsolicit,
+            To_Date(Sysdate,'dd/mm/yyyy') - To_Date(l.dhsolicit, 'dd/mm/yyyy') dias_atraso,
+           0 As dias_vencto,
+           m.codusu,
+           u.email
+      From tsilib l
+      Join tsilim m
+        On m.evento = l.evento
+      Join tsiusu u
+        On m.codusu = u.codusu
+      Join tgflibeve e
+        On l.evento = e.nuevento
+     Where l.codusulib = 0
+       And l.dhsolicit Between Sysdate - 60 And Sysdate - 1
+       And l.dhlib Is Null
+       And l.evento >= 1000;
+
+  Type type_base_mail_rec Is Record(
+    tabela      Varchar2(10),
+    nuchave     Number,
+    numnota     Number,
+    evento      Number,
+    descricao   Varchar2(40),
+    dhsolicit   Date,
+    dias_atraso Number,
+    dtvenc      Date,
+    dias_vencto Number,
+    codusu      Number,
+    email       Varchar2(2000));
+
+  Type tab_base_mail Is Table Of type_base_mail_rec;
+
+  Function lib_pendentes Return tab_base_mail
+    Pipelined;
+
+  Procedure envia_mail_agendado_nolib;
+
+  Procedure envia_mail_libpend;
+
+End;
+/
+CREATE OR REPLACE Package Body Ad_Pkg_Lib Is
+
+  Function Get_Fnc_Orig(p_Nufin Number) Return Varchar2 Is
+    v_Sessao Varchar2(100);
+    v_Status Varchar2(4000);
+  Begin
+  
+    Ad_Set.Inseresessao(p_Nome => 'NUFIN', p_sequencia => 1, p_Tipo => 'I', p_Valor => p_Nufin,
+                        p_Idsessao => v_Sessao);
+  
+    Ad_Stp_Getlibstatus(p_Codusu => 0, p_Idsessao => v_Sessao, p_Qtdlinhas => 1,
+                        p_Mensagem => v_Status);
+  
+    Ad_Set.Remove_Sessao(v_Sessao);
+  
+    Return v_Status;
+  
+  End;
+
+  Function Get_Orig(p_Nufin Number) Return Tb_Orig
+    Pipelined Is
+    v_Row      Ty_Orig;
+    v_Nuacerto Number;
+  Begin
+    /*
+    25/10/2016 - implementação da tratativa de envio para origem quando é multa - Linha 88 - Marcus Rangel
+    20/07/2017 - por Ricardo Soares, até então o c_Fre considerava apenas f.tipacerto = 'F', passei a tratar 
+    f.tipacerto IN ('F','A') executando tambem uma alteração no loop 
+    */
+    Select Nucompens
+      Into v_Nuacerto
+      From Tgffin
+     Where Nufin = p_Nufin;
+  
+    If v_Nuacerto Is Not Null Then
+    
+      For c_Fre In (Select f.Nuacerto, f.Nunota, f.Nufin, f.Tipacerto
+                      From Tgffre f
+                     Where f.Nuacerto = v_Nuacerto
+                       And f.Tipacerto In ('F', 'A')
+                       And Not Exists (Select 1
+                              From Tgffre F2
+                             Where f.Nufin = F2.Nufinorig)
+                     Order By Sequencia)
+      Loop
+      
+        If c_Fre.Nunota Is Null And c_Fre.Tipacerto = 'F' Then
+        
+          Select 'TGFFIN',
+                 Initcap(Ad_Get.Nometop(Fin.Codtipoper)),
+                 Fin.Nufin,
+                 Fin.Numnota,
+                 Fin.Nucompens,
+                 Fin.Codnat,
+                 Fin.Codcencus,
+                 Fin.Ordemcarga,
+                 o.Dtprevsaida,
+                 Fin.Codparc,
+                 Par.Nomeparc,
+                 Fin.Dtneg,
+                 Fin.Vlrdesdob * Recdesp As Valor,
+                 Fin.Historico,
+                 Fin.Codtipoper,
+                 Top.Tipmov,
+                 Fin.Serienota
+            Into v_Row.Tabela,
+                 v_Row.Tipo,
+                 v_Row.Nrounico,
+                 v_Row.Numnota,
+                 v_Row.Nuacordo,
+                 v_Row.Codnat,
+                 v_Row.Codcencus,
+                 v_Row.Ordemcarga,
+                 v_Row.Dtordcarga,
+                 v_Row.Codparc,
+                 v_Row.Nomeparc,
+                 v_Row.Dtneg,
+                 v_Row.Valor,
+                 v_Row.Historico,
+                 v_Row.Codtipoper,
+                 v_Row.Tipmov,
+                 v_Row.Serie
+            From Tgffin Fin
+           Inner Join Tgfpar Par
+              On Fin.Codparc = Par.Codparc
+           Inner Join Tgftop Top
+              On Fin.Codtipoper = Top.Codtipoper
+             And Fin.Dhtipoper = Top.Dhalter
+           Inner Join Tgford o
+              On o.Ordemcarga = Fin.Ordemcarga
+             And Fin.Codemp = o.Codemp
+           Where Nufin = c_Fre.Nufin;
+        
+        Elsif c_Fre.Nunota Is Null And c_Fre.Tipacerto = 'A' Then
+          -- Bloco incluido por Ricardo Soares em 20/07/2017
+        
+          Select 'TGFFIN',
+                 Initcap(Ad_Get.Nometop(Fin.Codtipoper)),
+                 Fin.Nufin,
+                 Fin.Numnota,
+                 Fin.Nucompens,
+                 Fin.Codnat,
+                 Fin.Codcencus,
+                 Fin.Ordemcarga,
+                 Fin.Dtvenc,
+                 Fin.Codparc,
+                 Par.Nomeparc,
+                 Fin.Dtneg,
+                 Fin.Vlrdesdob * Recdesp As Valor,
+                 Fin.Historico,
+                 Fin.Codtipoper,
+                 Top.Tipmov,
+                 Fin.Serienota
+            Into v_Row.Tabela,
+                 v_Row.Tipo,
+                 v_Row.Nrounico,
+                 v_Row.Numnota,
+                 v_Row.Nuacordo,
+                 v_Row.Codnat,
+                 v_Row.Codcencus,
+                 v_Row.Ordemcarga,
+                 v_Row.Dtordcarga,
+                 v_Row.Codparc,
+                 v_Row.Nomeparc,
+                 v_Row.Dtneg,
+                 v_Row.Valor,
+                 v_Row.Historico,
+                 v_Row.Codtipoper,
+                 v_Row.Tipmov,
+                 v_Row.Serie
+            From Tgffin Fin
+           Inner Join Tgfpar Par
+              On Fin.Codparc = Par.Codparc
+           Inner Join Tgftop Top
+              On Fin.Codtipoper = Top.Codtipoper
+             And Fin.Dhtipoper = Top.Dhalter
+           Where Nufin = c_Fre.Nufin
+             And Fin.Recdesp = -1;
+        
+        Else
+        
+          Select 'TGFCAB',
+                 Initcap(Ad_Get.Nometop(Cab.Codtipoper)),
+                 Cab.Nunota,
+                 Cab.Numnota,
+                 Cab.Ordemcarga,
+                 o.Dtprevsaida,
+                 c_Fre.Nuacerto,
+                 Cab.Codnat,
+                 Cab.Codcencus,
+                 Cab.Codparctransp,
+                 Par.Nomeparc,
+                 Cab.Dtneg,
+                 Cab.Vlrfrete,
+                 Cab.Observacao,
+                 Cab.Codtipoper,
+                 Top.Tipmov,
+                 Cab.Serienota
+            Into v_Row.Tabela,
+                 v_Row.Tipo,
+                 v_Row.Nrounico,
+                 v_Row.Numnota,
+                 v_Row.Ordemcarga,
+                 v_Row.Dtordcarga,
+                 v_Row.Nuacordo,
+                 v_Row.Codnat,
+                 v_Row.Codcencus,
+                 v_Row.Codparc,
+                 v_Row.Nomeparc,
+                 v_Row.Dtneg,
+                 v_Row.Valor,
+                 v_Row.Historico,
+                 v_Row.Codtipoper,
+                 v_Row.Tipmov,
+                 v_Row.Serie
+            From Tgfcab Cab
+           Inner Join Tgford o
+              On o.Ordemcarga = Cab.Ordemcarga
+             And Cab.Codemp = o.Codemp
+           Inner Join Tgfpar Par
+              On Cab.Codparctransp = Par.Codparc
+           Inner Join Tgftop Top
+              On Cab.Codtipoper = Top.Codtipoper
+             And Cab.Dhtipoper = Top.Dhalter
+           Where Cab.Nunota = c_Fre.Nunota;
+        End If;
+      
+        Pipe Row(v_Row);
+      
+      End Loop;
+    Else
+      For c_Fin In (Select Nufin,
+                           Nunota,
+                           Numnota,
+                           Origem,
+                           f.Nureneg,
+                           f.Codnat,
+                           f.Codcencus,
+                           f.Historico,
+                           f.Dtneg,
+                           f.Dtvenc,
+                           f.Vlrdesdob,
+                           f.Codtipoper,
+                           c.Nometaborig Taborig,
+                           c.Nuchaveorig Nuchave
+                      From Tgffin f
+                      Left Join Ad_Tblcmf c
+                        On (c.Nuchavedest = f.Nufin And Upper(c.Nometabdest) = 'TGFFIN')
+                     Where Nufin = p_Nufin
+                       And Recdesp <> 0)
+      Loop
+      
+        If c_Fin.Origem = 'F' And c_Fin.Nureneg Is Null And c_Fin.Taborig Is Null Then
+        
+          Select 'TGFFIN',
+                 'Lançamento Financeiro',
+                 Nufin,
+                 Numnota,
+                 f.Ordemcarga,
+                 o.Dtprevsaida,
+                 Nucompens,
+                 Codnat,
+                 F.Codcencus,
+                 f.Codparc,
+                 Par.Nomeparc,
+                 Dtneg,
+                 Vlrdesdob,
+                 f.Historico,
+                 f.Codtipoper,
+                 t.Tipmov,
+                 f.Serienota
+            Into v_Row.Tabela,
+                 v_Row.Tipo,
+                 v_Row.Nrounico,
+                 v_Row.Numnota,
+                 v_Row.Ordemcarga,
+                 v_Row.Dtordcarga,
+                 v_Row.Nuacordo,
+                 v_Row.Codnat,
+                 v_Row.Codcencus,
+                 v_Row.Codparc,
+                 v_Row.Nomeparc,
+                 v_Row.Dtneg,
+                 v_Row.Valor,
+                 v_Row.Historico,
+                 v_Row.Codtipoper,
+                 v_Row.Tipmov,
+                 v_Row.Serie
+            From Tgffin f, Tgfpar Par, Tgftop t, Tgford o
+           Where f.Codparc = Par.Codparc
+             And f.Codtipoper = t.Codtipoper
+             And f.Dhtipoper = t.Dhalter
+             And f.Nufin = p_Nufin
+             And f.Ordemcarga = o.Ordemcarga
+             And f.Codemp = o.Codemp;
+        
+        Elsif c_Fin.Origem = 'F' And c_Fin.Nureneg Is Not Null Then
+        
+          For c_Reneg In (Select 'TGFFIN' As Tabela,
+                                 'Renegociações' As Tipo,
+                                 f.Nufin As Nunota,
+                                 Numnota,
+                                 f.Ordemcarga,
+                                 o.Dtprevsaida,
+                                 f.Nureneg,
+                                 Codnat,
+                                 F.Codcencus,
+                                 f.Codparc,
+                                 p.Nomeparc,
+                                 Dtneg,
+                                 Vlrdesdob,
+                                 Historico,
+                                 f.Codtipoper,
+                                 t.Tipmov,
+                                 f.Serienota
+                            Into v_Row.Tabela,
+                                 v_Row.Tipo,
+                                 v_Row.Nrounico,
+                                 v_Row.Numnota,
+                                 v_Row.Ordemcarga,
+                                 v_Row.Dtordcarga,
+                                 v_Row.Nuacordo,
+                                 v_Row.Codnat,
+                                 v_Row.Codcencus,
+                                 v_Row.Codparc,
+                                 v_Row.Nomeparc,
+                                 v_Row.Dtneg,
+                                 v_Row.Valor,
+                                 v_Row.Historico,
+                                 v_Row.Codtipoper,
+                                 v_Row.Tipmov,
+                                 v_Row.Serie
+                            From Tgffin f
+                           Inner Join Tgfpar p
+                              On (f.Codparc = p.Codparc)
+                           Inner Join Tgfren r
+                              On (f.Nufin = r.Nufin)
+                           Inner Join Tgftop t
+                              On (f.Codtipoper = t.Codtipoper And f.Dhtipoper = t.Dhalter)
+                            Left Join Tgford o
+                              On (o.Ordemcarga = f.Ordemcarga And o.Codemp = f.Codemp)
+                           Where f.Recdesp = 0
+                             And (r.Nureneg = c_Fin.Nureneg Or r.Nureneg = (c_Fin.Nureneg * -1))
+                          --And f.nureneg > 0
+                          )
+          Loop
+            v_Row.Tabela     := c_Reneg.Tabela;
+            v_Row.Tipo       := c_Reneg.Tipo;
+            v_Row.Nrounico   := c_Reneg.Nunota;
+            v_Row.Numnota    := c_Reneg.Numnota;
+            v_Row.Ordemcarga := c_Reneg.Ordemcarga;
+            v_Row.Dtordcarga := c_Reneg.Dtprevsaida;
+            v_Row.Nuacordo   := c_Reneg.Nureneg;
+            v_Row.Codnat     := c_Reneg.Codnat;
+            v_Row.Codcencus  := c_Reneg.Codcencus;
+            v_Row.Codparc    := c_Reneg.Codparc;
+            v_Row.Nomeparc   := c_Reneg.Nomeparc;
+            v_Row.Dtneg      := c_Reneg.Dtneg;
+            v_Row.Valor      := c_Reneg.Vlrdesdob;
+            v_Row.Historico  := c_Reneg.Historico;
+            v_Row.Codtipoper := c_Reneg.Codtipoper;
+            v_Row.Tipmov     := c_Reneg.Tipmov;
+            v_Row.Serie      := c_Reneg.Serienota;
+          
+            Pipe Row(v_Row);
+          
+          End Loop;
+        
+        Elsif c_Fin.Origem = 'F' And c_Fin.Taborig Is Not Null Then
+        
+          v_Row.Tabela   := c_Fin.Taborig;
+          v_Row.Nrounico := c_Fin.Nuchave;
+        
+          Select i.Descrinstancia,
+                 Numnota,
+                 f.Ordemcarga,
+                 o.Dtprevsaida,
+                 Nucompens,
+                 Codnat,
+                 F.Codcencus,
+                 f.Codparc,
+                 p.Nomeparc,
+                 Dtneg,
+                 Vlrdesdob,
+                 Historico,
+                 f.Codtipoper,
+                 t.Tipmov,
+                 f.Serienota
+            Into v_Row.Tipo,
+                 v_Row.Numnota,
+                 v_Row.Ordemcarga,
+                 v_Row.Dtordcarga,
+                 v_Row.Nuacordo,
+                 v_Row.Codnat,
+                 v_Row.Codcencus,
+                 v_Row.Codparc,
+                 v_Row.Nomeparc,
+                 v_Row.Dtneg,
+                 v_Row.Valor,
+                 v_Row.Historico,
+                 v_Row.Codtipoper,
+                 v_Row.Tipmov,
+                 v_Row.Serie
+            From Tgffin f, Tgfpar p, Tgftop t, Tddins i, Tgford o
+           Where f.Codparc = p.Codparc
+             And f.Codtipoper = t.Codtipoper
+             And f.Dhtipoper = t.Dhalter
+             And o.Ordemcarga = f.Ordemcarga
+             And f.Codemp = o.Codemp
+             And f.Nufin = p_Nufin
+             And Nvl(i.Nometab, 0) = Nvl(c_Fin.Taborig, 0)
+             And f.Recdesp <> 0;
+        
+        Elsif c_Fin.Origem = 'E' And c_Fin.Nureneg Is Null Then
+        
+          Select Distinct 'TGFCAB' Tabela,
+                          Ad_Get.Nometop(c.Codtipoper) Tipo,
+                          c.Nunota Nrounico,
+                          c.Numnota,
+                          c.Ordemcarga,
+                          o.Dtprevsaida,
+                          0 Nuacordo,
+                          c.Codnat,
+                          c.Codcencus,
+                          c.Codparc,
+                          p.Nomeparc,
+                          c.Dtneg,
+                          Vlrnota Valor,
+                          C.Observacao,
+                          c.Codtipoper,
+                          c.Tipmov,
+                          c.Serienota
+            Into v_Row.Tabela,
+                 v_Row.Tipo,
+                 v_Row.Nrounico,
+                 v_Row.Numnota,
+                 v_Row.Ordemcarga,
+                 v_Row.Dtordcarga,
+                 v_Row.Nuacordo,
+                 v_Row.Codnat,
+                 v_Row.Codcencus,
+                 v_Row.Codparc,
+                 v_Row.Nomeparc,
+                 v_Row.Dtneg,
+                 v_Row.Valor,
+                 v_Row.Historico,
+                 v_Row.Codtipoper,
+                 v_Row.Tipmov,
+                 v_Row.Serie
+            From Tgfcab c, Tgfpar p, Tgffin f, Tgftop t, Tgford o
+           Where c.Codparc = p.Codparc
+             And c.Codtipoper = t.Codtipoper
+             And c.Dhtipoper = t.Dhalter
+             And f.Nunota = c.Nunota
+             And o.Ordemcarga = c.Ordemcarga
+             And c.Codemp = o.Codemp
+             And Nufin = p_Nufin;
+        
+        Elsif c_Fin.Origem = 'E' And c_Fin.Nureneg Is Not Null Then
+        
+          For c_Cabren In (Select 'TGFCAB' Tabela,
+                                  'Renegociações' Tipo,
+                                  f.Nunota,
+                                  Numnota,
+                                  f.Ordemcarga,
+                                  o.Dtprevsaida,
+                                  Nucompens,
+                                  Codnat,
+                                  F.Codcencus,
+                                  f.Codparc,
+                                  p.Nomeparc,
+                                  Dtneg,
+                                  Vlrdesdob,
+                                  Historico,
+                                  f.Codtipoper,
+                                  t.Tipmov,
+                                  f.Serienota
+                             From Tgffin f
+                            Inner Join Tgfpar p
+                               On (f.Codparc = p.Codparc)
+                            Inner Join Tgfren r
+                               On (f.Nufin = r.Nufin)
+                            Inner Join Tgftop t
+                               On (f.Codtipoper = t.Codtipoper And f.Dhtipoper = t.Dhalter)
+                             Left Join Tgford o
+                               On (o.Ordemcarga = f.Ordemcarga And o.Codemp = f.Codemp)
+                            Where f.Recdesp = 0
+                              And r.Nureneg = c_Fin.Nureneg
+                              And f.Nureneg > 0)
+          Loop
+            v_Row.Tabela     := c_Cabren.Tabela;
+            v_Row.Tipo       := c_Cabren.Tipo;
+            v_Row.Nrounico   := c_Cabren.Nunota;
+            v_Row.Numnota    := c_Cabren.Numnota;
+            v_Row.Ordemcarga := c_Cabren.Ordemcarga;
+            v_Row.Dtordcarga := c_Cabren.Dtprevsaida;
+            v_Row.Nuacordo   := 0;
+            v_Row.Codnat     := c_Cabren.Codnat;
+            v_Row.Codcencus  := c_Cabren.Codcencus;
+            v_Row.Codparc    := c_Cabren.Codparc;
+            v_Row.Nomeparc   := c_Cabren.Nomeparc;
+            v_Row.Dtneg      := c_Cabren.Dtneg;
+            v_Row.Valor      := c_Cabren.Vlrdesdob;
+            v_Row.Historico  := c_Cabren.Historico;
+            v_Row.Codtipoper := c_Cabren.Codtipoper;
+            v_Row.Tipmov     := c_Cabren.Tipmov;
+            v_Row.Serie      := c_Cabren.Serienota;
+          
+            Pipe Row(v_Row);
+          
+          End Loop;
+        
+          Goto Stat_End;
+        
+        End If;
+      
+        Begin
+          Select l.Codusulib, l.Dhlib
+            Into v_Row.Codliberador, v_Row.Dhlib
+            From Tsilib l
+           Where l.Tabela = Case
+                   When v_Row.Tabela = 'AD_MULCONTROL' Then
+                    'AD_MULCONT'
+                   Else
+                    v_Row.Tabela
+                 End
+             And l.Nuchave = v_Row.Nrounico;
+        Exception
+          When No_Data_Found Then
+            Null;
+          When Too_Many_Rows Then
+            Select l.Codusulib, l.Dhlib
+              Into v_Row.Codliberador, v_Row.Dhlib
+              From Tsilib l
+             Where l.Tabela = v_Row.Tabela
+               And l.Nuchave = v_Row.Nrounico
+               And Rownum = 1;
+        End;
+      
+        Begin
+          Pipe Row(v_Row);
+        End;
+      
+      End Loop c_Fin;
+    
+    End If;
+    <<stat_End>>
+    Null;
+  End Get_Orig;
+
+  Function Nro_Documento(p_Nometab Varchar2,
+                         p_Nuchave Number) Return Number Is
+    v_Nrodoc Number;
+  Begin
+    If p_Nometab = 'TGFFIN' Then
+    
+      Select f.Numnota
+        Into v_Nrodoc
+        From Tgffin f
+       Where Nufin = p_Nuchave;
+    
+    Elsif p_Nometab = 'TGFCAB' Then
+    
+      Select Numnota
+        Into v_Nrodoc
+        From Tgfcab
+       Where Nunota = p_Nuchave;
+    
+    Elsif p_Nometab = 'TCSCON' Then
+      v_Nrodoc := p_Nuchave;
+    
+    Elsif p_Nometab = 'TGFITE' Then
+    
+      Select c.Numnota
+        Into v_Nrodoc
+        From Tgfite i
+       Inner Join Tgfcab c
+          On (c.Nunota = i.Nunota);
+    
+    Elsif p_Nometab = 'AD_MULCONT' Then
+      --v_NroDoc := p_Nuchave;
+      Select m.Ordemcarga
+        Into v_Nrodoc
+        From Ad_Mulcontrol m
+       Where m.Codmulcont = p_Nuchave;
+    
+    Elsif p_Nometab = 'AD_TSFDEF' Then
+      --v_NroDoc := p_Nuchave;
+      Select d.Ordemcarga
+        Into v_Nrodoc
+        From Ad_Tsfdef d
+       Where d.Nudef = p_Nuchave;
+    
+    Elsif p_Nometab = 'AD_CABSOLCPA' Then
+      --v_NroDoc := p_Nuchave;
+      Select Nvl(c.Numcontrato, c.Numcotger)
+        Into v_Nrodoc
+        From Ad_Cabsolcpa c
+       Where c.Nusolcpa = p_Nuchave;
+    End If;
+  
+    Return Nvl(v_Nrodoc, 0);
+  Exception
+    When Others Then
+      v_Nrodoc := 0;
+      Return v_Nrodoc;
+  End Nro_Documento;
+
+  Function get_dtvencto(p_tabela  In Varchar2,
+                        p_nuchave In Number) Return Date Is
+    v_aux_date Varchar2(20); 
+    v_dtvenc Date;
+    i        Int;
+  Begin
+  
+    If p_tabela = 'TGFCAB' Then
+    
+      Select Count(*)
+        Into i
+        From tgffin
+       Where nunota = p_nuchave;
+    
+      If i = 0 Then
+        v_dtvenc := '01/01/1900';
+        Return v_dtvenc;
+      Else
+        Select Min(f.dtvenc)
+          Into v_dtvenc
+          From Tgffin F
+         Where (f.nunota = p_nuchave) Fetch First 1 rows Only;
+      End If;
+    
+    Elsif p_tabela = 'TGFFIN' Then
+    
+      Begin
+        Select Min(f.dtvenc)
+          Into v_dtvenc
+          From tgffin f
+         Where (f.nufin = p_nuchave) Fetch First 1 rows Only;
+      Exception
+        When no_data_found Then
+          v_dtvenc := '01/01/1900';
+      End;
+    
+    End If;
+    
+    If ( v_dtvenc is Not null ) then
+      v_dtvenc := Cast(v_dtvenc As Timestamp);
+    end if; 
+  
+    Return v_dtvenc;
+  
+  End get_dtvencto;
+
+  -- Autor: M. Rangel
+  -- notificações para liberações pendentes
+  Procedure envia_mail_agendado Is
+    r_fin tgffin%Rowtype;
+    mail  tmdfmg%Rowtype;
+    i     Int;
+  
+    Type type_eventos Is Table Of Number Index By Pls_Integer;
+    t type_eventos;
+    v type_eventos;
+    x Int := 0;
+  Begin
+  
+    -- percorre os usuários liberadores com pendencias
+    For c_Usu In (
+                  
+                  Select l.codusulib,
+                          ad_get.Mailusu(l.codusulib) email,
+                          To_Number(Nvl(u.ad_intervalolibmail, '24')) As horasreenvio,
+                          u.ad_codper codperfil
+                    From tsilib l
+                    Join tsiusu u
+                      On l.codusulib = u.codusu
+                   Where dhlib Is Null
+                     And dhsolicit Between Sysdate - 60 And Sysdate - 1
+                     And evento >= 1000
+                     And codusulib > 0
+                   Group By codusulib,
+                             ad_get.Mailusu(l.codusulib),
+                             To_Number(Nvl(u.ad_intervalolibmail, '24')),
+                             u.ad_codper
+                   Order By codusulib
+                  
+                  )
+    Loop
+    
+      --verifica último envio
+      Select Nvl(Max(dtentrada), To_Date('01/01/2000 23:59:59', 'dd/mm/yyyy hh24:mi:ss')),
+             (Sysdate -
+             Nvl(Max(dtentrada), To_Date('01/01/2000 23:59:59', 'dd/mm/yyyy hh24:mi:ss'))) * 24
+        Into ultimoenvio, ultenviohrs
+        From tmdfmg f
+       Where f.codusu = c_usu.codusulib;
+    
+      --ultenviohrs := (Sysdate - ultimoenvio) * 24;
+    
+      If ultenviohrs >= c_usu.horasreenvio Then
+        enviar := True;
+      End If;
+    
+      -- percorre as pendencias
+      For c_Lib In (
+                    
+                    Select tabela,
+                            nuchave,
+                            l.evento,
+                            e.descricao As descrevento,
+                            l.dhsolicit,
+                            codususolicit
+                      From tsilib l
+                      Join vgflibeve e
+                        On l.evento = e.evento
+                     Where dhlib Is Null
+                       And Trunc(l.dhsolicit) Between Sysdate - 60 And Sysdate - 1
+                       And codusulib = c_usu.codusulib
+                       And l.evento >= 1000
+                     Order By l.evento
+                    
+                    )
+      Loop
+      
+        -- se tem vencimento ou não
+        If c_lib.tabela In ('TGFCAB', 'TGFFIN') Then
+        
+          If c_lib.tabela = 'TGFCAB' Then
+            Select Count(*)
+              Into i
+              From tgffin
+             Where nunota = c_lib.nuchave;
+            If i = 0 Then
+              Goto nao_tem_financeiro;
+            End If;
+          End If;
+        
+          Begin
+            Select Min(f.dtvenc), codparc, codemp, numnota
+              Into r_fin.dtvenc, r_fin.codparc, r_fin.codemp, r_fin.numnota
+              From tgffin f
+             Where (f.nufin = c_lib.nuchave Or f.nunota = c_lib.nuchave)
+						   And f.dhbaixa Is Null
+             Group By codparc, codemp, numnota Fetch First 1 rows Only;
+          Exception
+            When no_data_found Then
+              Raise;
+          End;
+        
+          r_fin.dtvenc := To_Date(To_Char(r_fin.dtvenc, 'dd/mm/yyyy') || ' 18:00:00',
+                                  'dd/mm/yyyy hh24:mi:ss');
+        
+          -- dias vencidos
+          v_diasvencto := (r_fin.dtvenc - Sysdate);
+        
+          -- se urgente
+          If (v_diasvencto * 24) Between - 2040 And 96 Then
+            enviar       := True;
+            urgente      := True;
+            msgAdicional := 'Existem liberações pendentes muito próximas do vencimento ou vencidas que necessitam urgentemente de vossa atenção!!!!<p><p>';
+          Elsif (v_diasvencto * 24) Between 144 And 97 Then
+            msgAdicional := 'Existem liberações próximas do vencimento que necessitam de vossa atenção!<p><p>';
+          End If;
+        
+          <<nao_tem_financeiro>>
+          If enviar = False Then
+            Continue;
+          End If;
+          
+          
+          Else
+            
+          /*se não é de origem finaceira ou comercial, não tem data de vencimento*/
+          r_fin.dtvenc := Null;
+          v_diasvencto := Null;          
+        
+        End If;
+      
+        --dias passsados após a solicitação
+        v_diasatraso := To_Date(Sysdate, 'dd/mm/yyyy') - c_lib.dhsolicit;
+        
+
+      
+        v_mensagem := v_mensagem || Chr(13) || '<tr align="center">' || '<td>' || r_fin.numnota ||
+                      '</td>' || '<td>' || c_lib.nuchave || '</td>' || '<td>' || c_lib.evento ||
+                      '</td>' || '<td>' || c_lib.DescrEvento || '</td>' || '<td>' ||
+                      c_lib.Dhsolicit || '</td>' || '<td>' || v_diasatraso || '</td>' || '<td>' ||
+                      r_fin.Dtvenc || '</td>' || '<td><font color=red>' || v_diasvencto ||
+                      '</font></td>' || '</tr>';
+      
+        --Dbms_Output.Put_Line(v_mensagem);
+      
+        x := x + 1;
+        t(x) := c_lib.evento;
+      
+      End Loop c_lib;
+    
+      --Dbms_Output.Put_Line('Total de linhas: ' || t.count);
+    
+      If enviar Then
+      
+        mail.assunto := 'Agendador - Liberações pendentes!!!';
+      
+        mailheader := 'Olá ' || ad_get.Nomeusu(c_usu.codusulib, 'completo') ||
+                      ', favor verificar o quanto antes as liberações que ainda constam como pendentes.<p>' ||
+                      msgAdicional || '<p>Obrigado.<p><p>';
+      
+        htmlhead := '<table border = 1>' || '<tr>' || ' <td>Nº Documento. </td>' ||
+                    ' <td>Nº Único. </td>' || ' <td>Evento </td>' || ' <td>Descr. Evento </td>' ||
+                    ' <td>Dt. Solicitação</td>' || ' <td>Dias Atraso</td>' ||
+                    ' <td>Dt. Vencto</td>' || ' <td>Dias Vencto</td>' || '</tr>';
+      Else
+        Continue;
+      End If;
+    
+      -- busca os email, considerar se for usuario 0, busca de todos que podem liberar
+      -- se urgente, tem que mandar para fila certa dependendo do evento
+      mail.email := c_usu.email;
+    
+      If c_usu.codusulib = 0 Then
+      
+        -- distinct na collection
+        For z In t.first .. t.last
+        Loop
+          Begin
+            v(t(z)) := t(z);
+          Exception
+            When Others Then
+              Null;
+          End;
+        End Loop;
+      
+        -- percorre os eventos      
+        x := v.first;
+        While x Is Not Null
+        Loop
+        
+          For c_eve In (Select lim.evento, ad_get.Mailusu(lim.codusu) As mail
+                          From tsilim lim
+                          Join tsilib lib
+                            On lib.evento = lim.evento
+                         Where lib.codusulib = c_usu.codusulib
+                           And lib.dhsolicit Between Sysdate - 60 And Sysdate - 1
+                           And lib.dhlib Is Null
+                           And ad_get.Mailusu(lim.codusu) != c_usu.email
+                           And lim.evento = v(x)
+                         Group By lim.evento, ad_get.Mailusu(lim.codusu))
+          Loop
+          
+            If mail.email Is Null Then
+              mail.email := c_eve.mail;
+            Else
+              mail.email := mail.email || ', ' || c_eve.mail;
+            End If;
+          End Loop;
+        
+          x := v.next(x);
+        End Loop;
+      
+      Elsif c_usu.codusulib > 0 And c_usu.email Is Null Then
+      
+        For c_eve In (
+                      
+                      Select ad_get.Mailusu(codususupl) mail
+                        From tsisupl su
+                       Where su.codusu = c_usu.codusulib
+                         And (dtfim Is Null Or dtfim > Sysdate)
+                         And (dtinicio <= Sysdate)
+                      
+                      )
+        Loop
+          If mail.email Is Null Then
+            mail.email := c_eve.mail;
+          
+          Else
+            mail.email := mail.email || ', ' || c_eve.mail;
+          End If;
+        End Loop;
+      
+      Elsif c_usu.codusulib > 0 And urgente Then
+      
+        -- complementa a lista de e-mail com a fila
+        If c_usu.codperfil Is Not Null Then
+          mail.email := mail.email || ', ' || ad_get.Mailfila(c_usu.codperfil);
+        End If;
+      
+      Else
+        -- complementa a lista de e-mail com os suplentes
+        For c_supl In (
+                       
+                       Select s.codususupl, u.email
+                         From tsisupl s
+                         Join tsiusu u
+                           On s.codususupl = u.codusu
+                        Where s.codusu = c_usu.codusulib
+                          And Sysdate Between s.dtinicio And s.dtfim
+                        Group By s.codususupl, u.email
+                       
+                       )
+        Loop
+        
+          If mail.email Is Null Then
+            mail.email := c_supl.email;
+          Else
+            mail.email := mail.email || ', ' || c_supl.email;
+          End If;
+        
+        End Loop;
+      
+      End If;
+    
+      Dbms_Output.Put_Line('Lista de email: ' || mail.email);
+      dbms_output.new_line;
+    
+      htmlbottom := Chr(13) || '</table>';
+    
+      htmllinklib := Chr(13) || '<p><a href="' || ad_fnc_urlskw('TSILIB', 0) ||
+                     '" target="_blank"> Clicar aqui para liberar </a></p>';
+    
+      htmllinksnk := Chr(13) || '<p><a href="http://www.sankhya.com.br" target="_blank">' ||
+                     '<img src="http://www.sankhya.com.br/imagens/logo-sankhya-rodape.png" widht="141" height="32" ></img></a></p>';
+    
+      mail.mensagem := mailheader || Chr(13) || htmlhead || Chr(13) || v_mensagem || Chr(13) ||
+                       htmlbottom || Chr(13) || htmllinklib || Chr(13) || htmllinksnk;
+    
+      Dbms_Output.Put_Line(mail.mensagem);
+    
+      --enviar := False;
+    
+      If enviar Then
+      
+        If depurando Then
+        
+          mail.codfila := AD_SEQ_TMDFMG_SF.Nextval; --debug
+        
+          Insert Into ad_Tmdfmg
+            (Codfila, Assunto, Codmsg, Dtentrada, Status, Codcon, Tentenvio, Mensagem, Tipoenvio,
+             Maxtentenvio, Email, Codusu, codusuremet, reenviar)
+          Values
+            (mail.codfila, mail.assunto, Null, Sysdate, 'P', 12, 3, mail.mensagem, 'E', 3,
+             mail.email, c_usu.codusulib, 0, 'S');
+        
+          mail := Null;
+        
+          v_mensagem := Null;
+        
+        Else
+        
+          stp_keygen_tgfnum('TMDFMG', 1, 'TMDFMG', 'CODFILA', 0, mail.codfila);
+        
+          --mail.codfila := AD_SEQ_TMDFMG_SF.Nextval; --debug
+        
+          Insert Into Tmdfmg
+            (Codfila, Assunto, Codmsg, Dtentrada, Status, Codcon, Tentenvio, Mensagem, Tipoenvio,
+             Maxtentenvio, Email, Codusu, codusuremet, reenviar)
+          Values
+            (mail.codfila, mail.assunto, Null, Sysdate, 'P', 12, 3, mail.mensagem, 'E', 3,
+             mail.email, c_usu.codusulib, 0, 'S');
+        
+          mail := Null;
+        
+          v_mensagem := Null;
+        
+        End If;
+      
+      End If;
+    
+    End Loop c_usu;
+  
+  End envia_mail_agendado;
+
+  Function lib_pendentes Return tab_base_mail
+    Pipelined Is
+    t   type_base_mail_rec;
+    cur cur_liberacoes%Rowtype;
+  Begin
+    Open cur_liberacoes;
+    Loop
+      Fetch cur_liberacoes
+        Into cur;
+      Exit When cur_liberacoes%Notfound;
+    
+      t.tabela      := cur.tabela;
+      t.nuchave     := cur.nuchave;
+      T.Numnota     := Nro_Documento(T.Tabela, T.Nuchave);
+      t.evento      := cur.evento;
+      t.descricao   := cur.descricao;
+      t.dhsolicit   := cur.dhsolicit;
+      t.dias_atraso := cur.dias_atraso;
+      t.dtvenc      := get_dtvencto(t.tabela, t.nuchave);
+      t.dias_vencto := Round(t.dtvenc - Sysdate);
+      t.codusu      := cur.codusu;
+      t.email       := cur.email;
+      Pipe Row(t);
+    
+    End Loop;
+    Close cur_liberacoes;
+  End lib_pendentes;
+
+  Procedure envia_mail_agendado_nolib Is
+    mail tmdfmg%Rowtype;
+  Begin
+    For c_usu In (Select Distinct u.codusu, u.email, u.ad_codper codperfil
+                    From Table(lib_pendentes) l
+                    Join tsiusu u
+                      On l.codusu = u.codusu
+                   Order By u.codusu)
+    Loop
+    
+      mail := Null;
+    
+      Select Nvl(Max(dtentrada), To_Date('01/01/2000 23:59:59', 'dd/mm/yyyy hh24:mi:ss')),
+             (Sysdate -
+             Nvl(Max(dtentrada), To_Date('01/01/2000 23:59:59', 'dd/mm/yyyy hh24:mi:ss'))) * 24
+        Into ultimoenvio, ultenviohrs
+        From tmdfmg f
+       Where f.codusu = c_usu.codusu;
+    
+      If ultenviohrs >= 12 Then
+        enviar := True;
+      End If;
+    
+      For c_Lib In (Select *
+                      From Table(lib_pendentes)
+                     Where codusu = c_usu.codusu)
+      Loop
+      
+        If (c_lib.dias_vencto * 24) Between - 2040 And 96 Then
+          enviar       := True;
+          urgente      := True;
+          msgAdicional := 'Existem liberações pendentes muito próximas do vencimento ou vencidas que necessitam urgentemente de vossa atenção!!!!<p><p>';
+        Elsif (v_diasvencto * 24) Between 144 And 97 Then
+          msgAdicional := 'Existem liberações próximas do vencimento que necessitam de vossa atenção!<p><p>';
+        End If;
+      
+        v_mensagem := v_mensagem || Chr(13) || '<tr align="center">' || '<td>' ||
+                      Nvl(c_lib.numnota, c_lib.nuchave) || '</td>' || '<td>' || c_lib.evento ||
+                      '</td>' || '<td>' || c_lib.descricao || '</td>' || '<td>' || c_lib.Dhsolicit ||
+                      '</td>' || '<td>' || c_lib.dias_atraso || '</td>' || '<td>' || c_lib.Dtvenc ||
+                      '</td>' || '<td><font color=red>' || c_lib.dias_vencto || '</font></td>' ||
+                      '</tr>';
+      
+        If enviar Then
+        
+          mail.assunto := 'Agendador - Liberações pendentes!!!';
+        
+          mailheader := 'Olá ' || ad_get.Nomeusu(c_usu.codusu, 'completo') ||
+                        ', favor verificar o quanto antes as liberações que ainda constam como pendentes.<p>' ||
+                        msgAdicional || '<p>Obrigado.<p><p>';
+        
+          htmlhead := '<table border = 1>' || '<tr>' || ' <td>Nº Documento. </td>' ||
+                      ' <td>Evento </td>' || ' <td>Descr. Evento </td>' ||
+                      ' <td>Dt. Solicitação</td>' || ' <td>Dias Atraso</td>' ||
+                      ' <td>Dt. Vencto</td>' || ' <td>Dias Vencto</td>' || '</tr>';
+        Else
+          Continue;
+        End If;
+      
+      End Loop c_lib;
+    
+      mail.email := c_usu.email;
+    
+      If c_usu.codusu > 0 And c_usu.email Is Null Then
+      
+        For c_eve In (Select ad_get.Mailusu(codususupl) mail
+                        From tsisupl su
+                       Where su.codusu = c_usu.codusu
+                         And (dtfim Is Null Or dtfim > Sysdate)
+                         And (dtinicio <= Sysdate))
+        Loop
+          If mail.email Is Null Then
+            mail.email := c_eve.mail;
+          
+          Else
+            mail.email := mail.email || ', ' || c_eve.mail;
+          End If;
+        End Loop;
+      
+      Elsif c_usu.codusu > 0 And urgente Then
+      
+        -- complementa a lista de e-mail com a fila
+        If c_usu.codperfil Is Not Null Then
+          mail.email := mail.email || ', ' || ad_get.Mailfila(c_usu.codperfil);
+        End If;
+      
+      Else
+        -- complementa a lista de e-mail com os suplentes
+        For c_supl In (Select s.codususupl, u.email
+                         From tsisupl s
+                         Join tsiusu u
+                           On s.codususupl = u.codusu
+                        Where s.codusu = c_usu.codusu
+                          And Sysdate Between s.dtinicio And s.dtfim
+                        Group By s.codususupl, u.email)
+        Loop
+        
+          If mail.email Is Null Then
+            mail.email := c_supl.email;
+          Else
+            mail.email := mail.email || ', ' || c_supl.email;
+          End If;
+        
+        End Loop;
+      
+      End If;
+    
+      Dbms_Output.Put_Line('Lista de email: ' || mail.email);
+      --dbms_output.new_line;
+    
+      htmlbottom := Chr(13) || '</table>';
+    
+      htmllinklib := Chr(13) || '<p><a href="' || ad_fnc_urlskw('TSILIB', 0) ||
+                     '" target="_blank"> Clicar aqui para liberar </a></p>';
+    
+      htmllinksnk := Chr(13) || '<p><a href="http://www.sankhya.com.br" target="_blank">' ||
+                     '<img src="http://www.sankhya.com.br/imagens/logo-sankhya-rodape.png" widht="141" height="32" ></img></a></p>';
+    
+      mail.mensagem := mailheader || Chr(13) || htmlhead || Chr(13) || v_mensagem || Chr(13) ||
+                       htmlbottom || Chr(13) || htmllinklib || Chr(13) || htmllinksnk;
+    
+      Dbms_Output.Put_Line(mail.mensagem);
+    
+      --enviar := False;
+    
+      If enviar Then
+      
+        If depurando Then
+        
+          mail.codfila := AD_SEQ_TMDFMG_SF.Nextval; --debug
+        
+          Insert Into ad_Tmdfmg
+            (Codfila, Assunto, Codmsg, Dtentrada, Status, Codcon, Tentenvio, Mensagem, Tipoenvio,
+             Maxtentenvio, Email, Codusu, codusuremet, reenviar)
+          Values
+            (mail.codfila, mail.assunto, Null, Sysdate, 'P', 12, 3, mail.mensagem, 'E', 3,
+             mail.email, c_usu.codusu, 0, 'S');
+        
+        Else
+        
+          stp_keygen_tgfnum('TMDFMG', 1, 'TMDFMG', 'CODFILA', 0, mail.codfila);
+        
+          --mail.codfila := AD_SEQ_TMDFMG_SF.Nextval; --debug
+        
+          Insert Into Tmdfmg
+            (Codfila, Assunto, Codmsg, Dtentrada, Status, Codcon, Tentenvio, Mensagem, Tipoenvio,
+             Maxtentenvio, Email, Codusu, codusuremet, reenviar)
+          Values
+            (mail.codfila, mail.assunto, Null, Sysdate, 'P', 12, 3, mail.mensagem, 'E', 3,
+             mail.email, c_usu.codusu, 0, 'S');
+        
+        End If;
+      
+      End If;
+    
+      v_mensagem := Null;
+    
+    End Loop c_usu;
+  End envia_mail_agendado_nolib;
+
+  Procedure envia_mail_libpend Is
+  Begin
+    envia_mail_agendado;
+    envia_mail_agendado_nolib;
+  End envia_mail_libpend;
+
+End Ad_Pkg_Lib;
+/

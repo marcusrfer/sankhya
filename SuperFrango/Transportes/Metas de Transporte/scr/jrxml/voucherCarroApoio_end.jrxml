@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="voucherCarroApoio_end" language="groovy" pageWidth="554" pageHeight="798" columnWidth="554" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.6105100000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="PK_NUCAPSOL" class="java.math.BigDecimal" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select i.nucapsol,
+ Case When i.tipotin = 'O' Then 'Origem'
+ When i.tipotin = 'D' Then 'Destino'
+ When i.tipotin =  'I' Then 'Intermedíario' End As tipoend,
+ i.codcid,
+ c.nomecid,
+ e.tipo||' '||e.nomeend nomeend,
+ nvl(b.nomebai,'<Sem Bairro>') nomebai,
+ nvl(i.complemento,' ') complemento,
+ nvl(i.referencia,' ') referencia
+ from ad_tsfcapitn i
+ left join ad_tsfcapsol s on (s.nucapsol = i.nucapsol)
+ left Join tsicid c On (i.codcid = c.codcid)
+ left Join tsiend e On (i.codend = e.codend)
+ left Join tsibai b On (i.codbai = b.codbai)
+where i.nucapsol = $P{PK_NUCAPSOL}]]>
+	</queryString>
+	<field name="NUCAPSOL" class="java.math.BigDecimal"/>
+	<field name="TIPOEND" class="java.lang.String"/>
+	<field name="CODCID" class="java.math.BigDecimal"/>
+	<field name="NOMECID" class="java.lang.String"/>
+	<field name="NOMEEND" class="java.lang.String"/>
+	<field name="NOMEBAI" class="java.lang.String"/>
+	<field name="COMPLEMENTO" class="java.lang.String"/>
+	<field name="REFERENCIA" class="java.lang.String"/>
+	<group name="NUCAPSOL">
+		<groupExpression><![CDATA[$F{NUCAPSOL}]]></groupExpression>
+	</group>
+	<group name="TIPOEND">
+		<groupExpression><![CDATA[$F{TIPOEND}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="17" splitType="Stretch">
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="554" height="17" isRemoveLineWhenBlank="true"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Itinerário]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="72" height="16" isRemoveLineWhenBlank="true"/>
+				<box leftPadding="3" rightPadding="3">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TIPOEND}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="72" y="0" width="482" height="16" isRemoveLineWhenBlank="true"/>
+				<box leftPadding="3" rightPadding="3">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMEEND}+" "+$F{COMPLEMENTO}+" "+$F{REFERENCIA}+", "+$F{NOMEBAI}
++" - "+$F{NOMECID}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

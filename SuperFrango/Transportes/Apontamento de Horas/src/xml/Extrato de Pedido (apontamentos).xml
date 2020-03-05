@@ -1,0 +1,241 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="nunota" description="Nro Único Pedido" metadata="integer" required="false" keep-last="false" keep-date="false"/>
+  </prompt-parameters>
+  <level id="lvl_8wocdx" description="Principal">
+    <args>
+      <arg id="descrprod" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="100">
+        <simple-value id="svl_8woceg">
+          <expression type="sql" data-source="MGEDS"><![CDATA[SELECT
+ C.NUMNOTA,
+ C.DTNEG,
+ C.CODPARC,
+ P.NOMEPARC,
+ C.VLRNOTA,
+ con.ad_codusuapont||' - '||ad_get.Nomeusu(con.ad_codusuapont, 'completo') apontador
+FROM TGFCAB C
+ JOIN TGFPAR P ON C.CODPARC = P.CODPARC
+ left join tcscon con on c.numcontrato = con.numcontrato
+WHERE C.NUNOTA = :nunota
+]]></expression>
+          <metadata>
+            <field name="NUMNOTA" label="NUMNOTA" type="F" visible="true" useFooter="false" mask="#.##0"/>
+            <field name="DTNEG" label="DTNEG" type="D" visible="true" useFooter="false"/>
+            <field name="CODPARC" label="CODPARC" type="I" visible="true" useFooter="false"/>
+            <field name="NOMEPARC" label="NOMEPARC" type="S" visible="true" useFooter="false"/>
+            <field name="VLRNOTA" label="VLRNOTA" type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+            <field name="APONTADOR" label="APONTADOR" type="S" visible="true" useFooter="false"/>
+          </metadata>
+          <value-expression><![CDATA[<b>Nro Pedido: </b>$NUMNOTA
+<b>Dt. Negociação: </b>$DTNEG
+<b>Cód. Parceiro: </b>$CODPARC
+<b>Nome do Parceiro: </b>$NOMEPARC
+<b>Valor do Pedido: </b>$VLRNOTA
+<b>Resp. Apontamento: </b> $APONTADOR]]></value-expression>
+        </simple-value>
+      </container>
+      <container orientacao="H" tamanhoRelativo="381">
+        <container orientacao="H" tamanhoRelativo="441">
+          <container orientacao="V" tamanhoRelativo="350">
+            <grid id="grd_8wocd0">
+              <title><![CDATA[Apontamentos]]></title>
+              <expression type="sql" data-source="MGEDS"><![CDATA[Select distinct /*+ RESULT_CACHE */ 
+ a.nunota, a.nuapont, a.numcontrato, t.dtapont, a.codmaq, ad_pkg_ahm.Descrmaquina(a.codmaq)  as descrmaquina,  
+ m.id, a.codvol, t.tothoras tothoras,
+  ad_pkg_ahm.get_ultimo_valor(a.NumContrato, a.Codprod, a.codmaq, a.codvol, t.dtapont) vlrunit,
+ a.codcencus, ad_get.DescrCenCus(a.codcencus) descrcencus, 
+ a.codprod, ad_get.Descrproduto(a.codprod) descrprod
+	From ad_tsfahmapd a
+	Join ad_tsfahmtad t
+		On a.nuapont = t.nuapont
+	 And a.numcontrato = t.numcontrato
+	 And a.codprod = t.codprod
+	 And a.codmaq = t.codmaq
+	 And a.codvol = t.codvol
+	 And a.dtapont = t.dtapont
+	Join ad_tsfahmmaq m
+	 On m.nuapont = a.nuapont
+	  And m.nuseqmaq = a.nuseqmaq
+ Where a.nunota = :nunota
+  Or Exists (Select 1 From tgfvar v Where v.nunotaorig = a.nunota And v.nunota = :nunota)
+order by t.dtapont]]></expression>
+              <metadata>
+                <field name="NUNOTA" label="NUNOTA" type="I" visible="false" useFooter="false"/>
+                <field name="NUAPONT" label="Nro Apontamento" type="I" visible="true" useFooter="false"/>
+                <field name="NUMCONTRATO" label="Nro Contrato" type="I" visible="true" useFooter="false"/>
+                <field name="DTAPONT" label="Dt. Apontamento" type="D" visible="true" useFooter="false"/>
+                <field name="CODMAQ" label="Cód. Máquina" type="I" visible="true" useFooter="false"/>
+                <field name="DESCRMAQUINA" label="Máquina" type="S" visible="true" useFooter="false"/>
+                <field name="ID" label="ID Máquina" type="S" visible="true" useFooter="false"/>
+                <field name="CODVOL" label="Volume" type="S" visible="true" useFooter="false"/>
+                <field name="TOTHORAS" label="Qtd." type="F" visible="true" useFooter="SUM" mask="#.##0"/>
+                <field name="VLRUNIT" label="Vlr. Unit." type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+                <field name="CODCENCUS" label="Cód. CR" type="I" visible="true" useFooter="false"/>
+                <field name="DESCRCENCUS" label="Centro de Resultados" type="S" visible="true" useFooter="false"/>
+                <field name="CODPROD" label="Cód. Serviço" type="I" visible="true" useFooter="false"/>
+                <field name="DESCRPROD" label="Descrição Serviço" type="S" visible="true" useFooter="false"/>
+                <field name="vlrtot" label="Vlr. Total" type="F" visible="true" useFooter="SUM" mask="#.##0,00">
+                  <calculated>
+                    <formula><![CDATA[$TOTHORAS * $VLRUNIT]]></formula>
+                  </calculated>
+                </field>
+              </metadata>
+              <on-click-launcher resource-id="br.com.sankhya.menu.adicional.TSFAHMC">
+                <NUAPONT>$NUAPONT</NUAPONT>
+              </on-click-launcher>
+            </grid>
+          </container>
+          <container orientacao="V" tamanhoRelativo="100">
+            <chart id="cht_avub3lx" type="pizza">
+              <title><![CDATA[Rateio Projeto]]></title>
+              <expression type="sql" data-source="MGEDS"><![CDATA[select /*+ RESULT_CACHE */ codproj, ad_get.descrProjeto(codproj) descrproj, sum(vlrunit * tothoras) vlrtot 
+from (
+Select a.nunota, a.nuapont, a.numcontrato, a.codcencus, ad_get.DescrCenCus(a.codcencus) descrcencus,
+ t.dtapont, a.codprod, ad_get.Descrproduto(a.codprod) descrprod, a.codmaq, 
+ ad_pkg_ahm.Descrmaquina(a.codmaq)  as descrmaquina,  m.id, a.codvol, t.tothoras, a.codvol, a.codproj,
+ ad_pkg_ahm.get_ultimo_valor(a.NumContrato, a.Codprod, a.codmaq, a.codvol, t.dtapont) vlrunit
+	From ad_tsfahmapd a
+	Join ad_tsfahmtad t
+		On a.nuapont = t.nuapont
+	 And a.numcontrato = t.numcontrato
+	 And a.codprod = t.codprod
+	 And a.codmaq = t.codmaq
+	 And a.codvol = t.codvol
+	 And a.dtapont = t.dtapont
+	Join ad_tsfahmmaq m
+	 On m.nuapont = a.nuapont
+	  And m.nuseqmaq = a.nuseqmaq
+ Where a.nunota = :nunota
+  Or Exists (Select 1 From tgfvar v Where v.nunotaorig = a.nunota And v.nunota = :nunota) 
+)
+group by codproj, ad_get.descrProjeto(codproj) 
+Order By 1]]></expression>
+              <metadata>
+                <field name="CODPROJ" label="Cód. Projeto" type="I" visible="true" useFooter="false"/>
+                <field name="DESCRPROJ" label="Descr. Projeto" type="S" visible="true" useFooter="false"/>
+                <field name="VLRTOT" label="Vlr. Toral" type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+              </metadata>
+              <series>
+                <serie type="pizza">
+                  <field>$VLRTOT</field>
+                  <nameField>CODPROJ</nameField>
+                </serie>
+              </series>
+            </chart>
+          </container>
+        </container>
+        <container orientacao="V" tamanhoRelativo="100">
+          <chart id="cht_8woce1" type="pizza">
+            <title><![CDATA[Rateio CR]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select /*+ RESULT_CACHE */ codcencus, descrcencus, sum(vlrunit * tothoras) vlrtot 
+from (
+Select a.nunota, a.nuapont, a.numcontrato, a.codcencus, ad_get.DescrCenCus(a.codcencus) descrcencus,
+ t.dtapont, a.codprod, ad_get.Descrproduto(a.codprod) descrprod, a.codmaq, 
+ ad_pkg_ahm.Descrmaquina(a.codmaq)  as descrmaquina,  m.id, a.codvol, t.tothoras, a.codvol,
+ ad_pkg_ahm.get_ultimo_valor(a.NumContrato, a.Codprod, a.codmaq, a.codvol, t.dtapont) vlrunit
+	From ad_tsfahmapd a
+	Join ad_tsfahmtad t
+		On a.nuapont = t.nuapont
+	 And a.numcontrato = t.numcontrato
+	 And a.codprod = t.codprod
+	 And a.codmaq = t.codmaq
+	 And a.codvol = t.codvol
+	 And a.dtapont = t.dtapont
+	Join ad_tsfahmmaq m
+	 On m.nuapont = a.nuapont
+	  And m.nuseqmaq = a.nuseqmaq
+ Where a.nunota = :nunota
+  Or Exists (Select 1 From tgfvar v Where v.nunotaorig = a.nunota And v.nunota = :nunota) 
+)
+group by codcencus, descrcencus
+Order By 1]]></expression>
+            <metadata>
+              <field name="CODCENCUS" label="Còd. CR" type="S" visible="true" useFooter="false"/>
+              <field name="DESCRCENCUS" label="Descr. CR" type="S" visible="true" useFooter="false"/>
+              <field name="VLRTOT" label="Vlr. Total" type="F" visible="true" useFooter="false" mask="#.##0,00"/>
+            </metadata>
+            <series>
+              <serie type="pizza">
+                <field>$VLRTOT</field>
+                <nameField>$CODCENCUS</nameField>
+              </serie>
+            </series>
+          </chart>
+        </container>
+      </container>
+      <container orientacao="H" tamanhoRelativo="239">
+        <container orientacao="V" tamanhoRelativo="138">
+          <grid id="grd_8wocfk">
+            <title><![CDATA[Notas]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[select c.nunota,
+	c.numnota,
+	c.dtentsai,
+	c.codtipoper,
+	t.descroper,
+	c.vlrnota,
+	c.codusu,
+	ad_get.Nomeusu(c.codusu, 'completo') nomeusu,
+	c.dtfatur
+ from tgfcab c
+ join tgfvar v on c.nunota = v.nunota
+ join tgftop t on c.codtipoper = t.codtipoper and c.dhtipoper = t.dhalter
+where v.nunotaorig = :nunota]]></expression>
+            <metadata>
+              <field name="NUNOTA" label="Nro Único" type="I" visible="true" useFooter="false"/>
+              <field name="NUMNOTA" label="Nro. Nota" type="I" visible="true" useFooter="false"/>
+              <field name="DTENTSAI" label="Dt. Ent/Saída" type="D" visible="true" useFooter="false"/>
+              <field name="CODTIPOPER" label="Top" type="I" visible="true" useFooter="false"/>
+              <field name="DESCROPER" label="Tipo de Operação" type="S" visible="true" useFooter="false"/>
+              <field name="VLRNOTA" label="Vlr. Nota" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+              <field name="CODUSU" label="Cód. Usuário" type="I" visible="true" useFooter="false"/>
+              <field name="NOMEUSU" label="Nome usuário" type="S" visible="true" useFooter="false"/>
+              <field name="DTFATUR" label="Dt. Faturamento" type="D" visible="true" useFooter="false"/>
+            </metadata>
+            <on-click-launcher resource-id="br.com.sankhya.com.mov.CentralNotas">
+              <NUNOTA>$NUNOTA</NUNOTA>
+            </on-click-launcher>
+          </grid>
+        </container>
+        <container orientacao="V" tamanhoRelativo="135">
+          <grid id="grd_8wocgk">
+            <title><![CDATA[Liberações]]></title>
+            <expression type="sql" data-source="MGEDS"><![CDATA[Select l.evento,
+ e.descricao,
+ l.codususolicit,
+ ad_get.Nomeusu(l.codususolicit, 'resumido') nomesolicitante,
+ l.dhsolicit,
+ l.codusulib,
+ ad_get.Nomeusu(l.codusulib,'resumido') nomelib,
+ l.dhlib,
+ l.vlrliberado
+From tsilib l
+ Join tgflibeve e On l.evento = e.nuevento
+ Where (l.nuchave = :nunota 
+or l.nuchave in (select nufin 
+			from tgffin f 
+			where f.nunota = :nunota 
+			or f.nunota = (select nunota 
+						from tgfvar v
+						where v.nunotaorig = :nunota)
+			)
+	  )]]></expression>
+            <metadata>
+              <field name="EVENTO" label="Evento" type="I" visible="true" useFooter="false"/>
+              <field name="DESCRICAO" label="Descrição do Evento" type="S" visible="true" useFooter="false"/>
+              <field name="CODUSUSOLICIT" label="Cód. Solicitante" type="I" visible="true" useFooter="false"/>
+              <field name="NOMESOLICITANTE" label="Nome Solicitante" type="S" visible="true" useFooter="false"/>
+              <field name="DHSOLICIT" label="Dh. Solicitação" type="D" visible="true" useFooter="false"/>
+              <field name="CODUSULIB" label="Cód. Liberador" type="I" visible="true" useFooter="false"/>
+              <field name="NOMELIB" label="Nome Liberador" type="S" visible="true" useFooter="false"/>
+              <field name="DHLIB" label="Dh. liberação" type="D" visible="true" useFooter="false"/>
+              <field name="VLRLIBERADO" label="Vlr. Liberado" type="F" visible="true" useFooter="SUM" mask="#.##0,00"/>
+            </metadata>
+          </grid>
+        </container>
+      </container>
+    </container>
+  </level>
+</gadget>

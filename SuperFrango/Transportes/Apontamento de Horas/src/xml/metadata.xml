@@ -1,0 +1,4129 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<metadata>
+  <exportInfo>
+    <exportTime>18/03/2019 11:14:19</exportTime>
+    <systemVersion>3.28b252</systemVersion>
+    <systemCharSet>ISO-8859-1</systemCharSet>
+    <dbMetadata>
+      <dbUser>SANKHYA</dbUser>
+      <urlConnection><![CDATA[jdbc:oracle:thin:@(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = ssaprod-scan)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME =orcl)))]]></urlConnection>
+      <jdbcDriver><![CDATA[Oracle JDBC driver 12.1.0.1.0]]></jdbcDriver>
+      <DBMS><![CDATA[Oracle - Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
+With the Partitioning, Real Application Clusters, Automatic Storage Management, OLAP,
+Advanced Analytics and Real Application Testing options]]></DBMS>
+    </dbMetadata>
+  </exportInfo>
+  <instances>
+    <instance name="TSFAHMAPD">
+      <instanceDescription><![CDATA[Apontamento]]></instanceDescription>
+      <tableInfo name="AD_TSFAHMAPD" sequenceType="A" sequenceField="SEQAPONT">
+        <category><![CDATA[Apontamento Horas Maquina]]></category>
+        <telaDescription><![CDATA[/*Autor: Marcus Rangel*/
+TSF - Apontamentos Diários]]></telaDescription>
+        <tableDescription><![CDATA[Apontamento]]></tableDescription>
+        <primaryKey>
+          <NUAPONT />
+          <NUSEQMAQ />
+          <SEQAPONT />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="NUSEQMAQ" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Num. Seq. Maq]]></description>
+        </field>
+        <field name="SEQAPONT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Seq. Apontamento]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUAPONT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Nro Apontamento]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUMCONTRATO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Nro. Contrato]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODMAQ" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Máquina]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODPROD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Serviço]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DTAPONT" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Dt. Apontamento]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+          </properties>
+        </field>
+        <field name="DTINIJORNADA" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Início Jornada]]></description>
+          <expression><![CDATA[if ($valorCampo == null && $col_DTAPONT != null){
+ return $col_DTAPONT;
+}
+return $valorCampo;]]></expression>
+        </field>
+        <field name="HORA" systemField="N" dataType="T" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Hora]]></description>
+        </field>
+        <field name="HORIMETRO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Horímetro]]></description>
+        </field>
+        <field name="QTDNEG" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Quantidade]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="CODVOL" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Un. Medição]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="COORDENADAS" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Coordenadas]]></description>
+        </field>
+        <field name="OBSERVACAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Obs.]]></description>
+        </field>
+        <field name="DTFECHA" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Fechamento]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="FATURADO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Faturado?]]></description>
+          <expression><![CDATA[if($col_NUNOTA == null || $col_NUNOTA.intValue() == 0){
+ return "N";
+} else {
+ return "S";
+}]]></expression>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="NUNOTA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="N" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Nro. Único]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODCENCUS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. CR]]></description>
+          <expression><![CDATA[if( $valorCampo == null || $valorCampo.intValue() == 0){
+ $sql.select("ad_pkg_ahm.dadoscontrato("+$col_NUAPONT+",'CODCENCUS')","dual","0=0");
+ if($sql.next()){
+ return $sql.getBigDecimal(1);
+ }
+}$valorCampo;]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CRALTERADO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[CR Alterado?]]></description>
+          <expression><![CDATA[if ($valorCampo == null) {
+return "N";
+}
+ return $valorCampo;]]></expression>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="CODPROJ" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Projeto]]></description>
+          <expression><![CDATA[if ($valorCampo == null){
+$sql.select("CODPROJ","AD_TSFAHMC","NUAPONT = "+$col_NUAPONT);
+ if($sql.next() ){
+ return $sql.getBigDecimal(1);
+}
+}$valorCampo;]]></expression>
+        </field>
+        <field name="PROJALTERADO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Projeto Alterado?]]></description>
+          <expression><![CDATA[if ($valorCampo == null) {
+return "N";
+}
+return $valorCampo;]]></expression>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="TIPOAPONT" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Tipo de Apontamento]]></description>
+          <options>
+            <option value="I"><![CDATA[Início Turno]]></option>
+            <option value="F"><![CDATA[Fim Turno]]></option>
+            <option value="U" default="S"><![CDATA[Único]]></option>
+          </options>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="TURNO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Turno]]></description>
+          <options>
+            <option value="1"><![CDATA[1]]></option>
+            <option value="2"><![CDATA[2]]></option>
+            <option value="3" default="S"><![CDATA[3]]></option>
+          </options>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DHINCLUSAO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dh. Inclusão]]></description>
+          <expression><![CDATA[if($valorCampo == null){
+ return $ctx_dh_atual;
+}
+return $valorCampo;]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="SEQAPONTDIA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Seq. Apontamento Dia]]></description>
+          <expression><![CDATA[if($valorCampo==null){
+ $sql.select("COUNT(*)+1", "AD_TSFAHMAPD","NUAPONT="+$col_NUAPONT+" AND NUSEQMAQ = "+$col_NUSEQMAQ+
+" AND DTAPONT= ad_get.data_w('"+$col_DTAPONT+"')");
+ if($sql.next()){
+ return $sql.getBigDecimal(1);
+ }
+} 
+$valorCampo;]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="ORIGEM" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Origem]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="ULTIMASEQ" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Fim Apontamento dia?]]></description>
+          <expression><![CDATA[if ($valorCampo == null) {
+return "N";
+}
+ return $valorCampo;]]></expression>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Projeto" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TCSPRJ" />
+          <fields>
+            <field localName="CODPROJ" targetName="CODPROJ" />
+          </fields>
+        </relation>
+        <relation entityName="CentroResultado" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICUS" />
+          <fields>
+            <field localName="CODCENCUS" targetName="CODCENCUS" />
+          </fields>
+        </relation>
+        <relation entityName="CabecalhoNota" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFCAB" />
+          <fields>
+            <field localName="NUNOTA" targetName="NUNOTA" />
+          </fields>
+        </relation>
+      </relationShip>
+      <actions>
+        <action type="SP">
+          <description><![CDATA[Visualizar Apontamento no Mapa]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_VERNOMAPA" refreshType="NONE" txManual="false" rootEntity="TSFAHMA" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_VERNOMAPA" (P_CODUSU    Number,
+																							 P_IDSESSAO  Varchar2,
+																							 P_QTDLINHAS Number,
+																							 P_MENSAGEM  Out Varchar2) As
+	r_Maq AD_TSFAHMAPD%Rowtype;
+	error Exception;
+Begin
+
+	For I In 1 .. P_QTDLINHAS -- Este loop permite obter o valor de campos dos registros envolvidos na execução.
+	Loop
+		-- A variável "I" representa o registro corrente.
+	
+		r_Maq.Nuapont     := ACT_INT_FIELD(P_IDSESSAO, I, 'NUAPONT');
+		r_Maq.Numcontrato := ACT_INT_FIELD(P_IDSESSAO, I, 'NUMCONTRATO');
+		r_Maq.Codmaq      := ACT_INT_FIELD(P_IDSESSAO, I, 'CODMAQ');
+		r_Maq.Codprod     := ACT_INT_FIELD(P_IDSESSAO, I, 'CODPROD');
+		r_Maq.Codvol      := ACT_INT_FIELD(P_IDSESSAO, I, 'CODVOL');
+	
+		Begin
+			Select coordenadas
+				Into r_Maq.Coordenadas
+				From ad_tsfahmapd a
+			 Where a.nuapont = r_maq.nuapont
+				 And a.numcontrato = r_Maq.Numcontrato
+				 And a.codprod = r_maq.codprod
+				 And a.codmaq = r_Maq.Codmaq
+				 And a.codvol = r_maq.codvol;
+		Exception
+			When Others Then
+				Raise error;
+		End;
+	
+	End Loop;
+	p_mensagem := '<p align=''center''><a target="_blank" href="https://www.google.com/maps/preview?q=
+								' || r_Maq.Coordenadas ||
+								'&z=18&t=k">Clique <b><font color="#FF0000">AQUI</font></b> para ver no mapa</a>';
+Exception
+	When error Then
+		p_mensagem := 'Não foi possível analisar as coordenadas desse apontamento, por favor verifique se a informação está correta.';
+End;]]></storedProcedure>
+        </action>
+        <action type="LC">
+          <description><![CDATA[Visualizar Pedido Gerado]]></description>
+          <actionConfig>
+            <laucher resourceID="br.com.sankhya.com.mov.CentralNotas" />
+            <params>
+              <param localField="NUNOTA" targetField="NUNOTA" />
+            </params>
+          </actionConfig>
+        </action>
+      </actions>
+    </instance>
+    <instance name="TSFAHMC">
+      <instanceDescription><![CDATA[Apont. Horas Máquina - Cabecalho]]></instanceDescription>
+      <expression><![CDATA[this.NUAPONT In
+(Select m.nuapont From AD_TSFAHMMAQ m
+ Join ad_tsfsstc s On m.codsolst = s.codsolst
+ Where s.codsol In (Select codusu From tsiusu Where codcencuspad In (Select codcencuspad From tsiusu Where codusu = ctx[usuario_logado])) or s.codsol = ctx[usuario_logado] or ctx[usuario_logado] In (0,429,626,233) )
+Or ctx[usuario_logado] In (Select codusu From ad_centparamusu Where nupar = 4)
+Or ctx[usuario_logado] In (0, 216)]]></expression>
+      <tableInfo name="AD_TSFAHMC" sequenceType="A" sequenceField="NUAPONT" presentationField="NOMEPARC">
+        <category><![CDATA[Apontamento Horas Maquina]]></category>
+        <telaDescription><![CDATA[/*Autor: Marcus Rangel*/
+Tela principal da rotina de apontamento de horas máquina.
+TSF - Tabela Super Frango
+AHM - Apontamento de hrs maq
+C - Cabeçalho]]></telaDescription>
+        <tableDescription><![CDATA[Apont. Horas Máquina - Cabecalho]]></tableDescription>
+        <primaryKey>
+          <NUAPONT />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="NUAPONT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Nro Apontamento]]></description>
+          <properties>
+            <prop name="filterOrder"><![CDATA[0]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Nro Apontamento]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+          </properties>
+        </field>
+        <field name="NOMEPARC" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nome Parceiro]]></description>
+          <expression><![CDATA[if ($valorCampo == null){ $sql.select("ad_pkg_ahm.nomeContrato("+$col_NUAPONT+")","DUAL","0=0");
+ if ($sql.next()){
+ return $sql.getString(1);
+}
+}
+ $valorCampo;]]></expression>
+          <properties>
+            <prop name="filterOrder"><![CDATA[1]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DTCONTRATO" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Contrato]]></description>
+          <properties>
+            <prop name="filterOrder"><![CDATA[2]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Dt. Contrato]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[period]]></prop>
+          </properties>
+        </field>
+        <field name="DTULTFECHA" systemField="N" dataType="D" presentationType="P" calculated="S" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Último Fechamento]]></description>
+          <expression><![CDATA[#type.sql# SELECT MAX(DTFECHA) FROM AD_TSFAHMAPD A
+WHERE A.NUAPONT = AD_TSFAHMC.NUAPONT]]></expression>
+        </field>
+        <field name="PENDENTE" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Pendente]]></description>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+          <properties>
+            <prop name="filterOrder"><![CDATA[3]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="filterLabel"><![CDATA[Pendente]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterType"><![CDATA[mult-list]]></prop>
+          </properties>
+        </field>
+        <field name="NUMCONTRATO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Número do contrato]]></description>
+          <expression><![CDATA[if( $valorCampo == null){
+ $sql.select("ad_pkg_ahm.numcontrato("+$col_NUAPONT+")","dual","0=0");
+ if($sql.next()){
+ return $sql.getBigDecimal(1);
+ }
+}$valorCampo;]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODCENCUS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Centro de Resultado]]></description>
+          <expression><![CDATA[if( $valorCampo == null || $valorCampo.intValue() == 0){
+ $sql.select("ad_pkg_ahm.dadoscontrato("+$col_NUAPONT+",'CODCENCUS')","dual","0=0");
+ if($sql.next()){
+ return $sql.getBigDecimal(1);
+ }
+}$valorCampo;]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODPROJ" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Projeto]]></description>
+          <expression><![CDATA[if( $valorCampo == null || $valorCampo.intValue() == 0){
+ $sql.select("ad_pkg_ahm.dadoscontrato("+$col_NUAPONT+",'CODPORJ')","dual","0=0");
+ if($sql.next()){
+ return $sql.getBigDecimal(1);
+ }
+}$valorCampo;]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSUR" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Apontador]]></description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Contrato" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TCSCON" />
+          <fields>
+            <field localName="NUMCONTRATO" targetName="NUMCONTRATO" />
+          </fields>
+        </relation>
+        <relation entityName="Projeto" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TCSPRJ" />
+          <fields>
+            <field localName="CODPROJ" targetName="CODPROJ" />
+          </fields>
+        </relation>
+        <relation entityName="CentroResultado" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICUS" />
+          <fields>
+            <field localName="CODCENCUS" targetName="CODCENCUS" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSUR" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="TSFAHMMAQ" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFAHMMAQ" />
+          <fields>
+            <field localName="NUAPONT" targetName="NUAPONT" />
+          </fields>
+        </relation>
+      </relationShip>
+      <references>
+        <reference entityName="Contrato" tableName="TCSCON" type="I" insert="N" update="N" remove="N">
+          <!--Esse elemento "reference" diz respeito a campos da entidade exportada que são mencionados em tabelas do sistema.-->
+          <fields>
+            <field name="AD_NUAPONT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" localName="NUAPONT">
+              <description><![CDATA[Nro Apontamento]]></description>
+            </field>
+          </fields>
+        </reference>
+      </references>
+      <actions>
+        <action type="SP">
+          <description><![CDATA[Gerar Pedido por Apontamento]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_AHM_FECHAPONT" refreshType="NONE" txManual="false" rootEntity="TSFAHMC" />
+            <params>
+              <promptParam label="Tipo de Oper." name="CODTIPOPER" required="true" saveLast="true" entityName="TipoOperacao" paramType="ENTITY" />
+              <promptParam label="Cod. Responsavel" name="CODVEND" required="true" saveLast="true" precision="" entityName="Vendedor" paramType="ENTITY" />
+              <promptParam label="Dt. inicio" name="DTINI" required="true" saveLast="false" paramType="DT" />
+              <promptParam label="Dt. Final" name="DTFIM" required="true" saveLast="false" paramType="DT" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_AHM_FECHAPONT" (p_Codusu    Pls_Integer,
+																																																			p_Idsessao  Varchar2,
+																																																			p_Qtdlinhas Number,
+																																																			p_Mensagem  Out Varchar2) As
+
+		t                 Ad_Pkg_Ahm.t_Apont;
+		v_Dataini         Date;
+		v_Datafin         Date;
+		r_Cab             Tgfcab%Rowtype;
+		r_Con             Tcscon%Rowtype;
+		v_Temmedicao      Char(1);
+		v_Sitprod         Char(1);
+		v_Valortotservico Float := 0;
+		v_Itens           Pls_Integer := 0;
+		v_Evelibped       Pls_Integer;
+		v_Geraordcarga    Char(1) := 'N';
+		v_Codliberador    Pls_Integer;
+		v_Vlrdesc         Float;
+		v_Isfatalt        Boolean;
+		v_Faturaalt       Varchar2(1);
+		v_crdiferete      Int := 0;
+		Error Exception;
+		Errmsg Varchar2(4000);
+		--debug  DBA_PLSQL_OBJECT_SETTINGS.plsql_debug%Type;
+		Debug Boolean := False;
+Begin
+
+		/******************************************************************************** 
+  * Autor: Marcus Rangel
+  * Processo: Contratação de Serviços de Transportes
+  * Objetivo: Realizar a geração do pedido de compras como saida das rotinas que usam 
+  os contratos de locação de máquinas/equipamentos/veículos,tanto os contratos 
+  por empreito quanto os contratos por medição utilizam esse procedimento para 
+  realizar o fechamento.
+  **********************************************************************************/
+		t.Nuapont        := Act_Int_Field(p_Idsessao, 1, 'NUAPONT');
+		t.Nuseqmaq       := Act_Int_Field(p_Idsessao, 1, 'NUSEQMAQ');
+		t.Numcontrato    := Act_Int_Field(p_Idsessao, 1, 'NUMCONTRATO');
+		r_Cab.Codtipoper := Act_Int_Param(p_Idsessao, 'CODTIPOPER');
+		r_Cab.Codvend    := Act_Int_Param(p_Idsessao, 'CODVEND');
+		r_Cab.Observacao := Act_Txt_Param(p_Idsessao, 'OBSERVACAO');
+		r_Cab.Dtneg      := Trunc(Sysdate);
+		v_Dataini        := Act_Dta_Param(p_Idsessao, 'DTINI');
+		v_Datafin        := Act_Dta_Param(p_Idsessao, 'DTFIM');
+
+		/*Tratativa para faturar a partir do layou html5,os campos data estão sendo passados como float*/
+		If v_Dataini Is Null Then
+				v_Dataini := To_Date(Substr(Replace(Act_Dec_Param(p_Idsessao, 'DTINI'), '.', ''), 1, 8), 'yyyymmdd');
+		End If;
+
+		If v_Datafin Is Null Then
+				v_Datafin := To_Date(Substr(Replace(Act_Dec_Param(p_Idsessao, 'DTFIM'), '.', ''), 1, 8), 'yyyymmdd');
+		End If;
+
+		If Lower(p_Idsessao) = 'debug' Then
+				Debug            := True;
+				t.Nuapont        := 596;
+				t.Nuseqmaq       := 1;
+				t.Numcontrato    := 7709;
+				r_Cab.Codtipoper := 170;
+				r_Cab.Codvend    := 995;
+				r_Cab.Observacao := Null;
+				r_Cab.Dtneg      := Trunc(Sysdate);
+				v_Dataini        := '21/08/2018';
+				v_Datafin        := '21/09/2018';
+		End If;
+
+		Begin
+		
+				--Select PLSQL_DEBUG Into debug From DBA_PLSQL_OBJECT_SETTINGS Where Name = 'AD_STP_FECHAPONT';
+				If Debug Then
+						v_Geraordcarga := 'N';
+				Else
+						v_Geraordcarga := Act_Escolher_Simnao(p_Titulo => 'Geração de Ordem de Carga',
+																																												p_Texto => 'Deseja gerar Ordem de Carga para o pedido que será gerado?',
+																																												p_Chave => p_Idsessao, p_Sequencia => 1);
+				End If;
+		
+		Exception
+				When Others Then
+						Raise_Application_Error(-20105, Sqlerrm);
+		End;
+
+		/*Se nro Contrato é nulo,busca do maior contrato dos itens no apontamento*/
+		If t.Numcontrato Is Null Then
+				Begin
+						Select c.Numcontrato Into t.Numcontrato From Ad_Tsfahmc c Where Nuapont = t.Nuapont;
+				Exception
+						When Others Then
+								p_Mensagem := 'Erro ao buscar o número do contrato. ' || Sqlerrm;
+								Return;
+				End;
+		End If;
+
+		Begin
+				Select * Into r_Con From Tcscon Where Numcontrato = t.Numcontrato;
+		Exception
+				When Others Then
+						p_Mensagem := Sqlerrm;
+						Return;
+		End;
+
+		/* Busca o valor dos descontos do contrato */
+		Begin
+				Select Nvl(Sum(d.Vlrdesc), 0)
+						Into v_Vlrdesc
+						From Ad_Tsfdfc d
+					Where d.Numcontrato = t.Numcontrato
+							And Nvl(Compensado, 'N') = 'N';
+		Exception
+				When No_Data_Found Then
+						v_Vlrdesc := 0;
+		End;
+
+		--valida a ultima ocorrencia do contrato está ativa
+		v_Sitprod := Ad_Pkg_Ahm.Valida_Ococontrato(t.Numcontrato);
+
+		If Nvl(v_Sitprod, 'C') <> 'A' Then
+				Errmsg := 'Somente contratos com a última ocorrência ATIVA,podem ser faturados.';
+				Raise Error;
+		End If;
+
+		--popula as variáveis com os valores do contrato
+		Select c.Codemp,
+									c.Codparc,
+									c.Codnat,
+									c.Codcencus,
+									c.Codproj,
+									c.Codtipvenda,
+									Case
+											When c.Temmed = 'S' And c.Observacoes Is Not Null Then
+												r_Cab.Observacao || Chr(13) || 'Ref. Apontamento ' || c.Ad_Nuapont
+											Else
+												'Ref. Apontamento ' || c.Ad_Nuapont
+									End,
+									c.Temmed,
+									c.Ad_Situacao
+				Into r_Cab.Codemp,
+									r_Cab.Codparc,
+									r_Cab.Codnat,
+									r_Cab.Codcencus,
+									r_Cab.Codproj,
+									r_Cab.Codtipvenda,
+									r_Cab.Observacao,
+									v_Temmedicao,
+									r_Cab.Statusnota
+				From Tcscon c
+			Where c.Numcontrato = t.Numcontrato;
+
+		--valida se o tipo de negociação foi informado
+		If r_Cab.Codtipvenda Is Null Then
+				p_Mensagem := 'Tipo de negociação não informado no contrato ' || t.Numcontrato;
+				Return;
+		End If;
+
+		--busca o nro da solicitação de origem
+		Select c.Ad_Codsolst Into t.Codsolst From Tcscon c Where c.Numcontrato = t.Numcontrato;
+
+		-- valida cr nat proj
+		Begin
+				Ad_Stp_Valida_Natcrproj_Sf(r_Cab.Codemp, r_Cab.Codtipoper, r_Cab.Codnat, r_Cab.Codcencus, r_Cab.Codproj,
+																															0, p_Mensagem);
+		
+				If p_Mensagem Is Not Null Then
+						Return;
+				End If;
+		
+		End;
+
+		--insere o cabeçalho do pedido
+		Begin
+				Ad_Set.Ins_Pedidocab(r_Cab.Codemp, r_Cab.Codparc, r_Cab.Codvend, r_Cab.Codtipoper, r_Cab.Codtipvenda,
+																									r_Cab.Dtneg, r_Cab.Vlrnota, r_Cab.Codnat, r_Cab.Codcencus, r_Cab.Codproj,
+																									r_Cab.Observacao, r_Cab.Nunota);
+		
+		Exception
+				When Others Then
+						p_Mensagem := 'Não gerou o cabeçalho do pedido de compras';
+						Return;
+		End;
+
+		--se é faturamento por apontamento ao invés de contrato
+		If t.Nuapont Is Not Null Then
+		
+				For i In 1 .. p_Qtdlinhas
+				Loop
+						/* Se possui serviços e máquina,realiza o faturamento do apontamento 
+      insere os itens do pedido de compras,atualiza os apontamentos 
+      no caso de apontamentos gerados sem máquina,apenas com serviço,o codmaq será nulo*/
+				
+						-- faturamento por apontamento (todas as máquinas)
+						-- quando é faturado pelo cabeçalho do apontamento e nenhuma máquina é selecionada diretamente
+				
+						t.Nuseqmaq := Act_Int_Field(p_Idsessao, i, 'NUSEQMAQ');
+				
+						-- verifica quantos CRs diferentes existem
+						Select Count(Distinct codcencus)
+								Into v_crdiferete
+								From ad_tsfahmapd
+							Where nuapont = t.Nuapont
+									And (nuseqmaq = t.Nuseqmaq Or Nvl(t.Nuseqmaq, 0) = 0)
+									And codcencus Is Not Null;
+				
+						--ad_pkg_var.Permite_Update := True;
+				
+						--- percorre as máquinas envolvidas
+						For c_Maq In (Select m.Nuapont,
+																											m.Numcontrato,
+																											m.Codprod,
+																											m.Codmaq,
+																											m.Nuseqmaq,
+																											m.Seqmaq,
+																											m.Codvol
+																						From Ad_Tsfahmmaq m
+																						Join Ad_Tsfahmapd a
+																								On m.Nuapont = a.Nuapont
+																							And m.Nuseqmaq = a.Nuseqmaq
+																					Where m.Nuapont = t.Nuapont
+																							And a.Dtinijornada Between v_Dataini And v_Datafin
+																							And (m.Nuseqmaq = t.Nuseqmaq Or Nvl(t.Nuseqmaq, 0) = 0)
+																					Group By m.Nuapont,
+																														m.Numcontrato,
+																														m.Codprod,
+																														m.Nuseqmaq,
+																														m.Seqmaq,
+																														m.Codmaq,
+																														m.Codvol
+																					Order By m.nuapont,
+																														m.nuseqmaq)
+						Loop
+						
+								-- verifica se atende as regras de faturamento alternativo para a máquina
+								Ad_Pkg_Ahm.Check_Excecao_Faturamento(p_Numcontrato => c_Maq.Numcontrato, p_Codprod => c_Maq.Codprod,
+																																													p_Seqmaq => c_Maq.Seqmaq, p_Dataini => v_Dataini,
+																																													p_Datafin => v_Datafin, p_Excecao => v_Isfatalt,
+																																													p_Valor => v_Valortotservico, p_Codvol => t.Codvol);
+						
+								-- se atender alguma regra
+								If v_Isfatalt Then
+								
+										-- pergunta ao usuário se deseja faturar pela regra
+										If Debug Then
+												v_Faturaalt := 'S';
+										Else
+										
+												Declare
+														Msg_Tothoras   Float;
+														Msg_Vlrhora    Float;
+														Msg_Vlrtothora Float;
+												Begin
+														Select Sum(Tad.Tothoras),
+																					Ad_Pkg_Ahm.Get_Ultimo_Valor(c_Maq.Numcontrato, c_Maq.Codprod, c_Maq.Codmaq, c_Maq.Codvol,
+																																																	Sysdate)
+																Into Msg_Tothoras,
+																					Msg_Vlrhora
+																From Ad_Tsfahmtad Tad
+															Where Tad.Nuapont = c_Maq.Nuapont
+																	And Tad.Codprod = c_Maq.Codprod
+																	And Tad.Codmaq = c_Maq.Codmaq
+																	And Tad.Nuseqmaq = c_Maq.Nuseqmaq
+																	And Tad.Dtapont Between v_Dataini And v_Datafin;
+												
+														Msg_Vlrtothora := Msg_Tothoras * Msg_Vlrhora;
+												
+														v_Faturaalt := Act_Escolher_Simnao('Confirma Faturamento Alternativo',
+																																																	'Foi identificado que esta máquina/serviço possui regras de exceções de faturamento ativa,' ||
+																																																		'deseja gerar o pedido utilizando os dados da exceção? <p>' ||
+																																																		'Faturamento normal: ' || Ad_Get.Formatanumero(Msg_Tothoras) ||
+																																																		' - ' || c_Maq.Codvol || ' - ' ||
+																																																		Ad_Get.Formatavalor(Msg_Vlrtothora) ||
+																																																		'<br>Faturamento Altern: 1 - ' || t.Codvol || ' - ' ||
+																																																		Ad_Get.Formatavalor(v_Valortotservico), p_Idsessao, 2);
+												End;
+										End If;
+								
+								End If;
+						
+								If v_Isfatalt = True And v_Faturaalt = 'S' Then
+										Ad_Pkg_Ahm.Fatura_Exc_Apontamento(p_Nunota => r_Cab.Nunota, p_Nuapont => c_Maq.Nuapont,
+																																												p_Nuseqmaq => c_Maq.Nuseqmaq,
+																																												p_Codvol => Nvl(t.Codvol, c_Maq.Codvol), p_Dateini => v_Dataini,
+																																												p_Datefin => v_Datafin, p_Valortotservico => v_Valortotservico,
+																																												p_Rowcount => v_Itens, p_Mensagem => p_Mensagem);
+								
+								Else
+										Ad_Pkg_Ahm.Fat_Apontamento(r_Cab.Nunota, c_Maq.Nuapont, c_Maq.Nuseqmaq, v_Dataini, v_Datafin,
+																																					v_Valortotservico, v_Itens, p_Mensagem);
+								End If;
+						
+								If p_mensagem Is Not Null Then
+										Return;
+								End If;
+						
+								r_Cab.Vlrnota := Nvl(r_Cab.Vlrnota, 0) + v_Valortotservico;
+						
+								If t.Nuseqmaq Is Not Null And v_crdiferete > 1 Then
+										Ad_Pkg_Ahm.Ins_Rateio_Apontamento(p_Nuapont => c_Maq.Nuapont, p_Nuseqmaq => t.Nuseqmaq,
+																																												p_Nunota => r_Cab.Nunota, p_Dtini => v_Dataini,
+																																												p_Dtfin => v_Datafin, p_Errmsg => p_Mensagem);
+								
+										If p_mensagem Is Not Null Then
+												Return;
+										End If;
+								End If;
+						
+						End Loop c_Maq;
+				
+						If t.Nuseqmaq Is Null And v_crdiferete > 1 Then
+								Ad_Pkg_Ahm.Ins_Rateio_Apontamento(p_Nuapont => t.Nuapont, p_Nuseqmaq => t.Nuseqmaq,
+																																										p_Nunota => r_Cab.Nunota, p_Dtini => v_Dataini, p_Dtfin => v_Datafin,
+																																										p_Errmsg => p_mensagem);
+						
+								If p_Mensagem Is Not Null Then
+										Return;
+								End If;
+						End If;
+				
+				End Loop i;
+		
+				--ad_pkg_var.Permite_Update := False;
+				--se não encontrar nenhum apontamento pendente
+		
+				If v_Itens = 0 Then
+				
+						Delete From Tgfcab Where Nunota = r_Cab.Nunota;
+				
+						p_mensagem := 'Não foram encontradas horas disponíveis para faturamento nas máquinas selecionadas no período de ' ||
+																				v_Dataini || ' a ' || v_Datafin;
+						Return;
+				
+				End If;
+		
+				--cria a ligação entre os registros de origem e destino
+		
+				Insert Into Ad_Tblcmf
+						(Nometaborig, Nuchaveorig, Nometabdest, Nuchavedest)
+				Values
+						('AD_TSFAHMC', t.Nuapont, 'TGFCAB', r_Cab.Nunota);
+		
+				/* Insere o extrato do apontamento em html para comprovação das horas pelo liberador */
+				Begin
+						Stp_i_Tsiata_Tsfahmtad_Sf(p_Nunota => r_Cab.Nunota, p_Nuapont => t.Nuapont);
+				Exception
+						When Others Then
+								Errmsg := 'Erro ao inserir o anexo do apontamento no pedido. <br>' || Sqlerrm;
+								--Raise Error;
+								ad_set.insere_msglog(p_mensagem => errmsg);
+				End;
+		
+				/* deduz os descontos do contrato no valor do serviço*/
+		
+				v_Valortotservico := v_Valortotservico - v_Vlrdesc;
+		
+				/* se faturamento por empreito - sem medição */
+		Else
+		
+				If r_Cab.Statusnota In ('C', '0') Then
+						Errmsg := 'Este contrato já está concluído ou cancelado!';
+						Raise Error;
+				Elsif r_Con.Ad_Situacao = 'P' Then
+						Errmsg := 'Contrato não está confirmado.';
+						Raise Error;
+				End If;
+		
+				If Nvl(v_Temmedicao, 'N') = 'S' Then
+						Errmsg := 'Contratos que geram pedidos por empreito não podem estar marcados como ''Tem Medição=Sim''';
+						Raise Error;
+				End If;
+		
+				If r_Con.Parcelaatual = r_Con.Parcelaqtd Then
+						Errmsg := 'Este Contrato já foi faturado completamente (Qtd. parcelas: ' || r_Con.Parcelaqtd || ')';
+						Raise Error;
+				End If;
+		
+				For Itens_Contrato In (Select Psc.Codprod As Codprod,
+																																		1 As Qtdprevista,
+																																		Sum(Pmc.Vlrunit) Vlrunit
+																													From Tcspsc Psc
+																													Join Ad_Tsfpmc Pmc
+																															On Pmc.Numcontrato = Psc.Numcontrato
+																														And Pmc.Codprod = Psc.Codprod
+																												Where Psc.Numcontrato = t.Numcontrato
+																														And Pmc.Dtvigor = (Select Max(P2.Dtvigor)
+																																																			From Ad_Tsfpmc P2
+																																																		Where P2.Numcontrato = Pmc.Numcontrato
+																																																				And P2.Codprod = Pmc.Codprod
+																																																				And P2.Dtvigor <= Sysdate + 1)
+																											
+																												Group By Psc.Codprod)
+				Loop
+						Begin
+						
+								Ad_Set.Ins_Pedidoitens(r_Cab.Nunota, Itens_Contrato.Codprod, Itens_Contrato.Qtdprevista,
+																															Itens_Contrato.Vlrunit, Itens_Contrato.Qtdprevista * Itens_Contrato.Vlrunit,
+																															Errmsg);
+						
+								If Errmsg Is Not Null Then
+										Raise Error;
+								End If;
+						
+								Insert Into Tcsocc
+										(Numcontrato, Codprod, Dtocor, Codusu, Codparc, Codcontato, Codocor, Descricao)
+								Values
+										(t.Numcontrato, Itens_Contrato.Codprod, Sysdate, p_Codusu, r_Cab.Codparc, 1, 1004, 'Faturamento ');
+						
+						Exception
+								When Others Then
+										Raise Error;
+						End;
+				
+				End Loop;
+		
+				Begin
+						Update Tcscon c
+									Set c.Dtrefproxfat = Add_Months(Trunc(Sysdate, 'mm'), 1),
+													c.Parcelaatual = Nvl(c.Parcelaatual, 0) + 1,
+													c.Ad_Situacao = 'E'
+							Where Numcontrato = t.Numcontrato;
+				
+						Update Ad_Tsfdfc d
+									Set d.Compensado = 'S',
+													Nunota = r_Cab.Nunota
+							Where Numcontrato = t.Numcontrato
+									And Nvl(Compensado, 'N') = 'N';
+				
+				Exception
+						When Others Then
+								Errmsg := 'Erro ao atualizar a parcela do contrato.' || Sqlerrm;
+								Raise Error;
+				End;
+		
+		End If;
+		/*end of contrato por apontamento*/
+
+		If v_Valortotservico Is Null Or v_Valortotservico = 0 Or v_Valortotservico <> r_Cab.Vlrnota Then
+		
+				Select Sum(i.Vlrtot) Into v_Valortotservico From Tgfite i Where Nunota = r_Cab.Nunota;
+		
+		End If;
+
+		/* Busca a ordem de carga e o veiculo */
+
+		Begin
+		
+				If v_Geraordcarga = 'S' Then
+				
+						Stp_Keygen_Tgfnum(p_Arquivo => 'TGFORD', p_Codemp => r_Cab.Codemp, p_Tabela => 'TGFORD',
+																								p_Campo => 'ORDEMCARGA', p_Dsync => 0, p_Ultcod => r_Cab.Ordemcarga);
+				
+						Begin
+								Select Codveiculo
+										Into r_Cab.Codveiculo
+										From Tgfvei
+									Where Codparc = r_Cab.Codparc
+											And Nvl(Ativo, 'N') = 'S'
+											And Proprio = 'N';
+						
+						Exception
+								When No_Data_Found Then
+										r_Cab.Codveiculo := 0;
+								When Too_Many_Rows Then
+										r_Cab.Codveiculo := 0;
+								When Others Then
+										Errmsg := 'Erro ao buscar o veículo. ' || Sqlerrm;
+										Raise Error;
+						End;
+				
+						Begin
+								Insert Into Tgford
+										(Codemp, Ordemcarga, Dtinic, Codparctransp, Codveiculo, Situacao)
+								Values
+										(r_Cab.Codemp, r_Cab.Ordemcarga, Sysdate, r_Cab.Codparc, r_Cab.Codveiculo, 'A');
+						Exception
+								When Others Then
+										Errmsg := 'Erro ao Inserir a Ordem de carga. ' || Sqlerrm;
+										Raise Error;
+						End;
+				
+				Else
+						Null;
+				End If;
+		End;
+
+		/* atualiza o valor do pedido*/
+
+		Begin
+				Update Tgfcab
+				/*Set Vlrnota=Nvl(v_VlrFat,v_Valortotservico),Numcontrato=t.Num_contrato*/
+				
+				/* OBSERVAÇÃO IMPORTANTE!!!
+     
+    O tipo frete será incluso,pois a nota/pedido não possui frete financeiro,
+    essa medida é apenas para que o lançamento possa ser exibido na rotina de 
+    pagamento de acerto de OC,que exige que possua valor do frete,o que causa 
+    uma duplicidade de valor no pedido,pois soma-se o valor do serviço e o valor 
+    do serviço que deve ser informado no vlrfrete para que apareça no acerto.
+    A solucção dessa situação está sendo tratada por mim,Marcus Rangel e em breve
+    será sanada.
+    
+    tipfrete alterado para 'N' e adicionada o cif_fob = 'C' - M.Rangel - 15/12/2017
+    */
+				
+				/* Após a atualização para a 3.21 não consegue confirmar o pedido 
+    com frete extra nota sem exibir a janela para lançar o financeiro 
+    do frete e como esses pedidos serão usados no acerto,a solução foi deixar
+    o frete como incluso e dar o desconto no valor,lembrando que esses pedidos não
+    possuem financeiro */
+							Set Vlrnota = v_Valortotservico,
+											Numcontrato = t.Numcontrato,
+											Tipfrete = 'S',
+											Cif_Fob = 'C',
+											Vlrfrete = Case
+																								When v_Geraordcarga = 'S' Then
+																									v_Valortotservico
+																								Else
+																									0
+																						End,
+											Ordemcarga = Case
+																										When v_Geraordcarga = 'S' Then
+																											r_Cab.Ordemcarga
+																										Else
+																											0
+																								End,
+											Codveiculo = Case
+																										When v_Geraordcarga = 'S' Then
+																											r_Cab.Codveiculo
+																										Else
+																											0
+																								End,
+											Vlrdesctot = Case
+																										When v_Geraordcarga = 'S' Then
+																											v_Valortotservico
+																										Else
+																											0
+																								End,
+											observacao = observacao || Chr(13) || ' Ref.  dias ' || v_Dataini || ' a ' || v_Datafin ||
+																								', apont. nro ' || t.Nuapont
+					Where Nunota = r_Cab.Nunota;
+		
+		Exception
+				When Others Then
+						Errmsg := 'Erro ao atualizar valor total do pedido de compras. ' || Sqlerrm;
+						Raise Error;
+		End;
+
+		/*insere a liberação do pedido*/
+
+		Select t.Evelibconfped Into v_Evelibped From Ad_Tsfelt t Where t.Nuelt = 1;
+
+		--v_Codliberador := Ad_get.Usuarioliberador('TRANSPORTE');
+		/*Select codusuresp
+   Into v_Codliberador
+   From tsicus
+  Where codcencus = r_cab.codcencus;*/
+
+		-- M. Rangel - 17/12/2018
+		-- alteração para buscar o liberador do CR de fonte alteranativa
+		-- conforme instrução enviada por e-mail
+		Begin
+				Select u.Codusu
+						Into v_Codliberador
+						From Ad_Itesolcpalibcr l
+						Join Tsiusu u
+								On u.Codusu = l.Codusu
+					Where l.Codcencus = r_Cab.Codcencus
+							And l.Ativo = 'SIM'
+							And Nvl(l.Aprova, 'N') = 'S'
+							And l.Vlrfinal > v_Valortotservico
+							And (u.Dtlimacesso Is Null Or u.Dtlimacesso > Trunc(Sysdate));
+		Exception
+				When No_Data_Found Then
+						p_Mensagem := 'Não foi encontrato o usuário liberador do CR. Por favor revifique se o CR ' ||
+																				r_Cab.Codcencus || ' possui um usuário liberador vinculado ao mesmo.';
+						Return;
+		End;
+
+		/*  
+   If v_VlrFat <> 0 Then
+    v_Valortotservico:=v_VlrFat;
+   End If;
+  */
+
+		If Debug Then
+				Null;
+		Else
+				Ad_Set.Ins_Liberacao(p_Tabela => 'TGFCAB', p_Nuchave => r_Cab.Nunota, p_Evento => v_Evelibped,
+																									p_Valor => v_Valortotservico, p_Codusulib => v_Codliberador,
+																									p_Obslib => ' Ref. Fechamento de horas do contrato ' || t.Numcontrato,
+																									p_Errmsg => Errmsg);
+		
+				If Errmsg Is Not Null Then
+						Raise Error;
+				End If;
+		
+		End If;
+
+		p_Mensagem := 'Gerado o pedido de compras Nº único ' ||
+																'<a title="Visualizar registro" target="_parent" href="' ||
+																Ad_Fnc_Urlskw('TGFCAB', r_Cab.Nunota) || '"><font color="#0000FF"><b>' || r_Cab.Nunota ||
+																'</b></font></a>, no valor de ' || Ad_Get.Formatavalor(v_Valortotservico);
+
+		/* Insere a ligação enter contrato e pedido de comrpas */
+
+		Begin
+				Insert Into Ad_Tblcmf
+						(Nometaborig, Nuchaveorig, Nometabdest, Nuchavedest)
+				Values
+						('TCSCON', t.Numcontrato, 'TGFCAB', r_Cab.Nunota);
+		
+		Exception
+				When Others Then
+						Insert Into Tsilog
+								(Codusu, Dhevento, Descricao)
+						Values
+								(Stp_Get_Codusulogado, Sysdate, 'Erro ao inserir na tabela de ligação.');
+				
+		End;
+
+Exception
+		When Error Then
+				Rollback;
+		
+				Begin
+						Delete From Tgfcab Where Nunota = r_Cab.Nunota;
+				End;
+		
+				p_Mensagem := Errmsg;
+		
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Consulta Resumo por Período]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_AHM_QTDRESUMO_SF" refreshType="NONE" txManual="false" rootEntity="TSFAHMC" />
+            <params>
+              <promptParam label="Dt. Início" name="DTINI" required="false" saveLast="false" paramType="DT" />
+              <promptParam label="Dt. Fim" name="DTFIM" required="false" saveLast="false" precision="" paramType="DT" />
+              <promptParam label="Cód. Máquina/Veículo" name="CODMAQ" required="true" saveLast="false" entityName="TSFCME" paramType="ENTITY" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_AHM_QTDRESUMO_SF" (p_codusu    Number,
+																											p_idsessao  Varchar2,
+																											p_qtdlinhas Number,
+																											p_mensagem  Out Varchar2) As
+	p_dtini  Date;
+	p_dtfim  Date;
+	p_codmaq Number;
+Begin
+
+	/***************************************************************************
+  * Autor: Marcus Rangel
+  * Dt. Creação: 04/09/2017
+  * Processo: Apontamento de Horas Máquinas/Veículos
+  * Objetivo: Exibir na tela o resumo de medição de determinada máquina/veículo
+  *****************************************************************************/
+
+	p_codmaq := act_int_param(p_chave => p_idsessao, p_nome => 'CODMAQ');
+
+	p_dtini := act_dta_param(p_idsessao, 'DTINI');
+
+	If p_dtini Is Null Then
+		p_dtini := To_Date(Substr(Replace(act_dec_param(p_idsessao, 'DTINI'), '.', ''), 1, 8),
+											 'yyyymmdd');
+	End If;
+
+	p_dtfim := act_dta_param(p_idsessao, 'DTFIM');
+
+	If p_dtfim Is Null Then
+		p_dtfim := To_Date(Substr(Replace(act_dec_param(p_idsessao, 'DTFIM'), '.', ''), 1, 8),
+											 'yyyymmdd');
+	End If;
+
+	For i In 1 .. p_qtdlinhas
+	Loop
+		p_mensagem := Substr('<b>Maq/Veículo: </b>' || p_codmaq || ' - ' ||
+												 ad_pkg_ahm.descrmaquina(p_codmaq),
+												 1,
+												 50) || ' (' || To_Char(p_dtini, 'dd/mm/yy') || ' a ' ||
+									To_Char(p_dtfim, 'dd/mm/yy') || ')';
+	
+		For D In (Select --Substr('<b>Maq/Veículo: </b>' || r.codmaq || ' - ' || m.descrmaq, 1, 50) ||
+							 '<br>' || '<b>Un. Medição: </b>' || am.codvol || ' - ' || v.descrvol || ' / ' ||
+							 '<b>Quantidade: </b>' || Sum(r.tothoras) mensagem
+								From ad_tsfahmrad r
+								Join ad_tsfahmmaq am
+									On R.nuseqmaq = am.nuseqmaq
+								 And r.nuapont = am.nuapont
+								Join ad_tsfcme m
+									On am.codmaq = m.codmaq
+								Join tgfvol v
+									On am.codvol = v.codvol
+							 Where r.dtapont Between p_dtini And p_dtfim
+								 And am.codmaq = P_codmaq
+							 Group By am.codmaq, m.descrmaq, am.codvol, v.descrvol)
+		Loop
+			If p_mensagem Is Null Then
+				p_mensagem := d.mensagem;
+			Else
+				p_mensagem := p_mensagem || d.mensagem;
+			End If;
+		End Loop;
+	
+	End Loop;
+
+End;]]></storedProcedure>
+        </action>
+      </actions>
+    </instance>
+    <instance name="TSFAHMFAT">
+      <instanceDescription><![CDATA[Faturamento]]></instanceDescription>
+      <tableInfo name="AD_TSFAHMFAT" sequenceType="A" sequenceField="SEQFAT">
+        <category><![CDATA[Apontamento Horas Maquina]]></category>
+        <telaDescription><![CDATA[Aba faturamento na tela de apontamento, view.]]></telaDescription>
+        <tableDescription><![CDATA[Faturamento]]></tableDescription>
+        <primaryKey>
+          <NUAPONT />
+          <NUSEQMAQ />
+          <SEQFAT />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="SEQFAT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[seqfat]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="PKOrder"><![CDATA[2]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUSEQMAQ" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Seq. Prod/Maq]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="PKOrder"><![CDATA[1]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUAPONT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Nro Apontamento]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="PKOrder"><![CDATA[0]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUNOTAPED" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Nro Único Pedido]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUMNOTAPED" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Nro Pedido]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODEMPPED" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Empresa Pedido]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DTNEGPED" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Dt. Neg. Pedido]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DTFATURPED" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Fatur. Pedido]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODTOPPED" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Top Pedido]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DESCROPERPED" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Tipo de Operação Pedido]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="VLRPED" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Vlr. Pedido]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSUINCPED" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Usúario Inc. Pedido]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NOMEUSUINCPED" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nome Usuário Inc. Pedido]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUNOTA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nro Único Nota]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUMNOTA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Nro. Nota]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DTNEG" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Neg. Nota]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODTIPOPER" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Cód. Top Nota]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DESCROPER" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Tipo Operação Nota]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <actions>
+        <action type="LC">
+          <description><![CDATA[Visualizar Nota]]></description>
+          <actionConfig>
+            <laucher resourceID="br.com.sankhya.com.mov.CentralNotas" />
+            <params>
+              <param localField="NUNOTA" targetField="NUNOTA" />
+            </params>
+          </actionConfig>
+        </action>
+        <action type="LC">
+          <description><![CDATA[Visualizar Extrato do Pedido]]></description>
+          <actionConfig>
+            <laucher resourceID="br.com.sankhya.menu.adicional.nuDsb.258.1" />
+            <params>
+              <param localField="NUNOTAPED" targetField="NUNOTA" />
+            </params>
+          </actionConfig>
+        </action>
+        <action type="LC">
+          <description><![CDATA[Visualizar Pedido]]></description>
+          <actionConfig>
+            <laucher resourceID="br.com.sankhya.com.mov.CentralNotas" />
+            <params>
+              <param localField="NUNOTAPED" targetField="NUNOTA" />
+            </params>
+          </actionConfig>
+        </action>
+      </actions>
+    </instance>
+    <instance name="TSFAHMRAD">
+      <instanceDescription><![CDATA[Resumo Diário]]></instanceDescription>
+      <tableInfo name="AD_TSFAHMRAD" sequenceType="M">
+        <category><![CDATA[Apontamento Horas Maquina]]></category>
+        <telaDescription><![CDATA[/*Autor: Marcus Rangel*/
+TSF -Tabela Super Frango
+AHM - Apontamento de Horas Máquina
+RAD - Resumo de Apontamento Diário
+view da tshahmtad]]></telaDescription>
+        <tableDescription><![CDATA[Resumo Diário]]></tableDescription>
+        <primaryKey>
+          <NUAPONT />
+          <NUSEQMAQ />
+          <SEQRAD />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="SEQRAD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[SEQRAD]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="PKOrder"><![CDATA[2]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUSEQMAQ" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Seq. Prod/Maq]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="PKOrder"><![CDATA[1]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUAPONT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Nro Apontamento]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="PKOrder"><![CDATA[0]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DTAPONT" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Dt. Apontamento]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="TOTHORAS" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Horas]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="CODVOL" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Un. Medição]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="VLRUNIT" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Vlr. Unitário]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[6]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="VLRTOTAL" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Vlr. Total]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[6]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="QTDNEG" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Qtd. Medição]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Volume" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFVOL" />
+          <fields>
+            <field localName="CODVOL" targetName="CODVOL" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="TSFAHMMAQ">
+      <instanceDescription><![CDATA[Máquinas]]></instanceDescription>
+      <tableInfo name="AD_TSFAHMMAQ" sequenceType="A" sequenceField="NUSEQMAQ">
+        <category><![CDATA[Apontamento Horas Maquina]]></category>
+        <telaDescription><![CDATA[/*Autor: Marcus Rangel*/
+TSF - Máquinas]]></telaDescription>
+        <tableDescription><![CDATA[Máquinas]]></tableDescription>
+        <primaryKey>
+          <NUAPONT />
+          <NUSEQMAQ />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="NUSEQMAQ" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Seq. Prod/Maq]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUAPONT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Nro Apontamento]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODSOLST" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Solicitação]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUSSTI" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Seq Prod Sol.]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="SEQMAQ" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Seq. Maq Sol.]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUMCONTRATO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Nro. Contrato]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODPROD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Serviço]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODMAQ" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Máquina]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="ID" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[ID]]></description>
+        </field>
+        <field name="CODVOL" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Un. Medição]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODPROJ" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Projeto]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="QTDPREVISTA" systemField="N" dataType="F" presentationType="P" calculated="S" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Qtd. Prevista]]></description>
+          <expression><![CDATA[$sql.select("ad_pkg_ahm.qtdHorasApont("+$col_NUAPONT+","+$col_NUSEQMAQ+",'P')","Dual","0=0");
+ if ($sql.next()){
+	 return $sql.getBigDecimal(1);
+ }]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="QTDUSADA" systemField="N" dataType="F" presentationType="P" calculated="S" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Qtd. Consumida]]></description>
+          <expression><![CDATA[$sql.select("ad_pkg_ahm.qtdHorasApont("+$col_NUAPONT+","+$col_NUSEQMAQ+",'C')","Dual","0=0");
+ if ($sql.next()){
+	 return $sql.getBigDecimal(1);
+ }]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="SALDOHORAS" systemField="N" dataType="F" presentationType="P" calculated="S" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Saldo]]></description>
+          <expression><![CDATA[$sql.select("ad_pkg_ahm.qtdHorasApont("+$col_NUAPONT+","+$col_NUSEQMAQ+",'S')","Dual","0=0");
+ if ($sql.next()){
+	 return $sql.getBigDecimal(1);
+ }]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Volume" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFVOL" />
+          <fields>
+            <field localName="CODVOL" targetName="CODVOL" />
+          </fields>
+        </relation>
+        <relation entityName="Produto" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPRO" />
+          <fields>
+            <field localName="CODPROD" targetName="CODPROD" />
+          </fields>
+        </relation>
+        <relation entityName="Projeto" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TCSPRJ" />
+          <fields>
+            <field localName="CODPROJ" targetName="CODPROJ" />
+          </fields>
+        </relation>
+        <relation entityName="TSFCME" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFCME" />
+          <fields>
+            <field localName="CODMAQ" targetName="CODMAQ" />
+          </fields>
+        </relation>
+        <relation entityName="TSFSSTM" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFSSTM" />
+          <expression><![CDATA[@ref-param[force-one-to-one=true]]]></expression>
+          <fields>
+            <field localName="NUSSTI" targetName="NUSSTI" />
+            <field localName="SEQMAQ" targetName="SEQMAQ" />
+          </fields>
+        </relation>
+        <relation entityName="TSFSSTC" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFSSTC" />
+          <fields>
+            <field localName="CODSOLST" targetName="CODSOLST" />
+          </fields>
+        </relation>
+        <relation entityName="TSFAHMAPD" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFAHMAPD" />
+          <fields>
+            <field localName="NUAPONT" targetName="NUAPONT" />
+            <field localName="NUSEQMAQ" targetName="NUSEQMAQ" />
+          </fields>
+        </relation>
+        <relation entityName="TSFAHMRAD" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFAHMRAD" />
+          <fields>
+            <field localName="NUAPONT" targetName="NUAPONT" />
+            <field localName="NUSEQMAQ" targetName="NUSEQMAQ" />
+          </fields>
+        </relation>
+        <relation entityName="TSFAHMFAT" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFAHMFAT" />
+          <fields>
+            <field localName="NUAPONT" targetName="NUAPONT" />
+            <field localName="NUSEQMAQ" targetName="NUSEQMAQ" />
+          </fields>
+        </relation>
+      </relationShip>
+      <actions>
+        <action type="SP">
+          <description><![CDATA[Alterar Valor Hora]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_AHM_UPDVLRHORA" refreshType="NONE" txManual="false" rootEntity="TSFAHMMAQ" />
+            <params>
+              <promptParam label="Nova Data de Vigor" name="DTVIGOR" required="true" saveLast="false" paramType="DT" />
+              <promptParam label="Novo Valor Unitário" name="VLRUNIT" required="true" saveLast="false" precision="6" paramType="D" />
+              <promptParam label="Motivo da Alteração" name="MOTIVO" required="true" saveLast="false" paramType="S" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_AHM_UPDVLRHORA" (p_codusu    Number,
+																										p_idsessao  Varchar2,
+																										p_qtdlinhas Number,
+																										p_mensagem  Out Varchar2) As
+	p_DtVigor  Date;
+	p_VlrUnit  Float;
+	p_Motivo   Varchar2(4000);
+	r_apo      ad_tsfahmmaq%Rowtype;
+	v_nuseqpmc Int := 0;
+	Errmsg     Varchar2(4000);
+	Error Exception;
+Begin
+
+	/*
+  * Autor: Marcus Rangel
+  * Processo: Apontamento de Horas Máquina
+  * Objtivo: Permitir alterar o valor unitário do serviço antes da geração do pedido de compra
+  */
+
+	p_DtVigor := ACT_DTA_PARAM(P_IDSESSAO, 'DTVIGOR');
+	p_VlrUnit := ACT_DEC_PARAM(P_IDSESSAO, 'VLRUNIT');
+	p_Motivo  := ACT_TXT_PARAM(P_IDSESSAO, 'MOTIVO');
+
+	/*Tratativa para faturar a partir do layou html5, os campos data estão sendo passados como float*/
+	If p_DtVigor Is Null Then
+		p_DtVigor := To_Date(Substr(Replace(act_dec_param(P_IDSESSAO, 'DTVIGOR'), '.', ''), 1, 8),
+												 'yyyymmdd');
+	End If;
+
+	For I In 1 .. P_QTDLINHAS
+	Loop
+		r_apo.nuapont  := ACT_INT_FIELD(P_IDSESSAO, I, 'NUAPONT');
+		r_apo.nuseqmaq := ACT_INT_FIELD(P_IDSESSAO, I, 'NUSEQMAQ');
+		/*    
+    r_apo.CodMaq   := ACT_INT_FIELD(P_IDSESSAO, I, 'CODMAQ');
+    r_apo.CodProd  := ACT_INT_FIELD(P_IDSESSAO, I, 'CODPROD');
+    r_apo.Codvol   := act_txt_field(P_IDSESSAO, 1, 'CODVOL');
+    */
+	
+		Begin
+			Select *
+				Into r_apo
+				From ad_tsfahmmaq m
+			 Where m.nuapont = r_apo.nuapont
+				 And m.nuseqmaq = r_apo.nuseqmaq;
+		Exception
+			When no_data_found Then
+				Errmsg := 'Não foram encontrados dados de apontamento para: Apontamento: ' || r_apo.nuapont ||
+									'; Serviço: ' || r_apo.codprod || '; Máquina:' || r_apo.codmaq || '; Un: ' ||
+									r_apo.codvol;
+				Raise error;
+		End;
+	
+		If Length(p_Motivo) < 15 Then
+			Errmsg := 'Motivo muito breve, por favor detalhe melhor o mesmo.';
+			Raise error;
+		End If;
+	
+		Begin
+		
+			Select Nvl(Max(nuseqpmc), 0) + 1
+				Into v_nuseqpmc
+				From ad_tsfpmc
+			 Where numcontrato = r_apo.numcontrato
+				 And codprod = r_apo.codprod;
+		
+			Insert Into ad_tsfpmc
+				(numcontrato,
+				 codprod,
+				 nuseqpmc,
+				 dtvigor,
+				 vlrunit,
+				 codsolst,
+				 nussti,
+				 seqmaq,
+				 codmaq,
+				 id,
+				 codvol,
+				 dhalter,
+				 codusu,
+				 motivo)
+			Values
+				(r_apo.numcontrato,
+				 r_apo.codprod,
+				 v_nuseqpmc,
+				 p_DtVigor,
+				 p_VlrUnit,
+				 r_apo.codsolst,
+				 r_apo.nussti,
+				 r_apo.seqmaq,
+				 r_apo.codmaq,
+				 r_apo.id,
+				 r_apo.codvol,
+				 Sysdate,
+				 P_CODUSU,
+				 p_motivo);
+		Exception
+			When Others Then
+				Errmsg := 'Erro ao inserir o novo preço. ' || Sqlerrm;
+				Raise error;
+		End;
+	
+	End Loop;
+	p_mensagem := 'Preço Atualizado com sucesso!!!';
+Exception
+	When error Then
+		P_MENSAGEM := Errmsg;
+	When Others Then
+		P_MENSAGEM := Sqlerrm;
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Gerar Pedido de Serviço por Período]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_AHM_FECHAPONT" refreshType="PARENT" txManual="false" rootEntity="TSFAHMMAQ" />
+            <params>
+              <promptParam label="Tipo Oper." name="CODTIPOPER" required="true" saveLast="true" entityName="TipoOperacao" paramType="ENTITY" />
+              <promptParam label="Resp. Transportes" name="CODVEND" required="true" saveLast="true" entityName="Vendedor" paramType="ENTITY" />
+              <promptParam label="Obs." name="OBSERVACAO" required="false" saveLast="false" precision="" paramType="S" />
+              <promptParam label="Dt. Inicio" name="DTINI" required="true" saveLast="false" precision="" paramType="DT" />
+              <promptParam label="Dt. Fim" name="DTFIM" required="true" saveLast="false" precision="" paramType="DT" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_AHM_FECHAPONT" (p_Codusu    Pls_Integer,
+																																																			p_Idsessao  Varchar2,
+																																																			p_Qtdlinhas Number,
+																																																			p_Mensagem  Out Varchar2) As
+
+		t                 Ad_Pkg_Ahm.t_Apont;
+		v_Dataini         Date;
+		v_Datafin         Date;
+		r_Cab             Tgfcab%Rowtype;
+		r_Con             Tcscon%Rowtype;
+		v_Temmedicao      Char(1);
+		v_Sitprod         Char(1);
+		v_Valortotservico Float := 0;
+		v_Itens           Pls_Integer := 0;
+		v_Evelibped       Pls_Integer;
+		v_Geraordcarga    Char(1) := 'N';
+		v_Codliberador    Pls_Integer;
+		v_Vlrdesc         Float;
+		v_Isfatalt        Boolean;
+		v_Faturaalt       Varchar2(1);
+		v_crdiferete      Int := 0;
+		Error Exception;
+		Errmsg Varchar2(4000);
+		--debug  DBA_PLSQL_OBJECT_SETTINGS.plsql_debug%Type;
+		Debug Boolean := False;
+Begin
+
+		/******************************************************************************** 
+  * Autor: Marcus Rangel
+  * Processo: Contratação de Serviços de Transportes
+  * Objetivo: Realizar a geração do pedido de compras como saida das rotinas que usam 
+  os contratos de locação de máquinas/equipamentos/veículos,tanto os contratos 
+  por empreito quanto os contratos por medição utilizam esse procedimento para 
+  realizar o fechamento.
+  **********************************************************************************/
+		t.Nuapont        := Act_Int_Field(p_Idsessao, 1, 'NUAPONT');
+		t.Nuseqmaq       := Act_Int_Field(p_Idsessao, 1, 'NUSEQMAQ');
+		t.Numcontrato    := Act_Int_Field(p_Idsessao, 1, 'NUMCONTRATO');
+		r_Cab.Codtipoper := Act_Int_Param(p_Idsessao, 'CODTIPOPER');
+		r_Cab.Codvend    := Act_Int_Param(p_Idsessao, 'CODVEND');
+		r_Cab.Observacao := Act_Txt_Param(p_Idsessao, 'OBSERVACAO');
+		r_Cab.Dtneg      := Trunc(Sysdate);
+		v_Dataini        := Act_Dta_Param(p_Idsessao, 'DTINI');
+		v_Datafin        := Act_Dta_Param(p_Idsessao, 'DTFIM');
+
+		/*Tratativa para faturar a partir do layou html5,os campos data estão sendo passados como float*/
+		If v_Dataini Is Null Then
+				v_Dataini := To_Date(Substr(Replace(Act_Dec_Param(p_Idsessao, 'DTINI'), '.', ''), 1, 8), 'yyyymmdd');
+		End If;
+
+		If v_Datafin Is Null Then
+				v_Datafin := To_Date(Substr(Replace(Act_Dec_Param(p_Idsessao, 'DTFIM'), '.', ''), 1, 8), 'yyyymmdd');
+		End If;
+
+		If Lower(p_Idsessao) = 'debug' Then
+				Debug            := True;
+				t.Nuapont        := 596;
+				t.Nuseqmaq       := 1;
+				t.Numcontrato    := 7709;
+				r_Cab.Codtipoper := 170;
+				r_Cab.Codvend    := 995;
+				r_Cab.Observacao := Null;
+				r_Cab.Dtneg      := Trunc(Sysdate);
+				v_Dataini        := '21/08/2018';
+				v_Datafin        := '21/09/2018';
+		End If;
+
+		Begin
+		
+				--Select PLSQL_DEBUG Into debug From DBA_PLSQL_OBJECT_SETTINGS Where Name = 'AD_STP_FECHAPONT';
+				If Debug Then
+						v_Geraordcarga := 'N';
+				Else
+						v_Geraordcarga := Act_Escolher_Simnao(p_Titulo => 'Geração de Ordem de Carga',
+																																												p_Texto => 'Deseja gerar Ordem de Carga para o pedido que será gerado?',
+																																												p_Chave => p_Idsessao, p_Sequencia => 1);
+				End If;
+		
+		Exception
+				When Others Then
+						Raise_Application_Error(-20105, Sqlerrm);
+		End;
+
+		/*Se nro Contrato é nulo,busca do maior contrato dos itens no apontamento*/
+		If t.Numcontrato Is Null Then
+				Begin
+						Select c.Numcontrato Into t.Numcontrato From Ad_Tsfahmc c Where Nuapont = t.Nuapont;
+				Exception
+						When Others Then
+								p_Mensagem := 'Erro ao buscar o número do contrato. ' || Sqlerrm;
+								Return;
+				End;
+		End If;
+
+		Begin
+				Select * Into r_Con From Tcscon Where Numcontrato = t.Numcontrato;
+		Exception
+				When Others Then
+						p_Mensagem := Sqlerrm;
+						Return;
+		End;
+
+		/* Busca o valor dos descontos do contrato */
+		Begin
+				Select Nvl(Sum(d.Vlrdesc), 0)
+						Into v_Vlrdesc
+						From Ad_Tsfdfc d
+					Where d.Numcontrato = t.Numcontrato
+							And Nvl(Compensado, 'N') = 'N';
+		Exception
+				When No_Data_Found Then
+						v_Vlrdesc := 0;
+		End;
+
+		--valida a ultima ocorrencia do contrato está ativa
+		v_Sitprod := Ad_Pkg_Ahm.Valida_Ococontrato(t.Numcontrato);
+
+		If Nvl(v_Sitprod, 'C') <> 'A' Then
+				Errmsg := 'Somente contratos com a última ocorrência ATIVA,podem ser faturados.';
+				Raise Error;
+		End If;
+
+		--popula as variáveis com os valores do contrato
+		Select c.Codemp,
+									c.Codparc,
+									c.Codnat,
+									c.Codcencus,
+									c.Codproj,
+									c.Codtipvenda,
+									Case
+											When c.Temmed = 'S' And c.Observacoes Is Not Null Then
+												r_Cab.Observacao || Chr(13) || 'Ref. Apontamento ' || c.Ad_Nuapont
+											Else
+												'Ref. Apontamento ' || c.Ad_Nuapont
+									End,
+									c.Temmed,
+									c.Ad_Situacao
+				Into r_Cab.Codemp,
+									r_Cab.Codparc,
+									r_Cab.Codnat,
+									r_Cab.Codcencus,
+									r_Cab.Codproj,
+									r_Cab.Codtipvenda,
+									r_Cab.Observacao,
+									v_Temmedicao,
+									r_Cab.Statusnota
+				From Tcscon c
+			Where c.Numcontrato = t.Numcontrato;
+
+		--valida se o tipo de negociação foi informado
+		If r_Cab.Codtipvenda Is Null Then
+				p_Mensagem := 'Tipo de negociação não informado no contrato ' || t.Numcontrato;
+				Return;
+		End If;
+
+		--busca o nro da solicitação de origem
+		Select c.Ad_Codsolst Into t.Codsolst From Tcscon c Where c.Numcontrato = t.Numcontrato;
+
+		-- valida cr nat proj
+		Begin
+				Ad_Stp_Valida_Natcrproj_Sf(r_Cab.Codemp, r_Cab.Codtipoper, r_Cab.Codnat, r_Cab.Codcencus, r_Cab.Codproj,
+																															0, p_Mensagem);
+		
+				If p_Mensagem Is Not Null Then
+						Return;
+				End If;
+		
+		End;
+
+		--insere o cabeçalho do pedido
+		Begin
+				Ad_Set.Ins_Pedidocab(r_Cab.Codemp, r_Cab.Codparc, r_Cab.Codvend, r_Cab.Codtipoper, r_Cab.Codtipvenda,
+																									r_Cab.Dtneg, r_Cab.Vlrnota, r_Cab.Codnat, r_Cab.Codcencus, r_Cab.Codproj,
+																									r_Cab.Observacao, r_Cab.Nunota);
+		
+		Exception
+				When Others Then
+						p_Mensagem := 'Não gerou o cabeçalho do pedido de compras';
+						Return;
+		End;
+
+		--se é faturamento por apontamento ao invés de contrato
+		If t.Nuapont Is Not Null Then
+		
+				For i In 1 .. p_Qtdlinhas
+				Loop
+						/* Se possui serviços e máquina,realiza o faturamento do apontamento 
+      insere os itens do pedido de compras,atualiza os apontamentos 
+      no caso de apontamentos gerados sem máquina,apenas com serviço,o codmaq será nulo*/
+				
+						-- faturamento por apontamento (todas as máquinas)
+						-- quando é faturado pelo cabeçalho do apontamento e nenhuma máquina é selecionada diretamente
+				
+						t.Nuseqmaq := Act_Int_Field(p_Idsessao, i, 'NUSEQMAQ');
+				
+						-- verifica quantos CRs diferentes existem
+						Select Count(Distinct codcencus)
+								Into v_crdiferete
+								From ad_tsfahmapd
+							Where nuapont = t.Nuapont
+									And (nuseqmaq = t.Nuseqmaq Or Nvl(t.Nuseqmaq, 0) = 0)
+									And codcencus Is Not Null;
+				
+						--ad_pkg_var.Permite_Update := True;
+				
+						--- percorre as máquinas envolvidas
+						For c_Maq In (Select m.Nuapont,
+																											m.Numcontrato,
+																											m.Codprod,
+																											m.Codmaq,
+																											m.Nuseqmaq,
+																											m.Seqmaq,
+																											m.Codvol
+																						From Ad_Tsfahmmaq m
+																						Join Ad_Tsfahmapd a
+																								On m.Nuapont = a.Nuapont
+																							And m.Nuseqmaq = a.Nuseqmaq
+																					Where m.Nuapont = t.Nuapont
+																							And a.Dtinijornada Between v_Dataini And v_Datafin
+																							And (m.Nuseqmaq = t.Nuseqmaq Or Nvl(t.Nuseqmaq, 0) = 0)
+																					Group By m.Nuapont,
+																														m.Numcontrato,
+																														m.Codprod,
+																														m.Nuseqmaq,
+																														m.Seqmaq,
+																														m.Codmaq,
+																														m.Codvol
+																					Order By m.nuapont,
+																														m.nuseqmaq)
+						Loop
+						
+								-- verifica se atende as regras de faturamento alternativo para a máquina
+								Ad_Pkg_Ahm.Check_Excecao_Faturamento(p_Numcontrato => c_Maq.Numcontrato, p_Codprod => c_Maq.Codprod,
+																																													p_Seqmaq => c_Maq.Seqmaq, p_Dataini => v_Dataini,
+																																													p_Datafin => v_Datafin, p_Excecao => v_Isfatalt,
+																																													p_Valor => v_Valortotservico, p_Codvol => t.Codvol);
+						
+								-- se atender alguma regra
+								If v_Isfatalt Then
+								
+										-- pergunta ao usuário se deseja faturar pela regra
+										If Debug Then
+												v_Faturaalt := 'S';
+										Else
+										
+												Declare
+														Msg_Tothoras   Float;
+														Msg_Vlrhora    Float;
+														Msg_Vlrtothora Float;
+												Begin
+														Select Sum(Tad.Tothoras),
+																					Ad_Pkg_Ahm.Get_Ultimo_Valor(c_Maq.Numcontrato, c_Maq.Codprod, c_Maq.Codmaq, c_Maq.Codvol,
+																																																	Sysdate)
+																Into Msg_Tothoras,
+																					Msg_Vlrhora
+																From Ad_Tsfahmtad Tad
+															Where Tad.Nuapont = c_Maq.Nuapont
+																	And Tad.Codprod = c_Maq.Codprod
+																	And Tad.Codmaq = c_Maq.Codmaq
+																	And Tad.Nuseqmaq = c_Maq.Nuseqmaq
+																	And Tad.Dtapont Between v_Dataini And v_Datafin;
+												
+														Msg_Vlrtothora := Msg_Tothoras * Msg_Vlrhora;
+												
+														v_Faturaalt := Act_Escolher_Simnao('Confirma Faturamento Alternativo',
+																																																	'Foi identificado que esta máquina/serviço possui regras de exceções de faturamento ativa,' ||
+																																																		'deseja gerar o pedido utilizando os dados da exceção? <p>' ||
+																																																		'Faturamento normal: ' || Ad_Get.Formatanumero(Msg_Tothoras) ||
+																																																		' - ' || c_Maq.Codvol || ' - ' ||
+																																																		Ad_Get.Formatavalor(Msg_Vlrtothora) ||
+																																																		'<br>Faturamento Altern: 1 - ' || t.Codvol || ' - ' ||
+																																																		Ad_Get.Formatavalor(v_Valortotservico), p_Idsessao, 2);
+												End;
+										End If;
+								
+								End If;
+						
+								If v_Isfatalt = True And v_Faturaalt = 'S' Then
+										Ad_Pkg_Ahm.Fatura_Exc_Apontamento(p_Nunota => r_Cab.Nunota, p_Nuapont => c_Maq.Nuapont,
+																																												p_Nuseqmaq => c_Maq.Nuseqmaq,
+																																												p_Codvol => Nvl(t.Codvol, c_Maq.Codvol), p_Dateini => v_Dataini,
+																																												p_Datefin => v_Datafin, p_Valortotservico => v_Valortotservico,
+																																												p_Rowcount => v_Itens, p_Mensagem => p_Mensagem);
+								
+								Else
+										Ad_Pkg_Ahm.Fat_Apontamento(r_Cab.Nunota, c_Maq.Nuapont, c_Maq.Nuseqmaq, v_Dataini, v_Datafin,
+																																					v_Valortotservico, v_Itens, p_Mensagem);
+								End If;
+						
+								If p_mensagem Is Not Null Then
+										Return;
+								End If;
+						
+								r_Cab.Vlrnota := Nvl(r_Cab.Vlrnota, 0) + v_Valortotservico;
+						
+								If t.Nuseqmaq Is Not Null And v_crdiferete > 1 Then
+										Ad_Pkg_Ahm.Ins_Rateio_Apontamento(p_Nuapont => c_Maq.Nuapont, p_Nuseqmaq => t.Nuseqmaq,
+																																												p_Nunota => r_Cab.Nunota, p_Dtini => v_Dataini,
+																																												p_Dtfin => v_Datafin, p_Errmsg => p_Mensagem);
+								
+										If p_mensagem Is Not Null Then
+												Return;
+										End If;
+								End If;
+						
+						End Loop c_Maq;
+				
+						If t.Nuseqmaq Is Null And v_crdiferete > 1 Then
+								Ad_Pkg_Ahm.Ins_Rateio_Apontamento(p_Nuapont => t.Nuapont, p_Nuseqmaq => t.Nuseqmaq,
+																																										p_Nunota => r_Cab.Nunota, p_Dtini => v_Dataini, p_Dtfin => v_Datafin,
+																																										p_Errmsg => p_mensagem);
+						
+								If p_Mensagem Is Not Null Then
+										Return;
+								End If;
+						End If;
+				
+				End Loop i;
+		
+				--ad_pkg_var.Permite_Update := False;
+				--se não encontrar nenhum apontamento pendente
+		
+				If v_Itens = 0 Then
+				
+						Delete From Tgfcab Where Nunota = r_Cab.Nunota;
+				
+						p_mensagem := 'Não foram encontradas horas disponíveis para faturamento nas máquinas selecionadas no período de ' ||
+																				v_Dataini || ' a ' || v_Datafin;
+						Return;
+				
+				End If;
+		
+				--cria a ligação entre os registros de origem e destino
+		
+				Insert Into Ad_Tblcmf
+						(Nometaborig, Nuchaveorig, Nometabdest, Nuchavedest)
+				Values
+						('AD_TSFAHMC', t.Nuapont, 'TGFCAB', r_Cab.Nunota);
+		
+				/* Insere o extrato do apontamento em html para comprovação das horas pelo liberador */
+				Begin
+						Stp_i_Tsiata_Tsfahmtad_Sf(p_Nunota => r_Cab.Nunota, p_Nuapont => t.Nuapont);
+				Exception
+						When Others Then
+								Errmsg := 'Erro ao inserir o anexo do apontamento no pedido. <br>' || Sqlerrm;
+								--Raise Error;
+								ad_set.insere_msglog(p_mensagem => errmsg);
+				End;
+		
+				/* deduz os descontos do contrato no valor do serviço*/
+		
+				v_Valortotservico := v_Valortotservico - v_Vlrdesc;
+		
+				/* se faturamento por empreito - sem medição */
+		Else
+		
+				If r_Cab.Statusnota In ('C', '0') Then
+						Errmsg := 'Este contrato já está concluído ou cancelado!';
+						Raise Error;
+				Elsif r_Con.Ad_Situacao = 'P' Then
+						Errmsg := 'Contrato não está confirmado.';
+						Raise Error;
+				End If;
+		
+				If Nvl(v_Temmedicao, 'N') = 'S' Then
+						Errmsg := 'Contratos que geram pedidos por empreito não podem estar marcados como ''Tem Medição=Sim''';
+						Raise Error;
+				End If;
+		
+				If r_Con.Parcelaatual = r_Con.Parcelaqtd Then
+						Errmsg := 'Este Contrato já foi faturado completamente (Qtd. parcelas: ' || r_Con.Parcelaqtd || ')';
+						Raise Error;
+				End If;
+		
+				For Itens_Contrato In (Select Psc.Codprod As Codprod,
+																																		1 As Qtdprevista,
+																																		Sum(Pmc.Vlrunit) Vlrunit
+																													From Tcspsc Psc
+																													Join Ad_Tsfpmc Pmc
+																															On Pmc.Numcontrato = Psc.Numcontrato
+																														And Pmc.Codprod = Psc.Codprod
+																												Where Psc.Numcontrato = t.Numcontrato
+																														And Pmc.Dtvigor = (Select Max(P2.Dtvigor)
+																																																			From Ad_Tsfpmc P2
+																																																		Where P2.Numcontrato = Pmc.Numcontrato
+																																																				And P2.Codprod = Pmc.Codprod
+																																																				And P2.Dtvigor <= Sysdate + 1)
+																											
+																												Group By Psc.Codprod)
+				Loop
+						Begin
+						
+								Ad_Set.Ins_Pedidoitens(r_Cab.Nunota, Itens_Contrato.Codprod, Itens_Contrato.Qtdprevista,
+																															Itens_Contrato.Vlrunit, Itens_Contrato.Qtdprevista * Itens_Contrato.Vlrunit,
+																															Errmsg);
+						
+								If Errmsg Is Not Null Then
+										Raise Error;
+								End If;
+						
+								Insert Into Tcsocc
+										(Numcontrato, Codprod, Dtocor, Codusu, Codparc, Codcontato, Codocor, Descricao)
+								Values
+										(t.Numcontrato, Itens_Contrato.Codprod, Sysdate, p_Codusu, r_Cab.Codparc, 1, 1004, 'Faturamento ');
+						
+						Exception
+								When Others Then
+										Raise Error;
+						End;
+				
+				End Loop;
+		
+				Begin
+						Update Tcscon c
+									Set c.Dtrefproxfat = Add_Months(Trunc(Sysdate, 'mm'), 1),
+													c.Parcelaatual = Nvl(c.Parcelaatual, 0) + 1,
+													c.Ad_Situacao = 'E'
+							Where Numcontrato = t.Numcontrato;
+				
+						Update Ad_Tsfdfc d
+									Set d.Compensado = 'S',
+													Nunota = r_Cab.Nunota
+							Where Numcontrato = t.Numcontrato
+									And Nvl(Compensado, 'N') = 'N';
+				
+				Exception
+						When Others Then
+								Errmsg := 'Erro ao atualizar a parcela do contrato.' || Sqlerrm;
+								Raise Error;
+				End;
+		
+		End If;
+		/*end of contrato por apontamento*/
+
+		If v_Valortotservico Is Null Or v_Valortotservico = 0 Or v_Valortotservico <> r_Cab.Vlrnota Then
+		
+				Select Sum(i.Vlrtot) Into v_Valortotservico From Tgfite i Where Nunota = r_Cab.Nunota;
+		
+		End If;
+
+		/* Busca a ordem de carga e o veiculo */
+
+		Begin
+		
+				If v_Geraordcarga = 'S' Then
+				
+						Stp_Keygen_Tgfnum(p_Arquivo => 'TGFORD', p_Codemp => r_Cab.Codemp, p_Tabela => 'TGFORD',
+																								p_Campo => 'ORDEMCARGA', p_Dsync => 0, p_Ultcod => r_Cab.Ordemcarga);
+				
+						Begin
+								Select Codveiculo
+										Into r_Cab.Codveiculo
+										From Tgfvei
+									Where Codparc = r_Cab.Codparc
+											And Nvl(Ativo, 'N') = 'S'
+											And Proprio = 'N';
+						
+						Exception
+								When No_Data_Found Then
+										r_Cab.Codveiculo := 0;
+								When Too_Many_Rows Then
+										r_Cab.Codveiculo := 0;
+								When Others Then
+										Errmsg := 'Erro ao buscar o veículo. ' || Sqlerrm;
+										Raise Error;
+						End;
+				
+						Begin
+								Insert Into Tgford
+										(Codemp, Ordemcarga, Dtinic, Codparctransp, Codveiculo, Situacao)
+								Values
+										(r_Cab.Codemp, r_Cab.Ordemcarga, Sysdate, r_Cab.Codparc, r_Cab.Codveiculo, 'A');
+						Exception
+								When Others Then
+										Errmsg := 'Erro ao Inserir a Ordem de carga. ' || Sqlerrm;
+										Raise Error;
+						End;
+				
+				Else
+						Null;
+				End If;
+		End;
+
+		/* atualiza o valor do pedido*/
+
+		Begin
+				Update Tgfcab
+				/*Set Vlrnota=Nvl(v_VlrFat,v_Valortotservico),Numcontrato=t.Num_contrato*/
+				
+				/* OBSERVAÇÃO IMPORTANTE!!!
+     
+    O tipo frete será incluso,pois a nota/pedido não possui frete financeiro,
+    essa medida é apenas para que o lançamento possa ser exibido na rotina de 
+    pagamento de acerto de OC,que exige que possua valor do frete,o que causa 
+    uma duplicidade de valor no pedido,pois soma-se o valor do serviço e o valor 
+    do serviço que deve ser informado no vlrfrete para que apareça no acerto.
+    A solucção dessa situação está sendo tratada por mim,Marcus Rangel e em breve
+    será sanada.
+    
+    tipfrete alterado para 'N' e adicionada o cif_fob = 'C' - M.Rangel - 15/12/2017
+    */
+				
+				/* Após a atualização para a 3.21 não consegue confirmar o pedido 
+    com frete extra nota sem exibir a janela para lançar o financeiro 
+    do frete e como esses pedidos serão usados no acerto,a solução foi deixar
+    o frete como incluso e dar o desconto no valor,lembrando que esses pedidos não
+    possuem financeiro */
+							Set Vlrnota = v_Valortotservico,
+											Numcontrato = t.Numcontrato,
+											Tipfrete = 'S',
+											Cif_Fob = 'C',
+											Vlrfrete = Case
+																								When v_Geraordcarga = 'S' Then
+																									v_Valortotservico
+																								Else
+																									0
+																						End,
+											Ordemcarga = Case
+																										When v_Geraordcarga = 'S' Then
+																											r_Cab.Ordemcarga
+																										Else
+																											0
+																								End,
+											Codveiculo = Case
+																										When v_Geraordcarga = 'S' Then
+																											r_Cab.Codveiculo
+																										Else
+																											0
+																								End,
+											Vlrdesctot = Case
+																										When v_Geraordcarga = 'S' Then
+																											v_Valortotservico
+																										Else
+																											0
+																								End,
+											observacao = observacao || Chr(13) || ' Ref.  dias ' || v_Dataini || ' a ' || v_Datafin ||
+																								', apont. nro ' || t.Nuapont
+					Where Nunota = r_Cab.Nunota;
+		
+		Exception
+				When Others Then
+						Errmsg := 'Erro ao atualizar valor total do pedido de compras. ' || Sqlerrm;
+						Raise Error;
+		End;
+
+		/*insere a liberação do pedido*/
+
+		Select t.Evelibconfped Into v_Evelibped From Ad_Tsfelt t Where t.Nuelt = 1;
+
+		--v_Codliberador := Ad_get.Usuarioliberador('TRANSPORTE');
+		/*Select codusuresp
+   Into v_Codliberador
+   From tsicus
+  Where codcencus = r_cab.codcencus;*/
+
+		-- M. Rangel - 17/12/2018
+		-- alteração para buscar o liberador do CR de fonte alteranativa
+		-- conforme instrução enviada por e-mail
+		Begin
+				Select u.Codusu
+						Into v_Codliberador
+						From Ad_Itesolcpalibcr l
+						Join Tsiusu u
+								On u.Codusu = l.Codusu
+					Where l.Codcencus = r_Cab.Codcencus
+							And l.Ativo = 'SIM'
+							And Nvl(l.Aprova, 'N') = 'S'
+							And l.Vlrfinal > v_Valortotservico
+							And (u.Dtlimacesso Is Null Or u.Dtlimacesso > Trunc(Sysdate));
+		Exception
+				When No_Data_Found Then
+						p_Mensagem := 'Não foi encontrato o usuário liberador do CR. Por favor revifique se o CR ' ||
+																				r_Cab.Codcencus || ' possui um usuário liberador vinculado ao mesmo.';
+						Return;
+		End;
+
+		/*  
+   If v_VlrFat <> 0 Then
+    v_Valortotservico:=v_VlrFat;
+   End If;
+  */
+
+		If Debug Then
+				Null;
+		Else
+				Ad_Set.Ins_Liberacao(p_Tabela => 'TGFCAB', p_Nuchave => r_Cab.Nunota, p_Evento => v_Evelibped,
+																									p_Valor => v_Valortotservico, p_Codusulib => v_Codliberador,
+																									p_Obslib => ' Ref. Fechamento de horas do contrato ' || t.Numcontrato,
+																									p_Errmsg => Errmsg);
+		
+				If Errmsg Is Not Null Then
+						Raise Error;
+				End If;
+		
+		End If;
+
+		p_Mensagem := 'Gerado o pedido de compras Nº único ' ||
+																'<a title="Visualizar registro" target="_parent" href="' ||
+																Ad_Fnc_Urlskw('TGFCAB', r_Cab.Nunota) || '"><font color="#0000FF"><b>' || r_Cab.Nunota ||
+																'</b></font></a>, no valor de ' || Ad_Get.Formatavalor(v_Valortotservico);
+
+		/* Insere a ligação enter contrato e pedido de comrpas */
+
+		Begin
+				Insert Into Ad_Tblcmf
+						(Nometaborig, Nuchaveorig, Nometabdest, Nuchavedest)
+				Values
+						('TCSCON', t.Numcontrato, 'TGFCAB', r_Cab.Nunota);
+		
+		Exception
+				When Others Then
+						Insert Into Tsilog
+								(Codusu, Dhevento, Descricao)
+						Values
+								(Stp_Get_Codusulogado, Sysdate, 'Erro ao inserir na tabela de ligação.');
+				
+		End;
+
+Exception
+		When Error Then
+				Rollback;
+		
+				Begin
+						Delete From Tgfcab Where Nunota = r_Cab.Nunota;
+				End;
+		
+				p_Mensagem := Errmsg;
+		
+End;]]></storedProcedure>
+        </action>
+      </actions>
+    </instance>
+    <instance name="TSFSSTI">
+      <instanceDescription><![CDATA[Itens SST]]></instanceDescription>
+      <tableInfo name="AD_TSFSSTI" sequenceType="A" sequenceField="NUSSTI">
+        <category><![CDATA[Solicitação de Serviços Transp]]></category>
+        <tableDescription><![CDATA[Itens SST]]></tableDescription>
+        <primaryKey>
+          <CODSOLST />
+          <NUSSTI />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODSOLST" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Solicitação]]></description>
+        </field>
+        <field name="NUSSTI" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Seq.]]></description>
+        </field>
+        <field name="QTDNEG" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Quantidade]]></description>
+          <expression><![CDATA[if ($valorCampo == null){
+ return java.math.BigDecimal.ZERO;
+}
+ $valorCampo;]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="CODVOL" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Un. Medição]]></description>
+        </field>
+        <field name="VLRUNIT" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Vlr. Unitário]]></description>
+          <expression><![CDATA[if ($valorCampo == null){
+ return java.math.BigDecimal.ZERO;
+}
+ $valorCampo;]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="VLRTOT" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Vlr. Total]]></description>
+          <expression><![CDATA[if ($col_QTDNEG == null || $col_VLRUNIT == null){
+ return java.math.BigDecimal.ZERO;
+} else {
+return $col_VLRUNIT.doubleValue() * $col_QTDNEG.doubleValue();
+};]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[4]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="CODSERV" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Serviço]]></description>
+          <expression><![CDATA[if ($valorCampo == null)	{
+ return java.math.BigDecimal.ZERO;
+}
+ return $valorCampo;]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="apresentacao"><![CDATA[DESCRPRODNFE]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="QTDPREV" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Qtd. Prevista]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="CODPARC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Parceiro]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUMCONTRATO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Número do contrato]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="TEMMED" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Tem Medição]]></description>
+          <expression><![CDATA[if ($valorCampo == null){
+ return "S";
+}
+$valorCampo;]]></expression>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="AUTOMATICO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Automático]]></description>
+          <expression><![CDATA[if ($valorCampo == null){
+ return "N";
+}
+$valorCampo;]]></expression>
+          <options>
+            <option value="N"><![CDATA[Não]]></option>
+            <option value="S" default="S"><![CDATA[Sim]]></option>
+          </options>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="DESCRSERV" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description><![CDATA[Descr. Alternativa Serviço]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Contrato" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TCSCON" />
+          <fields>
+            <field localName="NUMCONTRATO" targetName="NUMCONTRATO" />
+          </fields>
+        </relation>
+        <relation entityName="Volume" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFVOL" />
+          <expression><![CDATA[this.AD_USASERVICO = 'S']]></expression>
+          <fields>
+            <field localName="CODVOL" targetName="CODVOL" />
+          </fields>
+        </relation>
+        <relation entityName="Servico" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPRO" />
+          <expression><![CDATA[this.CODPROD in (select codserv from ad_tsflsm)]]></expression>
+          <fields>
+            <field localName="CODSERV" targetName="CODPROD" />
+          </fields>
+        </relation>
+        <relation entityName="ParceiroFornecedorCotacao" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPAR" />
+          <fields>
+            <field localName="CODPARC" targetName="CODPARC" />
+          </fields>
+        </relation>
+        <relation entityName="TSFSSTM" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFSSTM" />
+          <fields>
+            <field localName="NUSSTI" targetName="NUSSTI" />
+            <field localName="CODSOLST" targetName="CODSOLST" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="TSFSSTM">
+      <instanceDescription><![CDATA[Máq/Equip]]></instanceDescription>
+      <tableInfo name="AD_TSFSSTM" sequenceType="A" sequenceField="SEQMAQ">
+        <category><![CDATA[Solicitação de Serviços Transp]]></category>
+        <tableDescription><![CDATA[Máq/Equip]]></tableDescription>
+        <primaryKey>
+          <CODSOLST />
+          <NUSSTI />
+          <SEQMAQ />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="SEQMAQ" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Seq. Maq]]></description>
+        </field>
+        <field name="CODSOLST" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Solicitação]]></description>
+        </field>
+        <field name="NUSSTI" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[NUSSTI]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODMAQ" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Máquina]]></description>
+        </field>
+        <field name="QTDNEG" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Quantidade]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[2]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="CODVOL" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Sigla da Unidade]]></description>
+        </field>
+        <field name="VLRUNIT" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Vlr. Unitário]]></description>
+          <expression><![CDATA[if ($valorCampo == null)	{
+ return java.math.BigDecimal.ZERO;
+}
+ return $valorCampo;]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[4]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="VLRTOT" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Vlr. Total]]></description>
+          <expression><![CDATA[if ($col_QTDNEG != null && $col_VLRUNIT != null){
+ return $col_VLRUNIT.multiply($col_QTDNEG);
+}]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nuCasasDecimais"><![CDATA[4]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="gridFooterOper"><![CDATA[sum]]></prop>
+          </properties>
+        </field>
+        <field name="CODPARC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Parceiro]]></description>
+          <expression><![CDATA[vCodparc = "";
+$sql.select("CODPARC","AD_TSFSSTI","CODSOLST="+$col_CODSOLST+" and NUSSTI = "+$col_NUSSTI);
+if ($sql.next()){
+  vCodparc = $sql.getBigDecimal(1);
+ }
+if (vCodparc == null){
+ return $valorCampo;
+}
+return vCodparc;]]></expression>
+        </field>
+        <field name="NUMCONTRATO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Número do contrato]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="TEMMED" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Tem Medição]]></description>
+          <expression><![CDATA[if ($valorCampo == null){
+ return "S";
+}
+$valorCampo;]]></expression>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="CODSERV" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Cód. Serviço]]></description>
+          <expression><![CDATA[if ($valorCampo == null ){
+ $sql.select("CODSERV","AD_TSFSSTI","CODSOLST = "+$col_CODSOLST+" AND NUSSTI = "+$col_NUSSTI);
+ if($sql.next()){
+  return $sql.getBigDecimal(1);
+ }
+}
+$valorCampo;]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="ID" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[ID]]></description>
+          <expression><![CDATA[$valorCampo.toUpperCase();]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Contrato" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TCSCON" />
+          <fields>
+            <field localName="NUMCONTRATO" targetName="NUMCONTRATO" />
+          </fields>
+        </relation>
+        <relation entityName="Volume" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFVOL" />
+          <expression><![CDATA[this.AD_USASERVICO='S']]></expression>
+          <fields>
+            <field localName="CODVOL" targetName="CODVOL" />
+          </fields>
+        </relation>
+        <relation entityName="ParceiroFornecedorCotacao" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPAR" />
+          <fields>
+            <field localName="CODPARC" targetName="CODPARC" />
+          </fields>
+        </relation>
+        <relation entityName="TSFCME" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="N" tableName="AD_TSFCME" />
+          <expression><![CDATA[@form-filter[this.CODMAQ IN (select codmaq from ad_tsflsm where codserv in (select codserv from ad_tsfssti where nussti = form.NUSSTI)) and 
+this.REVISADO = 'S']@ref-param[force-one-to-one=true]]]></expression>
+          <fields>
+            <field localName="CODMAQ" targetName="CODMAQ" />
+          </fields>
+        </relation>
+      </relationShip>
+      <actions>
+        <action type="LC">
+          <description><![CDATA[Visualizar Contrato]]></description>
+          <actionConfig>
+            <laucher resourceID="br.com.sankhya.os.cad.contratos__1481549812553.1" />
+            <params>
+              <param localField="NUMCONTRATO" targetField="NUMCONTRATO" />
+            </params>
+          </actionConfig>
+        </action>
+        <action type="LC">
+          <description><![CDATA[Impressão Contrato]]></description>
+          <actionConfig>
+            <laucher resourceID="br.com.sankhya.menu.adicional.nuDsb.149.1" />
+          </actionConfig>
+        </action>
+      </actions>
+    </instance>
+    <instance name="TSFCME">
+      <instanceDescription><![CDATA[Cadastro de Máquinas/Equip.]]></instanceDescription>
+      <tableInfo name="AD_TSFCME" sequenceType="A" sequenceField="CODMAQ" presentationField="DESCRMAQ">
+        <category><![CDATA[Solicitação de Serviços Transp]]></category>
+        <tableDescription><![CDATA[Cadastro de Máquinas/Equip.]]></tableDescription>
+        <primaryKey>
+          <CODMAQ />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODMAQ" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description><![CDATA[Cód. Máquina]]></description>
+        </field>
+        <field name="DESCRMAQ" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Descrição Máq/Equip]]></description>
+          <expression><![CDATA[if ($valorCampo != null){
+ return com.sankhya.util.StringUtils.replaceAccentuatedChars($valorCampo).toUpperCase();
+}]]></expression>
+        </field>
+        <field name="ID" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Identificador]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="REVISADO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Revisado?]]></description>
+          <expression><![CDATA[if($valorCampo == null){
+ return "S";
+}
+$valorCampo;]]></expression>
+          <options>
+            <option value="S"><![CDATA[Sim]]></option>
+            <option value="N" default="S"><![CDATA[Não]]></option>
+          </options>
+        </field>
+        <field name="INFO" systemField="N" dataType="S" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Informaçãoes sobre Equipamento]]></description>
+        </field>
+      </fields>
+    </instance>
+    <instance name="TSFSSTC">
+      <instanceDescription><![CDATA[Solicit. Serviços de Transporte]]></instanceDescription>
+      <tableInfo name="AD_TSFSSTC" sequenceType="A" sequenceField="CODSOLST">
+        <category><![CDATA[Solicitação de Serviços Transp]]></category>
+        <tableDescription><![CDATA[Solicit. Serviços de Transporte]]></tableDescription>
+        <primaryKey>
+          <CODSOLST />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODSOLST" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description><![CDATA[Cód. Solicitação]]></description>
+          <properties>
+            <prop name="filterOrder"><![CDATA[0]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterLabel"><![CDATA[Cód. Solicitação]]></prop>
+            <prop name="filterConsFilLig"><![CDATA[N]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODSOL" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Solicitante]]></description>
+          <expression><![CDATA[if ($valorCampo == null) {
+ return $ctx_usuario_logado;
+}
+return $valorCampo;]]></expression>
+          <properties>
+            <prop name="filterOrder"><![CDATA[4]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+          </properties>
+        </field>
+        <field name="DHSOLICIT" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Solicitação]]></description>
+          <expression><![CDATA[if ($valorCampo == null) {
+ return $ctx_dh_atual;
+}
+return $valorCampo;]]></expression>
+          <properties>
+            <prop name="filterOrder"><![CDATA[2]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterLabel"><![CDATA[Dt. Solicitação]]></prop>
+            <prop name="filterConsFilLig"><![CDATA[N]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[period]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="CODEMP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Empresa]]></description>
+          <properties>
+            <prop name="filterOrder"><![CDATA[1]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterLabel"><![CDATA[Cód. Empresa]]></prop>
+            <prop name="filterConsFilLig"><![CDATA[N]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+          </properties>
+        </field>
+        <field name="CODNAT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Natureza]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+          </properties>
+        </field>
+        <field name="CODCENCUS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód.Centro Resultado]]></description>
+          <properties>
+            <prop name="filterOrder"><![CDATA[5]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+          </properties>
+        </field>
+        <field name="CODPROJ" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Projeto]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[S]]></prop>
+          </properties>
+        </field>
+        <field name="DTINICIO" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. prev. início]]></description>
+        </field>
+        <field name="DTFIM" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. prev. término]]></description>
+        </field>
+        <field name="CODPARC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Cód. Parceiro]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[N]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Transportes]]></prop>
+          </properties>
+        </field>
+        <field name="STATUS" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Status]]></description>
+          <expression><![CDATA[vStatus = "P";
+if  ($valorCampo == null) {
+ return vStatus;
+}
+return $valorCampo;]]></expression>
+          <options>
+            <option value="P" default="S"><![CDATA[Pendente]]></option>
+            <option value="A"><![CDATA[Em Análise]]></option>
+            <option value="L"><![CDATA[Liberado]]></option>
+            <option value="C"><![CDATA[Cancelado]]></option>
+          </options>
+          <properties>
+            <prop name="filterOrder"><![CDATA[3]]></prop>
+            <prop name="combobox"><![CDATA[S]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="filterLabel"><![CDATA[Status]]></prop>
+            <prop name="filterConsFilLig"><![CDATA[N]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="filterKeepLast"><![CDATA[N]]></prop>
+            <prop name="filterType"><![CDATA[mult-list]]></prop>
+            <prop name="UIGroupName"><![CDATA[Automático]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+          </properties>
+        </field>
+        <field name="NUMCONTRATO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Número do contrato]]></description>
+          <properties>
+            <prop name="filterOrder"><![CDATA[6]]></prop>
+            <prop name="filterVoidExpression"><![CDATA[N]]></prop>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[N]]></prop>
+            <prop name="filterConsFilLig"><![CDATA[S]]></prop>
+            <prop name="filterRequired"><![CDATA[N]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="filterKeepLast"><![CDATA[S]]></prop>
+            <prop name="filterType"><![CDATA[default]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Automático]]></prop>
+            <prop name="filterDefaultValue"><![CDATA[NaN]]></prop>
+          </properties>
+        </field>
+        <field name="DHALTER" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Dt. Alteração]]></description>
+          <expression><![CDATA[$ctx_dh_atual]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Automático]]></prop>
+          </properties>
+        </field>
+        <field name="CODUSU" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description><![CDATA[Cód. Usuário]]></description>
+          <expression><![CDATA[$ctx_usuario_logado]]></expression>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Automático]]></prop>
+          </properties>
+        </field>
+        <field name="OBS" systemField="N" dataType="S" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description><![CDATA[Observações]]></description>
+        </field>
+        <field name="NUNOTAORIG" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="N" visibleOnSearch="S" allowNull="S" size="10">
+          <description><![CDATA[Nro. Único Origem]]></description>
+          <properties>
+            <prop name="combobox"><![CDATA[N]]></prop>
+            <prop name="readOnly"><![CDATA[S]]></prop>
+            <prop name="visivel"><![CDATA[S]]></prop>
+            <prop name="nullable"><![CDATA[S]]></prop>
+            <prop name="requerido"><![CDATA[N]]></prop>
+            <prop name="UIGroupName"><![CDATA[Automático]]></prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="Parceiro" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFPAR" />
+          <fields>
+            <field localName="CODPARC" targetName="CODPARC" />
+          </fields>
+        </relation>
+        <relation entityName="Contrato" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TCSCON" />
+          <fields>
+            <field localName="NUMCONTRATO" targetName="NUMCONTRATO" />
+          </fields>
+        </relation>
+        <relation entityName="Natureza" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFNAT" />
+          <expression><![CDATA[this.ATIVA='S' AND this.ANALITICA='S']]></expression>
+          <fields>
+            <field localName="CODNAT" targetName="CODNAT" />
+          </fields>
+        </relation>
+        <relation entityName="Empresa" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIEMP" />
+          <fields>
+            <field localName="CODEMP" targetName="CODEMP" />
+          </fields>
+        </relation>
+        <relation entityName="Projeto" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TCSPRJ" />
+          <expression><![CDATA[this.ATIVO='S' and this.ANALITICO='S']]></expression>
+          <fields>
+            <field localName="CODPROJ" targetName="CODPROJ" />
+          </fields>
+        </relation>
+        <relation entityName="CentroResultado" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSICUS" />
+          <expression><![CDATA[this.ATIVO ='S' and
+this.ANALITICO = 'S']]></expression>
+          <fields>
+            <field localName="CODCENCUS" targetName="CODCENCUS" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODSOL" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="CabecalhoNota" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TGFCAB" />
+          <fields>
+            <field localName="NUNOTAORIG" targetName="NUNOTA" />
+          </fields>
+        </relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N">
+          <targetInfo systemInstance="S" tableName="TSIUSU" />
+          <fields>
+            <field localName="CODUSU" targetName="CODUSU" />
+          </fields>
+        </relation>
+        <relation entityName="TSFSSTI" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_TSFSSTI" />
+          <fields>
+            <field localName="CODSOLST" targetName="CODSOLST" />
+          </fields>
+        </relation>
+      </relationShip>
+      <references>
+        <reference entityName="Contrato" tableName="TCSCON" type="I" insert="N" update="N" remove="N">
+          <!--Esse elemento "reference" diz respeito a campos da entidade exportada que são mencionados em tabelas do sistema.-->
+          <fields>
+            <field name="AD_CODSOLST" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" localName="CODSOLST">
+              <description><![CDATA[Cód. Solicitação Orig]]></description>
+            </field>
+          </fields>
+        </reference>
+      </references>
+      <actions>
+        <action type="SP">
+          <description><![CDATA[Excluir Lançamentos Gerados]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_SST_EXCLANC" refreshType="MASTER" txManual="false" rootEntity="TSFSSTC" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_SST_EXCLANC" (P_CODUSU Number, P_IDSESSAO Varchar2, P_QTDLINHAS Number,
+																								 P_MENSAGEM Out Varchar2) As
+	v_CodSol Number;
+Begin
+
+	/* 
+  Autor: Marcus Rangel
+  Processo: Solicitação de Serviços de Transportes
+  Objetivo: Excluir contratos ou cotações geradas 
+  a partir de uma solicitação de serviços 
+  */
+
+	For I In 1 .. P_QTDLINHAS
+	Loop
+		Begin
+			v_CodSol := ACT_INT_FIELD(P_IDSESSAO, I, 'CODSOLST');
+		
+			Execute Immediate 'alter trigger  AD_TRG_BIUD_TCSCON_SF disable';
+			Execute Immediate 'alter trigger AD_TRG_AIUD_TCSCON_SF disable';
+		
+			ad_pkg_ahm.desfaz_lancamentos(v_codsol);
+		
+			Execute Immediate 'alter trigger AD_TRG_AIUD_TCSCON_SF enable';
+			Execute Immediate 'alter trigger AD_TRG_BIUD_TCSCON_SF enable';
+		
+			p_mensagem := 'Lançamentos Excluídos com sucesso!';
+		
+		Exception
+			When Others Then
+				Rollback;
+				p_mensagem := Sqlerrm;
+		End;
+	End Loop;
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Enviar para Análise]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_SST_ENVANALISE" refreshType="SEL" txManual="false" rootEntity="TSFSSTC" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_SST_ENVANALISE" (P_CODUSU    Number,
+																										P_IDSESSAO  Varchar2,
+																										P_QTDLINHAS Number,
+																										P_MENSAGEM  Out Varchar2) As
+	v_QtdServ     Int := 0;
+	v_QtdMaq      Int := 0;
+	r_sol         ad_tsfsstc%Rowtype;
+	listaUsuarios Varchar2(4000);
+	v_mailUsu     Varchar2(100);
+	r_mail        tmdfmg%Rowtype;
+	v_NomeEmpresa Varchar2(1000);
+	v_NomeUsuario Varchar2(100);
+	errMsg        Varchar2(4000);
+	Error Exception;
+Begin
+	/*************************************************************************
+  * Autor: Marcus Rangel
+  * Processo: Solicitação de Serviços de Transporte
+  * Objetivo: Procedimento de envio da solicitação para analise da area de transportes
+  * Ponte para estabelecer comunicação entre solicitante e responsavel
+  *************************************************************************/
+	For I In 1 .. P_QTDLINHAS
+	Loop
+		r_sol.Codsolst := ACT_INT_FIELD(P_IDSESSAO, I, 'CODSOLST');
+	
+		Select *
+			Into r_sol
+			From AD_TSFSSTC c
+		 Where c.codsolst = r_sol.codsolst;
+	
+		Select Count(*)
+			Into v_QtdServ
+			From ad_tsfssti i
+		 Where i.codsolst = r_sol.codsolst;
+		Select Count(*)
+			Into v_QtdMaq
+			From ad_tsfsstm m
+		 Where m.codsolst = r_sol.codsolst;
+	
+		If v_QtdServ = 0 Then
+			errMsg := 'Solicitações sem serviços não podem ser confirmadas.';
+			Raise error;
+		End If;
+	
+		/*    
+    If v_QtdMaq = 0 Then
+      errMsg := 'Solicitações sem máquinas ou equipamentos não podem ser confirmadas.';
+    End If;*/
+	
+		/* If r_sol.status <> 'P' Then
+      errMsg := 'Solicitação já se encontra ' || ad_get.opcoescampo(r_sol.status, 'STATUS', 'AD_TSFSSTC');
+      Raise error;
+    End If;
+    
+    If errMsg Is Not Null Then
+      Raise error;
+    End If;*/
+	
+		-- valida status da solicitacao
+		If r_sol.status <> 'P' Then
+			errmsg := 'O lançamento se encontra <b>' ||
+								ad_get.opcoesCampo(r_sol.status, 'STATUS', 'AD_TSFSSTC') || '</b>.' || chr(13) ||
+								'Somente lançamentos <font color = "#FF0000">Pendentes</font> podem ser enviados para Analise.';
+			Raise error;
+		End If;
+	
+		Select e.nomefantasia
+			Into v_NomeEmpresa
+			From tsiemp e
+		 Where e.codemp = r_sol.codemp;
+		v_NomeUsuario := ad_get.nomeUsu(r_sol.codsol, 'completo');
+	
+		-- atualiza o status do lançamento  
+		Begin
+			Update ad_tsfsstc c
+				 Set c.status = 'A'
+			 Where c.codsolst = r_sol.codsolst;
+		Exception
+			When Others Then
+				errmsg := 'Ocorreu um erro ao atualizar o status da solicitação. - ' || Sqlerrm;
+				Raise error;
+		End;
+	
+		-- busca lista de usuários
+		listaUsuarios := get_tsipar_texto('USURESPSERVTRP');
+	
+		-- percorre o parametro para buscar os emails dos usuarios informados
+		For cl In (Select regexp_substr(listaUsuarios, '[^,]+', 1, Level) codusu
+								 From dual
+							 Connect By regexp_substr(listaUsuarios, '[^,]+', 1, Level) Is Not Null)
+		Loop
+			Select Nvl(u.emailsollib, u.email)
+				Into v_mailUsu
+				From tsiusu u
+			 Where u.codusu = To_Number(cl.codusu);
+			If v_mailUsu Is Null Then
+				Continue;
+			End If;
+		
+			If r_mail.email Is Null Then
+				r_mail.email := v_mailUsu;
+			Else
+				r_mail.email := r_mail.email || ',' || v_mailUsu;
+			End If;
+		
+		End Loop;
+	
+		-- SEND MAIL
+		Begin
+			r_mail.assunto  := 'Nova solicitação de serviços de transportes.';
+			r_mail.mensagem := '<BODY>' ||
+												 '<P><FONT STYLE="font-size: 14px; font-family: arial; ">Atenção!</FONT></P><P><BR/></P>' ||
+												 '<p><FONT STYLE="font-size: 14px; font-family: arial; ">Uma nova solicitação de compras de serviços de transportes foi inserida.</FONT></P>' ||
+												 '<br><br>' ||
+												 '<p><FONT STYLE="font-size: 14px; font-family: arial; "><U>Detalhes:</U></FONT></P><P><BR/></P>' ||
+												 '<p><FONT STYLE="font-size: 14px; font-family: arial; "><B>Nro Solicitação: </B>' ||
+												 r_sol.codsolst || '.</FONT></P>' ||
+												 '<p><FONT STYLE="font-size: 14px; font-family: arial; "><B>Empresa:</B> ' ||
+												 v_NomeEmpresa || '.</FONT></P>' ||
+												 '<p><FONT STYLE="font-size: 14px; font-family: arial; "><B>Solicitante:</B> ' ||
+												 v_NomeUsuario || '.</FONT></P>' ||
+												 '<p><FONT STYLE="font-size: 14px; font-family: arial; "><B>Observações: </B>' ||
+												 r_sol.obs || '.</FONT></P><P><BR/></P>' ||
+												 '<p><FONT STYLE="font-size: 14px; font-family: arial; ">Para mais detalhes clique <A HREF="' ||
+												 ad_fnc_urlskw('AD_TSFSSTC', r_sol.codsolst) ||
+												 '" TARGET="_blank">aqui</A>.</FONT></P>' || '<P><BR/></P>' ||
+												 '<P><BR/></P>' || '</BODY>';
+		
+			ad_stp_gravafilabi(r_mail.assunto, r_mail.mensagem, r_mail.email);
+		End;
+	
+		-- envia mensagem no sistema
+		Begin
+			ad_set.Ins_Avisosistema(p_Titulo     => 'Nova solicitação de Serviço',
+															p_Descricao  => 'Uma nova solicitação de serviços de transportes foi cadastrada por ' ||
+																							ad_get.nomeUsu(r_sol.codsol, 'resumido') ||
+																							' com previsão de inicio de uso em ' || r_sol.dtinicio ||
+																							' , e requer sua atenção',
+															p_Solucao    => 'Verifique do que se trata e posicione  o solicitante.',
+															p_prioridade => 2,
+															p_Usurem     => r_sol.codsol,
+															p_Usudest    => r_sol.codusu,
+															p_Tabela     => 'AD_TSFSSTC',
+															p_Nrounico   => r_sol.codsolst,
+															p_Erro       => errMsg);
+		End;
+	End Loop;
+	P_MENSAGEM := 'Solicitação enviada para análise com sucesso!!!';
+Exception
+	When error Then
+		P_MENSAGEM := '<font style="color:#FF0000;font-size:14px;"><b>Atenção!</b></font><br>' ||
+									errMsg;
+	When Others Then
+		p_mensagem := Sqlerrm;
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Confirmar Solicitação]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_SST_CONFSOLST" refreshType="SEL" txManual="false" rootEntity="TSFSSTC" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_SST_CONFSOLST" (P_CODUSU    Number,
+																									 P_IDSESSAO  Varchar2,
+																									 P_QTDLINHAS Number,
+																									 P_MENSAGEM  Out Varchar2) As
+	v_codSolicit  Number;
+	r_Sol         ad_tsfsstc%Rowtype;
+	v_QtdServ     Int := 0;
+	v_QtdMaq      Int := 0;
+	listaUsuarios Varchar2(4000);
+	v_mailUsu     Varchar2(100);
+	r_mail        tmdfmg%Rowtype;
+	v_NomeEmpresa Varchar2(1000);
+	v_NomeUsuario Varchar2(100);
+	v_MsgServicos Clob;
+	error Exception;
+	errmsg Varchar2(1000);
+Begin
+	/***************************************************************************************
+  * Autor: Marcus Rangel
+  * Processo: Solicitação de Serviços de Transporte
+  * Objetivo: Cnfirmar a solicitação de serviços de transporte e locação de 
+  * maquinas e equipamentos, alterar o status da solicitação e notificar o responsável.
+  ****************************************************************************************/
+	For I In 1 .. P_QTDLINHAS
+	Loop
+		v_codSolicit := ACT_INT_FIELD(P_IDSESSAO, I, 'CODSOLST');
+	
+		Select *
+			Into r_sol
+			From AD_TSFSSTC c
+		 Where c.codsolst = v_codSolicit;
+	
+		-- valida se possui serviços e/ou máquinas
+		Select Count(*)
+			Into v_QtdServ
+			From ad_tsfssti i
+		 Where i.codsolst = r_sol.codsolst;
+		Select Count(*)
+			Into v_QtdMaq
+			From ad_tsfsstm m
+		 Where m.codsolst = r_sol.codsolst;
+	
+		If v_QtdServ = 0 Then
+			errMsg := 'Solicitações sem serviços não podem ser confirmadas.';
+			/*    Elsif v_QtdMaq = 0 Then
+      errMsg := 'Solicitações sem máquinas ou equipamentos não podem ser confirmadas.';*/
+		End If;
+	
+		If errMsg Is Not Null Then
+			Raise error;
+		End If;
+	
+		-- validação do status da solicitação
+		If r_sol.status <> 'A' Then
+			errmsg := 'O lançamento se encontra <b>' ||
+								ad_get.opcoesCampo(r_sol.status, 'STATUS', 'AD_TSFSSTC') || '</b>.' || chr(13) ||
+								'Somente lançamentos <font color = "#FF0000">Em Análise</font> podem ser confirmados.';
+			Raise error;
+		End If;
+	
+		-- validação do parceiro
+		/*  If r_sol.codparc Is Null Or r_sol.codparc = 0 Then
+     errmsg := 'Necessário informar o parceiro que prestará o serviço antes de confirmar a solicitação.';
+     Raise error;
+    End If;*/
+	
+		-- valida valor dos serviços
+		For c_Serv In (Select i.nussti, i.codserv, i.vlrtot, p.descrprod, i.codparc, a.nomeparc
+										 From ad_tsfssti i
+										 Join tgfpro p
+											 On i.codserv = p.codprod
+										 Left Join tgfpar a
+											 On i.codparc = a.codparc
+										Where i.codsolst = r_sol.codsolst)
+		Loop
+		
+			If v_MsgServicos Is Null Then
+				v_MsgServicos := 'Serviço: ' || c_serv.codserv || ' - ' || c_Serv.Descrprod || '( Parc.: ' ||
+												 c_serv.codparc || ' - ' || c_serv.nomeparc || ')';
+			Else
+				v_MsgServicos := v_MsgServicos || chr(13) || 'Serviço: ' || c_serv.codserv || ' - ' ||
+												 c_Serv.Descrprod || '( Parc.: ' || c_serv.codparc || ' - ' ||
+												 c_serv.nomeparc || ')';
+			End If;
+		
+			If c_Serv.vlrtot <> 0 Then
+				For c_Maq In (Select m.codmaq, e.descrmaq, m.vlrtot, m.codparc, p.nomeparc
+												From ad_tsfsstm m
+												Join ad_tsfcme e
+													On m.codmaq = e.codmaq
+												Left Join tgfpar p
+													On m.codparc = p.codparc
+											 Where m.codsolst = r_sol.codsolst
+												 And m.nussti = c_Serv.Nussti
+											--And m.codserv = c_Serv.Codserv
+											)
+				Loop
+				
+					v_MsgServicos := v_MsgServicos || chr(13) || '     Máq/Equip/Veículo: ' || c_maq.descrmaq ||
+													 ' (Parc.: ' || c_maq.codparc || ' - ' || c_maq.nomeparc || ')';
+				
+					If c_Maq.Vlrtot <> 0 Then
+						Continue;
+					Else
+						errmsg := 'Para confirmação, se faz necessário que todas as máquinas possuam preço.';
+						Raise error;
+					End If;
+				
+				End Loop;
+			
+			Else
+				errmsg := 'Para confirmação, se faz necessário que todos os serviços possuam  preço.';
+				Raise error;
+			End If;
+		
+		End Loop;
+	
+		Select e.nomefantasia
+			Into v_NomeEmpresa
+			From tsiemp e
+		 Where e.codemp = r_sol.codemp;
+	
+		v_NomeUsuario := ad_get.nomeUsu(r_sol.codsol, 'completo');
+	
+		Update ad_tsfsstc c
+			 Set c.status = 'L'
+		 Where c.codsolst = v_codSolicit;
+	
+		listaUsuarios := get_tsipar_texto('USURESPSERVTRP');
+	
+		For c_lista In (Select regexp_substr(listaUsuarios, '[^,]+', 1, Level) codusu
+											From dual
+										Connect By regexp_substr(listaUsuarios, '[^,]+', 1, Level) Is Not Null)
+		Loop
+			Select Nvl(u.emailsollib, u.email)
+				Into v_mailUsu
+				From tsiusu u
+			 Where u.codusu = To_Number(c_lista.codusu);
+		
+			If v_mailUsu Is Null Then
+				Continue;
+			End If;
+		
+			If r_mail.email Is Null Then
+				r_mail.email := v_mailUsu;
+			Else
+				r_mail.email := r_mail.email || ',' || v_mailUsu;
+			End If;
+		
+		End Loop;
+	
+		Begin
+			r_mail.assunto  := 'Confirmação de solicitação de serviços de transportes.';
+			r_mail.mensagem := '<BODY>' || '<P>' ||
+												 '<FONT STYLE="font-size: 14px; font-family: arial; ">Atenção!</FONT></P><P><BR/></P><P>' ||
+												 '<FONT STYLE="font-size: 14px; font-family: arial; ">A solicitação de serviços de transportes foi confirmada.</FONT></P><P><BR/></P><P>' ||
+												 '<FONT STYLE="font-size: 14px; font-family: arial; "><U>Detalhes:</U></FONT></P><P><BR/></P><P>' ||
+												 '<FONT STYLE="font-size: 14px; font-family: arial; "><B>Nro Solicitação: </B>' ||
+												 r_sol.codsolst || '.</FONT></P><P>' ||
+												 '<FONT STYLE="font-size: 14px; font-family: arial; "><B>Empresa: </B>' ||
+												 v_NomeEmpresa || '.</FONT></P><P>' ||
+												 '<FONT STYLE="font-size: 14px; font-family: arial; "><B>Solicitante: </B> ' ||
+												 v_NomeUsuario || '.</FONT></P><P>' ||
+												 '<FONT STYLE="font-size: 14px; font-family: arial; "><B>Serviços: </B> ' ||
+												 v_MsgServicos || '.</FONT></P><P>' ||
+												 '<FONT STYLE="font-size: 14px; font-family: arial; "><B>Observações: </B>' ||
+												 r_sol.obs || '.</FONT></P><P><BR/></P><P>' ||
+												 '<FONT STYLE="font-size: 14px; font-family: arial; ">Para mais detalhes clique <A HREF="' ||
+												 ad_fnc_urlskw('AD_TSFSSTC', r_sol.codsolst) ||
+												 '" TARGET="_blank">aqui</A>.</FONT></P>' || '<P><BR/></P>' ||
+												 '<P><BR/></P>' || '</BODY>';
+		
+			ad_stp_gravafilabi(r_mail.assunto, r_mail.mensagem, r_mail.email);
+		End;
+	
+		-- envia mensagem no sistema
+		Begin
+			ad_set.Ins_Avisosistema(p_Titulo     => 'Confirmação de solicitação de Serviço',
+															p_Descricao  => 'Solicitação de serviços de transportes confirmada por ' ||
+																							ad_get.nomeUsu(stp_get_codusulogado, 'resumido') || '.',
+															p_Solucao    => 'Para maiores informações, verifique o registro..',
+															p_prioridade => 2,
+															p_Usurem     => stp_get_codusulogado,
+															p_Usudest    => r_sol.codsol,
+															p_Tabela     => 'AD_TSFSSTC',
+															p_Nrounico   => r_sol.codsolst,
+															p_Erro       => errMsg);
+		End;
+	
+	End Loop;
+
+	P_MENSAGEM := 'Confirmação concluída com sucesso!';
+
+Exception
+	When error Then
+		p_mensagem := '<font color="#FF0000" sizee="14px"><b>Atenção!</b></font><br>' || errmsg;
+	When Others Then
+		p_mensagem := 'Algo deu errado! ' || Sqlerrm;
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Gerar Cotação]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_SST_GERACOT" refreshType="SEL" txManual="false" rootEntity="TSFSSTC" />
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_SST_GERACOT" (P_CODUSU    Number,
+																								 P_IDSESSAO  Varchar2,
+																								 P_QTDLINHAS Number,
+																								 P_MENSAGEM  Out Varchar2) As
+	r_Sol    ad_tsfsstc%Rowtype;
+	r_Cot    ad_tabcotcab%Rowtype;
+	v_CodUsu Number := stp_get_codusulogado;
+	v_Count  Int := 0;
+	Error Exception;
+	ErrMsg Varchar2(4000);
+Begin
+	/*
+  Autor: Marcus Rangel
+  
+  Objetivo: Confirmar a solicitação de serviços, notificar o solicitante.
+  */
+	For I In 1 .. P_QTDLINHAS
+	Loop
+	
+		-- popula variáveis
+		Begin
+			r_sol.codsolst := ACT_INT_FIELD(P_IDSESSAO, I, 'CODSOLST');
+		
+			Select *
+				Into r_Sol
+				From ad_tsfsstc c
+			 Where c.codsolst = r_sol.codsolst;
+			--Select Count(*) Into v_Count From ad_tabcotcab c Where Nvl(c.codsolst, 0) = r_sol.codsolst;
+		Exception
+			When no_data_found Then
+				ErrMsg := 'Erro ao popular as variáveis. ' || Sqlerrm;
+				Raise error;
+		End;
+	
+		Begin
+			Select Nvl(ultcod, 0) + 1
+				Into r_Cot.Numcotacao
+				From tgfnum
+			 Where arquivo = 'AD_TABCOTCAB';
+			Update tgfnum
+				 Set ultcod = r_cot.numcotacao
+			 Where arquivo = 'AD_TABCOTCAB'
+				 And codemp = 1;
+		Exception
+			When Others Then
+				errmsg := 'Erro ao atualizar numeração. ' || Sqlerrm;
+		End;
+	
+		/* Verifica se já não foi gerada cotação */
+		If v_Count <> 0 Then
+			Select numcotacao
+				Into r_Cot.Numcotacao
+				From ad_tabcotcab
+			 Where Nvl(codsolst, 0) = r_sol.codsolst;
+		
+			ErrMsg := 'Essa solicitação já deu origem à Cotação Nro <a target="_parent" color="#FF0000" href="' ||
+								ad_fnc_urlskw('AD_Tabcotcab', r_Cot.Numcotacao) || '"><b>' || r_cot.numcotacao ||
+								'</b></a>';
+			Raise error;
+		End If;
+	
+		/* Insere Cotação */
+		<<ins_cotacao>>
+		Begin
+			Insert Into ad_tabcotcab
+				(numcotacao,
+				 codemp,
+				 codnat,
+				 codcencus,
+				 codproj,
+				 dtneg,
+				 codusu,
+				 situacao,
+				 codsolst,
+				 nunota,
+				 obs)
+			Values
+				(r_cot.numcotacao,
+				 r_sol.codemp,
+				 r_sol.codnat,
+				 r_sol.codcencus,
+				 r_sol.codproj,
+				 Sysdate,
+				 v_codusu,
+				 'A',
+				 r_sol.codsolst,
+				 r_Sol.Nunotaorig,
+				 r_Sol.Obs);
+		Exception
+			When dup_val_on_index Then
+				r_cot.numcotacao := r_cot.numcotacao + 1;
+				Goto ins_cotacao;
+			When Others Then
+				ErrMsg := 'Erro ao gerar a cotação. ' || Sqlerrm;
+				Raise error;
+		End;
+	
+	End Loop;
+
+	p_mensagem := 'Cotação Número <a target="_parent" href="' ||
+								ad_fnc_urlskw('AD_Tabcotcab', r_Cot.Numcotacao) || '"><b><font color="#0000FF">' ||
+								r_cot.numcotacao || '</font></b></a> gerada com sucesso.';
+
+Exception
+	When Error Then
+		P_MENSAGEM := '<p><font color="#FF0000" size="14"><b>Atenção!!!</b></font></p>' || ErrMsg;
+		/*When Others Then
+    P_MENSAGEM := '<p><font color="#FF0000" size="14"><b>Atenção!!!</b></font></p>' || Sqlerrm;*/
+End;]]></storedProcedure>
+        </action>
+        <action type="SP">
+          <description><![CDATA[Gerar Contrato]]></description>
+          <actionConfig>
+            <dbCall name="AD_STP_SST_GERACONTR" refreshType="SEL" txManual="false" rootEntity="TSFSSTC" />
+            <params>
+              <promptParam label="Usuário Responsável pelo Apontamento" name="CODRESPAPONT" required="false" saveLast="false" entityName="Usuario" paramType="ENTITY" />
+            </params>
+          </actionConfig>
+          <storedProcedure><![CDATA[CREATE OR REPLACE  PROCEDURE "AD_STP_SST_GERACONTR" (P_CODUSU    Number,
+                                                   P_IDSESSAO  Varchar2,
+                                                   P_QTDLINHAS Number,
+                                                   P_MENSAGEM  Out Varchar2) As
+  r_Sol         ad_tsfsstc%Rowtype;
+  v_NumContrato Number;
+  v_Codtiptit   Number;
+  errmsg        Varchar2(4000);
+  error Exception;
+  c              Int := 0;
+  v_Qtdneg       Float;
+  v_Vlrtot       Float;
+  v_NroContratos Varchar2(2000);
+  v_QtdContratos Int := 0;
+  v_CodApontador Number;
+  --t              ad_pkg_sst.ty_origem := ad_pkg_sst.ty_origem();
+Begin
+  /*****************************************************************************************
+  * Autor: Marcus Rangel
+  * Processo: Solicitação de Serviços de Transporte
+  * Objetivo: Procedure usada com bot?o de ac?o na tela de  "solicitac?o de servicos de transporte".
+  * Gerar o contrato a partir das informac?es contidas na solicitac?o.
+  ********************************************************************************************/
+
+  For I In 1 .. P_QTDLINHAS
+  Loop
+    r_Sol.Codsolst := ACT_INT_FIELD(P_IDSESSAO, I, 'CODSOLST');
+    v_CodApontador := act_int_param(P_CHAVE => P_IDSESSAO, P_NOME => 'CODRESPAPONT');
+  
+    Begin
+      Select *
+        Into r_Sol
+        From ad_tsfsstc c
+       Where c.codsolst = r_sol.codsolst;
+    Exception
+      When no_data_found Then
+        errmsg := 'Nro da Solicitac?o de Origem n?o foi encontrado.';
+        Raise error;
+    End;
+  
+    -- valida status pendente
+    If r_sol.status <> 'L' Then
+      errmsg := 'Somente lancamento <b><font color="#FF0000">Liberados</FONT></b> podem gerar Contratos. Confirme o lancamento primeiro.';
+      Raise error;
+    End If;
+  
+    For c_Itens In (Select i.nussti, i.codserv, i.codparc, Nvl(i.temmed, 'N') temmed
+                      From ad_tsfssti i
+                     Where i.codsolst = r_sol.codsolst
+                       And i.numcontrato Is Null
+                     Order By i.codserv)
+    Loop
+    
+      /*se o contrato sera lancado considerando o parceiro da maquina e não do servico*/
+      If c_itens.codparc Is Null Then
+      
+        For c_Maq In (Select Distinct codparc, Nvl(temmed, 'N') temmed
+                        From ad_tsfsstm m
+                       Where numcontrato Is Null
+                         And m.codsolst = r_sol.codsolst
+                            --And m.codserv = c_Itens.codserv
+                         And m.nussti = c_Itens.Nussti
+                         And m.codparc Is Not Null
+                       Order By codparc)
+        Loop
+          /*busca a quantidade e o valor total das maquinas*/
+          Begin
+            Select Sum(qtdneg), Sum(vlrtot)
+              Into v_qtdneg, v_vlrtot
+              From ad_tsfsstm m
+             Where m.codparc = c_maq.codparc
+                  --And m.codserv = c_itens.codserv
+               And m.nussti = c_Itens.Nussti
+               And m.codsolst = r_sol.codsolst
+               And m.temmed = c_maq.temmed;
+          End;
+        
+          If c_maq.temmed = 'S' And v_CodApontador Is Null Then
+            p_mensagem := 'Por favor informe o código do Usuário responsável pelo Apontamento';
+            Return;
+          End If;
+        
+          /*insere o contrato pela maquina*/
+          ad_pkg_sst.Insere_Contrato(p_CodSol => r_sol.codsolst, p_CodParc => c_Maq.codparc,
+                                     P_NUSSTI => c_itens.nussti, p_Codserv => c_itens.codserv,
+                                     p_Qtdneg => v_Qtdneg, p_Vlrtot => v_Vlrtot,
+                                     p_TemMed => c_Maq.Temmed, v_NumContrato => v_NumContrato,
+                                     errmsg => errmsg);
+          If errmsg Is Not Null Then
+            Raise error;
+          End If;
+        
+          -- informa o usuário resp do parametro no contrato
+          -- solicit. 28/08/2018, Marçel Eng.
+          Begin
+            Update tcscon con
+               Set con.ad_codusuapont = v_CodApontador
+             Where con.numcontrato = v_NumContrato;
+          Exception
+            When Others Then
+              p_mensagem := 'Erro ao atualizar o usuário responsável pelo apontamento no contrato.' ||
+                            Chr(13) || Sqlerrm;
+              Return;
+          End;
+        
+          /*atualiza o numero do contrato no equipamento*/
+          Update ad_tsfsstm m
+             Set m.numcontrato = v_NumContrato
+           Where codsolst = r_Sol.Codsolst
+             And codparc = c_Maq.codparc
+                --And codserv = c_itens.codserv
+             And nussti = c_Itens.Nussti
+             And numcontrato Is Null;
+        
+          /*Concatena os numeros dos contratos gerados*/
+          If v_NroContratos Is Null Then
+            v_NroContratos := v_NumContrato;
+          Else
+            v_NroContratos := v_NroContratos || ',' || v_NumContrato;
+          End If;
+        
+          v_QtdContratos := v_QtdContratos + 1;
+        
+        End Loop c_Maq;
+      
+        --Se o contrato sera gerado pelo servico      
+      Else
+      
+        Begin
+          /*Busca quantidade e valor, totais, do servicos*/
+          Select Sum(qtdneg), Sum(vlrtot)
+            Into v_qtdneg, v_vlrtot
+            From ad_tsfssti i
+           Where i.codparc = c_Itens.codparc
+             And i.codserv = c_Itens.codserv
+             And i.codsolst = r_sol.codsolst
+             And i.nussti = c_Itens.Nussti
+             And i.temmed = c_Itens.Temmed;
+        End;
+      
+        If c_itens.temmed = 'S' And v_CodApontador Is Null Then
+          p_mensagem := 'Por favor informe o código do Usuário responsável pelo Apontamento';
+          Return;
+        End If;
+      
+        /*Insere o contrato baseado no servico*/
+        ad_pkg_sst.Insere_Contrato(p_CodSol => r_Sol.Codsolst, p_CodParc => c_Itens.codparc,
+                                   p_nussti => c_itens.nussti, p_Codserv => c_Itens.codserv,
+                                   p_Qtdneg => v_Qtdneg, p_Vlrtot => v_Vlrtot,
+                                   p_temmed => c_Itens.temmed, v_NumContrato => v_NumContrato,
+                                   errmsg => errmsg);
+      
+        If errmsg Is Not Null Then
+          Raise error;
+        End If;
+      
+        -- informa o usuário resp do parametro no contrato
+        -- solicit. 28/08/2018, Marçel Eng.
+        Begin
+          Update tcscon con
+             Set con.ad_codusuapont = v_CodApontador
+           Where con.numcontrato = v_NumContrato;
+        Exception
+          When Others Then
+            p_mensagem := 'Erro ao atualizar o usuário responsável pelo apontamento no contrato.' ||
+                          Chr(13) || Sqlerrm;
+            Return;
+        End;
+      
+        /*Atualiza o numero do contrato no servico*/
+        Update ad_tsfssti
+           Set numcontrato = v_NumContrato
+         Where codsolst = r_Sol.Codsolst
+           And nussti = c_Itens.Nussti
+           And codparc = c_itens.codparc
+           And codserv = c_Itens.codserv
+           And numcontrato Is Null;
+      
+        /*Concatena o numero dos contratos*/
+        If v_NroContratos Is Null Then
+          v_NroContratos := v_NumContrato;
+        Else
+          v_NroContratos := v_NroContratos || ',' || v_NumContrato;
+        End If;
+      
+        v_QtdContratos := v_QtdContratos + 1;
+      
+      End If;
+    
+      /*Busca o tipo de titulo do parametro e atualiza os contratos*/
+      Begin
+        Select tiptitcontr
+          Into v_codtiptit
+          From ad_tsfelt elt
+         Where elt.nuelt = 1;
+      
+        Update tcscon con
+           Set con.tipotitulo   = v_Codtiptit,
+               con.dttermino    = r_sol.dtfim,
+               con.dtrefproxfat = Add_Months(Trunc(Sysdate, 'mm'), 1),
+               con.parcelaqtd = (Case
+                                  When c_Itens.temmed = 'N' Then
+                                   v_Qtdneg
+                                End)
+         Where numcontrato = v_NumContrato;
+      
+      Exception
+        When Others Then
+          errmsg := 'Erro ao atualizar informac?es adicionais no contrato ' || v_NumContrato ||
+                    ' - ' || Sqlerrm;
+          Raise error;
+      End;
+    
+    End Loop S;
+  
+  End Loop I;
+
+  If v_QtdContratos = 1 Then
+    P_MENSAGEM := 'Foi gerado o contrato nro ' ||
+                  '<font color="#0000FF"><b><a target="_parent" href="' ||
+                  ad_fnc_urlskw('TCSCON_AD', v_NumContrato) || '" >' || v_numcontrato ||
+                  '</b></font>';
+  
+  Else
+    If v_NroContratos Is Null Then
+      p_mensagem := 'Não foram encontradas máquinas/serviços disponíveis para geração de contratos';
+    Else
+      p_mensagem := 'Foram gerados os contratos ' || v_NroContratos;
+    End If;
+  End If;
+
+Exception
+  When error Then
+    Rollback;
+    P_MENSAGEM := errmsg;
+  When Others Then
+    Rollback;
+    P_MENSAGEM := Sqlerrm;
+End;]]></storedProcedure>
+        </action>
+        <action type="LC">
+          <description><![CDATA[Visualizar Contrato]]></description>
+          <actionConfig>
+            <laucher resourceID="br.com.sankhya.os.cad.contratos__1481549812553.1" />
+            <params>
+              <param localField="NUMCONTRATO" targetField="NUMCONTRATO" />
+            </params>
+          </actionConfig>
+        </action>
+      </actions>
+    </instance>
+  </instances>
+</metadata>
+

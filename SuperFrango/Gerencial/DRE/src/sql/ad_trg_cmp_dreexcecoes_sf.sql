@@ -19,8 +19,7 @@ create or replace trigger ad_trg_cmp_dreexcecoes_sf
     m             int := 2;
   begin
   
-    if inserting
-       or updating then
+    if inserting or updating then
     
       -- se ativo
       if (:old.ativo = 'S' or :new.ativo = 'S') then
@@ -37,14 +36,20 @@ create or replace trigger ad_trg_cmp_dreexcecoes_sf
           end if;
         
           --possui lançamentos?
-          select count(*) into i from dre_baseindpad where dtref = v_dtref;
+          select count(*)
+            into i
+            from dre_baseindpad
+           where dtref = v_dtref;
         
           -- retroaje um mes caso não tenha dados da table no time selecionado
           if i = 0 then
             while i = 0
             loop
               v_dtref := add_months(trunc(sysdate, 'fmmm'), -m);
-              select count(*) into i from dre_baseindpad where dtref = v_dtref;
+              select count(*)
+                into i
+                from dre_baseindpad
+               where dtref = v_dtref;
               m := m + 1;
             end loop;
           end if;

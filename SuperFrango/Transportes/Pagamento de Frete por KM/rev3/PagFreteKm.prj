@@ -1,0 +1,49 @@
+PL/SQL Developer Project
+
+[Options]
+AutoConnect=-1
+Username=sankhya
+Password=2406463248825020477448484730
+Database=ssaprod
+ConnectAs=Normal
+Edition=
+Workspace=
+HaltAfterError=0
+BrowseHistory=-1
+FileBrowser=-1
+BeautfierRulesFile=
+VersionControl=0
+VersionControlPath=
+ShowItems=-1
+
+[History]
+Programs=D:\Projetos\Sankhya
+SQL Scripts=D:\Projetos\Sankhya\Scripts
+Report Files=
+Test Scripts=D:\Projetos\Sankhya\Teste
+Command Scripts=
+Diagram Files=
+
+[BrowserFolders]
+
+
+[Groups]
+
+[Files]
+0,0,TABLE,,AD_TSFRPFC
+0,0,PROCEDURE,,AD_STP_RPFKM_SHOWNOTAS_SF
+0,0,PROCEDURE,,AD_STP_RPFKM_NOVAREVISAO_SF
+0,0,PROCEDURE,,AD_STP_RPFKM_ENVLIB_SF
+0,0,PROCEDURE,,AD_STP_RPFKM_BUSCADISTROTA_SF
+0,0,TRIGGER,,AD_TRG_AIUD_TSILIB_SF
+0,0,PROCEDURE,,STP_PROC_ROTEIRIZADOR
+0,0,PROCEDURE,,STP_FECHA_FRETE_FGO_ABAT_SF
+0,0,PACKAGE,,AD_PKG_FKM
+0,0,PACKAGE BODY,,AD_PKG_FKM
+0,0,TRIGGER,,AD_TRG_CIUD_TSFRPFC_SF
+
+[Notes]
+{\rtf1\ansi\deff0\nouicompat{\fonttbl{\f0\fnil Arial;}}
+{\*\generator Riched20 10.0.18362}\viewkind4\uc1 
+\pard\f0\fs20\lang1046\par
+}

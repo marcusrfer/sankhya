@@ -11,6 +11,7 @@ create or replace procedure ad_stp_fcp_gerarnota_sf(p_codusu    number,
   v_numnota  number;
   v_nufin    number;
   v_modelo   int;
+  v_tipmov   varchar2(1);
   v_confirma boolean default false;
 
   procedure exclui_movimentacao(p_nunota number) as
@@ -64,17 +65,14 @@ begin
   -- valida quantidade de ovos 
   if ref.qtdovosinc != ref.qtdovosgrj then
     --p_mensagem := 'Quantidade de ovos inconsistente.';
-    if not act_confirmar(p_titulo    => 'Geração de Notas Postura',
-                         p_texto     => 'Quantidade Insconsistentes, deseja gerar assim mesmo?',
-                         p_chave     => p_idsessao,
-                         p_sequencia => 0) then
+    if not act_confirmar(p_titulo => 'Geração de Notas Postura',
+                         p_texto => 'Quantidade Insconsistentes, deseja gerar assim mesmo?',
+                         p_chave => p_idsessao, p_sequencia => 0) then
       return;
     end if;
   end if;
 
-  v_confirma := act_confirmar('Confirmação de Nota',
-                              'Deseja confirmar a nota Gerada?',
-                              p_idsessao,
+  v_confirma := act_confirmar('Confirmação de Nota', 'Deseja confirmar a nota Gerada?', p_idsessao,
                               1);
 
   -- busca set de parametros
@@ -126,7 +124,7 @@ begin
     -- insere cabeçalho
     obs := 'Produção mês ' || to_char(ref.dtref, 'MM/RRRR') || ' - lote ' || ref.numlote;
     c   := '';
-    c   := c || '<CODEMP>' || mgn.codemp || '</CODEMP>';
+    c   := c || '<CODEMP>' || ref.codemp || '</CODEMP>';
     c   := c || '<CODPARC>' || ref.codparc || '</CODPARC>';
     c   := c || '<CODVEND>' || trim(to_char(mgn.codvend)) || '</CODVEND>';
     c   := c || '<CODTIPOPER>' || mgn.codtipoper || '</CODTIPOPER>';
@@ -153,9 +151,7 @@ begin
     i := i || '<USOPROD>P</USOPROD>';
     i := i || '<PERCDESC>0</PERCDESC>';
   
-    ad_pkg_apiskw.acao_inserir_nota(p_cab    => c,
-                                    p_itens  => i,
-                                    p_nunota => ref.nunota,
+    ad_pkg_apiskw.acao_inserir_nota(p_cab => c, p_itens => i, p_nunota => ref.nunota,
                                     p_errmsg => p_mensagem);
   
     if p_mensagem is not null then
@@ -172,7 +168,7 @@ begin
       begin
         f := '';
         f := f || '<NUNOTA>' || ref.nunota || '</NUNOTA>';
-        f := f || '<CODEMP>' || mgn.codemp || '</CODEMP>';
+        f := f || '<CODEMP>' || ref.codemp || '</CODEMP>';
         f := f || '<CODVEND>' || mgn.codvend || '</CODVEND>';
         f := f || '<NUMNOTA>0</NUMNOTA><ORIGEM>E</ORIGEM><PROVISAO>S</PROVISAO>';
         f := f || '<DTNEG>' || to_char(sysdate, 'dd/mm/yyyy') || '</DTNEG>';
@@ -199,8 +195,7 @@ begin
             return;
         end;
       
-        ad_pkg_apiskw.acao_inserir_financeiro(p_fin    => f,
-                                              p_nufin  => v_nufin,
+        ad_pkg_apiskw.acao_inserir_financeiro(p_fin => f, p_nufin => v_nufin,
                                               p_errmsg => p_mensagem);
       
         if p_mensagem is not null then

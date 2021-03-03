@@ -17,6 +17,9 @@ create or replace procedure ad_stp_adtssa_gerafinren_sf(p_nunico      number,
   v_codusulibib int;
   errmsg        varchar2(4000);
 
+  t dbms_utility.number_array;
+  i int := 0;
+
 begin
 
   --p_nunico    := 3501;
@@ -43,8 +46,6 @@ begin
                        from ad_adtssaparrenovar)
              where nunico = p_nunico)
   loop
-  
-    stp_keygen_nufin(fin.nufin);
   
     fin.numnota := case
                      when r.recdesp = -1 then
@@ -99,6 +100,11 @@ begin
   
     begin
       -- insere as receitas
+      stp_keygen_nufin(fin.nufin);
+    
+      i := i + 1;
+      t(i) := fin.nufin;
+    
       insert into tgffin
         (nufin, codemp, numnota, dtneg, desdobramento, dhmov, dtvenc, dtvencinic, codparc,
          codtipoper, dhtipoper, codctabcoint, codnat, codcencus, codproj, codtiptit, vlrdesdob,
@@ -107,13 +113,41 @@ begin
       values
         (fin.nufin, cab.codemp, nvl(fin.numnota, 0), cab.dtneg, r.nrparcela, sysdate, r.dtvenc,
          r.dtvencinic, fin.codparc, fin.codtipoper, fin.dhtipoper, fin.codctabcoint, cab.codnat,
-         cab.codcencus, cab.codproj, fin.codtiptit, r.vlrdesdob, fin.vlrjuronegoc, r.recdesp,
-         fin.provisao, 'F', stp_get_codusulogado, sysdate, 'ZZ', fin.historico, 1, 'adtSsa',
-         cab.modcred);
+         cab.codcencus, cab.codproj, fin.codtiptit, r.vlrdesdob, 0, r.recdesp, fin.provisao, 'F',
+         stp_get_codusulogado, sysdate, 'ZZ', fin.historico, 1, 'adtSsa', cab.modcred);
     exception
       when others then
         raise;
     end;
+  
+    -- m.rangel - 6/3/20 - incluir o juro em lançamento separado
+    if nvl(r.vlrjuros, 0) > 0 then
+    
+      begin
+      
+        i := i + 1;
+        stp_keygen_nufin(t(i));
+      
+        fin.codnat    := 1020118;
+        fin.historico := 'JUROS REF. PROJETO RENOVAR NRO ' || r.nunico || '. PARCEIRO ' ||
+                         ad_get.nome_parceiro(r.codparc, 'razaosocial');
+      
+        insert into tgffin
+          (nufin, codemp, numnota, dtneg, desdobramento, dhmov, dtvenc, dtvencinic, codparc,
+           codtipoper, dhtipoper, codctabcoint, codnat, codcencus, codproj, codtiptit, vlrdesdob,
+           vlrjuronegoc, recdesp, provisao, origem, codusu, dtalter, desdobdupl, historico, codbco,
+           ad_variacao, ad_modcred)
+        values
+          (t(i), cab.codemp, nvl(fin.numnota, 0), cab.dtneg, r.nrparcela, sysdate, r.dtvenc,
+           r.dtvencinic, fin.codparc, fin.codtipoper, fin.dhtipoper, fin.codctabcoint, fin.codnat,
+           cab.codcencus, cab.codproj, fin.codtiptit, r.vlrjuros, 0, 1, fin.provisao, 'F',
+           stp_get_codusulogado, sysdate, 'ZZ', fin.historico, 1, 'adtSsa', cab.modcred);
+      exception
+        when others then
+          raise;
+      end;
+    
+    end if;
   
     -- atualiza as parcelas
     begin
@@ -121,8 +155,7 @@ begin
     
       if r.recdesp = 1 then
         update ad_adtssapar p
-           set p.nufin    = fin.nufin,
-               p.provisao = fin.provisao
+           set p.nufin = fin.nufin, p.provisao = fin.provisao
          where p.nunico = r.nunico
            and p.sequencia = r.sequencia;
       else
@@ -139,50 +172,55 @@ begin
         raise;
     end;
   
-    -- insere o acerto
-    begin
-    
-      if v_nuacerto is null then
-        stp_keygen_tgfnum('TGFFRE', 1, 'TGFFRE', 'NUACERTO', 0, v_nuacerto);
-      end if;
-    
+  end loop r;
+
+  -- insere o acerto
+  begin
+  
+    if v_nuacerto is null then
+      stp_keygen_tgfnum('TGFFRE', 1, 'TGFFRE', 'NUACERTO', 0, v_nuacerto);
+    end if;
+  
+    for l in t.first .. t.last
+    loop
       v_sequencia := v_sequencia + 1;
     
-      insert into tgffre
-        (codusu, dhalter, nuacerto, nufin, nufinorig, nunota, sequencia, tipacerto)
-      values
-        (v_codusu, sysdate, v_nuacerto, fin.nufin, null, null, v_sequencia, 'A');
-    exception
-      when others then
-        raise;
-    end; 
+      begin
+        insert into tgffre
+          (codusu, dhalter, nuacerto, nufin, nufinorig, nunota, sequencia, tipacerto)
+        values
+          (v_codusu, sysdate, v_nuacerto, t(l), null, null, v_sequencia, 'A');
+      exception
+        when others then
+          raise_application_error(-20105, 'Erro ao criar o acerto. ' || sqlerrm);
+      end;
+    
+      -- atualiza o nro do acerto no financeiro
+      begin
+        update tgffin
+           set dtalter = sysdate, nucompens = v_nuacerto, numdupl = v_nuacerto
+         where nufin = t(l);
+      exception
+        when others then
+          raise_application_error(-20105,
+                                  'Erro! ao atualizar o nro do acerto no financeiro. ' || sqlerrm);
+      end;
+    
+      -- insere ligação
+      begin
+        insert into ad_tblcmf
+          (nometaborig, nuchaveorig, nometabdest, nuchavedest)
+        values
+          ('AD_ADTSSACAB', cab.nunico, 'TGFFIN', t(l));
+      exception
+        when others then
+          null;
+      end;
+    
+    end loop; -- loop do nufin
   
-    -- atualiza o nro do acerto no financeiro
-    begin
-      update tgffin
-         set dtalter   = sysdate,
-             nucompens = v_nuacerto,
-             numdupl   = v_nuacerto,
-             numnota   = nvl(fin.numnota, cab.nunico)
-       where tgffin.nufin = fin.nufin;
-    exception
-      when others then
-        raise_application_error(-20105,
-                                'Erro! ao atualizar o nro do acerto no financeiro. ' || sqlerrm);
-    end;
-  
-    -- insere ligação
-    begin
-      insert into ad_tblcmf
-        (nometaborig, nuchaveorig, nometabdest, nuchavedest)
-      values
-        ('AD_ADTSSACAB', cab.nunico, 'TGFFIN', fin.nufin);
-    exception
-      when others then
-        raise_application_error(-20105, 'Erro! Criação da ligação entre as tabelas. ' || sqlerrm);
-    end;
-  
-  end loop;
+  end;
+  -- fin insere acerto
 
   -- se tipo de processo exige aprov despesa
   if conf.exigaprdesp = 'S' then
@@ -190,14 +228,10 @@ begin
     --se foi identificado necessidade de lib financeira
     if p_aprov_fin = 1 then
     
-      ad_set.ins_liberacao(p_tabela    => 'AD_ADTSSACAB',
-                           p_nuchave   => p_nunico,
-                           p_evento    => 1042,
-                           p_valor     => 1,
-                           p_codusulib => nvl(conf.codusuapr, 946),
-                           p_obslib    => 'Adiantamento ' || p_nunico || ', com Divergência de ' ||
-                                          p_mensagemusu,
-                           p_errmsg    => errmsg);
+      ad_set.ins_liberacao(p_tabela => 'AD_ADTSSACAB', p_nuchave => p_nunico, p_evento => 1042,
+                           p_valor => 1, p_codusulib => nvl(conf.codusuapr, 946),
+                           p_obslib => 'Adiantamento ' || p_nunico || ', com Divergência de ' ||
+                                        p_mensagemusu, p_errmsg => errmsg);
     
       if errmsg is not null then
         raise_application_error(-20105, errmsg);
@@ -206,29 +240,23 @@ begin
       -- Busca usuários que estão vinculados ao perfil 13 (>>Bi Móvel >>Cadastro >>Perfil)
       mail.email := ad_get.mailfila(13);
     
-      ad_stp_gravafilabi(p_assunto  => 'Liberação Adiantamento Financeiro',
+      ad_stp_gravafilabi(p_assunto => 'Liberação Adiantamento Financeiro',
                          p_mensagem => 'Acaba de ser incluido o adiantamento ' || p_nunico ||
-                                       '. Favor verificar as liberações pendentes!' || chr(13) ||
-                                       chr(10) || 'Obrigado.' || chr(13) || chr(10) ||
-                                       'Stp_Adtssacab_Gerafin_Sf' || chr(13) || chr(10) ||
-                                       'e-mail enviado para: ' || mail.email,
-                         p_email    => mail.email);
+                                        '. Favor verificar as liberações pendentes!' || chr(13) ||
+                                        chr(10) || 'Obrigado.' || chr(13) || chr(10) ||
+                                        'Stp_Adtssacab_Gerafin_Sf' || chr(13) || chr(10) ||
+                                        'e-mail enviado para: ' || mail.email, p_email => mail.email);
     
     end if;
   
-    v_codusulibib := ad_confirma_fin.usulibfin(p_codtipoper => conf.codtipoperdesp,
-                                               p_exige      => 'F',
-                                               p_codnat     => cab.codnat,
-                                               p_codcencus  => cab.codcencusresp,
+    v_codusulibib := ad_confirma_fin.usulibfin(p_codtipoper => conf.codtipoperdesp, p_exige => 'F',
+                                               p_codnat => cab.codnat,
+                                               p_codcencus => cab.codcencusresp,
                                                p_codcencusr => cab.codcencusresp);
   
-    ad_set.ins_liberacao(p_tabela    => 'AD_ADTSSACAB',
-                         p_nuchave   => p_nunico,
-                         p_evento    => 1035,
-                         p_valor     => cab.vlrdesdob,
-                         p_codusulib => v_codusulibib,
-                         p_obslib    => 'Adiantamento ' || cab.nunico,
-                         p_errmsg    => errmsg);
+    ad_set.ins_liberacao(p_tabela => 'AD_ADTSSACAB', p_nuchave => p_nunico, p_evento => 1035,
+                         p_valor => cab.vlrdesdob, p_codusulib => v_codusulibib,
+                         p_obslib => 'Adiantamento ' || cab.nunico, p_errmsg => errmsg);
   
     if errmsg is not null then
       raise_application_error(-20105, errmsg);
@@ -236,8 +264,7 @@ begin
   
     begin
       update tsilib l
-         set l.ad_nuadto = v_nuacerto,
-             l.vlrlimite = 1
+         set l.ad_nuadto = v_nuacerto, l.vlrlimite = 1
        where l.nuchave = p_nunico
          and l.tabela = 'AD_ADTSSACAB';
     exception

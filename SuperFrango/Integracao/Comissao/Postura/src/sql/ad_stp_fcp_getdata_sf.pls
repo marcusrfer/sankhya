@@ -3,8 +3,8 @@ create or replace procedure ad_stp_fcp_getdata_sf(p_codusu    number,
                                                   p_qtdlinhas number,
                                                   p_mensagem  out varchar2) as
 
-  p_dataini  date;
-  p_datafin  date;
+  --p_dataini  date;
+  --p_datafin  date;
   v_confirma boolean;
   --v_dreftab  date;
 
@@ -12,7 +12,7 @@ create or replace procedure ad_stp_fcp_getdata_sf(p_codusu    number,
   t tab_notas;
 
   lanc ad_tsffcpref%rowtype;
-  conf ad_tsftcpref%rowtype;
+  --conf ad_tsftcpref%rowtype;
 
   cd int := 5;
   i  int;
@@ -25,14 +25,26 @@ begin
   * Objetivo: Ler os dados da tabela, popular e calcular os campos da tela de 
               fechamento da comissão postura
   */
-  lanc.codcencus := act_int_field(p_idsessao, 0, 'MASTER_CODCENCUS');
-  lanc.codemp    := to_number(act_txt_param(p_idsessao, 'CODEMP'));
-  lanc.codtabpos := to_number(act_txt_param(p_idsessao, 'CODTAB'));
-  lanc.numlote   := act_int_param(p_idsessao, 'NUMLOTE');
-  lanc.pontuacao := act_int_param(p_idsessao, 'PONTUACAO');
-  lanc.dtvenc    := act_dta_param(p_idsessao, 'DTVENC');
-  p_dataini      := act_dta_param(p_idsessao, 'DATAINI');
-  p_datafin      := act_dta_param(p_idsessao, 'DATAFIN');
+  lanc.codcencus   := act_int_field(p_idsessao, 0, 'MASTER_CODCENCUS');
+  lanc.codemp      := to_number(act_txt_param(p_idsessao, 'CODEMP'));
+  lanc.codtabpos   := to_number(act_txt_param(p_idsessao, 'CODTAB'));
+  lanc.numlote     := act_int_param(p_idsessao, 'NUMLOTE');
+  lanc.pontuacao   := act_dec_param(p_idsessao, 'PONTUACAO');
+  lanc.dtvenc      := act_dta_param(p_idsessao, 'DTVENC');
+  lanc.param_dtini := act_dta_param(p_idsessao, 'DATAINI');
+  lanc.param_dtfim := act_dta_param(p_idsessao, 'DATAFIN');
+  lanc.dtref       := trunc(act_dta_param(p_idsessao, 'DTREF'), 'fmmm');
+
+  if ad_pkg_var.isdebugging then
+    lanc.codcencus   := 110800301;
+    lanc.codemp      := 1;
+    lanc.codtabpos   := 2;
+    lanc.numlote     := 33;
+    lanc.pontuacao   := 98;
+    lanc.dtvenc      := '06/02/2020';
+    lanc.param_dtini := '01/01/2020';
+    lanc.param_dtfim := '31/01/2020';
+  end if;
 
   if lanc.pontuacao is null then
     lanc.pontuacao := 0;
@@ -49,28 +61,20 @@ begin
     return;
   end if;
 
-  /*  lanc.codcencus := 110400401;
-  lanc.codemp    := 1;
-  lanc.codtabpos := 3;
-  lanc.numlote   := 35;
-  lanc.pontuacao := 0;
-  lanc.dtvenc    := '30/01/2020';
-  p_dataini      := '01/08/2019';
-  p_datafin      := '31/08/2019';*/
-
   if p_qtdlinhas > 1 then
-    v_confirma := act_confirmar(p_titulo    => 'Preparação para Fechamento',
-                                p_texto     => 'Deseja recalcular os valores para todas as linhas ' ||
-                                               'selecionadas?',
-                                p_chave     => p_idsessao,
-                                p_sequencia => 0);
+    v_confirma := act_confirmar(p_titulo => 'Preparação para Fechamento',
+                                p_texto => 'Deseja recalcular os valores para todas as linhas ' || 'selecionadas?',
+                                p_chave => p_idsessao, p_sequencia => 0);
   end if;
 
   if not v_confirma then
     return;
   end if;
 
-  lanc.dtref      := add_months(trunc(sysdate, 'fmmm'), -1);
+  if lanc.dtref is null then
+    lanc.dtref := add_months(trunc(sysdate, 'fmmm'), -1);
+  end if;
+
   lanc.statuslote := 'A';
 
   select count(*)
@@ -80,8 +84,7 @@ begin
      and r.dtref = lanc.dtref;
 
   if i > 0 then
-    p_mensagem := 'já existe cálculo para essa referência! ' ||
-                  'Exclua a mesma e refaça os cálculos.';
+    p_mensagem := 'já existe cálculo para essa referência! ' || 'Exclua a mesma e refaça os cálculos.';
     return;
     /*begin
       delete from ad_tsffcpref
@@ -118,8 +121,7 @@ begin
   begin
   
     select r.dtref, r.recoper, r.recatrat, r.recbonus, r.rectotal
-      into lanc.dtreftab, lanc.vlrcomfixa, lanc.vlrcomatrat, lanc.vlrcomclist,
-           lanc.totcomfixa
+      into lanc.dtreftab, lanc.vlrcomfixa, lanc.vlrcomatrat, lanc.vlrcomclist, lanc.totcomfixa
       from ad_tsftcpref r
      where r.codtabpos = lanc.codtabpos
        and r.dtref = (select max(dtref)
@@ -138,27 +140,25 @@ begin
   
   exception
     when others then
-      p_mensagem := 'Erro ao buscar os valores da referencia da tabela. ' ||
-                    sqlerrm;
+      p_mensagem := 'Erro ao buscar os valores da referencia da tabela. ' || sqlerrm;
       return;
   end;
 
   -- quantidade de ovos incubaveis no incubatorio
   begin
     select nvl(sum(case
-                     when cab.codtipoper in (777) then
-                      ite.qtdneg * -1
-                     else
-                      ite.qtdneg
-                   end),
-               0)
+                      when cab.codtipoper in (777) then
+                       ite.qtdneg * -1
+                      else
+                       ite.qtdneg
+                    end), 0)
       into lanc.qtdovosinc
       from tgfcab cab, tgfite ite, tgfpro pro
      where cab.nunota = ite.nunota
        and ite.codprod = pro.codprod
        and cab.codtipoper in (332, 777)
-       and cab.dtneg >= p_dataini
-       and cab.dtneg <= p_datafin
+       and cab.dtneg >= lanc.param_dtini
+       and cab.dtneg <= lanc.param_dtfim
        and cab.codcencus = lanc.codcencus
        and cab.codparc = lanc.codparc
        and pro.descrprod like ('OVOS INCUBAVEIS%')
@@ -166,35 +166,32 @@ begin
     ;
   exception
     when others then
-      p_mensagem := 'Erro ao buscar a quantidade de ovos incubaveis no incubatório. ' ||
-                    sqlerrm;
+      p_mensagem := 'Erro ao buscar a quantidade de ovos incubaveis no incubatório. ' || sqlerrm;
       return;
   end;
 
   -- quantidade ovos incubaveis granja
   begin
     select nvl(sum(case
-                     when cab.codtipoper in (19, 777) or cab.codparc = 615964 then
-                      ite.qtdneg * -1
-                     else
-                      ite.qtdneg
-                   end),
-               0)
+                      when cab.codtipoper in (19, 777) or cab.codparc = 615964 then
+                       ite.qtdneg * -1
+                      else
+                       ite.qtdneg
+                    end), 0)
       into lanc.qtdovosgrj
       from tgfcab cab, tgfite ite, tgfpro pro
      where cab.nunota = ite.nunota
        and pro.codprod = ite.codprod
        and cab.codtipoper in (197, 777)
-       and cab.dtneg >= p_dataini
-       and cab.dtneg <= p_datafin
+       and cab.dtneg >= lanc.param_dtini
+       and cab.dtneg <= lanc.param_dtfim
        and cab.codcencus = lanc.codcencus
        and ite.sequencia > 0
           --and ite.codprod = 72124
        and pro.descrprod like ('OVOS INCUBAVEIS%');
   exception
     when others then
-      p_mensagem := 'Erro ao buscar a quantidade de ovos incubaveis na granja. ' ||
-                    sqlerrm;
+      p_mensagem := 'Erro ao buscar a quantidade de ovos incubaveis na granja. ' || sqlerrm;
       return;
   end;
 
@@ -215,16 +212,12 @@ begin
     lanc.recbonus := 0;
   end if;
 
-  lanc.totcomave := round(lanc.recbonus + lanc.vlrcomfixa + lanc.vlrcomatrat,
-                          cd);
+  lanc.totcomave := round(lanc.recbonus + lanc.vlrcomfixa + lanc.vlrcomatrat, cd);
 
   if nvl(lanc.qtdovosinc, 0) > 0 then
-    lanc.percparticipovo := round((lanc.qtdovosinc * lanc.totcomave) /
-                                  (lanc.qtdovosinc * lanc.vlrunitcom) * 100,
-                                  cd);
+    lanc.percparticipovo := round(lanc.qtdovosinc * lanc.totcomave, cd) / round(lanc.qtdovosinc * lanc.vlrunitcom, cd) * 100;
   
-    lanc.qtdparticipovo := round((lanc.qtdovosinc * lanc.percparticipovo) / 100,
-                                 0);
+    lanc.qtdparticipovo := round((lanc.qtdovosinc * lanc.percparticipovo) / 100, cd);
   else
     lanc.percparticipovo := 0;
     lanc.qtdparticipovo  := 0;
@@ -242,7 +235,8 @@ begin
      where r.codcencus = lanc.codcencus
        and r.dtref = lanc.dtref;
   
-    insert into ad_tsffcpref values lanc;
+    insert into ad_tsffcpref
+    values lanc;
     stp_set_atualizando('N');
   exception
     when others then
@@ -250,22 +244,21 @@ begin
   end;
 
   -- fetch das notas
-  select cab.nunota, ite.sequencia, lanc.codcencus, lanc.dtref, cab.numnota,
-         cab.dtneg, ite.codprod,
+  select cab.nunota, ite.sequencia, lanc.codcencus, lanc.dtref, cab.numnota, cab.dtneg, ite.codprod,
          case
-           when cab.codtipoper in (777) then
-            ite.qtdneg * -1
-           else
-            ite.qtdneg
-         end qtdneg, ite.vlrunit, ite.vlrtot
+            when cab.codtipoper in (777) then
+             ite.qtdneg * -1
+            else
+             ite.qtdneg
+          end qtdneg, ite.vlrunit, ite.vlrtot
     bulk collect
     into t
     from tgfcab cab, tgfite ite, tgfpro pro
    where cab.nunota = ite.nunota
      and pro.codprod = ite.codprod
      and cab.codtipoper in (332, 777)
-     and cab.dtneg >= p_dataini
-     and cab.dtneg <= p_datafin
+     and cab.dtneg >= lanc.param_dtini
+     and cab.dtneg <= lanc.param_dtfim
      and cab.codcencus = lanc.codcencus
      and cab.codparc = lanc.codparc
         --and ite.codprod = 72124
@@ -275,8 +268,7 @@ begin
   stp_set_atualizando('S');
   forall x in t.first .. t.last
     merge into ad_tsffcpnfe p
-    using (select t(x).codcencus codcencus,t(x).dtref dtref,t(x).nunota nunota,
-                  t(x).sequencia sequencia
+    using (select t(x).codcencus codcencus,t(x).dtref dtref,t(x).nunota nunota,t(x).sequencia sequencia
              from dual) d
     on (p.nunota = d.nunota and p.sequencia = d.sequencia and p.codcencus = d.codcencus and p.dtref = d.dtref)
     when matched then
@@ -288,7 +280,9 @@ begin
              vlrunit = t(x).vlrunit,
              vlrtot  = t(x).vlrtot
     when not matched then
-      insert values t (x);
+      insert
+      values t
+        (x);
 
   stp_set_atualizando('N');
 

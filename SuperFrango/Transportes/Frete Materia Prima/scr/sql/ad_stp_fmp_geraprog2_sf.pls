@@ -1,10 +1,7 @@
-create or replace procedure ad_stp_fmp_geraprog2_sf
-(
-  p_codusu    number,
-  p_idsessao  varchar2,
-  p_qtdlinhas number,
-  p_mensagem  out varchar2
-) as
+create or replace procedure ad_stp_fmp_geraprog2_sf(p_codusu    number,
+                                                    p_idsessao  varchar2,
+                                                    p_qtdlinhas number,
+                                                    p_mensagem  out varchar2) as
 
   cab ad_contcargto%rowtype;
   ite ad_itecargto%rowtype;
@@ -21,6 +18,7 @@ create or replace procedure ad_stp_fmp_geraprog2_sf
     codveiculo  number,
     codprod     number,
     codparc     number,
+    codparcarmz number,
     qtdneg      float);
 
   type tipo_tab_dados is table of tipo_rec_dados;
@@ -44,22 +42,12 @@ begin
 
   for i in 1 .. p_qtdlinhas
   loop
-  
     t.extend;
-  
     t(i).codveiculo := act_int_field(p_idsessao, i, 'CODVEICULO');
-  
     t(i).numcontrato := act_int_field(p_idsessao, i, 'CONTRATOCPA');
-  
-    t(i).codprod := act_int_field(p_idsessao, i, 'CODPROD');
-  
+    t(i).codprod := act_int_field(p_idsessao, i, 'PRODUTO');
     t(i).codparc := act_int_field(p_idsessao, i, 'PARCEIRO');
-  
-    if nvl(t(i).codprod, 0) = 0
-       or nvl(t(i).codparc, 0) = 0 then
-      p_mensagem := 'Por favor, selecione um Contrato/Parceiro!';
-      return;
-    end if;
+    t(i).codparcarmz := act_int_field(p_idsessao, i, 'CODPARCARMZ');
   
     --t(i).qtdneg := ROUND(ad_pkg_fmp.get_qtdneg_media_vei( t(i).codveiculo, t(i).codprod ));
   
@@ -78,8 +66,7 @@ begin
     end;
   
     v_qtdnegtot := v_qtdnegtot + t(i).qtdneg;
-  
-    p_mensagem := p_mensagem || ' - ' || t(i).codparc;
+    --p_mensagem  := p_mensagem || ' - ' || t(i).codparc;
   
     if t(i).codveiculo is null then
       p_mensagem := 'Não capturou o veículo';
@@ -99,9 +86,7 @@ begin
 
   confirma := act_confirmar('Geração de Programações',
                             'Serão geradas ' || p_qtdlinhas || ' Ordens de Carregamento, totalizando ' ||
-                            ad_get.formatanumero(v_qtdnegtot) || ' Kgs. <br>Confirma?',
-                            p_idsessao,
-                            1);
+                             ad_get.formatanumero(v_qtdnegtot) || ' Kgs. <br>Confirma?', p_idsessao, 0);
 
   if not confirma then
     return;
@@ -109,6 +94,22 @@ begin
 
   for l in t.first .. t.last
   loop
+  
+    begin
+    
+      --if ite.coddest is not null then
+      if t(l).codparcarmz is not null then
+        ite.codparc := t(l).codparcarmz;
+        ite.coddest := t(l).codparc;
+      else
+        ite.codparc := t(l).codparc;
+        ite.coddest := null;
+      end if;
+    
+    exception
+      when no_data_found then
+        ite.coddest := null;
+    end;
   
     begin
     
@@ -138,7 +139,8 @@ begin
       cab.analise_avulsa   := null;
       cab.dtvalidade       := sysdate + 3;
     
-      insert into ad_contcargto values cab;
+      insert into ad_contcargto
+      values cab;
     
     exception
       when others then
@@ -155,68 +157,32 @@ begin
       ite.codusu       := p_codusu;
       ite.dataalt      := sysdate;
       ite.seqcorteprod := null;
-      ite.codparc      := t(l).codparc;
-      ite.umidade      := null;
-      ite.cancelado    := 'NÃO';
-      ite.vlrfrete     := null;
-      ite.vlrcte       := null;
-      ite.nfe_ssa      := null;
-      ite.nunota       := null;
-      ite.nunotaorig   := null;
-      ite.chavenfe     := null;
-      ite.percquebra   := null;
-      ite.qtdnegcompl  := null;
-      ite.vlrdesconto  := null;
-      ite.coddest      := null;
-      ite.numcontrato  := t(l).numcontrato;
+      --ite.codparc      := t(l).codparc;
+      ite.umidade     := null;
+      ite.cancelado   := 'NÃO';
+      ite.vlrfrete    := null;
+      ite.vlrcte      := null;
+      ite.nfe_ssa     := null;
+      ite.nunota      := null;
+      ite.nunotaorig  := null;
+      ite.chavenfe    := null;
+      ite.percquebra  := null;
+      ite.qtdnegcompl := null;
+      ite.vlrdesconto := null;
+      --ite.coddest      := null;
+      ite.numcontrato := t(l).numcontrato;
     
       -- tratativa para o parceiro e parceiro destinatário
-      /* -- bloco comentado por M. Rangel em 17/09/2019 13:56
-           -- em conversa com o flávio do armazém, o "parceiro" 
-           -- sempre será o parceiro do contrato e o endereço do parceiro armazém
-           
-        begin
-        
-          select a.codparcarmz
-            into ite.coddest
-            from tcscon c
-            join ad_tcsamp a
-              on c.numcontrato = a.numcontrato
-           where a.dhprevret = (select max(dhprevret) from ad_tcsamp a2 where a2.numcontrato = a.numcontrato)
-             and c.numcontrato = t(l).numcontrato;
-        
-          if ite.coddest is not null then
-            ite.codparc := ite.coddest;
-            ite.coddest := t(l).codparc;
-          else
-            ite.codparc := t(l).codparc;
-          end if;
-        
-        exception
-          when no_data_found then
-            ite.coddest := null;
-        end;
-      */
+      -- não comentar esse bloco, caso algum cenário seja diferente do desenhado,
+      -- deverá ser analisado e proposta alguma solução alternativa
     
       if t(l).numcontrato is null then
         p_mensagem := 'Sem nro do contrato';
         return;
       end if;
     
-      insert into ad_itecargto values ite;
-    
-      begin
-        merge into ad_contador c
-        using (select 'AD_CONTCARGTO' as tablename from dual) d
-        on (c.nometab = d.tablename)
-        when matched then
-          update set qtdreg = qtdreg + 1
-        when not matched then
-          insert values ('AD_CONTCARGTO', 1);
-      exception
-        when others then
-          null;
-      end;
+      insert into ad_itecargto
+      values ite;
     
     end;
   

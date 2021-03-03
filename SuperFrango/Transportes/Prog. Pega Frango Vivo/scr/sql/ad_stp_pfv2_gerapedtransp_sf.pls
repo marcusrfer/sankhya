@@ -31,14 +31,16 @@ begin
   loop
     pfv.nupfv := act_int_field(p_idsessao, i, 'NUPFV');
   
-    select * into pfv from ad_tsfpfv2 where nupfv = pfv.nupfv;
+    select *
+      into pfv
+      from ad_tsfpfv2
+     where nupfv = pfv.nupfv;
   
     if pfv.numlfv is null then
     
-      if act_escolher_simnao(p_titulo    => 'Geração de notas de transportes',
-                             p_texto     => 'As datas de vacinação não foram preenchidas, ' ||
-                                            'deseja gerar os documentos assim mesmmo?',
-                             p_chave     => p_idsessao,
+      if act_escolher_simnao(p_titulo => 'Geração de notas de transportes',
+                             p_texto => 'As datas de vacinação não foram preenchidas, ' ||
+                                         'deseja gerar os documentos assim mesmmo?', p_chave => p_idsessao,
                              p_sequencia => 1) = 'S' then
         null;
       else
@@ -55,10 +57,9 @@ begin
   
     /* bloco comentado, pois já é realizado incodicionalmente por trigger
     --Begin*/
-    v_geraordcarga := act_escolher_simnao(p_titulo    => 'Geração de Ordem de Carga',
-                                          p_texto     => 'Deseja gerar Ordem de Carga para a(s) ' ||
-                                                         'nota(s) que será(ão) gerada(s)?',
-                                          p_chave     => p_idsessao,
+    v_geraordcarga := act_escolher_simnao(p_titulo => 'Geração de Ordem de Carga',
+                                          p_texto => 'Deseja gerar Ordem de Carga para a(s) ' ||
+                                                      'nota(s) que será(ão) gerada(s)?', p_chave => p_idsessao,
                                           p_sequencia => 2);
     /* Exception
       When erro_confirma Then
@@ -112,7 +113,10 @@ begin
     
       -- se o parâmetro CODEMP for nulo, busca do cadastro
       if nvl(cab.codemp, 0) = 0 then
-        select nvl(p.codemppref, 1) into cab.codemp from tgfpar p where p.codparc = pfv.codparc;
+        select nvl(p.codemppref, 1)
+          into cab.codemp
+          from tgfpar p
+         where p.codparc = pfv.codparc;
       end if;
     exception
       when others then
@@ -127,13 +131,8 @@ begin
   
     -- valida cr nat proj
     begin
-      ad_stp_valida_natcrproj_sf(p_codemp     => cab.codemp,
-                                 p_codtipoper => cab.codtipoper,
-                                 p_codnat     => cab.codnat,
-                                 p_codcencus  => cab.codcencus,
-                                 p_codproj    => 0,
-                                 p_tiposaida  => 0,
-                                 p_errmsg     => p_mensagem);
+      ad_stp_valida_natcrproj_sf(p_codemp => cab.codemp, p_codtipoper => cab.codtipoper, p_codnat => cab.codnat,
+                                 p_codcencus => cab.codcencus, p_codproj => 0, p_tiposaida => 0, p_errmsg => p_mensagem);
     
       if p_mensagem is not null then
         return;
@@ -157,35 +156,23 @@ begin
     end;
   
     /*insere o cabeçalho da nota*/
-    ad_set.ins_pedidocab(p_codemp      => cab.codemp,
-                         p_codparc     => cab.codparc,
-                         p_codvend     => 0,
-                         p_codtipoper  => cab.codtipoper,
-                         p_codtipvenda => cab.codtipvenda,
-                         p_dtneg       => trunc(sysdate),
-                         p_vlrnota     => 0,
-                         p_codnat      => cab.codnat,
-                         p_codcencus   => cab.codcencus,
-                         p_codproj     => 0,
-                         p_obs         => null,
-                         p_nunota      => cab.nunota);
+    ad_set.ins_pedidocab(p_codemp => cab.codemp, p_codparc => cab.codparc, p_codvend => 0,
+                         p_codtipoper => cab.codtipoper, p_codtipvenda => cab.codtipvenda, p_dtneg => trunc(sysdate),
+                         p_vlrnota => 0, p_codnat => cab.codnat, p_codcencus => cab.codcencus, p_codproj => 0,
+                         p_obs => null, p_nunota => cab.nunota);
   
     /*Busca a tabela de preços*/
-    select e.codtabfrangovivo into v_nutab from ad_tsfelt e where e.nuelt = 1;
+    select e.codtabfrangovivo
+      into v_nutab
+      from ad_tsfelt e
+     where e.nuelt = 1;
   
     /*Busca o valor*/
-    stp_obtem_preco2(p_nutab   => v_nutab,
-                     p_codprod => pfv.codprod,
-                     p_dtvigor => trunc(sysdate),
-                     p_preco   => v_vlrunit);
+    stp_obtem_preco2(p_nutab => v_nutab, p_codprod => pfv.codprod, p_dtvigor => trunc(sysdate), p_preco => v_vlrunit);
   
     /*Insere o produto na nota*/
-    ad_set.ins_pedidoitens(p_nunota   => cab.nunota,
-                           p_codprod  => pfv.codprod,
-                           p_qtdneg   => pfv.qtdneg,
-                           p_vlrunit  => v_vlrunit,
-                           p_vlrtotal => pfv.qtdneg * v_vlrunit,
-                           p_mensagem => p_mensagem);
+    ad_set.ins_pedidoitens(p_nunota => cab.nunota, p_codprod => pfv.codprod, p_qtdneg => pfv.qtdneg,
+                           p_vlrunit => v_vlrunit, p_vlrtotal => pfv.qtdneg * v_vlrunit, p_mensagem => p_mensagem);
     if p_mensagem is not null then
       return;
     end if;
@@ -213,38 +200,16 @@ begin
     
       if v_geraordcarga = 'S' then
       
-        stp_keygen_tgfnum(p_arquivo => 'TGFORD',
-                          p_codemp  => cab.codemp,
-                          p_tabela  => 'TGFORD',
-                          p_campo   => 'ORDEMCARGA',
-                          p_dsync   => 0,
-                          p_ultcod  => cab.ordemcarga);
+        stp_keygen_tgfnum(p_arquivo => 'TGFORD', p_codemp => cab.codemp, p_tabela => 'TGFORD', p_campo => 'ORDEMCARGA',
+                          p_dsync => 0, p_ultcod => cab.ordemcarga);
       
         begin
           insert into tgford
-            (codemp,
-             ordemcarga,
-             dtinic,
-             codparcorig,
-             codparctransp,
-             codveiculo,
-             situacao,
-             codreg,
-             roteiro,
-             ad_tipofrete,
-             tipcalcfrete)
+            (codemp, ordemcarga, dtinic, codparcorig, codparctransp, codveiculo, situacao, codreg, roteiro,
+             ad_tipofrete, tipcalcfrete)
           values
-            (cab.codemp,
-             cab.ordemcarga,
-             sysdate,
-             38,
-             cab.codparc,
-             cab.codveiculo,
-             'A',
-             1010101,
-             'Frete Frango Vivo',
-             'CIF',
-             1);
+            (cab.codemp, cab.ordemcarga, sysdate, 38, cab.codparc, cab.codveiculo, 'A', 1010101, 'Frete Frango Vivo',
+             'CIF', 1);
         exception
           when others then
             p_mensagem := 'Erro ao Inserir a Ordem de carga. ' || sqlerrm;
@@ -268,10 +233,7 @@ begin
          and codtipoper = cab.codtipoper
          and nunota != cab.nunota;
     
-      cab.vlrfrete := ad_pkg_fre.get_vlrfrete_formula(cab.nunota,
-                                                      cab.codemp,
-                                                      cab.codparc,
-                                                      cab.ordemcarga,
+      cab.vlrfrete := ad_pkg_fre.get_vlrfrete_formula(cab.nunota, cab.codemp, cab.codparc, cab.ordemcarga,
                                                       cab.codveiculo);
     
       update tgfcab c
@@ -312,7 +274,9 @@ begin
     end;
   
     begin
-      update ad_tsfpfv2 set nunota = cab.nunota where nupfv = pfv.nupfv;
+      update ad_tsfpfv2
+         set nunota = cab.nunota
+       where nupfv = pfv.nupfv;
     exception
       when others then
         p_mensagem := 'Erro ao atualizar o número único no agendamento. <br>' || sqlerrm;
@@ -323,11 +287,8 @@ begin
 
   if p_qtdlinhas = 1 then
     p_mensagem := 'Nota de Trasnporte Nro Único <a title="Abrir Tela" target="_parent" href="' ||
-                  ad_fnc_urlskw(p_tabela  => 'TGFCAB',
-                                p_nuchave => cab.nunota,
-                                p_nomedet => null,
-                                p_iditem  => null) || '"><b><span style="color:blue">' || cab.nunota ||
-                  '</span>' || '</b></a> gerada com sucesso.';
+                  ad_fnc_urlskw(p_tabela => 'TGFCAB', p_nuchave => cab.nunota, p_nomedet => null, p_iditem => null) ||
+                  '"><b><span style="color:blue">' || cab.nunota || '</span>' || '</b></a> gerada com sucesso.';
   elsif p_qtdlinhas > 1 then
     p_mensagem := 'Foram geradas as seguintes notas de transporte: ' || v_nunotas;
   end if;

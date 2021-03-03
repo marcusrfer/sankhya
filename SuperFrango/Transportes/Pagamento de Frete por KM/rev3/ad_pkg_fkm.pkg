@@ -1,0 +1,1189 @@
+create or replace package ad_pkg_fkm is
+
+  -- Author  : MARCUS.RANGEL
+  -- Created : 04/06/2020 16:47:04
+  -- Purpose : conter objetos utilizados na rotina de pagamento de fretes por KM
+
+  --soma_pedagio constant varchar2(1) := get_tsipar_logico('SOMAPEDAGIOFRET');
+
+  type rec_dados_frete is record(
+    codemp      int,
+    ordemcarga  number,
+    dtinic      date,
+    codveiculo  int,
+    placa       varchar2(10),
+    codcat      int,
+    categoria   varchar2(30),
+    seqcarga    int,
+    nunota      number,
+    numnota     number,
+    codparc     number,
+    nomeparc    varchar2(400),
+    codcid      number,
+    nomecid     varchar2(100),
+    peso        float,
+    vlrfrete    float,
+    distrota    number(10, 2),
+    distkm      number(10, 2),
+    codregfre   number,
+    descrregfre varchar2(30),
+    vlrfrereg   float,
+    vlrsaida    float);
+
+  type tab_dados_frete is table of rec_dados_frete;
+
+  -- Verifica se OC é carona 
+  function aux_check_carona(p_codemp     number,
+                            p_ordemcarga number) return boolean;
+
+  -- Verifica se OC utiliza rateio por peso
+  function aux_check_fretepeso(p_codemp     number,
+                               p_ordemcarga number) return varchar2;
+
+  function aux_check_precifica(p_codregfre number,
+                               p_codcat    int) return varchar2;
+
+  function aux_check_precifica(p_codemp     int default null,
+                               p_ordemcarga number default null,
+                               p_codregfre  number default null,
+                               p_codcat     int default null) return varchar2;
+
+  -- função que retorna o código da região a parir da cidade
+  function get_codregfrete_cid(p_codcid number) return number deterministic;
+
+  -- função que retorna o código da região a parir do parceiro
+  function get_codregfrete_cid(p_codparc number) return number deterministic;
+
+  -- Busca a região de frete do parceiro
+  function get_codregfrete(p_codparc number) return number;
+
+  -- Retorna uma array de strings com as regiões contidas em uma ordem de carga
+  function get_regioes_oc_lista(p_codemp number,
+                                p_oc     number) return varchar2;
+
+  function get_descregioes_oc_lista(p_codemp number,
+                                    p_oc     number) return varchar2;
+
+  -- retorna um number contendo a região da ordem de carga                          
+  function get_regioes_oc(p_codemp number,
+                          p_oc     number) return number;
+
+  -- busca o valor do pedágio pela cidade atribuindo valor pela categoria do veículo
+  function get_vlr_pedagio(p_codemp     number,
+                           p_ordemcarga number,
+                           p_codcat     number) return float;
+
+  function get_vlrsaida_regfrete(p_codregfre   number,
+                                 p_codcat      number,
+                                 p_codparcorig int) return float deterministic;
+
+  -- busca o valor da região usando categoria e parceiro de origem
+  function get_vlr_regfrete(p_codregfre   number,
+                            p_codcat      number,
+                            p_codparcorig int,
+                            p_distancia   float) return float;
+
+  function get_valor_oc_regfrete(p_codemp     number,
+                                 p_ordemcarga number) return float;
+
+  /* funão que retorna o valor final da OC com pró-rata da volta diluida na distância e região
+  individual por parceiro */
+  /*function get_vlr_regfrete(p_codemp     int,
+  p_ordemcarga int) return float deterministic;*/
+
+  -- retorna dados para o dash
+  function get_dados_frete(p_dtini      date,
+                           p_dtfin      date,
+                           p_codemp     int,
+                           p_ordemcarga number) return tab_dados_frete
+    pipelined;
+
+  procedure set_vlrfrete_notas(p_codemp     int,
+                               p_ordemcarga number,
+                               p_errmsg     out nocopy varchar2);
+
+  /*  procedure set_valor_rota(p_codemp     number,
+  p_ordemcarga number);*/
+
+  procedure set_tipo_calcfrete(p_codemp     int,
+                               p_ordemcarga number,
+                               p_errmsg     out nocopy varchar2);
+
+end ad_pkg_fkm;
+/
+create or replace package body ad_pkg_fkm is
+
+  /* Verifica se a ordem de carga é carona de acordo com regra definida, 2 OC no mesmo caminhão */
+  function aux_check_carona(p_codemp     number,
+                            p_ordemcarga number) return boolean is
+    veiculo number;
+    data    date;
+    carona  varchar2(1);
+    i       int;
+  begin
+  
+    begin
+      select o.codveiculo, o.dtinic, nvl(o.ad_carona, 'N')
+        into veiculo, data, carona
+        from tgford o
+       where o.codemp = p_codemp
+         and o.ordemcarga = p_ordemcarga
+         and o.temtransbordo = 'N';
+    exception
+      when others then
+        return false;
+    end;
+  
+    if carona = 'S' then
+      return true;
+    else
+    
+      select count(*)
+        into i
+        from (select o.ordemcarga
+                 from tgford o
+                where codveiculo = veiculo
+                  and dtinic = data
+                  and codemp != p_codemp
+                  and ordemcarga != p_ordemcarga
+                  and o.temtransbordo = 'S'
+               union
+               select o.ordemcarga
+                 from tgford o
+                where codveiculo = veiculo
+                  and dtinic = data
+                  and codemp != p_codemp
+                  and ordemcarga != p_ordemcarga
+                  and o.ordemcargapai > 0
+                  and o.ordemcargapai <> o.ordemcarga
+                  and o.ordemcargapai <> p_ordemcarga);
+    end if;
+  
+    if i > 0 then
+      return true;
+    else
+      return false;
+    end if;
+  
+  end aux_check_carona;
+
+  /* verifica se a modalidade de pagamento é "frete por peso", modalidade que considera
+  o peso da carona sobre peso total da carga para definir o valor a ser pago */
+  function aux_check_fretepeso(p_codemp     number,
+                               p_ordemcarga number) return varchar2 is
+    ord tgford%rowtype;
+    i   int;
+    x   int;
+  begin
+  
+    begin
+      select *
+        into ord
+        from tgford o
+       where o.codemp = p_codemp
+         and o.ordemcarga = p_ordemcarga;
+    exception
+      when no_data_found then
+        return 'N';
+    end;
+  
+    select count(*)
+      into i
+      from tgford o
+     where o.codveiculo = ord.codveiculo
+       and o.dtinic = ord.dtinic
+       and o.codemp != ord.codemp
+       and o.ordemcarga != ord.ordemcarga
+       and o.temtransbordo = 'N';
+  
+    if i > 0 then
+      select count(*)
+        into x
+        from tgford o
+       where o.ordemcarga = ord.ordemcargapai
+         and o.temtransbordo = 'S';
+    end if;
+  
+    if x > 0 then
+      dbms_output.put_line('frete por peso ');
+      return 'S';
+    else
+      return 'N';
+    end if;
+  
+  end aux_check_fretepeso;
+
+  -- função que retorna o código da região a parir da cidade
+  function get_codregfrete_cid(p_codcid number) return number deterministic is
+    v_codreg number;
+  begin
+    select c.ad_codregfre
+      into v_codreg
+      from tsicid c
+     where c.codcid = p_codcid;
+  
+    return v_codreg;
+  exception
+    when others then
+      return null;
+  end;
+
+  -- função que retorna o código da região a parir do parceiro
+  function get_codregfrete_cid(p_codparc number) return number deterministic is
+    v_codreg number;
+  begin
+    select c.ad_codregfre
+      into v_codreg
+      from tsicid c
+      join tgfpar p
+        on p.codcid = c.codcid
+     where p.codparc = p_codparc;
+  
+    return v_codreg;
+  exception
+    when others then
+      return null;
+  end;
+
+  -- Autor: M. Rangel
+  -- Objetivo: Buscar o cód. região de frete do parceiro percorrendo a hierarquia do cadastro de regiões 
+  function get_codregfrete(p_codparc number) return number is
+    v_codreg    number;
+    v_codregfre number;
+    sql_stmt    varchar2(4000);
+    pivot_stmt  varchar2(4000);
+  
+    c_cur sys_refcursor;
+    c     number;
+  
+  begin
+  
+    begin
+      select codreg
+        into v_codreg
+        from tgfpar p
+       where p.codparc = p_codparc;
+    exception
+      when no_data_found then
+        return 0;
+    end;
+  
+    begin
+      select substr(sys_connect_by_path('' || codreg || '', ','), 2,
+                     length(sys_connect_by_path('' || codreg || '', ',')))
+        into pivot_stmt
+        from tsireg
+       where codreg = v_codreg
+         and rownum = 1
+      connect by prior codreg = codregpai
+       start with codreg > 0;
+    exception
+      when others then
+        return 0;
+    end;
+  
+    --Dbms_Output.Put_Line(pivot_stmt);
+  
+    sql_stmt := 'Select codreg from tsireg where codreg in (' || pivot_stmt || ') order by 1 desc';
+  
+    --Dbms_Output.Put_Line(sql_stmt);
+  
+    open c_cur for sql_stmt;
+    loop
+      exit when c_cur%notfound;
+      fetch c_cur
+        into c;
+      if v_codregfre is null then
+        select ad_codregfre
+          into v_codregfre
+          from tsireg
+         where codreg = c;
+      else
+        exit;
+      end if;
+    end loop;
+    close c_cur;
+    --Dbms_Output.Put_Line('Região de Frete: ' || v_codregfre);
+  
+    return v_codregfre;
+  
+  exception
+    when others then
+      return 0;
+  end get_codregfrete;
+
+  -- busca o valor do pedágio pela cidade atribuindo valor pela categoria do veículo
+  function get_vlr_pedagio(p_codemp     number,
+                           p_ordemcarga number,
+                           p_codcat     number) return float is
+    v_vlrpedagio float;
+  begin
+    select nvl(cat.vlrpedagio, 0) * c.qtdeixos
+      into v_vlrpedagio
+      from ad_tsfrfpcat cat
+      join ad_tsfcat c
+        on c.codcat = cat.codcat
+      join ad_tsfrfpcid cid
+        on cid.codpraca = cat.codpraca
+      join ad_tsfrfp p
+        on p.codpraca = cat.codpraca
+     where nvl(p.ativo, 'N') = 'S'
+       and cat.codcat = p_codcat
+       and cat.dtvigor = (select max(c2.dtvigor)
+                            from ad_tsfrfpcat c2
+                           where c2.codpraca = cat.codpraca
+                             and c2.codcat = cat.codcat
+                             and c2.dtvigor <= sysdate)
+       and exists (select 1
+              from tgfpar par, tgfcab cab
+             where par.codparc = cab.codparc
+               and cab.codemp = p_codemp
+               and cab.ordemcarga = p_ordemcarga
+               and par.codcid = cid.codcid);
+  
+    return v_vlrpedagio;
+  
+  exception
+    when others then
+      return 0;
+  end get_vlr_pedagio;
+
+  function get_vlrsaida_regfrete(p_codregfre   number,
+                                 p_codcat      number,
+                                 p_codparcorig int) return float deterministic is
+    v_vlrsaida float;
+  begin
+    for r in (select c.codregfre, c.descrregfre, r.codcat, r.dtvigor, r.vlrsaida, i.vlrkm, i.vlrfixo
+                from ad_tsfrfc c
+                left join ad_tsfrfr r
+                  on c.codregfre = r.codregfre
+                left join ad_tsfrfi i
+                  on i.nurfr = r.nurfr
+                 and i.codregfre = r.codregfre
+               where c.codregfre = p_codregfre
+                    --and p_distancia between i.inicioint and i.finalint
+                 and r.codcat = p_codcat
+                 and (r.codparcorig = p_codparcorig or 0 = 0)
+                 and r.dtvigor = (select max(dtvigor)
+                                    from ad_tsfrfr r2
+                                   where r2.codregfre = r.codregfre
+                                     and r2.codcat = r.codcat
+                                     and (r2.codparcorig = r.codparcorig or 0 = 0)
+                                     and r2.dtvigor <= sysdate))
+    loop
+    
+      v_vlrsaida := nvl(r.vlrsaida, 0);
+    
+    end loop;
+  
+    return nvl(v_vlrsaida, 0);
+  
+  end get_vlrsaida_regfrete;
+
+  -- busca o valor da região usando categoria e parceiro de origem
+  function get_vlr_regfrete(p_codregfre   number,
+                            p_codcat      number,
+                            p_codparcorig int,
+                            p_distancia   float) return float is
+    v_vlrkm float;
+  begin
+    for r in (select c.codregfre, c.descrregfre, r.codcat, r.dtvigor, r.vlrsaida, i.vlrkm, i.vlrfixo
+                from ad_tsfrfc c
+                left join ad_tsfrfr r
+                  on c.codregfre = r.codregfre
+                left join ad_tsfrfi i
+                  on i.nurfr = r.nurfr
+                 and i.codregfre = r.codregfre
+               where c.codregfre = p_codregfre
+                 and p_distancia between i.inicioint and i.finalint
+                 and r.codcat = p_codcat
+                 and (r.codparcorig = p_codparcorig or 0 = 0)
+                 and r.dtvigor = (select max(dtvigor)
+                                    from ad_tsfrfr r2
+                                   where r2.codregfre = r.codregfre
+                                     and r2.codcat = r.codcat
+                                     and (r2.codparcorig = r.codparcorig or 0 = 0)
+                                     and r2.dtvigor <= sysdate))
+    loop
+    
+      if r.vlrfixo = 'S' then
+        v_vlrkm :=  /*nvl(r.vlrsaida, 0) +*/
+         r.vlrkm;
+      else
+        v_vlrkm :=  /*nvl(r.vlrsaida, 0) +*/
+         (r.vlrkm * p_distancia);
+      end if;
+    
+    end loop;
+  
+    return nvl(v_vlrkm, 0);
+  
+  end get_vlr_regfrete;
+
+  function get_regioes_oc_lista(p_codemp number,
+                                p_oc     number) return varchar2 as
+    v_codreg varchar2(100);
+  begin
+  
+    select listagg(codreg, ',') within group(order by codreg)
+      into v_codreg
+      from (select d.ad_codregfre codreg
+               from tgfcab c
+               join tgfpar p
+                 on p.codparc = c.codparc
+               join tgfcpl l
+                 on l.codparc = p.codparc
+               join tsicid d
+                 on d.codcid = l.codcidentrega
+              where 1 = 1
+                and c.codemp = p_codemp
+                and c.ordemcarga = p_oc
+                and c.tipmov = 'V'
+                and c.statusnota = 'L'
+              group by d.ad_codregfre);
+  
+    return v_codreg;
+  exception
+    when others then
+      return null;
+  end get_regioes_oc_lista;
+
+  function get_descregioes_oc_lista(p_codemp number,
+                                    p_oc     number) return varchar2 as
+    v_codreg varchar2(100);
+  begin
+  
+    select listagg(nomereg, ',') within group(order by codreg)
+      into v_codreg
+      from (select r.codregfre codreg, r.descrregfre nomereg
+               from tgfcab c
+               join tgfpar p
+                 on p.codparc = c.codparc
+               join tgfcpl l
+                 on l.codparc = p.codparc
+               join tsicid d
+                 on d.codcid = l.codcidentrega
+               join ad_tsfrfc r
+                 on r.codregfre = d.ad_codregfre
+              where 1 = 1
+                and c.codemp = p_codemp
+                and c.ordemcarga = p_oc
+                and c.tipmov = 'V'
+                and c.statusnota = 'L'
+              group by r.codregfre, r.descrregfre);
+  
+    return v_codreg;
+  exception
+    when others then
+      return null;
+  end get_descregioes_oc_lista;
+
+  function get_regioes_oc(p_codemp number,
+                          p_oc     number) return number as
+    v_codreg number;
+  begin
+  
+    for ord in (select p.ad_codregfre codreg
+                  from tgfcab c
+                  join tgfpar p
+                    on p.codparc = c.codparc
+                 where 1 = 1
+                   and c.codemp = p_codemp
+                   and c.ordemcarga = p_oc
+                   and c.tipmov = 'V'
+                   and c.statusnota = 'L'
+                   and nvl(p.ad_codregfre, 0) > 0
+                 group by p.ad_codregfre)
+    loop
+      v_codreg := ord.codreg;
+    end loop;
+  
+    return v_codreg;
+  exception
+    when others then
+      return null;
+  end get_regioes_oc;
+
+  --M. Rangel
+  /* Função que retorna o valor do frete de uma ordem de carga  */
+  function get_valor_oc_regfrete(p_codemp     number,
+                                 p_ordemcarga number) return float is
+    valor_atual  float := 0;
+    valor_final  float := 0;
+    vlr_pedagio  float := 0;
+    soma_pedagio varchar2(1) := get_tsipar_logico('SOMAPEDAGIOFRET');
+    errmsg       varchar2(4000);
+    error exception;
+  
+  begin
+  
+    for ordem in (select o.codparcorig, v.codveiculo, v.ad_codcat codcat, nvl(v.ad_qtdeixos, 0) qtdeixos,
+                         o.ad_kmrota distancia
+                    from tgford o
+                    join tgfvei v
+                      on v.codveiculo = o.codveiculo
+                   where o.codemp = p_codemp
+                     and o.ordemcarga = p_ordemcarga)
+    loop
+    
+      if ordem.codcat is null or ordem.qtdeixos is null then
+        errmsg := 'Não encontramos a categoria ou a quantidade de eixos do veículo ' || ordem.codveiculo;
+        raise error;
+      end if;
+    
+      for l in (select p.ad_codregfre codregfre
+                  from tgfcab c
+                  join tgfpar p
+                    on p.codparc = c.codparc
+                 where c.codemp = p_codemp
+                   and c.ordemcarga = p_ordemcarga)
+      loop
+        valor_atual := get_vlr_regfrete(l.codregfre, ordem.codcat, ordem.codparcorig, ordem.distancia);
+      end loop;
+    
+      if soma_pedagio = 'S' then
+        vlr_pedagio := get_vlr_pedagio(p_codemp, p_ordemcarga, ordem.codcat);
+        valor_final := valor_atual + vlr_pedagio;
+      else
+        valor_final := valor_atual;
+      end if;
+    
+    end loop;
+  
+    return valor_final;
+  
+  exception
+    when error then
+      raise_application_error(-20105, errmsg);
+    when others then
+      raise;
+  end get_valor_oc_regfrete;
+
+  /*  function get_vlr_regfrete(p_codemp     int,
+                            p_ordemcarga int) return float deterministic is
+    v_vlrfrete float := 0;
+  begin
+    for c in (select *
+                from table(ad_pkg_fkm.get_dados_frete(p_codemp, p_ordemcarga)))
+    loop
+      if nvl(c.vlrfrereg, 0) > 0 then
+        v_vlrfrete := v_vlrfrete +
+                      round((c.distparc + (c.distparc / c.distida) * (c.distkm - c.distida)) * c.vlrfrereg, 2);
+      else
+        null;
+      end if;
+    end loop;
+  
+    return v_vlrfrete;
+  
+  exception
+    when others then
+      return 0;
+    
+  end get_vlr_regfrete;*/
+
+  /* 
+  * Autor: Marcus Rangel
+  * Objetivo: Procedure chamada pela procedure AD_STP_FRE_CALCVLROC_SF do botão de ação "Calcular Valores de Frete da OC",
+  * a mesma executa a busca da distância e grava na tabela  AD_TSFRFV
+  */
+  /*procedure set_distancia_rota(p_codemp     number,
+                               p_ordemcarga number) is
+  begin
+  
+    merge into ad_tsfrfv r
+    using (select codemp, ordemcarga, ad_kmrota
+             from tgford
+            where codemp = p_codemp
+              and ordemcarga = p_ordemcarga) o
+    on (r.codemp = o.codemp and r.ordemcarga = o.ordemcarga)
+    when matched then
+      update
+         set distrota = o.ad_kmrota
+    when not matched then
+      insert
+      values
+        (o.codemp, o.ordemcarga, o.ad_kmrota, 0);
+  
+  exception
+    when others then
+      raise_application_error(-20105, 'Erro! ' || sqlerrm);
+  end set_distancia_rota;*/
+
+  -- M. Rangel-busca e popula o valor da rota da tab auxiliar
+  /*  procedure set_valor_rota(p_codemp     number,
+                           p_ordemcarga number) is
+    v_valor float;
+    i       int := 0;
+  begin
+  
+    select count(*)
+      into i
+      from ad_tsfrfv v
+     where v.codemp = p_codemp
+       and v.ordemcarga = p_ordemcarga;
+  
+    -- busca o valor da rota de acordo com a região de frete
+    if aux_check_carona(p_codemp, p_ordemcarga) then
+      null;
+    else
+      v_valor := get_valor_oc_regfrete(p_codemp, p_ordemcarga);
+      null;
+    end if;
+  
+    merge into ad_tsfrfv r
+    using (select p_codemp codemp, p_ordemcarga oc, v_valor valor
+             from dual) d
+    on (r.codemp = d.codemp and r.ordemcarga = d.oc)
+    when matched then
+      update
+         set vlrrota = d.valor
+    when not matched then
+      insert
+      values
+        (d.codemp, d.oc, 0, v_valor);
+  
+  end set_valor_rota;*/
+
+  function get_dados_frete(p_dtini      date,
+                           p_dtfin      date,
+                           p_codemp     int,
+                           p_ordemcarga number) return tab_dados_frete
+    pipelined is
+    type new_dados_frete is table of rec_dados_frete;
+    fkm new_dados_frete := new_dados_frete();
+  begin
+  
+    begin
+      select c.codemp, c.ordemcarga, o.dtinic, v.codveiculo, v.placa, cat.codcat, cat.categoria, c.seqcarga, c.nunota,
+             
+             c.numnota, c.codparc, p.nomeparc, cid.codcid, cid.nomecid || ' - ' || ufs.uf nomecid, c.peso, c.vlrfrete,
+             o.kmfin distrota, o.ad_kmrota distkm, reg.codregfre, reg.descrregfre,
+             ad_pkg_fkm.get_vlr_regfrete(reg.codregfre, cat.codcat, o.codparcorig, 1) vlrfrereg,
+             ad_pkg_fkm.get_vlrsaida_regfrete(reg.codregfre, cat.codcat, o.codparcorig) vlrsaida
+        bulk collect
+        into fkm
+        from tgford o
+        join tgfcab c
+          on c.codemp = o.codemp
+         and c.ordemcarga = o.ordemcarga
+        join tgfpar p
+          on p.codparc = c.codparc
+        join tgfvei v
+          on v.codveiculo = o.codveiculo
+        join ad_tsfcat cat
+          on cat.codcat = v.ad_codcat
+        join tsicid cid
+          on cid.codcid = p.codcid
+        join tsiufs ufs
+          on ufs.coduf = cid.uf
+        left join ad_tsfrfc reg
+          on reg.codregfre = cid.ad_codregfre
+       where 1 = 1
+         and c.statusnota = 'L'
+         and c.tipmov = 'V'
+         and nvl(o.ad_kmrota, 0) > 0
+         and o.codemp = nvl(p_codemp, c.codemp)
+         and o.ordemcarga = nvl(p_ordemcarga, c.ordemcarga)
+         and o.dtinic >= case
+               when p_dtini is not null then
+                p_dtini
+               else
+                add_months(sysdate, -6)
+             end
+         and o.dtinic <= case
+               when p_dtfin is not null then
+                p_dtfin
+               else
+                sysdate
+             end;
+    exception
+      when no_data_found then
+        return;
+    end;
+  
+    if fkm.count = 0 then
+      return;
+    end if;
+  
+    for i in fkm.first .. fkm.last
+    loop
+      begin
+        pipe row(fkm(i));
+      exception
+        when others then
+          dbms_output.put_line(fkm(i).codemp || ' - ' || fkm(i).ordemcarga || ' - ' || sqlerrm);
+      end;
+    
+    end loop;
+  
+  end get_dados_frete;
+
+  /*procedure set_vlrfrete_notas(p_codemp     int,
+                               p_ordemcarga number,
+                               p_msg        out varchar2) is
+    v_vlrfrete  float;
+    v_vlrfretot float := 0;
+  begin
+    -- busca o peso total da OC
+    for ord in (select count(distinct codparc) qtdentregas, sum(f.peso) pesototal, avg(f.vlrfrereg) vlrfrereg,
+                       round(distkm * avg(vlrfrereg) + f.vlrsaida, 2) vlrfretekm
+                  from table(ad_pkg_fkm.get_dados_frete(null, null, p_codemp, p_ordemcarga)) f
+                 group by distkm, vlrsaida)
+    loop
+      dbms_output.put_line(ord.vlrfretekm);
+      begin
+        update tgford o
+           set o.situacao   = 'F',
+               o.qtdentrega = ord.qtdentregas,
+               o.vlrfrete   = ord.vlrfretekm,
+               o.pesototal  = ord.pesototal,
+               o.dtalter    = sysdate,
+               o.codusu     = 0,
+               o.fretecalc  = 'S'
+         where o.codemp = p_codemp
+           and o.ordemcarga = p_ordemcarga;
+      exception
+        when others then
+          p_msg := 'Erro ao atualizar OC - ' || sqlerrm;
+          return;
+      end;
+    
+      for cab in (
+                  --select nunota, peso from table(ad_pkg_fkm.get_dados_frete(null, null, p_codemp, p_ordemcarga)) f
+                  select nunota, peso
+                    from tgfcab
+                   where codemp = p_codemp
+                     and ordemcarga = p_ordemcarga
+                     and tipmov = 'V'
+                     and statusnota = 'L'
+                  
+                  )
+      loop
+      
+        v_vlrfrete  := round(cab.peso * ord.vlrfretekm / ord.pesototal, 4);
+        v_vlrfretot := nvl(v_vlrfretot, 0) + v_vlrfrete;
+      
+        begin
+          update tgfcab
+             set baseicmsfrete = v_vlrfrete,
+                 vlrfrete      = v_vlrfrete,
+                 vlrfretecalc  = v_vlrfrete,
+                 tipfrete      = 'N',
+                 icmsfrete     = 0
+           where nunota = cab.nunota;
+        exception
+          when others then
+            p_msg := 'Erro ao atualizar nota - ' || sqlerrm;
+            return;
+        end;
+      
+      end loop;
+    
+      dbms_output.put_line(v_vlrfretot);
+    
+      if round(v_vlrfretot, 2) != round(ord.vlrfretekm, 2) then
+        raise_application_error(-20105, 'Erro! Total diferente!!!');
+      end if;
+    
+    end loop ord;
+  
+    p_msg := 'Sucesso';
+  
+  end set_vlrfrete_notas;*/
+  function aux_check_precifica(p_codregfre number,
+                               p_codcat    int) return varchar2 is
+    v_precifica varchar2(1);
+  begin
+    v_precifica := aux_check_precifica(null, null, p_codregfre, p_codcat);
+    return v_precifica;
+  end aux_check_precifica;
+
+  function aux_check_precifica(p_codemp     int default null,
+                               p_ordemcarga number default null,
+                               p_codregfre  number default null,
+                               p_codcat     int default null) return varchar2 is
+    v_precifica varchar2(1);
+    v_existe    int;
+    params      ad_tsfelt %rowtype;
+    v_retorno   varchar2(1);
+  begin
+  
+    uteis.get_param_transporte(params => params);
+  
+    --v_codregfre := ad_pkg_fkm.get_regioes_oc(p_codemp, p_ordemcarga);
+  
+    if (p_codemp is not null and p_ordemcarga is not null) and (p_codregfre is null or p_codcat is null) then
+    
+      for l in (select d.ad_codregfre codregfre, v.ad_codcat codcat
+                  from tgfcab c
+                  join tgford o
+                    on o.codemp = c.codemp
+                   and o.ordemcarga = c.ordemcarga
+                  join tgfpar p
+                    on p.codparc = c.codparc
+                  join tsicid d
+                    on d.codcid = p.codcid
+                  join tgfvei v
+                    on v.codveiculo = o.codveiculo
+                 where (c.tipmov = 'V' or c.tipmov = 'P')
+                   and c.statusnota = 'L'
+                   and c.codemp = p_codemp
+                   and c.ordemcarga = p_ordemcarga
+                 group by d.ad_codregfre, v.ad_codcat)
+      loop
+      
+        begin
+        
+          if nvl(v_precifica, 'N') = 'S' and nvl(v_existe, 0) > 0 then
+            exit;
+          else
+            select nvl(reg.precifica, 'N'), count(*)
+              into v_precifica, v_existe
+              from ad_tsfrfc reg
+              join ad_tsfrfr cat
+                on cat.codregfre = reg.codregfre
+             where reg.codregfre = l.codregfre
+               and cat.codcat = l.codcat
+             group by nvl(reg.precifica, 'N');
+          end if;
+        
+        exception
+          when no_data_found then
+            v_retorno := 'N';
+            return v_retorno;
+        end;
+      
+      end loop;
+    else
+      begin
+        select nvl(reg.precifica, 'N'), count(*)
+          into v_precifica, v_existe
+          from ad_tsfrfc reg
+          join ad_tsfrfr cat
+            on cat.codregfre = reg.codregfre
+         where reg.codregfre = p_codregfre
+           and cat.codcat = p_codcat
+         group by nvl(reg.precifica, 'N');
+      exception
+        when others then
+          v_retorno := 'N';
+          return v_retorno;
+      end;
+    end if;
+  
+    if params.modoprecofrekm = 'S' then
+    
+      if nvl(v_existe, 0) > 0 then
+        v_retorno := v_precifica;
+      else
+        v_retorno := 'N';
+      end if;
+    
+    elsif params.modoprecofrekm = 'P' then
+      if nvl(v_existe, 0) > 0 then
+        v_retorno := v_precifica;
+      else
+        v_retorno := 'N';
+      end if;
+    
+    end if;
+  
+    return v_retorno;
+  
+  end aux_check_precifica;
+
+  procedure set_tipo_calcfrete(p_codemp     int,
+                               p_ordemcarga number,
+                               p_errmsg     out nocopy varchar2) is
+    prm ad_tsfelt%rowtype;
+    rev ad_tsfrpfc%rowtype;
+  
+    v_pesototal float;
+    precifica   boolean;
+  
+    procedure notifica_usuario is
+      mail varchar2(4000);
+    begin
+      mail := ad_get.mailfila(16);
+    
+      ad_stp_gravafilabi(p_assunto => 'Ordem de carga enviada para revisão.',
+                         p_mensagem => 'A ordem de carga ' || rev.ordemcarga || ' acaba ser enviada para revisão. ' ||
+                                        chr(13) || 'Motivo: ' || rev.motivo, p_email => mail);
+    end;
+  
+    procedure insere_revisao is
+    begin
+    
+      insert into ad_tsfrpfc
+      values rev;
+    
+      dbms_output.put_line('Enviada para revisão ' || rev.codemp || '-' || rev.ordemcarga);
+    
+      -- se em produção, notifica usuário da fila de e-mail
+      if prm.modoprecofrekm = 'P' then
+        notifica_usuario;
+      end if;
+    
+    exception
+      when others then
+        p_errmsg := 'Erro ao inserir revisão da OC ' || p_ordemcarga || '. ' || sqlerrm;
+        return;
+    end;
+  
+  begin
+  
+    uteis.get_param_transporte(prm);
+  
+    rev.dhinclusao := sysdate;
+    rev.status     := 'P';
+    rev.codusulib  := prm.codlibfrekm;
+  
+    begin
+      select sum(peso)
+        into v_pesototal
+        from tgfcab c
+       where c.codemp = p_codemp
+         and c.ordemcarga = p_ordemcarga
+         and tipmov = 'V'
+         and statusnota = 'L';
+    exception
+      when no_data_found then
+        select sum(peso)
+          into v_pesototal
+          from tgfcab c
+         where c.codemp = p_codemp
+           and c.ordemcarga = p_ordemcarga
+           and tipmov = 'P'
+           and statusnota = 'L';
+      when others then
+        p_errmsg := 'erro no select do peso da cab. ' || sqlerrm;
+        return;
+    end;
+  
+    begin
+      select o.codemp, o.ordemcarga, o.dtinic, o.codveiculo, v.ad_codcat codcat, o.ad_kmrota distkm,
+             d.ad_codregfre codregfre, o.codparcorig, o.codparctransp, sum(c.peso) peso
+        into rev.codemp, rev.ordemcarga, rev.dtinic, rev.codveiculo, rev.codcat, rev.distkm, rev.codregfre,
+             rev.codparcorig, rev.codparctransp, rev.peso
+        from tgford o
+        join tgfcab c
+          on c.codemp = o.codemp
+         and c.ordemcarga = o.ordemcarga
+        join tgfpar p
+          on p.codparc = c.codparc
+        join tsicid d
+          on d.codcid = p.codcid
+        join tgfvei v
+          on v.codveiculo = o.codveiculo
+       where o.codemp = p_codemp
+         and o.ordemcarga = p_ordemcarga
+         and c.tipmov = 'P' -- nesse momento ainda não há notas
+         and c.statusnota = 'L'
+       group by o.codemp, o.ordemcarga, o.dtinic, o.codveiculo, v.ad_codcat, o.ad_kmrota, d.ad_codregfre, o.codparcorig,
+                o.codparctransp;
+    exception
+      when too_many_rows then
+      
+        begin
+        
+          rev.peso      := v_pesototal;
+          rev.codregfre := null;
+        
+          for p in (select o.codemp, o.ordemcarga, o.dtinic, o.codveiculo, v.ad_codcat codcat, o.ad_kmrota distkm,
+                           d.ad_codregfre codregfre, o.codparcorig, o.codparctransp, sum(c.peso) peso,
+                           round((sum(peso) / v_pesototal) * 100) varpeso
+                      from tgford o
+                      join tgfcab c
+                        on c.codemp = o.codemp
+                       and c.ordemcarga = o.ordemcarga
+                      join tgfpar p
+                        on p.codparc = c.codparc
+                      join tsicid d
+                        on d.codcid = p.codcid
+                      join tgfvei v
+                        on v.codveiculo = o.codveiculo
+                     where o.codemp = p_codemp
+                       and o.ordemcarga = p_ordemcarga
+                       and c.tipmov = 'P'
+                       and c.statusnota = 'L'
+                     group by o.codemp, o.ordemcarga, o.dtinic, o.codveiculo, v.ad_codcat, o.ad_kmrota, d.ad_codregfre,
+                              o.codparcorig, o.codparctransp)
+          loop
+            /*rev.dtinic        := p.dtinic;
+            rev.codveiculo    := p.codveiculo;
+            rev.codcat        := p.codcat;
+            rev.distkm        := p.distkm;
+            rev.peso          := v_pesototal;
+            rev.codparcorig   := p.codparcorig;
+            rev.codparctransp := p.codparctransp;*/
+          
+            if aux_check_precifica(null, null, p.codregfre, p.codcat) = 'S' then
+              precifica := true;
+            end if;
+          
+            if p.varpeso >= prm.percpesofrekm then
+              rev.codregfre := p.codregfre;
+            end if;
+          
+          end loop p;
+        
+          -- se não há volume mínimo em nenhuma região, gera revisão
+          if rev.codregfre is null and precifica then
+          
+            stp_keygen_tgfnum('AD_TSFRPFC', 1, 'AD_TSFRPFC', 'NURPFC', 0, rev.nurpfc);
+            rev.codemp     := p_codemp;
+            rev.ordemcarga := p_ordemcarga;
+            rev.motivo     := '1';
+            rev.log        := to_date(sysdate, 'dd/mm/yyyy hh24:mi:ss') || ' - ' ||
+                              ad_get.nomeusu(stp_get_codusulogado, 'completo') || ' - ' ||
+                              'Revisão adicionada - Regiões presentes: ' ||
+                              ad_pkg_fkm.get_descregioes_oc_lista(rev.codemp, rev.ordemcarga);
+          
+            insere_revisao();
+          
+            return;
+          
+          end if; -- codregfre is null
+        
+        end; -- 2many rows 
+    
+      when others then
+        --p_errmsg := 'Erro others / ' || p_codemp || ' - ' || p_ordemcarga || ' / ' || sqlerrm;
+        return;
+    end;
+  
+    -- só executa as ações se a região precificar e se a categoria existir na região
+    if aux_check_precifica(p_codemp, p_ordemcarga, rev.codregfre, rev.codcat) = 'S' then
+    
+      rev.vlrfrereg := ad_pkg_fkm.get_vlr_regfrete(rev.codregfre, rev.codcat, null, 1);
+      rev.vlrfrete  := rev.vlrfrereg * rev.distkm;
+    
+      -- verifica se não possui distancia e valor
+      if nvl(rev.vlrfrereg, 0) = 0 or nvl(rev.distkm, 0) = 0 then
+      
+        stp_keygen_tgfnum('AD_TSFRPFC', 1, 'AD_TSFRPFC', 'NURPFC', 0, rev.nurpfc);
+        rev.motivo := '2';
+        rev.log    := to_date(sysdate, 'dd/mm/yyyy hh24:mi:ss') || ' - ' ||
+                      ad_get.nomeusu(stp_get_codusulogado, 'completo') || ' - Revisão adicionada.';
+        insere_revisao();
+        return;
+      
+      else
+      
+        -- se simulação ou produção
+        if nvl(prm.modoprecofrekm, 'S') = 'P' then
+        
+          begin
+            update tgford o
+               set o.tipcalcfrete = 9,
+                   o.vlrfrete     = rev.vlrfrete,
+                   o.pesototal    = rev.peso
+             where codemp = p_codemp
+               and ordemcarga = p_ordemcarga;
+          exception
+            when others then
+              p_errmsg := 'Erro ao atualizar OC ' || p_ordemcarga || '. ' || sqlerrm;
+              return;
+          end;
+        
+        else
+          dbms_output.put_line('set tipcalcfrete = 9 tgford: ' || p_ordemcarga || ' Região: ' || rev.codregfre ||
+                               ', vlrfrete: ' || rev.vlrfrete || ', Peso: ' || rev.peso);
+        
+        end if;
+      
+      end if;
+    
+    else
+      dbms_output.put_line('OC ' || p_codemp || '-' || p_ordemcarga || ' não precifica por km');
+    end if; -- precifica 
+  
+    -- end loop l;
+  
+  end set_tipo_calcfrete;
+
+  procedure set_vlrfrete_notas(p_codemp     int,
+                               p_ordemcarga number,
+                               p_errmsg     out nocopy varchar2) is
+  
+    param      ad_tsfelt%rowtype;
+    v_peso     float;
+    v_vlrfrete float;
+  begin
+  
+    --if aux_check_precifica(p_codemp, p_ordemcarga, null, null) = 'S' then
+  
+    uteis.get_param_transporte(param);
+  
+    begin
+      select pesototal, vlrfrete
+        into v_peso, v_vlrfrete
+        from tgford o
+       where o.codemp = p_codemp
+         and o.ordemcarga = p_ordemcarga;
+    exception
+      when others then
+        p_errmsg := 'Erro ao buscar peso e valor da OC. ' || sqlerrm;
+        return;
+    end;
+  
+    if nvl(param.modoprecofrekm, 'S') = 'S' then
+      dbms_output.put_line('set vlr frete >>' || 'Cód. Emp: ' || p_codemp || ' OrdemCarga: ' || p_ordemcarga ||
+                           ' Vlr. Frete: ' || v_vlrfrete || ' Peso: ' || v_peso);
+      null;
+    else
+    
+      begin
+        update tgford o
+           set o.situacao = 'F',
+               --o.qtdentrega = 1,
+               --o.vlrfrete   = rev.vlrfrete,
+               --o.pesototal  = rev.peso,
+               o.dtalter   = sysdate,
+               o.codusu    = stp_get_codusulogado,
+               o.fretecalc = 'S'
+         where o.codemp = p_codemp
+           and o.ordemcarga = p_ordemcarga;
+      exception
+        when others then
+          p_errmsg := 'Erro ao atualizar OC - ' || sqlerrm;
+          return;
+      end;
+    
+      for cab in (
+                  --select nunota, peso from table(ad_pkg_fkm.get_dados_frete(null, null, p_codemp, p_ordemcarga))
+                  select nunota, peso
+                    from tgfcab c
+                   where c.codemp = p_codemp
+                     and c.ordemcarga = p_ordemcarga
+                     and tipmov = 'V'
+                     and c.statusnota = 'L')
+      loop
+      
+        declare
+          v_vlrfretecab float := round(cab.peso * v_vlrfrete / v_peso, 4);
+        begin
+          update tgfcab
+             set baseicmsfrete = v_vlrfretecab,
+                 vlrfrete      = v_vlrfretecab,
+                 vlrfretecalc  = v_vlrfretecab,
+                 tipfrete      = 'N',
+                 icmsfrete     = 0
+           where nunota = cab.nunota;
+        exception
+          when others then
+            p_errmsg := 'Erro ao atualizar nota - ' || sqlerrm;
+            return;
+        end;
+      
+      end loop cab;
+    
+    end if;
+  
+    -- end if; -- precifica = sim
+  
+  end set_vlrfrete_notas;
+
+end ad_pkg_fkm;
+/

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF8" ?>
+<cart>
+<connections>
+<connection>
+<displayname><![CDATA[snk@ssaprod]]></displayname>
+<connectionname><![CDATA[IdeConnections%23snk%40ssaprod]]></connectionname>
+<connectionuser><![CDATA[SANKHYA]]></connectionuser>
+</connection>
+</connections>
+<objects>
+<dbobject>
+	<objectconnection><![CDATA[IdeConnections%23snk%40ssaprod]]></objectconnection>
+	<objecttype><![CDATA[PACKAGE]]></objecttype>
+	<objectschema><![CDATA[SANKHYA]]></objectschema>
+	<objectname><![CDATA[AD_PKG_FKM]]></objectname>
+	<include><![CDATA[true]]></include>
+	<meta><![CDATA[true]]></meta>
+	<data><![CDATA[false]]></data>
+	<filter><![CDATA[]]></filter>
+</dbobject>
+<dbobject>
+	<objectconnection><![CDATA[IdeConnections%23snk%40ssaprod]]></objectconnection>
+	<objecttype><![CDATA[PROCEDURE]]></objecttype>
+	<objectschema><![CDATA[SANKHYA]]></objectschema>
+	<objectname><![CDATA[AD_STP_RPFKM_ENVLIB_SF]]></objectname>
+	<include><![CDATA[true]]></include>
+	<meta><![CDATA[true]]></meta>
+	<data><![CDATA[false]]></data>
+	<filter><![CDATA[]]></filter>
+</dbobject>
+<dbobject>
+	<objectconnection><![CDATA[IdeConnections%23snk%40ssaprod]]></objectconnection>
+	<objecttype><![CDATA[PROCEDURE]]></objecttype>
+	<objectschema><![CDATA[SANKHYA]]></objectschema>
+	<objectname><![CDATA[AD_STP_RPFKM_SHOWNOTAS_SF]]></objectname>
+	<include><![CDATA[true]]></include>
+	<meta><![CDATA[true]]></meta>
+	<data><![CDATA[false]]></data>
+	<filter><![CDATA[]]></filter>
+</dbobject>
+<dbobject>
+	<objectconnection><![CDATA[IdeConnections%23snk%40ssaprod]]></objectconnection>
+	<objecttype><![CDATA[TRIGGER]]></objecttype>
+	<objectschema><![CDATA[SANKHYA]]></objectschema>
+	<objectname><![CDATA[AD_TRG_CIUD_AD_TSFRPFC_SF]]></objectname>
+	<include><![CDATA[true]]></include>
+	<meta><![CDATA[true]]></meta>
+	<data><![CDATA[false]]></data>
+	<filter><![CDATA[]]></filter>
+</dbobject>
+</objects>
+</cart>

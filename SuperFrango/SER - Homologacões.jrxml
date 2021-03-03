@@ -1,0 +1,2230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Homologações" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="96"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TESTEPRODPROJETOS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
+	<style name="table_TH" mode="Opaque" backcolor="#9ACD32" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Style1" lineSpacing="Single"/>
+	<style name="Table 2_TH" mode="Opaque" backcolor="#2D5A2D" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#CAD5CA" lineSpacing="Single"/>
+		</conditionalStyle>
+	</style>
+	<style name="Table 1_TH" mode="Opaque" backcolor="#2D5A2D" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_CH" mode="Opaque" backcolor="#CFE6CF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 2_CH" mode="Opaque" backcolor="#CFE6CF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 2_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#CAD5CA" lineSpacing="Single"/>
+		</conditionalStyle>
+	</style>
+	<style name="Table 3_TH" mode="Opaque" backcolor="#2D5A2D" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 3_CH" mode="Opaque" backcolor="#CFE6CF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 3_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#CAD5CA" lineSpacing="Single"/>
+		</conditionalStyle>
+	</style>
+	<style name="Table_TH" mode="Opaque" backcolor="#2D5A2D" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#CFE6CF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#CAD5CA" lineSpacing="Single"/>
+		</conditionalStyle>
+	</style>
+	<style name="Table 4_TH" mode="Opaque" backcolor="#2D5A2D" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 4_CH" mode="Opaque" backcolor="#CFE6CF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 4_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#CAD5CA" lineSpacing="Single"/>
+		</conditionalStyle>
+	</style>
+	<style name="Table 5_TH" mode="Opaque" backcolor="#2D5A2D" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 5_CH" mode="Opaque" backcolor="#CFE6CF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 5_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#CAD5CA" lineSpacing="Single"/>
+		</conditionalStyle>
+	</style>
+	<style name="Table 6_TH" mode="Opaque" backcolor="#2D5A2D" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 6_CH" mode="Opaque" backcolor="#CFE6CF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 6_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#CAD5CA" lineSpacing="Single"/>
+		</conditionalStyle>
+	</style>
+	<style name="Table 7_TH" mode="Opaque" backcolor="#2D5A2D" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 7_CH" mode="Opaque" backcolor="#CFE6CF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 7_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#CAD5CA" lineSpacing="Single"/>
+		</conditionalStyle>
+	</style>
+	<style name="Table 8_TH" mode="Opaque" backcolor="#2D5A2D" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 8_CH" mode="Opaque" backcolor="#CFE6CF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 8_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#CAD5CA" lineSpacing="Single"/>
+		</conditionalStyle>
+	</style>
+	<style name="Table 9_TH" mode="Opaque" backcolor="#4D554D" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 9_CH" mode="Opaque" backcolor="#E6FFE6" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 9_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#D2D4D2" lineSpacing="Single"/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="Empresas">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TESTEPRODPROJETOS"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT TSI.CODEMP, 
+        TSI.NOMEFANTASIA, 
+        TSI.RAZAOSOCIAL
+        --CASE WHEN TGF.ATIVO = 'S' THEN 'Sim' ELSE 'Não' END AS ATIVO
+ FROM TSIEMP TSI
+ JOIN TGFEMP TGF ON TGF.CODEMP = TSI.CODEMP
+WHERE TGF.ATIVO = 'S' 
+ ORDER BY TSI.CODEMP]]>
+		</queryString>
+		<field name="CODEMP" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="CODEMP"/>
+			<property name="com.jaspersoft.studio.field.label" value="CODEMP"/>
+		</field>
+		<field name="NOMEFANTASIA" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="NOMEFANTASIA"/>
+			<property name="com.jaspersoft.studio.field.label" value="NOMEFANTASIA"/>
+		</field>
+		<field name="RAZAOSOCIAL" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="RAZAOSOCIAL"/>
+			<property name="com.jaspersoft.studio.field.label" value="RAZAOSOCIAL"/>
+		</field>
+	</subDataset>
+	<subDataset name="Personalizações">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TESTEPRODPROJETOS"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT --SUBSTR (INS.NOMETAB,1,3)    AS PREFIXO,
+        --'Tela Adicional'            AS DESCPREFIXO,
+        --INS.NUINSTANCIA, 
+        INS.NOMETAB, 
+        INS.NOMEINSTANCIA, 
+        INS.DESCRINSTANCIA , 
+        --CASE WHEN INS.ATIVO = 'S' THEN 'Sim' ELSE 'Não' END                  AS VISIVEL, 
+        --INS.NUINSTANCIAPAI,
+        NVL(PAI.DESCRINSTANCIA,  '') AS DESCRINSTANCIAPAI,
+        --CASE WHEN INS.ADICIONAL = 'S' THEN 'Sim' ELSE 'Não' END AS ADICIONAL ,
+        NVL((SELECT NUM_ROWS FROM USER_TABLES UST WHERE UST.TABLE_NAME=INS.NOMETAB), 0 ) AS NROLINHAS
+   FROM TDDINS INS
+   LEFT JOIN TDDINS PAI ON PAI.NUINSTANCIA = INS.NUINSTANCIAPAI
+  WHERE (INS.ADICIONAL = 'S' AND INS.NOMETAB LIKE 'AD_%')
+ORDER BY INS.DESCRINSTANCIA, INS.NOMETAB]]>
+		</queryString>
+		<field name="NOMETAB" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="NOMETAB"/>
+			<property name="com.jaspersoft.studio.field.label" value="NOMETAB"/>
+		</field>
+		<field name="NOMEINSTANCIA" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="NOMEINSTANCIA"/>
+			<property name="com.jaspersoft.studio.field.label" value="NOMEINSTANCIA"/>
+		</field>
+		<field name="DESCRINSTANCIA" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="DESCRINSTANCIA"/>
+			<property name="com.jaspersoft.studio.field.label" value="DESCRINSTANCIA"/>
+		</field>
+		<field name="DESCRINSTANCIAPAI" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="DESCRINSTANCIAPAI"/>
+			<property name="com.jaspersoft.studio.field.label" value="DESCRINSTANCIAPAI"/>
+		</field>
+		<field name="NROLINHAS" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="NROLINHAS"/>
+			<property name="com.jaspersoft.studio.field.label" value="NROLINHAS"/>
+		</field>
+	</subDataset>
+	<subDataset name="Lista de Movimentações">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TESTEPRODPROJETOS"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT TOP1.CODTIPOPER, 
+           --TOP1.DHALTER, 
+           INITCAP(TOP1.DESCROPER) AS DESCROPER,
+           ad_get.opcoescampo (TOP1.TIPMOV,'TIPMOV','TGFTOP') AS TIPMOVDESC,
+           INITCAP(NVL(TRIM(TOP1.GRUPO), 'Sem grupo')) AS GRUPO,
+           --CASE WHEN TOP1.ATIVO = 'S' THEN 'Sim' ELSE 'Não' END AS ATIVO,
+           TOP1.CODMODNF,
+           ad_get.opcoescampo(TOP1.CODMODDOC,'CODMODDOC', 'TGFTOP') AS CODMODDOC,
+           --TOP1.CODUSU,
+           RPAD(NOMEUSU, 40, ' ')||' Validação: ____________________' AS NOMEUSU
+     FROM TGFTOP TOP1 
+     JOIN TSIUSU USU ON TOP1.CODUSU=USU.CODUSU
+    WHERE TOP1.DHALTER  = (SELECT MAX(TOP2.DHALTER) FROM TGFTOP TOP2 WHERE TOP1.CODTIPOPER = TOP2.CODTIPOPER)
+      AND TOP1.ATIVO    ='S'
+ ORDER BY USU.NOMEUSU, TOP1.GRUPO, TOP1.TIPMOV, TOP1.DESCROPER]]>
+		</queryString>
+		<field name="CODTIPOPER" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="CODTIPOPER"/>
+			<property name="com.jaspersoft.studio.field.label" value="CODTIPOPER"/>
+		</field>
+		<field name="DESCROPER" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="DESCROPER"/>
+			<property name="com.jaspersoft.studio.field.label" value="DESCROPER"/>
+		</field>
+		<field name="CODMODNF" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="CODMODNF"/>
+			<property name="com.jaspersoft.studio.field.label" value="CODMODNF"/>
+		</field>
+		<field name="CODMODDOC" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="CODMODDOC"/>
+			<property name="com.jaspersoft.studio.field.label" value="CODMODDOC"/>
+		</field>
+		<field name="NOMEUSU" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="NOMEUSU"/>
+			<property name="com.jaspersoft.studio.field.label" value="NOMEUSU"/>
+		</field>
+		<field name="GRUPO" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="GRUPO"/>
+			<property name="com.jaspersoft.studio.field.label" value="GRUPO"/>
+		</field>
+		<field name="TIPMOVDESC" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="TIPMOVDESC"/>
+			<property name="com.jaspersoft.studio.field.label" value="TIPMOVDESC"/>
+		</field>
+		<group name="NOMEUSU">
+			<groupExpression><![CDATA[$F{NOMEUSU}]]></groupExpression>
+		</group>
+		<group name="GRUPO">
+			<groupExpression><![CDATA[$F{GRUPO}]]></groupExpression>
+		</group>
+		<group name="TIPMOVDESC">
+			<groupExpression><![CDATA[$F{TIPMOVDESC}]]></groupExpression>
+		</group>
+	</subDataset>
+	<subDataset name="Naturezas">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TESTEPRODPROJETOS"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT CODNAT, 
+       LPAD(DESCRNAT,LENGTH(DESCRNAT) + (3 * (GRAU - 1)), ' ') AS DESCRNAT, 
+       GRAU,
+       ad_get.opcoescampo( ANALITICA,'ANALITICA','TGFNAT' ) AS ANALITICA,
+       ad_get.opcoescampo(TIPNAT, 'TIPNAT', 'TGFNAT') AS TIPNAT
+  FROM TGFNAT NAT
+ WHERE ATIVA = 'S'
+   AND CODNAT <> 0
+ ORDER BY CODNAT]]>
+		</queryString>
+		<field name="CODNAT" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="CODNAT"/>
+			<property name="com.jaspersoft.studio.field.label" value="CODNAT"/>
+		</field>
+		<field name="DESCRNAT" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="DESCRNAT"/>
+			<property name="com.jaspersoft.studio.field.label" value="DESCRNAT"/>
+		</field>
+		<field name="GRAU" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="GRAU"/>
+			<property name="com.jaspersoft.studio.field.label" value="GRAU"/>
+		</field>
+		<field name="ANALITICA" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="ANALITICA"/>
+			<property name="com.jaspersoft.studio.field.label" value="ANALITICA"/>
+		</field>
+		<field name="TIPNAT" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="TIPNAT"/>
+			<property name="com.jaspersoft.studio.field.label" value="TIPNAT"/>
+		</field>
+	</subDataset>
+	<subDataset name="Centro de Resultado">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TESTEPRODPROJETOS"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT CODCENCUS,
+        LPAD(DESCRCENCUS,LENGTH(DESCRCENCUS) + (3 * (GRAU - 1)), ' ') AS DESCRCENCUS,
+        GRAU,
+        ad_get.opcoescampo( ANALITICO,'ANALITICO','TSICUS') AS ANALITICO
+   FROM TSICUS
+  WHERE ATIVO = 'S' 
+    AND CODCENCUS <> 0
+  ORDER BY CODCENCUS]]>
+		</queryString>
+		<field name="CODCENCUS" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="CODCENCUS"/>
+			<property name="com.jaspersoft.studio.field.label" value="CODCENCUS"/>
+		</field>
+		<field name="DESCRCENCUS" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="DESCRCENCUS"/>
+			<property name="com.jaspersoft.studio.field.label" value="DESCRCENCUS"/>
+		</field>
+		<field name="GRAU" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="GRAU"/>
+			<property name="com.jaspersoft.studio.field.label" value="GRAU"/>
+		</field>
+		<field name="ANALITICO" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="ANALITICO"/>
+			<property name="com.jaspersoft.studio.field.label" value="ANALITICO"/>
+		</field>
+	</subDataset>
+	<subDataset name="Grupos Produtos">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TESTEPRODPROJETOS"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT CODGRUPOPROD,
+         LPAD(DESCRGRUPOPROD,LENGTH(DESCRGRUPOPROD) + (3 * (GRAU - 1)), ' ') AS DESCRGRUPOPROD,
+         --CODGRUPAI, 
+         GRAU, 
+         ad_get.opcoescampo( ANALITICO,'ANALITICO','TGFGRU') AS ANALITICO
+    FROM TGFGRU
+   WHERE ATIVO = 'S'
+     AND CODGRUPOPROD <> 0
+   ORDER BY CODGRUPOPROD]]>
+		</queryString>
+		<field name="CODGRUPOPROD" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="CODGRUPOPROD"/>
+			<property name="com.jaspersoft.studio.field.label" value="CODGRUPOPROD"/>
+		</field>
+		<field name="DESCRGRUPOPROD" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="DESCRGRUPOPROD"/>
+			<property name="com.jaspersoft.studio.field.label" value="DESCRGRUPOPROD"/>
+		</field>
+		<field name="GRAU" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="GRAU"/>
+			<property name="com.jaspersoft.studio.field.label" value="GRAU"/>
+		</field>
+		<field name="ANALITICO" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="ANALITICO"/>
+			<property name="com.jaspersoft.studio.field.label" value="ANALITICO"/>
+		</field>
+	</subDataset>
+	<subDataset name="Campos Adicionais">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TESTEPRODPROJETOS"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT TAB.DESCRTAB, TAB.NOMETAB, CAM.DESCRCAMPO, CAM.NOMECAMPO
+     FROM TDDTAB TAB, TDDCAM CAM
+    WHERE TAB.NOMETAB=CAM.NOMETAB
+      AND SUBSTR(CAM.NOMECAMPO,1,3)='AD_'
+      AND SUBSTR(CAM.NOMETAB,1,3)<>'AD_'
+    ORDER BY CAM.NOMETAB, CAM.NOMECAMPO]]>
+		</queryString>
+		<field name="DESCRTAB" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="DESCRTAB"/>
+			<property name="com.jaspersoft.studio.field.label" value="DESCRTAB"/>
+		</field>
+		<field name="NOMETAB" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="NOMETAB"/>
+			<property name="com.jaspersoft.studio.field.label" value="NOMETAB"/>
+		</field>
+		<field name="DESCRCAMPO" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="DESCRCAMPO"/>
+			<property name="com.jaspersoft.studio.field.label" value="DESCRCAMPO"/>
+		</field>
+		<field name="NOMECAMPO" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="NOMECAMPO"/>
+			<property name="com.jaspersoft.studio.field.label" value="NOMECAMPO"/>
+		</field>
+	</subDataset>
+	<subDataset name="Botões de Ação">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TESTEPRODPROJETOS"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT INS.NOMETAB, 
+           INS.NOMEINSTANCIA, 
+           INS.DESCRINSTANCIA, 
+           BTA.IDBTNACAO, 
+           BTA.RESOURCEID, 
+           BTA.DESCRICAO, 
+           ad_get.opcoescampo(BTA.TIPO, 'TIPO', 'TSIBTA') AS TIPO
+      FROM TSIBTA BTA, TDDINS INS
+     WHERE BTA.NOMEINSTANCIA=INS.NOMEINSTANCIA
+       AND INS.ATIVO = 'S'
+       AND SUBSTR(INS.NOMETAB,1,3) <> 'AD_'
+  ORDER BY INS.NOMETAB, INS.NOMEINSTANCIA, BTA.DESCRICAO]]>
+		</queryString>
+		<field name="NOMETAB" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="NOMETAB"/>
+			<property name="com.jaspersoft.studio.field.label" value="NOMETAB"/>
+		</field>
+		<field name="NOMEINSTANCIA" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="NOMEINSTANCIA"/>
+			<property name="com.jaspersoft.studio.field.label" value="NOMEINSTANCIA"/>
+		</field>
+		<field name="DESCRINSTANCIA" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="DESCRINSTANCIA"/>
+			<property name="com.jaspersoft.studio.field.label" value="DESCRINSTANCIA"/>
+		</field>
+		<field name="IDBTNACAO" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="IDBTNACAO"/>
+			<property name="com.jaspersoft.studio.field.label" value="IDBTNACAO"/>
+		</field>
+		<field name="RESOURCEID" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="RESOURCEID"/>
+			<property name="com.jaspersoft.studio.field.label" value="RESOURCEID"/>
+		</field>
+		<field name="DESCRICAO" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="DESCRICAO"/>
+			<property name="com.jaspersoft.studio.field.label" value="DESCRICAO"/>
+		</field>
+		<field name="TIPO" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="TIPO"/>
+			<property name="com.jaspersoft.studio.field.label" value="TIPO"/>
+		</field>
+	</subDataset>
+	<subDataset name="Módulos Java">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TESTEPRODPROJETOS"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT CODMODULO, RESOURCEID, DESCRMODULO 
+FROM TSIMOD
+ORDER BY DESCRMODULO]]>
+		</queryString>
+		<field name="CODMODULO" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="CODMODULO"/>
+			<property name="com.jaspersoft.studio.field.label" value="CODMODULO"/>
+		</field>
+		<field name="RESOURCEID" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="RESOURCEID"/>
+			<property name="com.jaspersoft.studio.field.label" value="RESOURCEID"/>
+		</field>
+		<field name="DESCRMODULO" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="DESCRMODULO"/>
+			<property name="com.jaspersoft.studio.field.label" value="DESCRMODULO"/>
+		</field>
+	</subDataset>
+	<subDataset name="Resumo">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TESTEPRODPROJETOS"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT 'Empresas' AS LISTA, COUNT(TSI.CODEMP) AS QTD
+ FROM TSIEMP TSI
+ JOIN TGFEMP TGF ON TGF.CODEMP = TSI.CODEMP
+WHERE TGF.ATIVO = 'S'
+ 
+UNION ALL
+
+ SELECT 'TOPs' AS LISTA, COUNT(TOP1.CODTIPOPER) AS QTD
+     FROM TGFTOP TOP1 
+     JOIN TSIUSU USU ON TOP1.CODUSU=USU.CODUSU
+    WHERE TOP1.DHALTER  = (SELECT MAX(TOP2.DHALTER) FROM TGFTOP TOP2 WHERE TOP1.CODTIPOPER = TOP2.CODTIPOPER)
+      AND TOP1.ATIVO    ='S'
+      
+UNION ALL
+      
+      
+SELECT 'Naturezas' AS LISTA, COUNT(CODNAT) AS QTD
+  FROM TGFNAT NAT
+ WHERE ATIVA = 'S'
+   AND CODNAT <> 0
+   
+UNION ALL
+   
+   
+SELECT 'Centros de Resultados' AS LISTA, COUNT(CODCENCUS) AS QTD
+   FROM TSICUS
+  WHERE ATIVO = 'S' 
+    AND CODCENCUS <> 0
+    
+UNION ALL
+    
+
+SELECT 'Grupo de Produtos/Serviços' AS LISTA, COUNT(CODGRUPOPROD) AS QTD
+    FROM TGFGRU
+   WHERE ATIVO = 'S'
+     AND CODGRUPOPROD <> 0
+     
+UNION ALL
+     
+     
+SELECT 'Telas Adicionais' AS LISTA, COUNT(INS.NUINSTANCIA) AS QTD
+   FROM TDDINS INS
+   LEFT JOIN TDDINS PAI ON PAI.NUINSTANCIA = INS.NUINSTANCIAPAI
+  WHERE (INS.ADICIONAL = 'S' AND INS.NOMETAB LIKE 'AD_%')
+  
+UNION ALL
+  
+  
+SELECT 'Campos Adicionais' AS LISTA, COUNT(CAM.NUCAMPO) AS QTD
+     FROM TDDTAB TAB, TDDCAM CAM
+    WHERE TAB.NOMETAB=CAM.NOMETAB
+      AND SUBSTR(CAM.NOMECAMPO,1,3)='AD_'
+      AND SUBSTR(CAM.NOMETAB,1,3)<>'AD_'
+      
+UNION ALL
+      
+      
+SELECT 'Botões de Ações' AS LISTA, COUNT(BTA.RESOURCEID) AS QTD 
+      FROM TSIBTA BTA, TDDINS INS
+     WHERE BTA.NOMEINSTANCIA=INS.NOMEINSTANCIA
+       AND INS.ATIVO = 'S'
+       AND SUBSTR(INS.NOMETAB,1,3) <> 'AD_'
+       
+UNION ALL
+       
+      
+SELECT 'Módulos Java' AS LISTA, COUNT(CODMODULO) AS QTD 
+FROM TSIMOD]]>
+		</queryString>
+		<field name="LISTA" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="LISTA"/>
+			<property name="com.jaspersoft.studio.field.label" value="LISTA"/>
+		</field>
+		<field name="QTD" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="QTD"/>
+			<property name="com.jaspersoft.studio.field.label" value="QTD"/>
+		</field>
+	</subDataset>
+	<parameter name="PDIR_MODELO" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\Matheus.marques\\JaspersoftWorkspace\\MyReports\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ETAPA" class="java.lang.String">
+		<parameterDescription><![CDATA[Etapa/Serviço (Sankhya Experience)]]></parameterDescription>
+	</parameter>
+	<parameter name="OCULTAEMP" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[Ocultar Lista de Empresas?]]></parameterDescription>
+		<defaultValueExpression><![CDATA[$P{OCULTAEMP}.booleanValue()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OCULTAMOV" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[Ocultar Lista de Movimentações?]]></parameterDescription>
+		<defaultValueExpression><![CDATA[$P{OCULTAMOV}.booleanValue()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OCULTANAT" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[Ocultar Lista de Naturezas?]]></parameterDescription>
+		<defaultValueExpression><![CDATA[$P{OCULTANAT}.booleanValue()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OCULTACR" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[Ocultar Lista de Centros de Resultados?]]></parameterDescription>
+		<defaultValueExpression><![CDATA[$P{OCULTACR}.booleanValue()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OCULTAGRUPOPROD" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[Ocultar Lista de Grupo de Prod.Serv.?]]></parameterDescription>
+		<defaultValueExpression><![CDATA[$P{OCULTAGRUPOPROD}.booleanValue()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OCULTATELASAD" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[Ocultar Lista de Telas Adicionais?]]></parameterDescription>
+		<defaultValueExpression><![CDATA[$P{OCULTATELASAD}.booleanValue()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OCULTACAMPOSAD" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[Ocultar Lista de Campos Adicionais?]]></parameterDescription>
+		<defaultValueExpression><![CDATA[$P{OCULTACAMPOSAD}.booleanValue()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OCULTABOTOES" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[Ocultar Lista de Botões de Ação?]]></parameterDescription>
+		<defaultValueExpression><![CDATA[$P{OCULTABOTOES}.booleanValue()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OCULTAMODJAVA" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[Ocultar Lista de Módulos Java?]]></parameterDescription>
+		<defaultValueExpression><![CDATA[$P{OCULTAMODJAVA}.booleanValue()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OCULTARESUMO" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[Ocultar Resumo de Cadastros?]]></parameterDescription>
+		<defaultValueExpression><![CDATA[$P{OCULTARESUMO}.booleanValue()]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+ CASE WHEN $P{ETAPA}  IN (3, 50114) THEN 'SER - Homologação da Configuração'
+      WHEN $P{ETAPA} IN (4, 50117)  THEN 'SER - Homologação da Difusão do Conhecimento'
+      WHEN $P{ETAPA} IN (5, 50118) THEN 'SER - Homologação da Entrada em Produção'
+  END AS NOMEREL,
+  
+ CASE WHEN $P{ETAPA} IN (3, 50114) THEN 'O objetivo desta etapa será realizar a parametrização e configuração de todos os processos declarados no escopo do projeto.'
+      WHEN $P{ETAPA}  IN (4, 50117) THEN 'O objetivo dessa etapa é orientar e apoiar o gerenciamento do treinamento dos usuários chaves e finais. A responsabilidade pela execução do treinamento é do Implantador e usuários chaves, porém devemos garantir que os usuários estejam bem treinados e em tempo hábil para entrada em produção.'
+      WHEN $P{ETAPA} IN (5, 50118) THEN 'Esta etapa é um marco, é o dia da virada. É a data agendada para colocarmos o sistema em produção, abandonando os antigos processos e sistemas. A colocação do sistema em produção deve ocorrer somente quando os treinamentos e simulações forem realizados com sucesso de forma a evitar imprevistos que possam prejudicar o bom funcionamento da empresa. Um profissional da SANKHYA acompanhará os primeiros passos após a implantação, como apoio à dúvidas e problemas juntamente com o implantador. Este profissional não irá fazer lançamentos e correções de cadastros, irá apenas orientar e permitir que o usuário e o Implantador os façam, promovendo a segurança e independência do cliente.'
+  END AS OBJETIVO,
+  
+ CASE WHEN $P{ETAPA}  IN (3, 50114) THEN '* Análise e definição de subprocessos;'||chr(10)||'* Plano de atividades do Implantador.'
+      WHEN $P{ETAPA}  IN (4, 50117) THEN '* Análise e definição de subprocessos.'
+      WHEN $P{ETAPA}  IN (5, 50118) THEN '* Auditoria;'||chr(10)||'* Simulação e homologação de subprocessos.'
+  END AS DOCTOENTRADA,
+  
+  'Concordamos com a veracidade das informações contidas neste documento e validamos a execução desta etapa.'||chr(10)||chr(10)||'Portanto, estamos prontos para iniciar a filosofia de trabalho da próxima etapa.'
+      AS VALIDACAO
+ FROM DUAL]]>
+	</queryString>
+	<field name="NOMEREL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="NOMEREL"/>
+		<property name="com.jaspersoft.studio.field.label" value="NOMEREL"/>
+	</field>
+	<field name="OBJETIVO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="OBJETIVO"/>
+		<property name="com.jaspersoft.studio.field.label" value="OBJETIVO"/>
+	</field>
+	<field name="DOCTOENTRADA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="DOCTOENTRADA"/>
+		<property name="com.jaspersoft.studio.field.label" value="DOCTOENTRADA"/>
+	</field>
+	<field name="VALIDACAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="VALIDACAO"/>
+		<property name="com.jaspersoft.studio.field.label" value="VALIDACAO"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="34" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="1" y="1" width="555" height="24"/>
+				<box padding="2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Verdana" size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMEREL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="66" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{OCULTAEMP}.equals( false )]]></printWhenExpression>
+			<componentElement>
+				<reportElement x="0" y="0" width="555" height="56">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+					<property name="com.jaspersoft.studio.element.name" value="Empresas"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Empresas">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="555">
+						<jr:tableHeader style="Table 1_TH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="555" height="20" forecolor="#FFFFFF"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+									<font fontName="Verdana" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Empresas]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:column width="87">
+							<jr:tableHeader style="Table 1_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 1_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="87" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Cód. Empresa]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 1_TD" height="18">
+								<textField pattern="###0.###" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="87" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CODEMP}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="235">
+							<jr:tableHeader style="Table 1_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 1_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="235" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Nome Empresa]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 1_TD" height="18">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="235" height="18"/>
+									<textElement textAlignment="Justified" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{NOMEFANTASIA}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="233">
+							<jr:tableHeader style="Table 1_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 1_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="233" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Razão Social]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 1_TD" height="18">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="233" height="18"/>
+									<textElement textAlignment="Justified" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{RAZAOSOCIAL}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="40">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="555" height="14"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<font fontName="Verdana" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Objetivo]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="14" width="555" height="16"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" lineSpacing="Single" markup="none">
+					<font fontName="Verdana" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  "+$F{OBJETIVO}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="40">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="555" height="14">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single" markup="none">
+					<font fontName="Verdana" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Documentos de Entrada]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="15" width="555" height="16">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" lineSpacing="Single" markup="none">
+					<font fontName="Verdana" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DOCTOENTRADA}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="103">
+			<printWhenExpression><![CDATA[$P{OCULTAMOV}.equals( false )]]></printWhenExpression>
+			<componentElement>
+				<reportElement x="0" y="0" width="555" height="93">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 3_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 3_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 3_TD"/>
+					<property name="com.jaspersoft.studio.element.name" value="TOPs"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Lista de Movimentações">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="555">
+						<jr:tableHeader style="Table 3_TH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="555" height="20" forecolor="#FFFFFF"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+									<font fontName="Verdana" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Tipos de Operações]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:groupHeader groupName="NOMEUSU">
+							<jr:cell style="Table 3_CH" height="25" rowSpan="1">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="553" height="25"/>
+									<textElement textAlignment="Justified" verticalAlignment="Bottom" lineSpacing="Single">
+										<font fontName="Verdana" size="10" isBold="true"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" Dono do Processo: " + $F{NOMEUSU}]]></textFieldExpression>
+								</textField>
+							</jr:cell>
+						</jr:groupHeader>
+						<jr:groupHeader groupName="GRUPO">
+							<jr:cell style="Table 3_CH" height="15" rowSpan="1">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="553" height="15"/>
+									<textElement textAlignment="Justified" verticalAlignment="Bottom" lineSpacing="Single">
+										<font fontName="Verdana" size="8" isBold="true"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA["   Grupo da TOP: " + $F{GRUPO}]]></textFieldExpression>
+								</textField>
+							</jr:cell>
+						</jr:groupHeader>
+						<jr:groupHeader groupName="TIPMOVDESC">
+							<jr:cell style="Table 3_CH" height="15" rowSpan="1">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="553" height="15"/>
+									<textElement textAlignment="Justified" verticalAlignment="Bottom" lineSpacing="Single">
+										<font fontName="Verdana" size="8" isBold="true"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA["     Tipo de Operação: " + $F{TIPMOVDESC}]]></textFieldExpression>
+								</textField>
+							</jr:cell>
+						</jr:groupHeader>
+						<jr:column width="54">
+							<jr:tableHeader style="Table 3_TH" height="0" rowSpan="1"/>
+							<jr:groupHeader groupName="NOMEUSU">
+								<jr:cell style="Table 3_CH" height="0" rowSpan="1"/>
+							</jr:groupHeader>
+							<jr:groupHeader groupName="GRUPO">
+								<jr:cell style="Table 3_CH" height="0" rowSpan="1"/>
+							</jr:groupHeader>
+							<jr:groupHeader groupName="TIPMOVDESC">
+								<jr:cell style="Table 3_CH" height="0" rowSpan="1"/>
+							</jr:groupHeader>
+							<jr:columnHeader style="Table 3_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="54" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[TOP]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 3_TD" height="15">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="54" height="15"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CODTIPOPER}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="218">
+							<jr:tableHeader style="Table 3_TH" height="0" rowSpan="1"/>
+							<jr:groupHeader groupName="NOMEUSU">
+								<jr:cell style="Table 3_CH" height="0" rowSpan="1"/>
+							</jr:groupHeader>
+							<jr:groupHeader groupName="GRUPO">
+								<jr:cell style="Table 3_CH" height="0" rowSpan="1"/>
+							</jr:groupHeader>
+							<jr:groupHeader groupName="TIPMOVDESC">
+								<jr:cell style="Table 3_CH" height="0" rowSpan="1"/>
+							</jr:groupHeader>
+							<jr:columnHeader style="Table 3_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="218" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Descrição da TOP]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 3_TD" height="15">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="218" height="15"/>
+									<textElement textAlignment="Justified" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{DESCROPER}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="74">
+							<jr:tableHeader style="Table 3_TH" height="0" rowSpan="1"/>
+							<jr:groupHeader groupName="NOMEUSU">
+								<jr:cell style="Table 3_CH" height="0" rowSpan="1"/>
+							</jr:groupHeader>
+							<jr:groupHeader groupName="GRUPO">
+								<jr:cell style="Table 3_CH" height="0" rowSpan="1"/>
+							</jr:groupHeader>
+							<jr:groupHeader groupName="TIPMOVDESC">
+								<jr:cell style="Table 3_CH" height="0" rowSpan="1"/>
+							</jr:groupHeader>
+							<jr:columnHeader style="Table 3_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="74" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Modelo Nota]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 3_TD" height="15">
+								<textField isStretchWithOverflow="true" pattern="#,##0.###" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="74" height="15"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CODMODNF}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="209">
+							<jr:tableHeader style="Table 3_TH" height="0" rowSpan="1"/>
+							<jr:groupHeader groupName="NOMEUSU">
+								<jr:cell style="Table 3_CH" height="0" rowSpan="1"/>
+							</jr:groupHeader>
+							<jr:groupHeader groupName="GRUPO">
+								<jr:cell style="Table 3_CH" height="0" rowSpan="1"/>
+							</jr:groupHeader>
+							<jr:groupHeader groupName="TIPMOVDESC">
+								<jr:cell style="Table 3_CH" height="0" rowSpan="1"/>
+							</jr:groupHeader>
+							<jr:columnHeader style="Table 3_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="209" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Modelo Documento Fiscal]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 3_TD" height="15">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="209" height="15"/>
+									<textElement textAlignment="Justified" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{CODMODDOC}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="66">
+			<printWhenExpression><![CDATA[$P{OCULTANAT}.equals( false )]]></printWhenExpression>
+			<componentElement>
+				<reportElement x="0" y="0" width="555" height="56">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.element.name" value="Naturezas"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Naturezas">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="555">
+						<jr:tableHeader style="Table_TH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="555" height="20" forecolor="#FFFFFF"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+									<font fontName="Verdana" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Naturezas de Receitas e Despesas]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:column width="60">
+							<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Código]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="18">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CODNAT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="338">
+							<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="338" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Descrição]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="18">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="338" height="18"/>
+									<textElement verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[$F{DESCRNAT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60">
+							<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Tipo]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="18">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[$F{TIPNAT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="39">
+							<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="39" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Grau]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="18">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="39" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{GRAU}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="58">
+							<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="58" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Analítica]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="18">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="58" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[$F{ANALITICA}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="66">
+			<printWhenExpression><![CDATA[$P{OCULTACR}.equals( false )]]></printWhenExpression>
+			<componentElement>
+				<reportElement x="0" y="0" width="555" height="56">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 4_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 4_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 4_TD"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.element.name" value="CRs"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Centro de Resultado">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="555">
+						<jr:tableHeader style="Table 4_TH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="555" height="20" forecolor="#FFFFFF"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+									<font fontName="Verdana" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Centros de Resultados]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:column width="60">
+							<jr:tableHeader style="Table 4_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 4_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Código]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 4_TD" height="18">
+								<textField>
+									<reportElement x="0" y="0" width="60" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CODCENCUS}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="398">
+							<jr:tableHeader style="Table 4_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 4_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="398" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Descrição]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 4_TD" height="18">
+								<textField>
+									<reportElement x="0" y="0" width="398" height="18"/>
+									<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[$F{DESCRCENCUS}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="39">
+							<jr:tableHeader style="Table 4_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 4_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="39" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Grau]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 4_TD" height="18">
+								<textField>
+									<reportElement x="0" y="0" width="39" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{GRAU}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="58">
+							<jr:tableHeader style="Table 4_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 4_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="58" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Analítico]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 4_TD" height="18">
+								<textField>
+									<reportElement x="0" y="0" width="58" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[$F{ANALITICO}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="66">
+			<printWhenExpression><![CDATA[$P{OCULTAGRUPOPROD}.equals( false )]]></printWhenExpression>
+			<componentElement>
+				<reportElement x="0" y="0" width="555" height="56">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 5_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 5_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 5_TD"/>
+					<property name="com.jaspersoft.studio.element.name" value="Grupo de Produtos"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Grupos Produtos">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="555">
+						<jr:tableHeader style="Table 5_TH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="555" height="20" forecolor="#FFFFFF"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+									<font fontName="Verdana" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Grupo de Produtos e Serviços]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:column width="60">
+							<jr:tableHeader style="Table 5_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 5_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="10" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Código]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 5_TD" height="18">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CODGRUPOPROD}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="398">
+							<jr:tableHeader style="Table 5_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 5_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="398" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="10" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Descrição]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 5_TD" height="18">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="398" height="18"/>
+									<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[$F{DESCRGRUPOPROD}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="39">
+							<jr:tableHeader style="Table 5_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 5_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="39" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="10" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Grau]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 5_TD" height="18">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="39" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{GRAU}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="58">
+							<jr:tableHeader style="Table 5_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 5_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="58" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="10" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Analitico]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 5_TD" height="18">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="58" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[$F{ANALITICO}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="66">
+			<printWhenExpression><![CDATA[$P{OCULTATELASAD}.equals( false )]]></printWhenExpression>
+			<componentElement>
+				<reportElement key="" x="0" y="0" width="555" height="56">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 2_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 2_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 2_TD"/>
+					<property name="com.jaspersoft.studio.element.name" value="Personalizações"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Personalizações">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="555">
+						<jr:tableHeader style="Table 2_TH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="555" height="20" forecolor="#FFFFFF"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+									<font fontName="Verdana" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Tabelas Adicionais Personalizadas]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:column width="90">
+							<jr:tableHeader style="Table 2_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 2_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="90" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Tabela]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 2_TD" height="18">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="90" height="18">
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+									</reportElement>
+									<textElement textAlignment="Justified" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{NOMETAB}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="112">
+							<jr:tableHeader style="Table 2_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 2_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="112" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Nome Instância]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 2_TD" height="18">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="112" height="18"/>
+									<textElement textAlignment="Justified" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{NOMEINSTANCIA}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="148">
+							<jr:tableHeader style="Table 2_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 2_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="148" height="18">
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Descr. Instância]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 2_TD" height="18">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="148" height="18"/>
+									<textElement textAlignment="Justified" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{DESCRINSTANCIA}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="138">
+							<jr:tableHeader style="Table 2_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 2_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="138" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Descr. Instância Pai]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 2_TD" height="18">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="138" height="18"/>
+									<textElement textAlignment="Justified" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[$F{DESCRINSTANCIAPAI}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="67">
+							<jr:tableHeader style="Table 2_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 2_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="67" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Qtd. Linhas]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 2_TD" height="18">
+								<textField isStretchWithOverflow="true" pattern="#,##0.###" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="67" height="18">
+										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+										<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{NROLINHAS}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="66">
+			<printWhenExpression><![CDATA[$P{OCULTACAMPOSAD}.equals( false )]]></printWhenExpression>
+			<componentElement>
+				<reportElement x="0" y="0" width="555" height="56">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 6_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 6_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 6_TD"/>
+					<property name="com.jaspersoft.studio.element.name" value="Campos Adicionais"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Campos Adicionais">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="555">
+						<jr:tableHeader style="Table 6_TH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="555" height="20" forecolor="#FFFFFF"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+									<font fontName="Verdana" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Campos Adicionais Personalizados]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:column width="139">
+							<jr:tableHeader style="Table 6_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 6_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="139" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="10" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Descrição da Tabela]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 6_TD" height="18">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="139" height="18">
+										<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single" markup="none">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{DESCRTAB}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="138">
+							<jr:tableHeader style="Table 6_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 6_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="138" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="10" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Tabela]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 6_TD" height="18">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="138" height="18">
+										<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single" markup="none">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{NOMETAB}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="139">
+							<jr:tableHeader style="Table 6_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 6_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="139" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="10" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Descrição do Campo]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 6_TD" height="18">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="139" height="18"/>
+									<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single" markup="none">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{DESCRCAMPO}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="139">
+							<jr:tableHeader style="Table 6_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 6_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="139" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="10" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Campo]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 6_TD" height="18">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="139" height="18">
+										<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single" markup="none">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{NOMECAMPO}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="66">
+			<printWhenExpression><![CDATA[$P{OCULTABOTOES}.equals( false )]]></printWhenExpression>
+			<componentElement>
+				<reportElement x="0" y="0" width="555" height="56">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 7_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 7_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 7_TD"/>
+					<property name="com.jaspersoft.studio.element.name" value="Botões de Ação"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Botões de Ação">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="555">
+						<jr:tableHeader style="Table 7_TH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="555" height="20" forecolor="#FFFFFF"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+									<font fontName="Verdana" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Botões de Ação Personalizados]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:column width="48">
+							<jr:tableHeader style="Table 7_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 7_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="48" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Tabela	]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 7_TD" height="18">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="48" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMETAB}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="69">
+							<jr:tableHeader style="Table 7_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 7_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="69" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Instância	]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 7_TD" height="18">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="69" height="18"/>
+									<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{NOMEINSTANCIA}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="99">
+							<jr:tableHeader style="Table 7_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 7_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="99" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Descr. Instância]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 7_TD" height="18">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="99" height="18"/>
+									<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{DESCRINSTANCIA}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="50">
+							<jr:tableHeader style="Table 7_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 7_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="50" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Código]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 7_TD" height="18">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="50" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{IDBTNACAO}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="87">
+							<jr:tableHeader style="Table 7_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 7_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="87" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Filtro de Telas]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 7_TD" height="18">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="87" height="18"/>
+									<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{RESOURCEID}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="149">
+							<jr:tableHeader style="Table 7_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 7_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="149" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Descrição]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 7_TD" height="18">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="149" height="18"/>
+									<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{DESCRICAO}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="53">
+							<jr:tableHeader style="Table 7_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 7_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="53" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Tipo]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 7_TD" height="18">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="53" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[$F{TIPO}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="66">
+			<printWhenExpression><![CDATA[$P{OCULTAMODJAVA}.equals( false )]]></printWhenExpression>
+			<componentElement>
+				<reportElement x="0" y="0" width="555" height="56">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 8_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 8_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 8_TD"/>
+					<property name="com.jaspersoft.studio.element.name" value="Módulos Java"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Módulos Java">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="555">
+						<jr:tableHeader style="Table 8_TH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="555" height="20" forecolor="#FFFFFF"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+									<font fontName="Verdana" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Módulos Adicionais Java]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:column width="60">
+							<jr:tableHeader style="Table 8_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 8_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Código]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 8_TD" height="18">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CODMODULO}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="248">
+							<jr:tableHeader style="Table 8_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 8_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="248" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Identificador]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 8_TD" height="18">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="248" height="18"/>
+									<textElement verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{RESOURCEID}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="247">
+							<jr:tableHeader style="Table 8_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 8_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="247" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Descrição]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 8_TD" height="18">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="247" height="18"/>
+									<textElement verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{DESCRMODULO}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="66">
+			<printWhenExpression><![CDATA[$P{OCULTARESUMO}.equals( false )]]></printWhenExpression>
+			<componentElement>
+				<reportElement x="0" y="0" width="555" height="56">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 9_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 9_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 9_TD"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Resumo">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="555">
+						<jr:tableHeader style="Table 9_TH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="555" height="20" forecolor="#FFFFFF"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+									<font fontName="Verdana" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Resumo dos Cadastros]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:column width="455">
+							<jr:tableHeader style="Table 9_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 9_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="455" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Lista]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 9_TD" height="18">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="455" height="18"/>
+									<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.lang.String"><![CDATA[" "+$F{LISTA}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="100">
+							<jr:tableHeader style="Table 9_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="Table 9_CH" height="18" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="100" height="18"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Registros]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 9_TD" height="18">
+								<textField isStretchWithOverflow="true" pattern="#,##0.###" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="100" height="18"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+										<font fontName="Verdana" size="8"/>
+									</textElement>
+									<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{QTD}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="63" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="-20" y="16" width="595" height="47" forecolor="#FFFFFF" backcolor="#006600"/>
+				<box padding="2" topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Verdana" isBold="true"/>
+				</textElement>
+				<text><![CDATA[sankhya.com.br]]></text>
+			</staticText>
+			<textField pattern="">
+				<reportElement positionType="Float" x="455" y="0" width="100" height="16"/>
+				<box padding="1"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Verdana"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern=" dd/MM/yyyy HH:mm:ss">
+				<reportElement x="43" y="0" width="137" height="16"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="43" height="16"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Emissão:]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="185" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="7" width="380" height="20"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Verdana" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Validação da Etapa]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="15" y="32" width="539" height="18"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Verdana"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{VALIDACAO}]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="81" width="555" height="104"/>
+				<line>
+					<reportElement positionType="Float" x="0" y="1" width="199" height="1"/>
+				</line>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="2" width="41" height="15"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Verdana"/>
+					</textElement>
+					<text><![CDATA[Nome:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="25" width="199" height="15"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Verdana" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Líder do Projeto (Cliente)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="89" width="199" height="15"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Verdana" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Investidor (Cliente)]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="65" width="199" height="1"/>
+				</line>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="66" width="41" height="15"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Verdana"/>
+					</textElement>
+					<text><![CDATA[Nome:]]></text>
+				</staticText>
+				<line>
+					<reportElement x="331" y="0" width="199" height="1"/>
+				</line>
+				<staticText>
+					<reportElement positionType="Float" x="331" y="1" width="41" height="15"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Verdana"/>
+					</textElement>
+					<text><![CDATA[Nome:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="331" y="24" width="199" height="15"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Verdana" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Gerente do Projeto (Sankhya)]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="372" y="1" width="165" height="15"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Verdana"/>
+					</textElement>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="41" y="2" width="155" height="15"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Verdana"/>
+					</textElement>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="44" y="66" width="155" height="15"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Verdana"/>
+					</textElement>
+				</textField>
+			</frame>
+			<staticText>
+				<reportElement x="1" y="53" width="553" height="27">
+					<property name="com.jaspersoft.studio.element.name" value="Espaço Vazio"/>
+				</reportElement>
+				<textElement lineSpacing="Single"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

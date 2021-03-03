@@ -1,0 +1,389 @@
+create or replace package uteis as
+
+  /*  Modified     dd/mm/yyyy
+      mrangel      20/11/2019 - Add int_to_bool e bool_to_int
+  */
+  function get_nucampo(p_tabela    varchar2,
+                       p_nomecampo varchar2) return number;
+
+  procedure set_all_columns_readonly(p_tabela varchar2);
+
+  function int_to_bool(n number) return boolean;
+
+  function bool_to_int(b boolean) return number;
+
+  procedure cria_log_tabela(p_nometabela varchar2);
+
+  procedure duplica_pedido(p_nunota     number,
+                           p_new_nunota out number);
+
+  procedure fix_mailnfe_parceiro(p_codemp   int,
+                                 p_ordcarga int);
+
+  procedure get_param_transporte(params out ad_tsfelt%rowtype);
+
+end;
+/
+create or replace package body uteis as
+
+  function get_nucampo(p_tabela    varchar2,
+                       p_nomecampo varchar2) return number as
+  begin
+    select nucampo
+      into ad_pkg_var.resultn
+      from tddcam
+     where lower(nometab) = lower(p_tabela)
+       and lower(nomecampo) = lower(p_nomecampo);
+  exception
+    when others then
+      return 0;
+  end;
+
+  procedure set_all_columns_readonly(p_tabela varchar2) as
+  begin
+    merge into tddpco p
+    using (select nucampo, nomecampo
+             from tddcam c
+            where lower(c.nometab) = lower(p_tabela)) c
+    on (p.nucampo = c.nucampo)
+    when not matched then
+      insert
+      values
+        (c.nucampo, 'readOnly', 'S', null)
+    when matched then
+      update
+         set valor = 'S';
+  exception
+    when others then
+      raise;
+  end;
+
+  function bool_to_int(b boolean) return number is
+  begin
+    if b then
+      return 1;
+    elsif not b then
+      return 0;
+    else
+      return null;
+    end if;
+  end bool_to_int;
+
+  --------------------
+  -- int_to_bool
+  --------------------
+  function int_to_bool(n number) return boolean is
+  begin
+    if n is null then
+      return null;
+    elsif n = 1 then
+      return true;
+    elsif n = 0 then
+      return false;
+    else
+      raise value_error;
+    end if;
+  end int_to_bool;
+
+  -- Created on 29/01/2020 by MARCUS.RANGEL 
+  procedure cria_log_tabela(p_nometabela varchar2) as
+    -- Local variables here
+    --p_nometabela varchar2(100);
+    stmt         varchar2(32737);
+    v_table_name varchar2(100);
+    trigger_name varchar2(100);
+  
+    v_new_fields varchar2(4000);
+  
+    i int := 0;
+  
+  begin
+    -- Test statements here
+    --p_nometabela := 'AD_TSFFCR';
+    v_table_name := trim(p_nometabela) || '_LOG';
+  
+    select count(*)
+      into i
+      from user_tables u
+     where upper(u.table_name) = upper(v_table_name);
+  
+    if i = 0 then
+    
+      stmt := 'Create Table ' || v_table_name || ' as select * from ' || p_nometabela || ' where 1 = 0';
+    
+      execute immediate stmt;
+    
+      stmt := 'alter table ' || v_table_name;
+      stmt := stmt || chr(13) || q'[ add (
+                  username varchar2(100), 
+                  terminal varchar2(100),  
+                  operacao varchar2(20),
+                  dhoper date )]';
+    
+      execute immediate stmt;
+    
+    end if;
+  
+    for f in (select utc.column_name col
+              --listagg(utc.column_name, ', ') within group(order by utc.table_name) Into 
+                from user_tab_cols utc
+               where table_name = upper(trim(p_nometabela)))
+    loop
+      if v_new_fields is null then
+        v_new_fields := 'l(i).' || f.col || ' := ' || ':new.' || f.col || ';';
+      else
+        v_new_fields := v_new_fields || chr(13) || 'l(i).' || f.col || ' := ' || ':new.' || f.col || ';';
+      end if;
+    end loop;
+  
+    v_new_fields := v_new_fields || chr(13) || 'l(i).username := v_osuser;';
+    v_new_fields := v_new_fields || chr(13) || 'l(i).terminal := v_terminal;';
+    v_new_fields := v_new_fields || chr(13) || 'l(i).operacao := v_oper;';
+    v_new_fields := v_new_fields || chr(13) || 'l(i).dhoper := v_dhoper;';
+  
+    trigger_name := 'ad_trg_cmp_' || replace(v_table_name, 'AD_', '');
+  
+    stmt := 'create or replace trigger ' || trigger_name || '
+  for insert or update or delete on ' || p_nometabela || '
+  compound trigger
+
+  -- criada dinamicamente pela rotina de log
+  -- por: ' || ad_get.nomeusu(stp_get_codusulogado, 'completo') || '
+  -- em: ' || to_char(sysdate, 'dd/mm/rrrr') || '
+  
+  type l_tipo_log is table of ' || v_table_name || '%rowtype;
+  l l_tipo_log := l_tipo_log();
+
+  v_osuser   varchar2(100) := sys_context('' USERENV '', ''OS_USER'');
+  v_terminal varchar2(200) := sys_context(''USERENV'', ''TERMINAL'');
+  v_oper     varchar2(100);
+  v_dhoper   date := sysdate;
+
+  i int;
+
+  procedure inserir_registros_log is
+  begin
+    forall x in 1 .. l.count
+      insert into ' || v_table_name || ' values l(x);
+    l.delete;
+  end;
+
+  before statement is
+  begin
+    l.delete;
+  end before statement;
+
+  after each row is
+  begin
+    l.extend;
+    i := l.last;
+  
+    if inserting or updating then
+    
+      if inserting then
+        v_oper := ''Insert'';
+      else
+        v_oper := ''Update'';
+      end if;
+    
+      ' || v_new_fields || '
+    
+    elsif deleting then
+      v_oper := ''Delete'';
+    
+      ' || replace(v_new_fields, ':new.', ':old.') || '
+      
+    end if;
+  
+    if l.count > 1000 then
+      inserir_registros_log;
+    end if;
+  
+  end after each row;
+
+  after statement is
+  begin
+    if l.count > 0 then
+      inserir_registros_log;
+    end if;
+  end after statement;
+
+end;';
+  
+    --dbms_output.put_line(stmt);
+    execute immediate stmt;
+  
+  end;
+
+  -- Created on 20/02/2020 by MARCUS.RANGEL 
+  procedure duplica_pedido(p_nunota     number,
+                           p_new_nunota out number) as
+    -- Local variables here
+    i   integer;
+    cab tgfcab%rowtype;
+  
+    type type_tgfite is table of tgfite%rowtype;
+    ite type_tgfite := type_tgfite();
+  
+    type type_tgffin is table of tgffin%rowtype;
+    fin type_tgffin := type_tgffin();
+  
+  begin
+    -- Test statements here
+    select *
+      into cab
+      from tgfcab
+     where nunota = p_nunota;
+    select *
+      bulk collect
+      into ite
+      from tgfite
+     where nunota = p_nunota;
+  
+    begin
+      select *
+        bulk collect
+        into fin
+        from tgffin
+       where nunota = p_nunota;
+    exception
+      when no_data_found then
+        null;
+    end;
+  
+    stp_keygen_tgfnum('TGFCAB', 1, 'TGFCAB', 'NUNOTA', 0, cab.nunota);
+    cab.codusu := 0;
+    cab.dtneg  := trunc(sysdate);
+    --cab.observacao    := 'Validação de faturamento no skW';
+    cab.pendente      := 'S';
+    cab.ordemcarga    := 0;
+    cab.codparctransp := 0;
+    cab.codveiculo    := 0;
+  
+    insert into tgfcab
+    values cab;
+  
+    for l in ite.first .. ite.last
+    loop
+    
+      ite(l).nunota := cab.nunota;
+      ite(l).pendente := 'S';
+      ite(l).qtdentregue := 0;
+    
+      insert into tgfite
+      values ite
+        (l);
+    
+    end loop;
+  
+    for l in fin.first .. fin.last
+    loop
+    
+      fin(l).nunota := cab.nunota;
+      fin(l).desdobramento := l;
+      fin(l).dhmov := trunc(sysdate);
+      fin(l).dtalter := trunc(sysdate);
+    
+      insert into tgffin
+      values fin
+        (l);
+    
+    end loop;
+  
+    --dbms_output.put_line(cab.nunota);
+    p_new_nunota := cab.nunota;
+  exception
+    when others then
+      raise;
+  end duplica_pedido;
+
+  -- Created on 27/02/2020 by MARCUS.RANGEL 
+  procedure fix_mailnfe_parceiro(p_codemp   int,
+                                 p_ordcarga int) as
+    -- Local variables here
+    cursor cur_clientes(v_codemp     int,
+                        v_ordemcarga int) is(
+    
+      select codparc, emailnfe
+        from tgfpar p
+       where 1 = 1
+         and regexp_like(emailnfe, '[[:upper:]]+$')
+         and ativo = 'S'
+         and cliente = 'S'
+         and exists (select 1
+                from tgfcab c
+               where c.codparc = p.codparc
+                 and c.codemp = v_codemp
+                 and c.ordemcarga = v_ordemcarga)
+      --and dtneg >= '01/01/2019')
+      
+       );
+  
+    type rec_clientes is record(
+      codparc int,
+      mail    varchar2(400));
+  
+    type tab_clientes is table of rec_clientes;
+    t tab_clientes := tab_clientes();
+  
+  begin
+    -- Test statements here
+    stp_set_atualizando('S');
+    open cur_clientes(p_codemp, p_ordcarga);
+    loop
+    
+      fetch cur_clientes bulk collect
+        into t limit 100;
+    
+      exit when t.count = 0;
+    
+      for i in t.first .. t.last
+      loop
+        update tgfpar
+           set emailnfe = lower(emailnfe)
+         where codparc = t(i).codparc;
+        dbms_output.put_line(t(i).codparc);
+      end loop;
+    
+      /*begin
+        forall i in t.first .. t.last save exceptions
+          update tgfpar set emailnfe = lower(emailnfe) where codparc = t(i).codparc;
+      
+      exception
+        when others then
+        
+          for e in 1 .. sql%bulk_exceptions.count
+          loop
+            x := sql%bulk_exceptions(e).error_index;
+            dbms_output.put_line('Codparc: ' || t(x).codparc || '/' ||
+                                 sqlerrm(-1 * sql%bulk_exceptions(e).error_code));
+          end loop;
+      end;*/
+    
+      --dbms_lock.sleep(10);
+    
+      commit;
+    
+    end loop;
+    close cur_clientes;
+    stp_set_atualizando('N');
+  
+  end fix_mailnfe_parceiro;
+
+  procedure get_param_transporte(params out ad_tsfelt%rowtype) is
+  
+  begin
+  
+    select *
+      into params
+      from ad_tsfelt e
+     where ativo = 'S'
+       and dtvigor = (select max(dtvigor)
+                        from ad_tsfelt e2
+                       where e2.nuelt = e.nuelt
+                         and dtvigor <= trunc(sysdate));
+  
+  end get_param_transporte;
+
+end uteis;
+/

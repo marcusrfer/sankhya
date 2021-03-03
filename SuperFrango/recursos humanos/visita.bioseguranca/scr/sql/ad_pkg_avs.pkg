@@ -8,7 +8,8 @@ create or replace package ad_pkg_avs is
 
   function get_dados_visita(p_nuvisita number) return ad_tsfavs%rowtype;
 
-  procedure insere_historico(p_nuvisita number, p_msg varchar2);
+  procedure insere_historico(p_nuvisita number,
+                             p_msg      varchar2);
 
   procedure insere_historico(p_nuvisita number,
                              p_msg      varchar2,
@@ -29,9 +30,12 @@ create or replace package ad_pkg_avs is
   procedure set_reprovado(p_nuvisita number);
 
   -- procedure que realiza as alterações da visita quando reagendadas
-  procedure set_reagendado(p_nuvisita number, p_newdata date, p_numotivo int);
+  procedure set_reagendado(p_nuvisita number,
+                           p_newdata  date,
+                           p_numotivo int);
 
-  procedure set_nova_pesquisa(p_nuvisita number, p_pesquisa out number);
+  procedure set_nova_pesquisa(p_nuvisita number,
+                              p_pesquisa out number);
 
   procedure set_nova_pesquisa(p_nuvisita number,
                               p_pesquisa out number,
@@ -61,10 +65,7 @@ create or replace package body ad_pkg_avs is
   procedure exclui_solcitcarro(p_nucapsol number) is
   begin
     update ad_tsfavs a
-       set nucapsol       = null,
-           a.statuscar    = null,
-           a.dhagendcarro = null,
-           a.codveiculo   = null
+       set nucapsol = null, a.statuscar = null, a.dhagendcarro = null, a.codveiculo = null
      where nucapsol = p_nucapsol;
   
     delete from ad_tsfcaprat where nucapsol = p_nucapsol;
@@ -78,14 +79,12 @@ create or replace package body ad_pkg_avs is
     Autor: MARCUS.RANGEL 22/11/2019 11:10:27
     Objetivos: inserir os registro dos históricos.
   */
-  procedure insere_historico(p_nuvisita number, p_msg varchar2) is
+  procedure insere_historico(p_nuvisita number,
+                             p_msg      varchar2) is
     i int;
   begin
     stp_set_atualizando('S');
-    select nvl(max(nuavshis), 0) + 1
-      into i
-      from ad_tsfavshis h
-     where h.nuvisita = p_nuvisita;
+    select nvl(max(nuavshis), 0) + 1 into i from ad_tsfavshis h where h.nuvisita = p_nuvisita;
   
     insert into ad_tsfavshis
       (nuavshis, nuvisita, dhalter, codusu, descroco)
@@ -95,9 +94,7 @@ create or replace package body ad_pkg_avs is
     stp_set_atualizando('N');
   exception
     when others then
-      raise_application_error(-20105,
-                              ad_fnc_formataerro('Erro ao inserir histórico. ' ||
-                                                 sqlerrm));
+      raise_application_error(-20105, ad_fnc_formataerro('Erro ao inserir histórico. ' || sqlerrm));
   end insere_historico;
 
   procedure insere_historico(p_nuvisita number,
@@ -130,17 +127,14 @@ create or replace package body ad_pkg_avs is
                            and p2.dtvigor < sysdate);
   
     -- insere o pedido de liberação na lib
-    ad_set.ins_liberacao(p_tabela    => 'AD_TSFAVS',
-                         p_nuchave   => p_nuvisita,
-                         p_evento    => lib.evento,
-                         p_valor     => 1,
-                         p_codusulib => lib.codusulib,
-                         p_obslib    => 'Referente visita para contratação',
-                         p_errmsg    => ad_pkg_var.errmsg);
+    ad_set.ins_liberacao(p_tabela => 'AD_TSFAVS', p_nuchave => p_nuvisita, p_evento => lib.evento,
+                         p_valor => 1, p_codusulib => lib.codusulib,
+                         p_obslib => 'Referente visita para contratação',
+                         p_errmsg => ad_pkg_var.errmsg);
   
     -- monta e atualiza a observacao complementar com dados da visita
-    for v in (select avs.nomevisitado || ' - ' || car.descrcargo || '  - ' ||
-                      lot.descrlot || chr(13) as complemento
+    for v in (select avs.nomevisitado || ' - ' || car.descrcargo || '  - ' || lot.descrlot ||
+                      chr(13) as complemento
                 from ad_tsfavs avs
                 left join ad_fpwcrg car
                   on car.codcargo = avs.codcargo
@@ -167,8 +161,7 @@ create or replace package body ad_pkg_avs is
          and nuchave = p_nuvisita;
     exception
       when others then
-        ad_pkg_var.errmsg := 'Erro ao atualizar o complemento da liberação. ' ||
-                             sqlerrm;
+        ad_pkg_var.errmsg := 'Erro ao atualizar o complemento da liberação. ' || sqlerrm;
         raise_application_error(-20105, ad_fnc_formataerro(ad_pkg_var.errmsg));
     end;
   
@@ -227,12 +220,7 @@ create or replace package body ad_pkg_avs is
     -- loading antes do insert
     begin
     
-      stp_keygen_tgfnum('AD_TSFAVS',
-                        1,
-                        'AD_TSFAVS',
-                        'NUVISITA',
-                        0,
-                        vis.nuvisita);
+      stp_keygen_tgfnum('AD_TSFAVS', 1, 'AD_TSFAVS', 'NUVISITA', 0, vis.nuvisita);
       p_nuvisita := vis.nuvisita;
     
       --busca unidade do funcionario
@@ -258,20 +246,16 @@ create or replace package body ad_pkg_avs is
     
       -- popula complemento em caso de não achar endereço
       if nvl(vis.codend, 0) = 0 or nvl(vis.codbai, 0) = 0 then
-        vis.complemento := fun.fuendereco || '  - ' || fun.fubairro || ' nro ' ||
-                           fun.funumero || '  - ' || fun.fucomplemento;
+        vis.complemento := fun.fuendereco || '  - ' || fun.fubairro || ' nro ' || fun.funumero ||
+                           '  - ' || fun.fucomplemento;
       end if;
     
       vis.dhinclusao   := sysdate;
       vis.tipovisita   := p_tipovis;
       vis.nomevisitado := fun.funomfunc;
       vis.complemento  := vis.complemento;
-      vis.codcid       := ad_pkg_func.get_codcid_coduf(fun.fucodemp,
-                                                       fun.fumatfunc,
-                                                       'codcid');
-      vis.coduf        := ad_pkg_func.get_codcid_coduf(fun.fucodemp,
-                                                       fun.fumatfunc,
-                                                       'coduf');
+      vis.codcid       := ad_pkg_func.get_codcid_coduf(fun.fucodemp, fun.fumatfunc, 'codcid');
+      vis.coduf        := ad_pkg_func.get_codcid_coduf(fun.fucodemp, fun.fumatfunc, 'coduf');
       vis.codlot       := fun.fucodlot;
       vis.dhprevis     := p_dhprevis;
       vis.status       := 'pend';
@@ -288,8 +272,7 @@ create or replace package body ad_pkg_avs is
     
       begin
         ad_pkg_avs.insere_historico(vis.nuvisita,
-                                    'Inserido por ' ||
-                                    ad_get.nomeusu(v_codusu, 'completo'));
+                                    'Inserido por ' || ad_get.nomeusu(v_codusu, 'completo'));
       exception
         when others then
           p_mensagem := sqlerrm;
@@ -328,7 +311,9 @@ create or replace package body ad_pkg_avs is
   end;
 
   -- procedure que realiza as alterações da visita quando reagendadas
-  procedure set_reagendado(p_nuvisita number, p_newdata date, p_numotivo int) is
+  procedure set_reagendado(p_nuvisita number,
+                           p_newdata  date,
+                           p_numotivo int) is
     vis ad_tsfavs %rowtype;
   begin
     vis := get_dados_visita(p_nuvisita);
@@ -348,14 +333,12 @@ create or replace package body ad_pkg_avs is
        where v.nuvisita = p_nuvisita;
     exception
       when others then
-        ad_pkg_var.errmsg := 'Erro ao atualizar reagendamento da visita. ' ||
-                             sqlerrm;
+        ad_pkg_var.errmsg := 'Erro ao atualizar reagendamento da visita. ' || sqlerrm;
         raise_application_error(-20105, ad_fnc_formataerro(ad_pkg_var.errmsg));
     end;
   
     insere_historico(p_nuvisita,
-                     'Reagendamento da visita para dia ' ||
-                     to_char(p_newdata, 'dd/mm/yyyy'));
+                     'Reagendamento da visita para dia ' || to_char(p_newdata, 'dd/mm/yyyy'));
   
     stp_set_atualizando('N');
   
@@ -373,7 +356,8 @@ create or replace package body ad_pkg_avs is
   end;
 
   -- insere nova pesquisa
-  procedure set_nova_pesquisa(p_nuvisita number, p_pesquisa out number) is
+  procedure set_nova_pesquisa(p_nuvisita number,
+                              p_pesquisa out number) is
     vis ad_tsfavs %rowtype := get_dados_visita(p_nuvisita);
     pes ad_tsfpes %rowtype;
   begin
@@ -385,10 +369,8 @@ create or replace package body ad_pkg_avs is
   
     --Criação do campo observação: Tipo de Visita  
     pes.observacao := pes.observacao || chr(13) || 'Tipo de visita: ' ||
-                      ad_get.opcoescampo(vis.tipovisita,
-                                         'TIPOVISITA',
-                                         'AD_TSFAVS') || chr(13) || 'Obs: ' ||
-                      vis.obs;
+                      ad_get.opcoescampo(vis.tipovisita, 'TIPOVISITA', 'AD_TSFAVS') || chr(13) ||
+                      'Obs: ' || vis.obs;
   
     --Criação do campo observação: busca o cargo do candidato/funcionário
     for crg in (select *
@@ -396,36 +378,25 @@ create or replace package body ad_pkg_avs is
                  where c.codcargo = vis.codcargo
                    and c.codemp = 1)
     loop
-      pes.observacao := pes.observacao || chr(13) || 'Cargo: ' ||
-                        crg.descrcargo;
+      pes.observacao := pes.observacao || chr(13) || 'Cargo: ' || crg.descrcargo;
     end loop;
   
     --Criação do campo observação: Lotação
     for lot in (select * from ad_fpwlot l where l.codlot = vis.codlot)
     loop
-      pes.observacao := pes.observacao || chr(13) || 'Lotação: ' ||
-                        lot.descrlot;
+      pes.observacao := pes.observacao || chr(13) || 'Lotação: ' || lot.descrlot;
     end loop;
   
     --Criação do campo observação: Unidade
     for ung in (select * from ad_fpwlot l where l.codlot = vis.coduni)
     loop
-      pes.observacao := pes.observacao || chr(13) || 'Unidade: ' ||
-                        ung.descrlot;
+      pes.observacao := pes.observacao || chr(13) || 'Unidade: ' || ung.descrlot;
     end loop;
   
     -- insere pesquisa
-    stp_keygen_tgfnum('AD_TSFPES',
-                      1,
-                      'AD_TSFPES',
-                      'CODPESQUISA',
-                      0,
-                      pes.codpesquisa);
+    stp_keygen_tgfnum('AD_TSFPES', 1, 'AD_TSFPES', 'CODPESQUISA', 0, pes.codpesquisa);
   
-    select a.dhprevis
-      into pes.dhinc
-      from ad_tsfavs a
-     where a.nuvisita = vis.nuvisita;
+    select a.dhprevis into pes.dhinc from ad_tsfavs a where a.nuvisita = vis.nuvisita;
     pes.codquest      := vis.codquest;
     pes.descrpesquisa := 'Visita Biosegurança - ' || vis.nomevisitado;
     pes.dhrealizacao  := null;
@@ -469,8 +440,8 @@ create or replace package body ad_pkg_avs is
     begin
     
       if p_solmotivo is null then
-        sol.motivo := sol.motivo || chr(13) || 'Visita Sanitária nro: ' ||
-                      vis.nuvisita || ' - ' || vis.nomevisitado;
+        sol.motivo := sol.motivo || chr(13) || 'Visita Sanitária nro: ' || vis.nuvisita || ' - ' ||
+                      vis.nomevisitado;
       else
         sol.motivo := p_solmotivo;
       end if;
@@ -481,12 +452,8 @@ create or replace package body ad_pkg_avs is
       
       end if;
     
-      stp_keygen_tgfnum('AD_TSFCAPSOL',
-                        1,
-                        'AD_TSFCAPSOL',
-                        'NUCAPSOL',
-                        0,
-                        sol.nucapsol);
+      stp_keygen_tgfnum('AD_TSFCAPSOL', 1, 'AD_TSFCAPSOL', 'NUCAPSOL', 0, sol.nucapsol);
+      sol.tiposol        := 'CAP';
       sol.codusu         := stp_get_codusulogado;
       sol.codcencus      := 110100206;
       sol.dhsolicit      := sysdate;
@@ -566,10 +533,7 @@ create or replace package body ad_pkg_avs is
       values
         ('NOVASOLICITACAOCARRO', 1, 'NUCAPSOL', 'I', sol.nucapsol);
     
-      ad_stp_cap_enviaagend(stp_get_codusulogado,
-                            'NOVASOLICITACAOCARRO',
-                            1,
-                            p_errmsg);
+      ad_stp_cap_enviaagend(stp_get_codusulogado, 'NOVASOLICITACAOCARRO', 1, p_errmsg);
     
       if p_errmsg not like '%sucesso%' then
         return;
